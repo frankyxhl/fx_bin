@@ -44,7 +44,7 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/frankyxhl/py_fx_bin',
-    version='0.1.03',
+    version='0.1.04',
     zip_safe=False,
-    scripts=['bin/size'],
+    scripts=['py_fx_bin/size'],
 )

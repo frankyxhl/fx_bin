@@ -14,12 +14,10 @@ A common bin collection for my own usage
 Features
 --------
 
-* TODO
+* size
 
-Credits
+Install
 -------
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+    pip install git+https://github.com/frankyxhl/py_fx_bin
 
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
