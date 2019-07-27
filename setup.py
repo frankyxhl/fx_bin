@@ -45,6 +45,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/frankyxhl/py_fx_bin',
-    version='0.1.05',
+    version='0.1.06',
     zip_safe=False,
 )
