@@ -47,7 +47,7 @@ class Entry:
         return self.size < other.size
 
     def display(self, name_max, size_max):
-        return "{name:<{name_max}} {size:>{size_max}}".format(
+        return "{name:<{name_max}} {size.py:>{size_max}}".format(
             name=self.name,
             name_max=name_max,
             size=self.readable_size,
@@ -81,10 +81,14 @@ def list_size(path='.', ignore_dot_file=True) -> ([Entry], int, int):
     return result, _name_max, _size_max
 
 
-if __name__ == '__main__':
+def main():
     lst, n, s = list_size()
     for e in lst:
         print(e.display(n, s))
+
+
+if __name__ == '__main__':
+    main()
 
 
 

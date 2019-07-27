@@ -107,11 +107,11 @@ htmlhelp_basename = 'py_fx_bindoc'
 # -- Options for LaTeX output ------------------------------------------
 
 latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
+    # The paper size.py ('letterpaper' or 'a4paper').
     #
     # 'papersize': 'letterpaper',
 
-    # The font size ('10pt', '11pt' or '12pt').
+    # The font size.py ('10pt', '11pt' or '12pt').
     #
     # 'pointsize': '10pt',
 

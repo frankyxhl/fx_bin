@@ -32,6 +32,7 @@ setup(
     entry_points={
         'console_scripts': [
             'py_fx_bin=py_fx_bin.cli:main',
+            'size=py_fx_bin.size:main',
         ],
     },
     install_requires=requirements,
@@ -44,7 +45,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/frankyxhl/py_fx_bin',
-    version='0.1.04',
+    version='0.1.05',
     zip_safe=False,
-    scripts=['py_fx_bin/size'],
 )
