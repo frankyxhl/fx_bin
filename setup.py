@@ -18,6 +18,7 @@ setup_requirements = [ ]
 test_requirements = [ ]
 
 setup(
+    name='fx-bin',
     author="Frank Xu",
     author_email='frank@frankxu.me',
     classifiers=[
@@ -32,19 +33,18 @@ setup(
     entry_points={
         'console_scripts': [
             # 'py_fx_bin=py_fx_bin.cli:main',
-            'size=py_fx_bin.size:main',
+            'size=fx_bin.size:main',
         ],
     },
     install_requires=requirements,
     long_description=readme + '\n\n' + history,
     include_package_data=True,
     keywords='fx_bin',
-    name='fx_bin',
-    packages=find_packages(include=['py_fx_bin']),
+    packages=find_packages(include=['fx_bin']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/frankyxhl/py_fx_bin',
-    version='0.1.9',
+    version='0.1.10',
     zip_safe=False,
 )
