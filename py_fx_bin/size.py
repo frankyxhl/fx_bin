@@ -47,7 +47,7 @@ class Entry:
         return self.size < other.size
 
     def display(self, name_max, size_max):
-        return "{name:<{name_max}} {size.py:>{size_max}}".format(
+        return "{name:<{name_max}} {size:>{size_max}}".format(
             name=self.name,
             name_max=name_max,
             size=self.readable_size,
