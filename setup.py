@@ -11,7 +11,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=7.1', ]
+requirements = ['Click>=7.0', ]
 
 setup_requirements = [ ]
 
@@ -42,6 +42,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/frankyxhl/py_fx_bin',
-    version='0.1.11',
+    version='0.1.12',
     zip_safe=False,
 )
