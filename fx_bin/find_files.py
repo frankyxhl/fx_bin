@@ -10,19 +10,20 @@ def is_tool(name):
 
 
 def find_files(keyword):
-    if is_tool("find"):
+    if is_tool("find") and os.name != "nt":
     #     cmd = 'find . -iname "*{}*" -type f -print'.format(keyword)
         cmd = 'find . -iname "*{}*" -print'.format(keyword)
         os.system(cmd)
         return
-    print("Using Python search:")
-    for root, dirs, files in os.walk("."):
+    cwd = os.getcwd()
+    for root, dirs, files in os.walk(cwd):
         for d in dirs:
             if keyword in d:
                 print(os.path.join(root, d))
         for f in files:
             if keyword in f:
                 print(os.path.join(root, f))
+    return
 
 
 @click.command()
@@ -35,4 +36,4 @@ def main(keyword, args=None):
 
 
 if __name__ == "__main__":
-    sys.exit(main())  # pragma: no cover
+    sys.exit(main())
