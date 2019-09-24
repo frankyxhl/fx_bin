@@ -33,7 +33,7 @@ class Entry:
     def __lt__(self, other):
         if not isinstance(other, Entry):
             raise TypeError("Type is not same. Another type is {}".format(type(other)))
-        return self.count < other.count
+        return (self.count, self.name) < (other.count, other.name)
 
     def display(self, name_max, count_max):
         return "{name:<{name_max}} {count:>{count_max}}".format(
