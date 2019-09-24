@@ -30,6 +30,7 @@ setup(
         'console_scripts': [
             # 'py_fx_bin=py_fx_bin.cli:main',
             'fx_bin_upgrade=fx_bin.run_upgrade_program:main',
+            'files=fx_bin.files:main',
             'size=fx_bin.size:main',
             'ff=fx_bin.find_files:main',
         ],
@@ -43,6 +44,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/frankyxhl/py_fx_bin',
-    version='0.1.13',
+    version='0.2.0',
     zip_safe=False,
 )
