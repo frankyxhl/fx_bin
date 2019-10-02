@@ -74,6 +74,8 @@ def list_size(path='.', ignore_dot_file=True) -> ([Entry], int, int):
         if ignore_dot_file and entry.name.startswith("."):
             continue
         _e = Entry.from_scandir(entry)
+        if _e is None:
+            continue
         _name_max = max(_name_max, len(_e.name))
         _size_max = max(_size_max, len(_e.readable_size))
         result.append(_e)
@@ -89,6 +91,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-

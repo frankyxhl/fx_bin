@@ -59,6 +59,8 @@ def list_files_count(path='.', ignore_dot_file=True) -> ([Entry], int, int):
         if ignore_dot_file and entry.name.startswith("."):
             continue
         _e = Entry.from_scandir(entry)
+        if _e is None:
+            continue
         _name_max = max(_name_max, len(_e.name))
         _count_max = max(_count_max, len(str(_e.count)))
         result.append(_e)
