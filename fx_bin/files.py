@@ -3,7 +3,7 @@ import os
 from dataclasses import dataclass
 from enum import Enum
 from functools import total_ordering
-from libs.lib import count_ascii
+from lib import count_fullwidth
 
 __all__ = ["list_files_count"]
 
@@ -36,7 +36,7 @@ class Entry:
         return (self.count, self.name) < (other.count, other.name)
 
     def display(self, name_max, count_max):
-        length = len(self.name) - count_ascii(self.name)
+        length = len(self.name) - count_fullwidth(self.name)
         return "{name:<{name_max}} {count:>{count_max}}".format(
             name=self.name,
             name_max=name_max-length,

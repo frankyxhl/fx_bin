@@ -6,7 +6,7 @@ import math
 from dataclasses import dataclass
 from enum import Enum
 from functools import total_ordering
-from libs.lib import count_ascii, width, wide_chars
+from lib import count_fullwidth
 
 __all__ = ["list_size"]
 
@@ -50,7 +50,7 @@ class Entry:
         return self.size < other.size
 
     def display(self, name_max, size_max):
-        length = len(self.name) - count_ascii(self.name)
+        length = len(self.name) - count_fullwidth(self.name)
         return "{name:<{name_max}} {size:>{size_max}}".format(
             name=self.name,
             name_max=name_max-length,
