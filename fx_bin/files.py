@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import os
-import math
+from dataclasses import dataclass
 from enum import Enum
 from functools import total_ordering
+from libs.lib import count_ascii
 
 __all__ = ["list_files_count"]
 
@@ -22,13 +23,12 @@ def sum_folder_files_count(path='.') -> int:
     return total
 
 
+@dataclass
 @total_ordering
 class Entry:
-
-    def __init__(self, name: str, count: int, tpe: EntryType):
-        self.name = name
-        self.count = count
-        self.tpe = tpe
+    name: str
+    count: int
+    tpe: EntryType
 
     def __lt__(self, other):
         if not isinstance(other, Entry):
@@ -36,9 +36,10 @@ class Entry:
         return (self.count, self.name) < (other.count, other.name)
 
     def display(self, name_max, count_max):
+        length = len(self.name) - count_ascii(self.name)
         return "{name:<{name_max}} {count:>{count_max}}".format(
             name=self.name,
-            name_max=name_max,
+            name_max=name_max-length,
             count=self.count,
             count_max=count_max)
 
@@ -61,7 +62,7 @@ def list_files_count(path='.', ignore_dot_file=True) -> ([Entry], int, int):
         _e = Entry.from_scandir(entry)
         if _e is None:
             continue
-        _name_max = max(_name_max, len(_e.name))
+        _name_max = max(_name_max, len(_e.name.encode()))
         _count_max = max(_count_max, len(str(_e.count)))
         result.append(_e)
     result.sort()

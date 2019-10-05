@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
+# from __future__ import absolute_import
+
 import os
 import math
+from dataclasses import dataclass
 from enum import Enum
 from functools import total_ordering
+from libs.lib import count_ascii, width, wide_chars
 
 __all__ = ["list_size"]
 
@@ -33,13 +37,12 @@ def convert_size(size):
     return "%s%s" % (round(s), size_name[i])
 
 
+@dataclass
 @total_ordering
 class Entry:
-
-    def __init__(self, name: str, size: int, tpe: EntryType):
-        self.name = name
-        self.size = size
-        self.tpe = tpe
+    name: str
+    size: int
+    tpe: EntryType
 
     def __lt__(self, other):
         if not isinstance(other, Entry):
@@ -47,9 +50,10 @@ class Entry:
         return self.size < other.size
 
     def display(self, name_max, size_max):
+        length = len(self.name) - count_ascii(self.name)
         return "{name:<{name_max}} {size:>{size_max}}".format(
             name=self.name,
-            name_max=name_max,
+            name_max=name_max-length,
             size=self.readable_size,
             size_max=size_max)
 
@@ -76,7 +80,7 @@ def list_size(path='.', ignore_dot_file=True) -> ([Entry], int, int):
         _e = Entry.from_scandir(entry)
         if _e is None:
             continue
-        _name_max = max(_name_max, len(_e.name))
+        _name_max = max(_name_max, len(_e.name.encode()))
         _size_max = max(_size_max, len(_e.readable_size))
         result.append(_e)
     result.sort()
