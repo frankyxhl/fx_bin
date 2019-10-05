@@ -3,7 +3,7 @@ import os
 from dataclasses import dataclass
 from enum import Enum
 from functools import total_ordering
-from lib import count_fullwidth
+from fx_bin.lib import count_fullwidth
 
 __all__ = ["list_files_count"]
 
