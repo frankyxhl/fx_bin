@@ -1,17 +1,12 @@
 import os
 import sys
 import click
-
-
-def is_tool(name):
-    """Check whether `name` is on PATH and marked as executable."""
-    from shutil import which
-    return which(name) is not None
+from .lib import is_tool, is_windows
 
 
 def find_files(keyword):
-    if is_tool("find") and os.name != "nt":
-    #     cmd = 'find . -iname "*{}*" -type f -print'.format(keyword)
+    if is_tool("find") and not is_windows():
+        # cmd = 'find . -iname "*{}*" -type f -print'.format(keyword)
         cmd = 'find . -iname "*{}*" -print'.format(keyword)
         os.system(cmd)
         return
