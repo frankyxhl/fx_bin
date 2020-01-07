@@ -36,6 +36,7 @@ setup(
             'ff=fx_bin.find_files:main',
             'replace=fx_bin.replace:main',
             'grab_json_api_to_excel=fx_bin.pd:main',
+            's=fx_bin.upload_server:main',
         ],
     },
     install_requires=requirements,
@@ -47,6 +48,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/frankyxhl/py_fx_bin',
-    version='0.2.7',
+    version='0.3.0',
     zip_safe=False,
 )
