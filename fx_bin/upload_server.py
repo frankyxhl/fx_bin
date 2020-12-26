@@ -17,6 +17,7 @@ __all__ = ["SimpleHTTPRequestHandler"]
 __author__ = "Frank Xu"
 
 import cgi
+import html
 import errno
 import mimetypes
 import os
@@ -189,7 +190,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             return None
         lst.sort(key=lambda a: a.lower())
         f = BytesIO()
-        display_path = cgi.escape(urllib.parse.unquote(self.path))
+        display_path = html.escape(urllib.parse.unquote(self.path))
         f.write(b'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">')
         f.write(("<html>\n<title>Directory listing for %s</title>\n" % display_path).encode())
         f.write(("<body>\n<h2>Directory listing for %s</h2>\n" % display_path).encode())
@@ -209,7 +210,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 display_name = name + "@"
                 # Note: a link to a directory displays with @ and links with /
             f.write(('<li><a href="%s">%s</a>\n'
-                    % (urllib.parse.quote(link_name), cgi.escape(display_name))).encode())
+                    % (urllib.parse.quote(link_name), html.escape(display_name))).encode())
         f.write(b"</ul>\n<hr>\n</body>\n</html>\n")
         length = f.tell()
         f.seek(0)
@@ -305,7 +306,7 @@ def get_lan_ip():
 def main():
     ip = get_lan_ip()
     port = 8000
-    while port < 8020:
+    while port < 8050:
         try:
             httpd = HTTPServer((ip, port), SimpleHTTPRequestHandler)
             print("Running http server at {0}:{1}".format(ip, port))
