@@ -6,7 +6,6 @@ import math
 from dataclasses import dataclass
 from enum import Enum
 from functools import total_ordering
-from fx_bin.lib import count_fullwidth
 
 __all__ = ["list_size"]
 
@@ -40,6 +39,7 @@ def convert_size(size):
 @dataclass
 @total_ordering
 class Entry:
+    __slots__ = ['name', 'count', 'tpe']
     name: str
     size: int
     tpe: EntryType
@@ -50,13 +50,10 @@ class Entry:
             raise TypeError(msg(type(other)))
         return self.size < other.size
 
-    def display(self, name_max, size_max):
-        length = len(self.name) - count_fullwidth(self.name)
-        return "{size:>{size_max}} {name:<{name_max}}".format(
+    def __repr__(self):
+        return "{size:>5} {name}".format(
             name=self.name,
-            name_max=name_max-length,
-            size=self.readable_size,
-            size_max=size_max)
+            size=self.readable_size)
 
     @property
     def readable_size(self) -> str:
@@ -73,25 +70,21 @@ class Entry:
 
 def list_size(path='.', ignore_dot_file=True) -> ([Entry], int, int):
     result = []
-    _name_max = 0
-    _size_max = 0
     for entry in os.scandir(path):
         if ignore_dot_file and entry.name.startswith("."):
             continue
         _e = Entry.from_scandir(entry)
         if _e is None:
             continue
-        _name_max = max(_name_max, len(_e.name.encode()))
-        _size_max = max(_size_max, len(_e.readable_size))
         result.append(_e)
     result.sort()
-    return result, _name_max, _size_max
+    return result
 
 
 def main():
-    lst, n, s = list_size()
+    lst = list_size()
     for e in lst:
-        print(e.display(n, s))
+        print(e)
 
 
 if __name__ == '__main__':

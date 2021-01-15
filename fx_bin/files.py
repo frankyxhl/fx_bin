@@ -37,7 +37,7 @@ class Entry:
         return (self.count, self.name) < (other.count, other.name)
 
     def display(self, count_max):
-        return "{name} {count:>{count_max}}".format(
+        return "{count:>{count_max}} {name}".format(
             name=self.name,
             count=self.count,
             count_max=count_max)
