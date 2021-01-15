@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 import os
 
 
 def main():
-    cmd = "python3 -m pip install --upgrade git+https://github.com/frankyxhl/py_fx_bin"
+    cmd = "python3 -m pip install --upgrade fx_bin"
     print(cmd)
     os.system(cmd)
 

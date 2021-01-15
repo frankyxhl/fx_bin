@@ -39,7 +39,7 @@ def convert_size(size):
 @dataclass
 @total_ordering
 class Entry:
-    __slots__ = ['name', 'count', 'tpe']
+    __slots__ = ['name', 'size', 'tpe']
     name: str
     size: int
     tpe: EntryType
