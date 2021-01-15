@@ -46,12 +46,13 @@ class Entry:
 
     def __lt__(self, other):
         if not isinstance(other, Entry):
-            raise TypeError("Type is not same. Another type is {}".format(type(other)))
+            msg = "Not same Type. Another type is {}".format
+            raise TypeError(msg(type(other)))
         return self.size < other.size
 
     def display(self, name_max, size_max):
         length = len(self.name) - count_fullwidth(self.name)
-        return "{name:<{name_max}} {size:>{size_max}}".format(
+        return "{size:>{size_max}} {name:<{name_max}}".format(
             name=self.name,
             name_max=name_max-length,
             size=self.readable_size,
