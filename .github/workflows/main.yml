@@ -1,5 +1,11 @@
-name: Publish into PyPi
-uses: pypa/gh-action-pypi-publish@v1.4.1
-with:
-  user: __token__
-  password: ${{ secrets.PYPI_API_TOKEN }}
+on: push
+name: Deploy to PyPi
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to PyPi
+      uses: pypa/gh-action-pypi-publish@v1.4.1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
