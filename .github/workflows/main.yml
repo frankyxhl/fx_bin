@@ -4,6 +4,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+    - name: Makefile
+      run: |
+        python setup.py sdist
+        python setup.py bdist_wheel
     - name: Deploy to PyPi
       uses: pypa/gh-action-pypi-publish@v1.4.1
       with:
