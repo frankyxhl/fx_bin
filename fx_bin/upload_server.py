@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
- 
+
 """Simple HTTP Server With Upload.
 
 This module builds on BaseHTTPServer by implementing the standard GET
@@ -16,7 +16,6 @@ __version__ = "0.1.1"
 __all__ = ["SimpleHTTPRequestHandler"]
 __author__ = "Frank Xu"
 
-import cgi
 import html
 import errno
 import mimetypes
@@ -32,9 +31,8 @@ import urllib.error
 from io import BytesIO
 from http.server import HTTPServer, SimpleHTTPRequestHandler, BaseHTTPRequestHandler
 
- 
+
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
- 
     """Simple HTTP request handler with GET/HEAD/POST commands.
 
     This serves files from the current directory and any of its
@@ -46,22 +44,21 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     request omits the actual contents of the file.
 
     """
- 
     server_version = "SimpleHTTPWithUpload/" + __version__
- 
+
     def do_GET(self):
         """Serve a GET request."""
         f = self.send_head()
         if f:
             self.copy_file(f, self.wfile)
             f.close()
- 
+
     def do_HEAD(self):
         """Serve a HEAD request."""
         f = self.send_head()
         if f:
             f.close()
- 
+
     def do_POST(self):
         """Serve a POST request."""
         r, info = self.deal_post_data()
@@ -87,7 +84,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         if f:
             self.copy_file(f, self.wfile)
             f.close()
-        
+
     def deal_post_data(self):
         content_type = self.headers['content-type']
         if not content_type:
@@ -113,7 +110,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             out = open(fn, 'wb')
         except IOError:
             return False, "Can't create file to write, do you have permission to write?"
-                
+
         pre_line = self.rfile.readline()
         remain_bytes -= len(pre_line)
         while remain_bytes > 0:
@@ -130,7 +127,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 out.write(pre_line)
                 pre_line = line
         return False, "Unexpect Ends of data."
- 
+
     def send_head(self):
         """Common code for GET and HEAD commands.
 
@@ -174,7 +171,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
         self.end_headers()
         return f
- 
+
     def list_directory(self, path):
         """Helper to produce a directory listing (absent index.html).
 
@@ -219,7 +216,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(length))
         self.end_headers()
         return f
- 
+
     def translate_path(self, path):
         """Translate a /-separated PATH to the local filename syntax.
 
@@ -242,7 +239,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 continue
             path = os.path.join(path, word)
         return path
- 
+
     def copy_file(self, source, output_file):
         """Copy all data between two file objects.
 
@@ -258,7 +255,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
         """
         shutil.copyfileobj(source, output_file)
- 
+
     def guess_type(self, path):
         """Guess the type of a file.
 
@@ -273,7 +270,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         slow) to look inside the data to make a better guess.
 
         """
- 
+
         base, ext = posixpath.splitext(path)
         if ext in self.extensions_map:
             return self.extensions_map[ext]
@@ -282,7 +279,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             return self.extensions_map[ext]
         else:
             return self.extensions_map['']
- 
+
     if not mimetypes.inited:
         mimetypes.init()  # try to read system mime.types
     extensions_map = mimetypes.types_map.copy()
@@ -292,7 +289,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         '.c': 'text/plain',
         '.h': 'text/plain',
         })
- 
+
 
 def get_lan_ip():
     """
@@ -315,7 +312,8 @@ def main():
             if e.errno == errno.EADDRINUSE:
                 inuse_port = port
                 port += 1
-                print("Port '{}' is already in use. Try new port '{}'".format(inuse_port, port))
+                msg = f"Port '{inuse_port}' is already in use. Try new port '{port}'"
+                print(msg)
                 continue
             else:
                 print(e)

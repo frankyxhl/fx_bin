@@ -19,5 +19,4 @@ Features
 Install
 -------
 
-    pip install git+https://github.com/frankyxhl/py_fx_bin
-
+    pip install --upgrade fx-bin

@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# from __future__ import absolute_import
-
 import os
 import math
 from dataclasses import dataclass
@@ -51,9 +48,7 @@ class Entry:
         return self.size < other.size
 
     def __repr__(self):
-        return "{size:>5} {name}".format(
-            name=self.name,
-            size=self.readable_size)
+        return f"{self.readable_size}\t{self.name}"
 
     @property
     def readable_size(self) -> str:
