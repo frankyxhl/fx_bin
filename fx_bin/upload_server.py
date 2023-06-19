@@ -295,9 +295,18 @@ def get_lan_ip():
     """
     https://www.w3resource.com/python-exercises/python-basic-exercise-55.php
     """
-    return [l for l in ([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2]
-                         if not ip.startswith("127.")][:1], [[(s.connect(('8.8.8.8', 53)), s.getsockname()[0], s.close())
-                                                              for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) if l][0][0]
+    # Attempt to get IP from host name
+    hostname = socket.gethostname()
+    ips_from_hostname = socket.gethostbyname_ex(hostname)[2]
+    non_local_ips_from_hostname = [ip for ip in ips_from_hostname if not ip.startswith("127.")]
+    # If there are non-local IPs from the hostname, return the first one
+    if non_local_ips_from_hostname:
+        return non_local_ips_from_hostname[0]
+    # If there are no non-local IPs from the hostname, try another method
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        s.connect(('8.8.8.8', 53))
+        ip_from_socket = s.getsockname()[0]
+    return ip_from_socket
 
 
 def main():
@@ -323,7 +332,7 @@ def main():
             try:
                 sys.exit(0)
             except SystemExit:
-                os._exit(0)
+                os.exit(0)
 
 
 if __name__ == '__main__':
