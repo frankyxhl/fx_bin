@@ -3,6 +3,7 @@ import math
 from dataclasses import dataclass
 from enum import Enum
 from functools import total_ordering
+from loguru import Logger as L
 
 __all__ = ["list_size"]
 

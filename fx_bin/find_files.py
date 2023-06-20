@@ -13,9 +13,9 @@ def find_files(keyword):
 
 @click.command()
 @click.argument('keyword')
-def main(keyword, args=None):
+def main(keyword):
     if not keyword:
-        click.echo("Please type text to search. For example: fx.ff bar")
+        click.echo("Please type text to search. For example: fx_ff bar")
     find_files(keyword)
     return 0
 

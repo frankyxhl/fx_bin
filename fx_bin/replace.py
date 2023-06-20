@@ -1,8 +1,9 @@
 import os
-import os.path
+# import os.path
 import sys
 import tempfile
 import click
+from loguru import logger as L
 
 
 def work(s, t, f):
@@ -18,12 +19,13 @@ def work(s, t, f):
 @click.argument('search_text', nargs=1)
 @click.argument('replace_text', nargs=1)
 @click.argument('filenames', nargs=-1)
-def main(search_text, replace_text, filenames, args=None):
-    for f in filenames:
+def main(search_text: str, replace_text: str, file_names):
+    for f in file_names:
         if not os.path.isfile(f):
-            print(f"This file does not exist: {f}")
+            L.error(f"This file does not exist: {f}")
             return 1
-    for f in filenames:
+    for f in file_names:
+        L.debug(f'Replacing {search_text} with {replace_text} in {f}')
         work(search_text, replace_text, f)
     return 0
 
