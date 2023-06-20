@@ -1,10 +1,6 @@
 =============
-Python FX bin
+FX bin
 =============
-
-
-
-
 
 
 A common bin collection for my own usage
