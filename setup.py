@@ -11,7 +11,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=7.0', ]
+requirements = ['Click>=8.1.3', ]
 
 setup_requirements = []
 
@@ -27,17 +27,19 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
     ],
     description="A common bin collection for my own usage",
     entry_points={
         'console_scripts': [
-            'fx.upgrade=fx_bin.run_upgrade_program:main',
-            'fx.files=fx_bin.files:main',
-            'fx.size=fx_bin.size:main',
-            'fx.ff=fx_bin.find_files:main',
-            'fx.replace=fx_bin.replace:main',
-            'fx.grab_json_api_to_excel=fx_bin.pd:main',
-            'fx.server=fx_bin.upload_server:main',
+            'fx_upgrade=fx_bin.run_upgrade_program:main',
+            'fx_files=fx_bin.files:main',
+            'fx_size=fx_bin.size:main',
+            'fx_ff=fx_bin.find_files:main',
+            'fx_replace=fx_bin.replace:main',
+            'fx_grab_json_api_to_excel=fx_bin.pd:main',
+            'fx_server=fx_bin.upload_server:main',
         ],
     },
     install_requires=requirements,
@@ -49,6 +51,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/frankyxhl/py_fx_bin',
-    version='0.5.0',
+    version='0.6.0',
     zip_safe=False,
 )
