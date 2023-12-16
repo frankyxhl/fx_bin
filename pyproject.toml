@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "py-fx-bin"
-version = "0.5.1"
+version = "0.5.2"
 description = "Frank's personal Python bin files"
 authors = ["Frank Xu <franky.xhl@gmail.com>"]
 readme = "README.md"
@@ -15,3 +15,13 @@ loguru = "^0.7.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts]
+fx_upgrade = "fx_bin.run_upgrade_program:main"
+fx_files = "fx_bin.files:main"
+fx_size = "fx_bin.size:main"
+fx_ff = "fx_bin.find_files:main"
+fx_replace = "fx_bin.replace:main"
+fx_grab_json_api_to_excel = "fx_bin.pd:main"
+fx_server = "fx_bin.upload_server:main"
