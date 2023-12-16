@@ -19,6 +19,7 @@ jobs:
     - name: Install dependencies Makefile
       run: |
         poetry install
+        poetry build
     - name: Deploy to PyPi
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
