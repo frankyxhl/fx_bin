@@ -13,11 +13,11 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.x'
+        cache: 'poetry'
     - name: Install dependencies Makefile
       run: |
-        python -m pip install --upgrade pip wheel
-        python setup.py sdist
-        python setup.py bdist_wheel
+        poetry install
+        poetry run pytest
     - name: Deploy to PyPi
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
