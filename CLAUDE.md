@@ -22,14 +22,20 @@ pip install -e .
 
 ### Testing
 ```bash
-# Run tests using unittest
-python -m unittest tests/test_py_fx_bin.py
+# Run all tests
+poetry run python -m unittest discover tests
 
-# Run tests with tox (if tox is installed)
-tox
+# Run tests with verbose output
+poetry run python -m unittest discover tests -v
+
+# Run specific test module
+poetry run python -m unittest tests.test_size
+poetry run python -m unittest tests.test_files
+poetry run python -m unittest tests.test_find_files
+poetry run python -m unittest tests.test_replace
 
 # Run specific test
-python -m unittest tests.test_py_fx_bin.TestPy_fx_bin.test_command_line_interface
+poetry run python -m unittest tests.test_py_fx_bin.TestPy_fx_bin.test_command_line_interface
 ```
 
 ### Code Quality

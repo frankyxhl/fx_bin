@@ -1,85 +1,48 @@
+"""File and directory size listing utility."""
 import os
-import math
-from dataclasses import dataclass
-from enum import Enum
-from functools import total_ordering
+from typing import List
+
+from .common import SizeEntry
 
 __all__ = ["list_size"]
 
 
-class EntryType(Enum):
-    FILE = 1
-    FOLDER = 2
-
-
-def sum_folder_size(path='.') -> int:
-    total = 0
-    for entry in os.scandir(path):
-        if entry.is_file():
-            total += entry.stat().st_size
-        elif entry.is_dir():
-            total += sum_folder_size(entry.path)
-    return total
-
-
-def convert_size(size):
-    size_bytes = int(size)
-    if size_bytes == 0:
-        return "0B"
-    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
-    i = int(math.floor(math.log(size_bytes, 1024)))
-    p = math.pow(1024, i)
-    s = round(size_bytes / p, 2)
-    return "%s%s" % (round(s), size_name[i])
-
-
-@dataclass
-@total_ordering
-class Entry:
-    __slots__ = ['name', 'size', 'tpe']
-    name: str
-    size: int
-    tpe: EntryType
-
-    def __lt__(self, other):
-        if not isinstance(other, Entry):
-            msg = "Not same Type. Another type is {}".format
-            raise TypeError(msg(type(other)))
-        return self.size < other.size
-
-    def __repr__(self):
-        return f"{self.readable_size}\t{self.name}"
-
-    @property
-    def readable_size(self) -> str:
-        return convert_size(self.size)
-
-    @classmethod
-    def from_scandir(cls, obj: object):
-        if obj.is_file():
-            return Entry(obj.name, obj.stat().st_size, EntryType.FILE)
-        elif obj.is_dir():
-            total_size = sum_folder_size(obj.path)
-            return Entry(obj.name, total_size, EntryType.FOLDER)
-
-
-def list_size(path='.', ignore_dot_file=True) -> ([Entry], int, int):
+def list_size(path: str = '.', ignore_dot_file: bool = True) -> List[SizeEntry]:
+    """
+    List sizes of files and directories in the given path.
+    
+    Args:
+        path: Directory path to analyze
+        ignore_dot_file: Whether to ignore files/dirs starting with dot
+        
+    Returns:
+        Sorted list of SizeEntry objects
+    """
     result = []
     for entry in os.scandir(path):
         if ignore_dot_file and entry.name.startswith("."):
             continue
-        _e = Entry.from_scandir(entry)
-        if _e is None:
-            continue
-        result.append(_e)
+        size_entry = SizeEntry.from_scandir(entry)
+        if size_entry is not None:
+            result.append(size_entry)
     result.sort()
     return result
 
 
 def main():
-    lst = list_size()
-    for e in lst:
-        print(e)
+    """Main entry point for fx_size command."""
+    import click
+    
+    @click.command()
+    @click.option('--path', '-p', default='.', help='Path to analyze')
+    @click.option('--all', '-a', 'show_all', is_flag=True, help='Show hidden files')
+    def cli(path, show_all):
+        """Display file and directory sizes in human-readable format."""
+        lst = list_size(path, ignore_dot_file=not show_all)
+        for entry in lst:
+            print(entry)
+    
+    cli()
 
 
 if __name__ == '__main__':
