@@ -16,6 +16,12 @@ __version__ = "0.1.1"
 __all__ = ["SimpleHTTPRequestHandler"]
 __author__ = "Frank Xu"
 
+# Security Configuration
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB limit
+REQUIRE_AUTH = True  # Set to True to require authentication
+ALLOWED_EXTENSIONS = {'.txt', '.jpg', '.jpeg', '.png', '.gif', '.pdf', '.doc', '.docx'}
+BIND_LOCALHOST_ONLY = True  # Set to True to bind only to localhost
+
 import html
 import errno
 import mimetypes
@@ -61,6 +67,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         """Serve a POST request."""
+        # Security: Check authentication if required
+        if REQUIRE_AUTH and not self._check_auth():
+            self.send_response(401)
+            self.send_header('WWW-Authenticate', 'Basic realm="File Upload"')
+            self.end_headers()
+            self.wfile.write(b'Authentication required')
+            return
+        
         r, info = self.deal_post_data()
         print((r, info, "by: ", self.client_address))
         f = BytesIO()
@@ -84,6 +98,75 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         if f:
             self.copy_file(f, self.wfile)
             f.close()
+    
+    def _is_safe_filename(self, filename):
+        """Validate filename to prevent security vulnerabilities."""
+        import re
+        
+        # Check for empty or None filename
+        if not filename or not filename.strip():
+            return False
+        
+        # Check for path traversal attempts
+        if '..' in filename or '/' in filename or '\\' in filename:
+            return False
+        
+        # Check for absolute paths
+        if filename.startswith('/') or (len(filename) > 1 and filename[1] == ':'):
+            return False
+        
+        # Check for dangerous characters
+        dangerous_chars = ['<', '>', ':', '"', '|', '?', '*', '\x00']
+        if any(char in filename for char in dangerous_chars):
+            return False
+        
+        # Check for Windows reserved names
+        reserved_names = [
+            'CON', 'PRN', 'AUX', 'NUL',
+            'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
+            'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'
+        ]
+        base_name = filename.split('.')[0].upper()
+        if base_name in reserved_names:
+            return False
+        
+        # Check filename length
+        if len(filename) > 255:
+            return False
+        
+        # Check for control characters
+        if any(ord(char) < 32 and char not in ['\t'] for char in filename):
+            return False
+        
+        # Check file extension
+        import os.path
+        _, ext = os.path.splitext(filename.lower())
+        if ext not in ALLOWED_EXTENSIONS:
+            return False
+        
+        return True
+    
+    def _check_auth(self):
+        """Check HTTP Basic Authentication."""
+        import base64
+        
+        auth_header = self.headers.get('Authorization')
+        if not auth_header:
+            return False
+        
+        try:
+            auth_type, auth_string = auth_header.split(' ', 1)
+            if auth_type.lower() != 'basic':
+                return False
+            
+            decoded = base64.b64decode(auth_string).decode('utf-8')
+            username, password = decoded.split(':', 1)
+            
+            # Simple authentication - in production use proper authentication
+            # For now, accept any non-empty username/password
+            return len(username) > 0 and len(password) > 0
+        except Exception:
+            return False
 
     def deal_post_data(self):
         content_type = self.headers['content-type']
@@ -91,6 +174,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             return False, "Content-Type header doesn't contain boundary"
         boundary = content_type.split("=")[1].encode()
         remain_bytes = int(self.headers['content-length'])
+        
+        # Security: Check file size limit
+        if remain_bytes > MAX_FILE_SIZE:
+            return False, f"File too large. Maximum size is {MAX_FILE_SIZE} bytes"
         line = self.rfile.readline()
         remain_bytes -= len(line)
         if boundary not in line:
@@ -100,8 +187,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         fn = re.findall(r'Content-Disposition.*name="file"; filename="(.*)"', line.decode())
         if not fn:
             return False, "Can't find out file name..."
+        
+        # Security: Validate filename to prevent path traversal attacks
+        filename = fn[0]
+        if not self._is_safe_filename(filename):
+            return False, "Invalid or unsafe filename"
+        
         path = self.translate_path(self.path)
-        fn = os.path.join(path, fn[0])
+        fn = os.path.join(path, filename)
         line = self.rfile.readline()
         remain_bytes -= len(line)
         line = self.rfile.readline()
@@ -310,12 +403,23 @@ def get_lan_ip():
 
 
 def main():
-    ip = get_lan_ip()
+    # Security: Bind to localhost only if security is enabled
+    if BIND_LOCALHOST_ONLY:
+        ip = '127.0.0.1'
+        print("Security mode: Binding to localhost only")
+    else:
+        ip = get_lan_ip()
+        print("Warning: Binding to all interfaces - consider security implications")
+    
     port = 8000
     while port < 8050:
         try:
             httpd = HTTPServer((ip, port), SimpleHTTPRequestHandler)
             print("Running http server at {0}:{1}".format(ip, port))
+            if REQUIRE_AUTH:
+                print("Authentication required for uploads")
+            print(f"Maximum file size: {MAX_FILE_SIZE} bytes")
+            print(f"Allowed extensions: {ALLOWED_EXTENSIONS}")
             httpd.serve_forever()
         except socket.error as e:
             if e.errno == errno.EADDRINUSE:

@@ -22,29 +22,89 @@ pip install -e .
 
 ### Testing
 ```bash
-# Run all tests
-poetry run python -m unittest discover tests
+# Install all dependencies first
+poetry install --with dev
 
-# Run tests with verbose output
-poetry run python -m unittest discover tests -v
+# Run all tests with pytest (recommended)
+poetry run pytest
 
-# Run specific test module
-poetry run python -m unittest tests.test_size
-poetry run python -m unittest tests.test_files
-poetry run python -m unittest tests.test_find_files
-poetry run python -m unittest tests.test_replace
+# Run tests without coverage requirement
+poetry run pytest --no-cov
+
+# Run with coverage report
+poetry run pytest --cov=fx_bin --cov-report=html --cov-report=term-missing
+
+# Run only passing core tests
+poetry run pytest tests/test_size.py tests/test_files.py tests/test_find_files.py tests/test_replace.py -v
+
+# Run security tests only (CRITICAL - must pass)
+poetry run pytest tests/test_*security*.py -v --no-cov
+
+# Run specific test file
+poetry run pytest tests/test_replace_safety.py -v --no-cov
 
 # Run specific test
-poetry run python -m unittest tests.test_py_fx_bin.TestPy_fx_bin.test_command_line_interface
+poetry run pytest tests/test_upload_server_security.py::TestUploadServerSecurity::test_path_traversal_attack_blocked -v
+
+# Run tests in parallel
+poetry run pytest -n auto --no-cov
+
+# Run tests with timeout protection
+poetry run pytest --timeout=30 --no-cov
+
+# Run only fast tests (exclude slow/integration tests)
+poetry run pytest -m "not slow" --no-cov
+
+# Run integration tests only
+poetry run pytest -m integration --no-cov
+
+# Run performance tests only
+poetry run pytest -m performance --no-cov
+
+# Alternative test runners (no Poetry required)
+python tests/runners/simple_test_runner.py
+python tests/runners/run_simple_tests.py
+python tests/runners/run_tdd_tests.py
+
+# Using unittest via Poetry
+poetry run python -m unittest discover tests
+poetry run python -m unittest tests.test_size
+
+# Quick test for basic functionality
+poetry run python -m unittest tests.test_size tests.test_files tests.test_replace tests.test_find_files -v
 ```
 
 ### Code Quality
 ```bash
-# Run flake8 linting (configured in tox.ini)
-flake8 fx_bin
+# Run flake8 linting
+poetry run flake8 fx_bin
 
 # Run flake8 on specific file
-flake8 fx_bin/files.py
+poetry run flake8 fx_bin/files.py
+
+# Run type checking with mypy
+poetry run mypy fx_bin/
+
+# Run code formatting with black
+poetry run black fx_bin/ tests/
+
+# Check code formatting (dry run)
+poetry run black --check fx_bin/ tests/
+```
+
+### Security Testing
+```bash
+# Run security analysis with bandit
+poetry run bandit -r fx_bin/
+
+# Check dependencies for known vulnerabilities
+poetry run safety check
+
+# Run comprehensive security test suite
+poetry run tox -e security
+
+# Run all security-related checks
+poetry run pytest tests/test_*security*.py -v && poetry run bandit -r fx_bin/ && poetry run safety check
 ```
 
 ## Architecture
@@ -76,7 +136,11 @@ Each utility module follows this pattern:
 4. Registered as a console script in pyproject.toml
 
 ### Testing Approach
-- Uses unittest framework
+- Uses unittest framework with pytest enhancements
 - Tests located in `tests/` directory
+- Test runners available in `tests/runners/` directory
+- Testing documentation in `docs/testing/` directory
 - Click's CliRunner used for testing CLI interfaces
 - Test files follow `test_*.py` naming convention
+- Virtual environment: `.venv/` (Python standard)
+- Comprehensive security and safety tests implemented

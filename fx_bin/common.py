@@ -25,30 +25,94 @@ def convert_size(size: int) -> str:
     return f"{round(s)}{size_name[i]}"
 
 
-def sum_folder_size(path: str = '.') -> int:
-    """Recursively calculate total size of a folder."""
+def sum_folder_size(path: str = '.', _visited_inodes=None, _depth=0) -> int:
+    """Recursively calculate total size of a folder with safety checks."""
+    # Initialize visited inodes set on first call
+    if _visited_inodes is None:
+        _visited_inodes = set()
+    
+    # Prevent infinite recursion
+    if _depth > 1000:
+        return 0
+    
     total = 0
     try:
-        for entry in os.scandir(path):
-            if entry.is_file():
-                total += entry.stat().st_size
-            elif entry.is_dir():
-                total += sum_folder_size(entry.path)
-    except (PermissionError, OSError):
+        # Get directory's inode to detect cycles
+        dir_stat = os.stat(path)
+        dir_inode = (dir_stat.st_dev, dir_stat.st_ino)
+        
+        # Check if we've already visited this directory (symlink loop)
+        if dir_inode in _visited_inodes:
+            return 0
+        
+        _visited_inodes.add(dir_inode)
+        
+        try:
+            for entry in os.scandir(path):
+                if entry.is_file(follow_symlinks=False):
+                    total += entry.stat(follow_symlinks=False).st_size
+                elif entry.is_dir(follow_symlinks=False):
+                    # Recursively calculate subdirectory size
+                    total += sum_folder_size(entry.path, _visited_inodes, _depth + 1)
+                elif entry.is_symlink():
+                    # Handle symlinks carefully
+                    try:
+                        if entry.is_file():
+                            total += entry.stat().st_size
+                    except (OSError, ValueError):
+                        # Skip broken symlinks or circular references
+                        pass
+        finally:
+            # Remove from visited set when leaving directory
+            _visited_inodes.discard(dir_inode)
+            
+    except (PermissionError, OSError, ValueError):
         pass  # Skip directories we can't access
     return total
 
 
-def sum_folder_files_count(path: str = '.') -> int:
-    """Recursively count total files in a folder."""
+def sum_folder_files_count(path: str = '.', _visited_inodes=None, _depth=0) -> int:
+    """Recursively count total files in a folder with safety checks."""
+    # Initialize visited inodes set on first call
+    if _visited_inodes is None:
+        _visited_inodes = set()
+    
+    # Prevent infinite recursion
+    if _depth > 1000:
+        return 0
+    
     total = 0
     try:
-        for entry in os.scandir(path):
-            if entry.is_file():
-                total += 1
-            elif entry.is_dir():
-                total += sum_folder_files_count(entry.path)
-    except (PermissionError, OSError):
+        # Get directory's inode to detect cycles
+        dir_stat = os.stat(path)
+        dir_inode = (dir_stat.st_dev, dir_stat.st_ino)
+        
+        # Check if we've already visited this directory (symlink loop)
+        if dir_inode in _visited_inodes:
+            return 0
+        
+        _visited_inodes.add(dir_inode)
+        
+        try:
+            for entry in os.scandir(path):
+                if entry.is_file(follow_symlinks=False):
+                    total += 1
+                elif entry.is_dir(follow_symlinks=False):
+                    # Recursively count files in subdirectory
+                    total += sum_folder_files_count(entry.path, _visited_inodes, _depth + 1)
+                elif entry.is_symlink():
+                    # Handle symlinks carefully
+                    try:
+                        if entry.is_file():
+                            total += 1
+                    except (OSError, ValueError):
+                        # Skip broken symlinks or circular references
+                        pass
+        finally:
+            # Remove from visited set when leaving directory
+            _visited_inodes.discard(dir_inode)
+            
+    except (PermissionError, OSError, ValueError):
         pass  # Skip directories we can't access
     return total
 

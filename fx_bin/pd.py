@@ -7,6 +7,7 @@ try:
 except ImportError:
     print("could not find pandas please install:")
     print("Command: python -m pip install pandas")
+    sys.exit(1)
 
 
 @click.command()
