@@ -79,15 +79,16 @@ class TestPerformanceLimits(unittest.TestCase):
     @unittest.skipIf(os.getenv('SKIP_SLOW_TESTS'), "Slow test skipped")
     def test_deep_directory_performance(self):
         """Test performance with deep directory nesting."""
-        # Create deeply nested directory structure
-        depth = 100
+        # Create deeply nested directory structure (reduced for macOS path limits)
+        depth = 80  # Reduced from 100 to avoid macOS path length limits
         current_dir = self.test_path
         
         print(f"\nCreating {depth}-level deep directory...")
         for i in range(depth):
-            current_dir = current_dir / f"level_{i:03d}"
+            # Use shorter directory names to avoid path length issues
+            current_dir = current_dir / f"{i}"
             current_dir.mkdir()
-            (current_dir / f"file_{i}.txt").write_text(f"content at level {i}")
+            (current_dir / f"f{i}.txt").write_text(f"content at level {i}")
         
         start_time = time.time()
         total_size = sum_folder_size(str(self.test_path))

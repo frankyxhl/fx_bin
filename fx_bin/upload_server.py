@@ -436,7 +436,7 @@ def main():
             try:
                 sys.exit(0)
             except SystemExit:
-                os.exit(0)
+                sys.exit(0)
 
 
 if __name__ == '__main__':

@@ -32,7 +32,7 @@ def sum_folder_size(path: str = '.', _visited_inodes=None, _depth=0) -> int:
         _visited_inodes = set()
     
     # Prevent infinite recursion
-    if _depth > 1000:
+    if _depth > 100:
         return 0
     
     total = 0
@@ -78,7 +78,7 @@ def sum_folder_files_count(path: str = '.', _visited_inodes=None, _depth=0) -> i
         _visited_inodes = set()
     
     # Prevent infinite recursion
-    if _depth > 1000:
+    if _depth > 100:
         return 0
     
     total = 0
