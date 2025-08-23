@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from click.testing import CliRunner
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 # Silence loguru during tests
 from loguru import logger
@@ -148,6 +148,132 @@ class TestReplaceMain(unittest.TestCase):
         self.assertNotEqual(result.exit_code, 0)
         # Existing file should not be modified due to early exit
         self.assertEqual(existing.read_text(), "test content")
+
+
+class TestReplaceErrorHandling(unittest.TestCase):
+    """Test error handling paths in replace functionality."""
+    
+    def setUp(self):
+        """Set up test fixtures."""
+        self.test_dir = tempfile.mkdtemp()
+        self.test_file = Path(self.test_dir) / "test.txt"
+    
+    def tearDown(self):
+        """Clean up test fixtures."""
+        import shutil
+        shutil.rmtree(self.test_dir, ignore_errors=True)
+    
+    @patch('os.name', 'nt')
+    def test_windows_file_removal_path(self):
+        """Test Windows-specific file removal path (line 51)."""
+        self.test_file.write_text("Hello World")
+        
+        with patch('os.remove') as mock_remove, \
+             patch('os.rename') as mock_rename:
+            # Make rename succeed after remove
+            mock_rename.return_value = None
+            mock_remove.return_value = None
+            
+            work("World", "Python", str(self.test_file))
+            
+            # Verify Windows path was taken (remove is called twice: once for file, once for backup)
+            self.assertEqual(mock_remove.call_count, 2)
+            # First call should be the target file
+            mock_remove.assert_any_call(str(self.test_file))
+            mock_rename.assert_called_once()
+    
+    def test_atomic_replacement_general_exception(self):
+        """Test general exception handling during atomic replacement (lines 66-70)."""
+        self.test_file.write_text("Hello World")
+        
+        # Mock os.rename to raise a non-OSError exception
+        with patch('os.rename', side_effect=RuntimeError("Unexpected error")), \
+             patch('shutil.move') as mock_move, \
+             patch('os.path.exists', return_value=True):
+            
+            with self.assertRaises(RuntimeError):
+                work("World", "Python", str(self.test_file))
+            
+            # Verify backup restoration was attempted
+            mock_move.assert_called()
+    
+    def test_temp_file_cleanup_oserror(self):
+        """Test OSError during temp file cleanup (lines 77-78)."""
+        self.test_file.write_text("Hello World")
+        
+        # Mock tempfile creation to raise an exception, then mock cleanup to fail
+        with patch('tempfile.mkstemp', side_effect=Exception("Temp creation failed")), \
+             patch('os.path.exists', return_value=True), \
+             patch('os.unlink', side_effect=OSError("Cleanup failed")):
+            
+            # Should not re-raise the cleanup error
+            with self.assertRaises(Exception) as cm:
+                work("World", "Python", str(self.test_file))
+            
+            # Original exception should be preserved
+            self.assertIn("Temp creation failed", str(cm.exception))
+    
+    def test_backup_restore_oserror(self):
+        """Test OSError during backup restore (lines 82-85)."""
+        self.test_file.write_text("Hello World")
+        
+        # Mock file operations to trigger backup restore with OSError
+        with patch('tempfile.mkstemp', side_effect=Exception("Processing failed")), \
+             patch('os.path.exists', return_value=True), \
+             patch('shutil.move', side_effect=OSError("Restore failed")):
+            
+            # Should not re-raise the restore error
+            with self.assertRaises(Exception) as cm:
+                work("World", "Python", str(self.test_file))
+            
+            # Original exception should be preserved
+            self.assertIn("Processing failed", str(cm.exception))
+    
+    def test_transaction_rollback_oserror(self):
+        """Test OSError during transaction rollback (lines 136-137)."""
+        test_file1 = Path(self.test_dir) / "file1.txt"
+        test_file2 = Path(self.test_dir) / "file2.txt"
+        test_file1.write_text("content1")
+        test_file2.write_text("content2")
+        
+        runner = CliRunner()
+        
+        # Mock work function to fail after creating backups
+        with patch('fx_bin.replace.work', side_effect=Exception("Work failed")), \
+             patch('os.path.exists', return_value=True), \
+             patch('shutil.move', side_effect=OSError("Rollback failed")):
+            
+            # Should not re-raise rollback error
+            result = runner.invoke(main, ["search", "replace", str(test_file1), str(test_file2)])
+            
+            # Should exit with error due to original exception
+            self.assertNotEqual(result.exit_code, 0)
+    
+    def test_final_oserror_cleanup_paths(self):
+        """Test remaining OSError paths in cleanup (lines 77-78, 84-85)."""
+        self.test_file.write_text("Hello World")
+        
+        # Create a scenario that will fail and trigger the cleanup paths
+        with patch('tempfile.mkstemp') as mock_mkstemp, \
+             patch('os.path.exists', return_value=True), \
+             patch('os.unlink', side_effect=OSError("Cleanup unlink failed")) as mock_unlink, \
+             patch('shutil.move', side_effect=OSError("Backup move failed")) as mock_move:
+            
+            # Make mkstemp return a fake fd and path, then fail during processing
+            mock_mkstemp.return_value = (999, '/fake/temp/path')
+            
+            # Mock os.fdopen to fail, triggering the exception cleanup
+            with patch('os.fdopen', side_effect=Exception("fdopen failed")):
+                
+                with self.assertRaises(Exception) as cm:
+                    work("World", "Python", str(self.test_file))
+                
+                # Both cleanup paths should have been attempted despite errors
+                mock_unlink.assert_called()  # Line 77-78: temp file cleanup OSError
+                mock_move.assert_called()    # Line 84-85: backup restore OSError
+                
+                # Original exception should be preserved
+                self.assertIn("fdopen failed", str(cm.exception))
 
 
 if __name__ == '__main__':

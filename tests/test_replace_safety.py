@@ -35,6 +35,22 @@ class TestReplaceFileSafety(unittest.TestCase):
         import shutil
         shutil.rmtree(self.test_dir)
     
+    def test_exception_during_write_restores_backup(self):
+        """Test that backup is restored if an exception occurs during write."""
+        test_file = self.test_path / "test.txt"
+        test_file.write_text("original content")
+        
+        # Mock to cause an exception during write
+        with patch('builtins.open', side_effect=lambda *args, **kwargs: 
+            mock_open(read_data="original content").return_value if 'r' in args else 
+            (_ for _ in ()).throw(Exception("Mock write error"))):
+            
+            with self.assertRaises(Exception):
+                work("original", "modified", str(test_file))
+            
+            # File should be restored to original content
+            self.assertEqual(test_file.read_text(), "original content")
+    
     def test_file_descriptor_no_leak(self):
         """Test that file descriptors are not leaked."""
         test_file = self.test_path / "test.txt"
@@ -386,6 +402,53 @@ class TestReplaceMultiFileOperations(unittest.TestCase):
             content = file_path.read_text()
             self.assertEqual(content, f"content {i}",
                            f"File {i} should be unchanged after failed transaction")
+
+
+class TestMainFunctionErrorHandling(unittest.TestCase):
+    """Test main function exception handling."""
+    
+    def setUp(self):
+        """Set up test fixtures."""
+        self.test_dir = tempfile.mkdtemp()
+        self.test_path = Path(self.test_dir)
+        self.runner = CliRunner()
+    
+    def tearDown(self):
+        """Clean up test fixtures."""
+        import shutil
+        shutil.rmtree(self.test_dir)
+    
+    def test_main_function_exception_handling(self):
+        """Test main function handles work() exceptions and restores backups."""
+        # Create test files
+        file1 = self.test_path / "file1.txt"
+        file2 = self.test_path / "file2.txt"
+        
+        file1.write_text("original content 1")
+        file2.write_text("original content 2")
+        
+        # Mock work() to fail after first file
+        original_work = work
+        call_count = [0]
+        
+        def failing_work(*args, **kwargs):
+            call_count[0] += 1
+            if call_count[0] == 1:
+                return original_work(*args, **kwargs)  # First call succeeds
+            raise Exception("Simulated error in work()")  # Second call fails
+        
+        with patch('fx_bin.replace.work', side_effect=failing_work):
+            # This should trigger the exception handling in main (lines 130-140)
+            result = self.runner.invoke(main, [
+                "original", "modified", str(file1), str(file2)
+            ])
+            
+            # Should exit with non-zero code due to exception
+            self.assertNotEqual(result.exit_code, 0)
+            
+            # Both files should be restored to original content
+            self.assertEqual(file1.read_text(), "original content 1")
+            self.assertEqual(file2.read_text(), "original content 2")
 
 
 class TestReplaceErrorRecovery(unittest.TestCase):

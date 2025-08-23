@@ -23,6 +23,38 @@ class TestPandasImportSafety(unittest.TestCase):
         """Set up test fixtures."""
         self.runner = CliRunner()
     
+    def test_check_pandas_import_error_handling(self):
+        """Test _check_pandas_available handles ImportError properly."""
+        from fx_bin import pd
+        
+        # Reset pandas to None to test fresh import
+        original_pandas = pd.pandas
+        pd.pandas = None
+        
+        try:
+            # Mock the import to raise ImportError
+            with patch('builtins.__import__', side_effect=ImportError("No module named pandas")):
+                result = pd._check_pandas_available()
+                # Should return False when pandas import fails
+                self.assertFalse(result)
+        finally:
+            # Restore original state
+            pd.pandas = original_pandas
+    
+    def test_main_pandas_not_available_error_message(self):
+        """Test main function error handling when pandas is not available."""
+        from fx_bin.pd import main
+        
+        # Mock pandas as None and _check_pandas_available to return False
+        with patch('fx_bin.pd.pandas', None), \
+             patch('fx_bin.pd._check_pandas_available', return_value=False):
+            result = self.runner.invoke(main, ['http://example.com/data.json', 'output.xlsx'])
+            
+            # Should exit with error code 1
+            self.assertEqual(result.exit_code, 1)
+            self.assertIn("could not find pandas", result.output)
+            self.assertIn("pip install pandas", result.output)
+    
     # Note: These two tests were removed due to complex recursive mocking issues
     # that don't affect actual functionality. The pandas import handling is
     # properly tested by test_main_function_crashes_without_pandas()
@@ -78,6 +110,29 @@ class TestPdFunctionality(unittest.TestCase):
         
         self.assertEqual(result.exit_code, 0)
         mock_pandas.read_json.assert_called_once_with('http://example.com/data.json')
+        mock_df.to_excel.assert_called_once_with(str(output_file), index=False)
+    
+    @patch('fx_bin.pd.pandas')
+    def test_json_file_path_processing(self, mock_pandas):
+        """Test processing JSON file from local path (covers line 46)."""
+        # Create a test JSON file
+        test_json_file = self.test_path / "test_data.json"
+        test_json_file.write_text('{"key": "value", "number": 42}')
+        
+        # Mock pandas to simulate successful processing
+        mock_df = MagicMock()
+        mock_pandas.read_json.return_value = mock_df
+        mock_df.to_excel.return_value = None
+        
+        # Test with file path (should trigger line 46: df = pandas.read_json(url))
+        output_file = self.test_path / "output.xlsx"
+        
+        from fx_bin.pd import main
+        result = self.runner.invoke(main, [str(test_json_file), str(output_file)])
+        
+        # Should call read_json with the file path
+        self.assertEqual(result.exit_code, 0)
+        mock_pandas.read_json.assert_called_once_with(str(test_json_file))
         mock_df.to_excel.assert_called_once_with(str(output_file), index=False)
     
     @patch('fx_bin.pd.pandas')

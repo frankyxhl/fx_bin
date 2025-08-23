@@ -270,6 +270,23 @@ class TestMainFunctional(unittest.TestCase):
         self.assertIsInstance(result, Success)
         self.assertEqual(result.unwrap(), 0)
     
+    
+    @patch('fx_bin.pd_functional.process_json_to_excel')
+    @patch('fx_bin.pd_functional.check_file_not_exists')
+    def test_main_functional_unexpected_result_type(self, mock_check_file, mock_process):
+        """Test unexpected result type case (lines 149-150)."""
+        mock_check_file.return_value = Success("output.xlsx")
+        
+        # Return something that's neither IOSuccess nor IOFailure
+        mock_process.return_value = "unexpected_type"
+        
+        result = pd_functional.main_functional("data.json", "output")
+        
+        self.assertIsInstance(result, Failure)
+        error = result.failure()
+        self.assertIsInstance(error, PdError)
+        self.assertIn("Unexpected result type", str(error))
+    
     @patch('fx_bin.pd_functional.check_pandas_available')
     def test_main_functional_no_pandas(self, mock_check_pandas):
         """Test when pandas is not available."""

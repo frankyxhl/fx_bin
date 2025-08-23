@@ -453,6 +453,30 @@ class TestConvertSizeEdgeCases(unittest.TestCase):
         except (TypeError, ValueError):
             # May not accept floats
             pass
+    
+    def test_size_entry_invalid_comparison_types(self):
+        """Test SizeEntry comparison with invalid types."""
+        entry = SizeEntry("test.txt", 100, EntryType.FILE)
+        
+        # Test comparison with invalid types should raise TypeError in __lt__
+        try:
+            result = entry < "not_a_size_entry"
+            # If we get here without exception, that's unexpected but let's handle it
+            self.fail("Expected TypeError but comparison succeeded")
+        except TypeError as e:
+            self.assertIn("Not same Type", str(e))
+    
+    def test_file_count_entry_invalid_comparison_types(self):
+        """Test FileCountEntry comparison with invalid types."""
+        entry = FileCountEntry("test.txt", 5, EntryType.FILE)
+        
+        # Test comparison with invalid types should raise TypeError in __lt__
+        try:
+            result = entry < "not_a_file_count_entry"
+            # If we get here without exception, that's unexpected but let's handle it
+            self.fail("Expected TypeError but comparison succeeded")
+        except TypeError as e:
+            self.assertIn("Not same Type", str(e))
 
 
 if __name__ == '__main__':

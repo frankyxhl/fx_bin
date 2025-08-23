@@ -130,6 +130,20 @@ class TestFindFiles(unittest.TestCase):
         # Count occurrences
         lines = [l for l in output.strip().split('\n') if l]
         self.assertEqual(len(lines), 1)
+    
+    def test_main_function_empty_keyword(self):
+        """Test main function with empty keyword using Click runner."""
+        from click.testing import CliRunner
+        from fx_bin.find_files import main
+        
+        runner = CliRunner()
+        
+        # Test with empty string argument (this should trigger the empty check)
+        result = runner.invoke(main, [''])
+        
+        # Should show the help message
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Please type text to search. For example: fx_ff bar", result.output)
 
 
 if __name__ == '__main__':

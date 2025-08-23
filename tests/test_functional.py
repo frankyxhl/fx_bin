@@ -117,6 +117,173 @@ class TestCommonFunctional(unittest.TestCase):
                 if isinstance(actual_result, Success):
                     size = actual_result.unwrap()
                     self.assertGreater(size, 0)
+    
+    def test_size_entry_comparison(self):
+        """Test SizeEntry comparison operations."""
+        entry1 = SizeEntry("small.txt", 100, EntryType.FILE)
+        entry2 = SizeEntry("large.txt", 1000, EntryType.FILE)
+        entry3 = SizeEntry("same.txt", 100, EntryType.FILE)
+        
+        # Test equality
+        self.assertEqual(entry1, entry3)
+        self.assertNotEqual(entry1, entry2)
+        
+        # Test ordering
+        self.assertLess(entry1, entry2)
+        self.assertGreater(entry2, entry1)
+        self.assertLessEqual(entry1, entry2)
+        self.assertGreaterEqual(entry2, entry1)
+        
+        # Test with non-SizeEntry object
+        self.assertNotEqual(entry1, "not_a_size_entry")
+    
+    def test_size_entry_string_representation(self):
+        """Test SizeEntry string representation."""
+        entry = SizeEntry("test.txt", 1536, EntryType.FILE, "/path/to/test.txt")
+        expected = "2KB\ttest.txt"  # convert_size rounds 1536/1024 = 1.5 to 2
+        self.assertEqual(str(entry), expected)
+        
+        # Test zero size
+        zero_entry = SizeEntry("empty.txt", 0, EntryType.FILE)
+        self.assertEqual(str(zero_entry), "0B\tempty.txt")
+    
+    def test_entry_type_enum(self):
+        """Test EntryType enum values."""
+        self.assertEqual(EntryType.FILE.value, 1)
+        self.assertEqual(EntryType.FOLDER.value, 2)
+        
+        # Test enum comparison
+        file_entry = SizeEntry("file.txt", 100, EntryType.FILE)
+        folder_entry = SizeEntry("folder", 200, EntryType.FOLDER)
+        
+        self.assertEqual(file_entry.entry_type, EntryType.FILE)
+        self.assertEqual(folder_entry.entry_type, EntryType.FOLDER)
+        self.assertNotEqual(file_entry.entry_type, folder_entry.entry_type)
+    
+    def test_folder_context_creation(self):
+        """Test FolderContext creation and attributes."""
+        visited = {(1, 2), (3, 4)}
+        context = FolderContext(visited_inodes=visited, max_depth=50)
+        
+        self.assertEqual(context.visited_inodes, visited)
+        self.assertEqual(context.max_depth, 50)
+        
+        # Test default max_depth
+        context_default = FolderContext(visited_inodes=set())
+        self.assertEqual(context_default.max_depth, 100)
+    
+    def test_convert_size_edge_cases(self):
+        """Test convert_size function with edge cases."""
+        # Very small sizes
+        self.assertEqual(convert_size(0), "0B")
+        self.assertEqual(convert_size(1), "1B")
+        self.assertEqual(convert_size(512), "512B")
+        self.assertEqual(convert_size(1023), "1023B")
+        
+        # Exact powers of 1024
+        self.assertEqual(convert_size(1024), "1KB")
+        self.assertEqual(convert_size(1024 * 1024), "1MB")
+        self.assertEqual(convert_size(1024 * 1024 * 1024), "1GB")
+        
+        # Sizes that round to next unit
+        self.assertEqual(convert_size(1536), "2KB")  # 1.5KB rounds to 2KB
+        self.assertEqual(convert_size(2560), "2KB")  # 2.5KB rounds to 2KB (banker's rounding)
+        self.assertEqual(convert_size(3584), "4KB")  # 3.5KB rounds to 4KB (banker's rounding)
+        
+        # Very large sizes
+        huge_size = 1024**8  # 1 YB
+        result = convert_size(huge_size)
+        self.assertTrue(result.endswith("YB"))
+    
+    def test_size_entry_immutability(self):
+        """Test that SizeEntry is immutable (frozen dataclass)."""
+        entry = SizeEntry("test.txt", 1024, EntryType.FILE)
+        
+        # Should not be able to modify attributes
+        with self.assertRaises(AttributeError):
+            entry.name = "changed.txt"  # type: ignore
+        
+        with self.assertRaises(AttributeError):
+            entry.size = 2048  # type: ignore
+    
+    def test_size_entry_equality_with_different_types(self):
+        """Test SizeEntry equality with non-SizeEntry objects."""
+        entry = SizeEntry("test.txt", 1024, EntryType.FILE)
+        
+        # Should return NotImplemented for comparison with other types
+        self.assertNotEqual(entry, 1024)
+        self.assertNotEqual(entry, "test.txt")
+        self.assertNotEqual(entry, None)
+        
+        # Should work correctly with other SizeEntry instances
+        same_entry = SizeEntry("different.txt", 1024, EntryType.FOLDER)  # same size
+        self.assertEqual(entry, same_entry)
+    
+    def test_size_entry_ordering_with_different_types(self):
+        """Test SizeEntry ordering with non-SizeEntry objects."""
+        entry = SizeEntry("test.txt", 1024, EntryType.FILE)
+        
+        # Should return NotImplemented for comparison with other types
+        with self.assertRaises(TypeError):
+            entry < "string"  # type: ignore
+        
+        with self.assertRaises(TypeError):
+            entry < 1024  # type: ignore
+    
+    def test_size_entry_repr_method(self):
+        """Test SizeEntry __repr__ method directly."""
+        entry = SizeEntry("test.txt", 2048, EntryType.FILE, "/path/test.txt")
+        repr_str = entry.__repr__()
+        self.assertEqual(repr_str, "2KB\ttest.txt")
+        
+        # Test with folder
+        folder_entry = SizeEntry("folder", 0, EntryType.FOLDER)
+        folder_repr = folder_entry.__repr__()
+        self.assertEqual(folder_repr, "0B\tfolder")
+        
+        # Test with very large file
+        large_entry = SizeEntry("big.txt", 1024*1024*1024, EntryType.FILE)
+        large_repr = large_entry.__repr__()
+        self.assertEqual(large_repr, "1GB\tbig.txt")
+    
+    def test_entry_type_enum_str(self):
+        """Test EntryType enum string representation."""
+        file_type = EntryType.FILE
+        folder_type = EntryType.FOLDER
+        
+        self.assertEqual(file_type.name, "FILE")
+        self.assertEqual(folder_type.name, "FOLDER")
+        
+        # Test that they're different
+        self.assertNotEqual(file_type, folder_type)
+    
+    def test_convert_size_boundary_conditions(self):
+        """Test convert_size with boundary conditions."""
+        # Test size exactly at 1024 boundaries
+        self.assertEqual(convert_size(1024 - 1), "1023B")
+        self.assertEqual(convert_size(1024), "1KB")
+        self.assertEqual(convert_size(1024 + 1), "1KB")
+        
+        # Test edge case: very small positive numbers  
+        self.assertEqual(convert_size(1), "1B")
+        
+        # Test negative size would cause error (domain error in math.log)
+        with self.assertRaises(ValueError):
+            convert_size(-1)  # math.log(-1) raises ValueError
+    
+    def test_size_entry_path_attribute(self):
+        """Test SizeEntry path attribute usage."""
+        # Entry with explicit path
+        entry_with_path = SizeEntry("file.txt", 1024, EntryType.FILE, "/home/user/file.txt")
+        self.assertEqual(entry_with_path.path, "/home/user/file.txt")
+        
+        # Entry with default empty path
+        entry_no_path = SizeEntry("file.txt", 1024, EntryType.FILE)
+        self.assertEqual(entry_no_path.path, "")
+        
+        # Path doesn't affect equality (only size does)
+        entry_same_size = SizeEntry("other.txt", 1024, EntryType.FOLDER, "/different/path")
+        self.assertEqual(entry_with_path, entry_same_size)  # Same size = equal
 
 
 class TestReplaceFunctional(unittest.TestCase):

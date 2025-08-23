@@ -116,6 +116,41 @@ class TestListFilesCount(unittest.TestCase):
                 self.assertEqual(entry.tpe, EntryType.FILE)
             elif entry.name == "subdir":
                 self.assertEqual(entry.tpe, EntryType.FOLDER)
+    
+    def test_main_function_empty_directory(self):
+        """Test main function with empty directory."""
+        import io
+        import sys
+        from fx_bin.files import main
+        
+        # Create empty directory
+        empty_dir = tempfile.mkdtemp()
+        
+        # Capture stdout
+        captured_output = io.StringIO()
+        original_stdout = sys.stdout
+        
+        try:
+            sys.stdout = captured_output
+            
+            # Mock sys.argv to pass empty directory path
+            original_argv = sys.argv
+            sys.argv = ['fx_files', '--path', empty_dir]
+            
+            # This should trigger the "No files or directories found." message
+            try:
+                main()
+            except SystemExit:
+                pass  # Click exits with 0, which is expected
+                
+            # Check output
+            output = captured_output.getvalue()
+            self.assertIn("No files or directories found.", output)
+            
+        finally:
+            sys.stdout = original_stdout
+            sys.argv = original_argv
+            os.rmdir(empty_dir)
 
 
 if __name__ == '__main__':
