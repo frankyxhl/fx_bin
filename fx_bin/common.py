@@ -149,7 +149,11 @@ class SizeEntry:
         """Create SizeEntry from os.DirEntry object."""
         try:
             if obj.is_file(follow_symlinks=False):
-                return cls(obj.name, obj.stat(follow_symlinks=False).st_size, EntryType.FILE)
+                return cls(
+                    obj.name,
+                    obj.stat(follow_symlinks=False).st_size,
+                    EntryType.FILE
+                )
             elif obj.is_dir(follow_symlinks=False):
                 total_size = sum_folder_size(obj.path)
                 return cls(obj.name, total_size, EntryType.FOLDER)

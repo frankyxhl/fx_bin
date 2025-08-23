@@ -16,7 +16,9 @@ def find_files(keyword: str) -> None:
 @click.argument('keyword')
 def main(keyword: str) -> int:
     if not keyword or keyword.strip() == "":
-        click.echo("Please type text to search. For example: fx_ff bar", err=True)
+        click.echo(
+            "Please type text to search. For example: fx_ff bar", err=True
+        )
         click.echo("Usage: fx_ff KEYWORD", err=True)
         return 1
     find_files(keyword)

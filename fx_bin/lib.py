@@ -14,10 +14,10 @@ def count_special_char_lst(s):
 
 def count_ascii_and_special(s):
     """Count ASCII characters plus special Unicode characters.
-    
+
     This function counts ASCII characters and a predefined set of special
     Unicode characters (smart quotes and em-dash).
-    
+
     Note: This was previously named count_fullwidth but was renamed for clarity
     as it doesn't actually count fullwidth characters.
     """
