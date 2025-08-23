@@ -5,6 +5,7 @@ This module provides JSON to Excel conversion with functional error handling.
 
 import os
 import sys
+from io import StringIO
 from typing import Optional
 
 import click
@@ -72,7 +73,21 @@ def process_json_to_excel(
     try:
         # Use the pandas module that was validated
         pd = pandas_module
-        pd.read_json(url).to_excel(output_filename, index=False)
+        
+        # Check if url looks like a URL, file path, or JSON string
+        if url.startswith(('http://', 'https://')):
+            # It's definitely a URL
+            df = pd.read_json(url)
+        elif os.path.exists(url):
+            # It's a file path
+            df = pd.read_json(url)
+        else:
+            # For anything else, assume it might be JSON content
+            # Use StringIO to avoid FutureWarning
+            # This will naturally fail with appropriate error if it's not valid JSON
+            df = pd.read_json(StringIO(url))
+        
+        df.to_excel(output_filename, index=False)
         return IOResult.from_value(None)
     except Exception as e:
         return IOResult.from_failure(

@@ -101,3 +101,12 @@ ENV/
 # mypy
 .mypy_cache/
 .idea
+
+# Benchmark results
+benchmarks/results/*.txt
+benchmarks/results/*.json
+benchmarks/results/*.csv
+
+# Test output files
+*.xlsx
+output_*.xlsx

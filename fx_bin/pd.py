@@ -2,6 +2,7 @@ import os
 import os.path
 import sys
 import click
+from io import StringIO
 
 # Define a pandas placeholder that can be mocked by tests
 pandas = None
@@ -36,7 +37,20 @@ def main(url, output_filename: str, args=None) -> int:
         sys.exit(1)
     
     try:
-        pandas.read_json(url).to_excel(output_filename, index=False)
+        # Check if url looks like a URL, file path, or JSON string
+        if url.startswith(('http://', 'https://')):
+            # It's definitely a URL
+            df = pandas.read_json(url)
+        elif os.path.exists(url):
+            # It's a file path
+            df = pandas.read_json(url)
+        else:
+            # For anything else, assume it might be JSON content
+            # Use StringIO to avoid FutureWarning
+            # This will naturally fail with appropriate error if it's not valid JSON
+            df = pandas.read_json(StringIO(url))
+        
+        df.to_excel(output_filename, index=False)
         return 0
     except Exception as e:
         print(f"Error processing JSON or writing Excel file: {e}")
