@@ -55,6 +55,22 @@ class TestPandasImportSafety(unittest.TestCase):
             self.assertIn("could not find pandas", result.output)
             self.assertIn("pip install pandas", result.output)
     
+    def test_pandas_not_available_lines_35_37(self):
+        """Test pandas not available error message on lines 35-37 specifically."""
+        from fx_bin.pd import main
+        
+        # Mock pandas as None and _check_pandas_available to return False
+        # This should hit lines 35-37: print statements and sys.exit(1)
+        with patch('fx_bin.pd.pandas', None), \
+             patch('fx_bin.pd._check_pandas_available', return_value=False):
+            result = self.runner.invoke(main, ['data.json', 'output.xlsx'])
+            
+            # Should exit with error code 1 (line 37: sys.exit(1))
+            self.assertEqual(result.exit_code, 1)
+            # Should print both messages (lines 35-36)
+            self.assertIn("could not find pandas please install:", result.output)
+            self.assertIn("Command: python -m pip install pandas", result.output)
+    
     # Note: These two tests were removed due to complex recursive mocking issues
     # that don't affect actual functionality. The pandas import handling is
     # properly tested by test_main_function_crashes_without_pandas()
@@ -66,6 +82,24 @@ class TestPandasImportSafety(unittest.TestCase):
     # def test_pandas_import_error_message(self):
     #     # Removed: Complex mocking interferes with module reloading
     #     pass
+    
+    def test_pandas_import_error_handling_lines_18_19(self):
+        """Test ImportError handling on lines 18-19 specifically."""
+        from fx_bin import pd
+        
+        # Reset pandas to None to test fresh import
+        original_pandas = pd.pandas
+        pd.pandas = None
+        
+        try:
+            # Mock the import to raise ImportError (this hits lines 18-19)
+            with patch('builtins.__import__', side_effect=ImportError("No module named 'pandas'")):
+                result = pd._check_pandas_available()
+                # Should return False when pandas import fails (line 19)
+                self.assertFalse(result)
+        finally:
+            # Restore original state
+            pd.pandas = original_pandas
     
     def test_main_function_crashes_without_pandas(self):
         """Test current behavior - main crashes if pandas not available after try/except."""
