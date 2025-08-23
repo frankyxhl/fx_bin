@@ -64,7 +64,12 @@ class TestFilesCommand(unittest.TestCase):
     @patch('fx_bin.files.list_files_count')
     def test_files_command_default_path(self, mock_list_files):
         """Test 'fx files' with default path (current directory)."""
-        mock_list_files.return_value = ['file1.txt', 'file2.txt']
+        from fx_bin.common import FileCountEntry, EntryType
+        mock_entries = [
+            FileCountEntry('file1.txt', 1, EntryType.FILE),
+            FileCountEntry('file2.txt', 1, EntryType.FILE)
+        ]
+        mock_list_files.return_value = mock_entries
         
         result = self.runner.invoke(cli, ['files'])
         self.assertEqual(result.exit_code, 0)
@@ -79,7 +84,9 @@ class TestFilesCommand(unittest.TestCase):
             import os
             os.makedirs('test_dir')
             
-            mock_list_files.return_value = ['test_file.txt']
+            from fx_bin.common import FileCountEntry, EntryType
+            mock_entries = [FileCountEntry('test_file.txt', 1, EntryType.FILE)]
+            mock_list_files.return_value = mock_entries
             
             result = self.runner.invoke(cli, ['files', 'test_dir'])
             self.assertEqual(result.exit_code, 0)
@@ -94,7 +101,10 @@ class TestFilesCommand(unittest.TestCase):
             os.makedirs('dir1')
             os.makedirs('dir2')
             
-            mock_list_files.side_effect = [['file1.txt'], ['file2.txt']]
+            from fx_bin.common import FileCountEntry, EntryType
+            mock_entries1 = [FileCountEntry('file1.txt', 1, EntryType.FILE)]
+            mock_entries2 = [FileCountEntry('file2.txt', 1, EntryType.FILE)]
+            mock_list_files.side_effect = [mock_entries1, mock_entries2]
             
             result = self.runner.invoke(cli, ['files', 'dir1', 'dir2'])
             self.assertEqual(result.exit_code, 0)

@@ -17,12 +17,15 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
 ]
 
 
-@click.group(invoke_without_command=True, context_settings={'help_option_names': ['-h', '--help']})
+@click.group(
+    invoke_without_command=True,
+    context_settings={'help_option_names': ['-h', '--help']}
+)
 @click.version_option()
 @click.pass_context
 def cli(ctx):
     """FX - A collection of file and text utilities.
-    
+
     Use 'fx COMMAND --help' for more information on a specific command.
     """
     if ctx.invoked_subcommand is None:
@@ -34,7 +37,7 @@ def cli(ctx):
 @click.argument('paths', nargs=-1, type=click.Path(exists=True))
 def files(paths):
     """Count files in directories.
-    
+
     Examples:
         fx files          # Count files in current directory
         fx files /path    # Count files in specified path
@@ -45,8 +48,15 @@ def files(paths):
     # Call the list_files_count function with the paths
     for path in paths_list:
         files_list = files_module.list_files_count(path)
-        for file_info in files_list:
-            click.echo(file_info)
+        if files_list:
+            # Calculate max width for count display
+            max_count = max(entry.count for entry in files_list)
+            count_width = len(str(max_count))
+
+            for file_info in files_list:
+                click.echo(file_info.display(count_width))
+        else:
+            click.echo(f"No files or directories found in {path}.")
     return 0
 
 
@@ -54,26 +64,26 @@ def files(paths):
 @click.argument('paths', nargs=-1, type=click.Path(exists=True))
 def size(paths):
     """Analyze file and directory sizes.
-    
+
     Examples:
         fx size           # Show sizes in current directory
         fx size /path     # Show sizes in specified path
     """
     from . import size as size_module
-    
+
     paths_list = list(paths) if paths else ['.']
-    
+
     for path in paths_list:
         if len(paths_list) > 1:
             click.echo(f"\n{path}:")
-        
+
         entries = size_module.list_size(path)
         if entries:
             for entry in entries:
                 click.echo(entry)
         else:
             click.echo(f"No accessible files or directories in {path}")
-    
+
     return 0
 
 
@@ -81,15 +91,17 @@ def size(paths):
 @click.argument('keyword')
 def ff(keyword):
     """Find files by keyword.
-    
+
     Examples:
         fx ff config      # Find files containing 'config'
         fx ff "*.py"      # Find Python files
     """
     from . import find_files
-    
+
     if not keyword or keyword.strip() == "":
-        click.echo("Please type text to search. For example: fx ff bar", err=True)
+        click.echo(
+            "Please type text to search. For example: fx ff bar", err=True
+        )
         click.echo("Usage: fx ff KEYWORD", err=True)
         return 1
     find_files.find_files(keyword)
@@ -102,13 +114,13 @@ def ff(keyword):
 @click.argument('filenames', nargs=-1, required=True)
 def replace(search_text, replace_text, filenames):
     """Replace text in files.
-    
+
     Examples:
         fx replace "old" "new" file.txt   # Replace in specific file
         fx replace "old" "new" *.txt      # Replace in multiple files
     """
     from . import replace as replace_module
-    
+
     # Call the existing replace module's main function
     return replace_module.main(search_text, replace_text, filenames)
 
@@ -118,7 +130,7 @@ def replace(search_text, replace_text, filenames):
 @click.argument('output_filename')
 def json2excel(url, output_filename):
     """Convert JSON data to Excel file.
-    
+
     Examples:
         fx json2excel data.json output.xlsx
         fx json2excel https://api.example.com/data output.xlsx
@@ -139,15 +151,18 @@ def upgrade():
 def list_commands():
     """List all available fx commands."""
     click.echo("\nAvailable fx commands:\n")
-    
+
     # Calculate maximum command length for alignment
     max_len = max(len(cmd) for cmd, _ in COMMANDS_INFO)
-    
+
     for cmd, description in COMMANDS_INFO:
         # Format with aligned descriptions
         click.echo(f"  fx {cmd:<{max_len}}  - {description}")
-    
-    click.echo("\nUse 'fx COMMAND --help' for more information on a specific command.")
+
+    click.echo(
+        "\nUse 'fx COMMAND --help' for more information on a "
+        "specific command."
+    )
     return 0
 
 

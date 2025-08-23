@@ -10,7 +10,8 @@ install:  ## Install all dependencies with Poetry
 	poetry install --with dev
 
 test:  ## Run core tests that should pass (quick test)
-	poetry run pytest
+	$(MAKE) test-all
+	$(MAKE) lint
 
 test-core:  ## Run only core functionality tests
 	poetry run pytest tests/test_size.py tests/test_files.py tests/test_find_files.py tests/test_replace.py -v --no-cov
