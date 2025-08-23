@@ -9,19 +9,68 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch full history for version comparison
+    
     - name: Install poetry
       run: pipx install poetry
+    
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.x'
         cache: 'poetry'
-    - name: Install dependencies Makefile
+    
+    - name: Get current version
+      id: version
       run: |
+        VERSION=$(poetry version --short)
+        echo "current_version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Current version: $VERSION"
+    
+    - name: Check if version exists on PyPI
+      id: pypi_check
+      run: |
+        VERSION="${{ steps.version.outputs.current_version }}"
+        echo "Checking if version $VERSION exists on PyPI..."
+        
+        # Check PyPI API for existing version
+        HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://pypi.org/pypi/fx-bin/$VERSION/json")
+        
+        if [ "$HTTP_CODE" = "200" ]; then
+          echo "version_exists=true" >> $GITHUB_OUTPUT
+          echo "❌ Version $VERSION already exists on PyPI"
+        else
+          echo "version_exists=false" >> $GITHUB_OUTPUT  
+          echo "✅ Version $VERSION does not exist on PyPI - OK to deploy"
+        fi
+    
+    - name: Skip deployment (version exists)
+      if: steps.pypi_check.outputs.version_exists == 'true'
+      run: |
+        echo "⏭️ Skipping deployment - version ${{ steps.version.outputs.current_version }} already exists on PyPI"
+        echo "To deploy a new version:"
+        echo "1. Update version in pyproject.toml"
+        echo "2. Commit and push the changes"
+        exit 0
+    
+    - name: Install dependencies and build
+      if: steps.pypi_check.outputs.version_exists == 'false'
+      run: |
+        echo "📦 Building package version ${{ steps.version.outputs.current_version }}..."
         poetry install
         poetry build
+    
     - name: Deploy to PyPi
+      if: steps.pypi_check.outputs.version_exists == 'false'
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
+        skip_existing: true  # Extra safety net
+    
+    - name: Deployment success
+      if: steps.pypi_check.outputs.version_exists == 'false'
+      run: |
+        echo "🚀 Successfully deployed fx-bin version ${{ steps.version.outputs.current_version }} to PyPI!"
+        echo "📦 Package URL: https://pypi.org/project/fx-bin/${{ steps.version.outputs.current_version }}/"
