@@ -10,7 +10,6 @@ pandas = None
 
 def _check_pandas_available():
     """Check if pandas is available and import it if needed."""
-    global pandas
     if pandas is None:
         try:
             import pandas as pd
@@ -29,13 +28,14 @@ def main(url, output_filename: str, args=None) -> int:
     if os.path.exists(output_filename):
         print("This file already exists. Skip")
         sys.exit(1)
-    
-    # Check if pandas is available, unless it's already been set (e.g., by mocking)
+
+    # Check if pandas is available, unless it's already been set
+    # (e.g., by mocking)
     if pandas is None and not _check_pandas_available():
         print("could not find pandas please install:")
         print("Command: python -m pip install pandas")
         sys.exit(1)
-    
+
     try:
         # Check if url looks like a URL, file path, or JSON string
         if url.startswith(('http://', 'https://')):
@@ -47,9 +47,10 @@ def main(url, output_filename: str, args=None) -> int:
         else:
             # For anything else, assume it might be JSON content
             # Use StringIO to avoid FutureWarning
-            # This will naturally fail with appropriate error if it's not valid JSON
+            # This will naturally fail with appropriate error if it's not
+            # valid JSON
             df = pandas.read_json(StringIO(url))
-        
+
         df.to_excel(output_filename, index=False)
         return 0
     except Exception as e:

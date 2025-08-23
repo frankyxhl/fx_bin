@@ -4,7 +4,7 @@ import os
 from dataclasses import dataclass
 from enum import Enum
 from functools import total_ordering
-from typing import Optional, Tuple, List
+from typing import Optional
 
 
 class EntryType(Enum):
@@ -30,30 +30,32 @@ def sum_folder_size(path: str = '.', _visited_inodes=None, _depth=0) -> int:
     # Initialize visited inodes set on first call
     if _visited_inodes is None:
         _visited_inodes = set()
-    
+
     # Prevent infinite recursion
     if _depth > 100:
         return 0
-    
+
     total = 0
     try:
         # Get directory's inode to detect cycles
         dir_stat = os.stat(path)
         dir_inode = (dir_stat.st_dev, dir_stat.st_ino)
-        
+
         # Check if we've already visited this directory (symlink loop)
         if dir_inode in _visited_inodes:
             return 0
-        
+
         _visited_inodes.add(dir_inode)
-        
+
         try:
             for entry in os.scandir(path):
                 if entry.is_file(follow_symlinks=False):
                     total += entry.stat(follow_symlinks=False).st_size
                 elif entry.is_dir(follow_symlinks=False):
                     # Recursively calculate subdirectory size
-                    total += sum_folder_size(entry.path, _visited_inodes, _depth + 1)
+                    total += sum_folder_size(
+                        entry.path, _visited_inodes, _depth + 1
+                    )
                 elif entry.is_symlink():
                     # Handle symlinks carefully
                     try:
@@ -65,41 +67,45 @@ def sum_folder_size(path: str = '.', _visited_inodes=None, _depth=0) -> int:
         finally:
             # Remove from visited set when leaving directory
             _visited_inodes.discard(dir_inode)
-            
+
     except (PermissionError, OSError, ValueError):
         pass  # Skip directories we can't access
     return total
 
 
-def sum_folder_files_count(path: str = '.', _visited_inodes=None, _depth=0) -> int:
+def sum_folder_files_count(
+    path: str = '.', _visited_inodes=None, _depth=0
+) -> int:
     """Recursively count total files in a folder with safety checks."""
     # Initialize visited inodes set on first call
     if _visited_inodes is None:
         _visited_inodes = set()
-    
+
     # Prevent infinite recursion
     if _depth > 100:
         return 0
-    
+
     total = 0
     try:
         # Get directory's inode to detect cycles
         dir_stat = os.stat(path)
         dir_inode = (dir_stat.st_dev, dir_stat.st_ino)
-        
+
         # Check if we've already visited this directory (symlink loop)
         if dir_inode in _visited_inodes:
             return 0
-        
+
         _visited_inodes.add(dir_inode)
-        
+
         try:
             for entry in os.scandir(path):
                 if entry.is_file(follow_symlinks=False):
                     total += 1
                 elif entry.is_dir(follow_symlinks=False):
                     # Recursively count files in subdirectory
-                    total += sum_folder_files_count(entry.path, _visited_inodes, _depth + 1)
+                    total += sum_folder_files_count(
+                        entry.path, _visited_inodes, _depth + 1
+                    )
                 elif entry.is_symlink():
                     # Handle symlinks carefully
                     try:
@@ -111,7 +117,7 @@ def sum_folder_files_count(path: str = '.', _visited_inodes=None, _depth=0) -> i
         finally:
             # Remove from visited set when leaving directory
             _visited_inodes.discard(dir_inode)
-            
+
     except (PermissionError, OSError, ValueError):
         pass  # Skip directories we can't access
     return total

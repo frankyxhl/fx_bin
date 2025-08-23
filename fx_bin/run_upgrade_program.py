@@ -7,11 +7,13 @@ import sys
 def main():
     """Upgrade fx_bin package using pip."""
     cmd = [sys.executable, "-m", "pip", "install", "--upgrade", "fx-bin"]
-    
+
     print(f"Running: {' '.join(cmd)}")
-    
+
     try:
-        result = subprocess.run(cmd, check=True, text=True, capture_output=True)
+        result = subprocess.run(
+            cmd, check=True, text=True, capture_output=True
+        )
         print(result.stdout)
         if result.stderr:
             print(result.stderr, file=sys.stderr)

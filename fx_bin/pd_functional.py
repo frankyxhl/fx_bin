@@ -6,13 +6,11 @@ This module provides JSON to Excel conversion with functional error handling.
 import os
 import sys
 from io import StringIO
-from typing import Optional
 
 import click
-from returns.result import Result, Success, Failure, safe
-from returns.maybe import Maybe
+from returns.result import Result, Success, Failure
 from returns.pipeline import flow
-from returns.pointfree import bind, map_
+from returns.pointfree import bind
 from returns.io import IOResult, IOSuccess, IOFailure, impure_safe
 
 from fx_bin.errors import PdError, ValidationError, IOError as FxIOError
@@ -34,11 +32,11 @@ def check_pandas_available() -> Result[object, PdError]:
 def validate_output_filename(filename: str) -> Result[str, ValidationError]:
     """Validate and normalize output filename."""
     normalized = filename if filename.endswith(".xlsx") else f"{filename}.xlsx"
-    
+
     # Check for invalid characters or paths
     if os.path.sep in normalized or normalized.startswith('.'):
         return Failure(ValidationError(f"Invalid filename: {normalized}"))
-    
+
     return Success(normalized)
 
 
@@ -54,11 +52,11 @@ def validate_url(url: str) -> Result[str, ValidationError]:
     # Basic URL validation
     if not url:
         return Failure(ValidationError("URL cannot be empty"))
-    
+
     # Prevent local file access via file:// protocol
     if url.startswith('file://'):
         return Failure(ValidationError("Local file URLs not allowed"))
-    
+
     # Could add more validation here (URL format, allowed domains, etc)
     return Success(url)
 
@@ -73,7 +71,7 @@ def process_json_to_excel(
     try:
         # Use the pandas module that was validated
         pd = pandas_module
-        
+
         # Check if url looks like a URL, file path, or JSON string
         if url.startswith(('http://', 'https://')):
             # It's definitely a URL
@@ -84,9 +82,10 @@ def process_json_to_excel(
         else:
             # For anything else, assume it might be JSON content
             # Use StringIO to avoid FutureWarning
-            # This will naturally fail with appropriate error if it's not valid JSON
+            # This will naturally fail with appropriate error if it's
+            # not valid JSON
             df = pd.read_json(StringIO(url))
-        
+
         df.to_excel(output_filename, index=False)
         return IOResult.from_value(None)
     except Exception as e:
@@ -98,32 +97,33 @@ def process_json_to_excel(
 def main_functional(url: str, output_filename: str) -> Result[int, PdError]:
     """
     Main function with functional error handling.
-    
+
     Returns Result[int, PdError] where int is the exit code.
     """
     # Check pandas first
     pandas_result = check_pandas_available()
     if isinstance(pandas_result, Failure):
         return pandas_result.map(lambda _: 1)  # Won't execute, type hint
-    
+
     pandas_module = pandas_result.unwrap()
-    
+
     # Validation pipeline
     validation_result = flow(
         validate_url(url),
         bind(lambda _: validate_output_filename(output_filename)),
         bind(check_file_not_exists),
     )
-    
+
     if isinstance(validation_result, Failure):
         return validation_result.map(lambda _: 1)
-    
+
     output_file = validation_result.unwrap()
-    
+
     # Process the file
     io_result = process_json_to_excel(pandas_module, url, output_file)
-    
-    # Handle both mocked results (direct IOSuccess/IOFailure) and real results (nested structure)
+
+    # Handle both mocked results (direct IOSuccess/IOFailure) and real results
+    # (nested structure)
     if isinstance(io_result, IOFailure):
         # Direct IOFailure (from mocking or other cases)
         error = io_result.failure()
@@ -141,14 +141,17 @@ def main_functional(url: str, output_filename: str) -> Result[int, PdError]:
                 final_error = inner_result.failure()._inner_value
                 result = Failure(final_error)
             else:
-                # Direct value wrapped in IO (from mocking like IOSuccess(None))
+                # Direct value wrapped in IO (from mocking like
+                # IOSuccess(None))
                 result = Success(inner_result)
         else:
             # Direct IOSuccess (from mocking)
             result = Success(unwrapped)
     else:
-        result = Failure(PdError("Unexpected result type from process_json_to_excel"))
-    
+        result = Failure(
+            PdError("Unexpected result type from process_json_to_excel")
+        )
+
     if isinstance(result, Success):
         return Success(0)
     else:
@@ -161,11 +164,11 @@ def main_functional(url: str, output_filename: str) -> Result[int, PdError]:
 def main(url: str, output_filename: str) -> None:
     """
     CLI entry point that bridges functional and traditional interfaces.
-    
+
     This maintains backward compatibility while using functional internals.
     """
     result = main_functional(url, output_filename)
-    
+
     if isinstance(result, Failure):
         error = result.failure()
         print(str(error), file=sys.stderr)
@@ -178,7 +181,7 @@ def main(url: str, output_filename: str) -> None:
 def main_legacy(url: str, output_filename: str, args=None) -> int:
     """Legacy interface for backward compatibility."""
     result = main_functional(url, output_filename)
-    
+
     if isinstance(result, Failure):
         error = result.failure()
         print(str(error))

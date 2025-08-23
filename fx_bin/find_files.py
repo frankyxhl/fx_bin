@@ -1,6 +1,5 @@
 import os
 import sys
-from typing import NoReturn
 
 import click
 
