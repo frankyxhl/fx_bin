@@ -110,3 +110,5 @@ benchmarks/results/*.csv
 # Test output files
 *.xlsx
 output_*.xlsx
+
+AGENTS.md
