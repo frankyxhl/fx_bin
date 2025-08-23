@@ -273,8 +273,8 @@ def sum_folder_size_legacy(
         visited_inodes=_visited_inodes or set(),
         max_depth=100
     )
-    result = sum_folder_size_functional(path).run(context).run()
-    return result.value_or(0)
+    result = sum_folder_size_functional(path)(context)
+    return result._inner_value.value_or(0) if hasattr(result, '_inner_value') else 0
 
 
 def sum_folder_files_count_legacy(
@@ -285,5 +285,5 @@ def sum_folder_files_count_legacy(
         visited_inodes=_visited_inodes or set(),
         max_depth=100
     )
-    result = sum_folder_files_count_functional(path).run(context).run()
-    return result.value_or(0)
+    result = sum_folder_files_count_functional(path)(context)
+    return result._inner_value.value_or(0) if hasattr(result, '_inner_value') else 0
