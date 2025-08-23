@@ -25,9 +25,14 @@ class TestPy_fx_bin(unittest.TestCase):
     def test_command_line_interface(self):
         """Test the CLI."""
         runner = CliRunner()
-        result = runner.invoke(cli.main)
+        # Test the Click command group, not the main function
+        result = runner.invoke(cli.cli)
         assert result.exit_code == 0
-        assert 'fx_bin.cli.main' in result.output or 'Replace this message' in result.output
-        help_result = runner.invoke(cli.main, ['--help'])
+        # The CLI should show help when no command is provided
+        assert 'FX - A collection of file and text utilities' in result.output
+        
+        # Test help command
+        help_result = runner.invoke(cli.cli, ['--help'])
         assert help_result.exit_code == 0
-        assert '--help  Show this message and exit.' in help_result.output
+        assert '--help' in help_result.output
+        assert 'Show this message and exit' in help_result.output

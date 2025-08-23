@@ -23,6 +23,7 @@ A comprehensive Python utility collection providing command-line tools for file 
 * 🛡️ Atomic file operations to prevent data loss
 * 📊 Comprehensive file and directory analysis
 * 🔍 Advanced file search capabilities
+* 🎯 **NEW**: Unified CLI with single ``fx`` command
 * 🚀 Production-ready with extensive test coverage
 
 Installation
@@ -51,29 +52,76 @@ From source
     cd fx_bin
     pip install -e .
 
-Available Commands
-==================
+Quick Start - New Unified CLI (v0.10.0+)
+=========================================
 
-After installation, the following commands will be available in your terminal:
+**NEW**: Starting from version 0.10.0, FX Bin provides a unified ``fx`` command with subcommands for better usability:
+
+.. code-block:: bash
+
+    # List all available commands
+    fx list
+    
+    # Get help for any command
+    fx --help
+    fx COMMAND --help
+
+Available fx Commands
+---------------------
+
+.. code-block:: text
+
+    fx files       - Count files in directories
+    fx size        - Analyze file/directory sizes
+    fx ff          - Find files by keyword
+    fx replace     - Replace text in files
+    fx json2excel  - Convert JSON to Excel
+    fx upgrade     - Run upgrade program
+    fx list        - List all available commands
+
+Examples with New CLI
+---------------------
+
+.. code-block:: bash
+
+    # Count files in current directory
+    fx files
+    
+    # Analyze directory sizes
+    fx size /path/to/directory
+    
+    # Find Python files
+    fx ff "*.py"
+    
+    # Replace text in files
+    fx replace "old_text" "new_text" file.txt
+    
+    # Convert JSON to Excel
+    fx json2excel data.json output.xlsx
+
+Available Commands (Legacy)
+============================
+
+For backward compatibility, the original commands are still available:
 
 fx_size - Directory Size Analyzer
 ----------------------------------
 
 Analyze and display file and directory sizes in human-readable format.
 
+**New CLI (recommended):**
+
 .. code-block:: bash
 
-    # Show sizes of all items in current directory
-    fx_size
-    
-    # Show sizes in a specific directory
-    fx_size /path/to/directory
-    
-    # Show only directories
-    fx_size --only-dirs
-    
-    # Show only files
-    fx_size --only-files
+    fx size                    # Current directory
+    fx size /path/to/dir       # Specific directory
+
+**Legacy CLI:**
+
+.. code-block:: bash
+
+    fx_size                    # Current directory
+    fx_size /path/to/dir       # Specific directory
 
 **Features:**
 
@@ -87,16 +135,19 @@ fx_files - File Counter
 
 Count files in directories with detailed statistics.
 
+**New CLI (recommended):**
+
 .. code-block:: bash
 
-    # Count files in current directory
-    fx_files
-    
-    # Count files in specific directory
-    fx_files /path/to/directory
-    
-    # Count files recursively
-    fx_files --recursive
+    fx files                   # Current directory
+    fx files /path/to/dir      # Specific directory
+
+**Legacy CLI:**
+
+.. code-block:: bash
+
+    fx_files                   # Current directory
+    fx_files /path/to/dir      # Specific directory
 
 **Features:**
 
@@ -110,19 +161,19 @@ fx_ff - Find Files
 
 Advanced file search utility with pattern matching.
 
+**New CLI (recommended):**
+
 .. code-block:: bash
 
-    # Find files by name pattern
-    fx_ff "*.py"
-    
-    # Find files containing text
-    fx_ff --contains "TODO"
-    
-    # Find files modified in last 7 days
-    fx_ff --modified-days 7
-    
-    # Find files larger than 10MB
-    fx_ff --size-min 10485760
+    fx ff "*.py"               # Find Python files
+    fx ff config               # Find files with 'config' in name
+
+**Legacy CLI:**
+
+.. code-block:: bash
+
+    fx_ff "*.py"               # Find Python files
+    fx_ff config               # Find files with 'config' in name
 
 **Features:**
 
@@ -137,19 +188,19 @@ fx_replace - Text Replacement
 
 Safe text replacement in files with atomic operations.
 
+**New CLI (recommended):**
+
 .. code-block:: bash
 
-    # Replace text in a single file
-    fx_replace "old_text" "new_text" file.txt
-    
-    # Replace in multiple files
-    fx_replace "old_text" "new_text" *.txt
-    
-    # Preview changes without modifying
-    fx_replace "old_text" "new_text" file.txt --dry-run
-    
-    # Create backup before replacing
-    fx_replace "old_text" "new_text" file.txt --backup
+    fx replace "old" "new" file.txt              # Single file
+    fx replace "old" "new" *.txt                 # Multiple files
+
+**Legacy CLI:**
+
+.. code-block:: bash
+
+    fx_replace "old" "new" file.txt              # Single file
+    fx_replace "old" "new" *.txt                 # Multiple files
 
 **Features:**
 
@@ -164,16 +215,19 @@ fx_grab_json_api_to_excel - JSON to Excel Converter
 
 Convert JSON API responses to Excel spreadsheets.
 
+**New CLI (recommended):**
+
 .. code-block:: bash
 
-    # Convert JSON file to Excel
+    fx json2excel data.json output.xlsx          # Convert JSON file
+    fx json2excel https://api.example.com/data output.xlsx  # From API
+
+**Legacy CLI:**
+
+.. code-block:: bash
+
     fx_grab_json_api_to_excel data.json output.xlsx
-    
-    # Fetch from API and convert
     fx_grab_json_api_to_excel https://api.example.com/data output.xlsx
-    
-    # Specify custom headers
-    fx_grab_json_api_to_excel api_url output.xlsx --header "Authorization: Bearer TOKEN"
 
 **Note:** Requires pandas installation: ``pip install fx-bin[excel]``
 
@@ -210,31 +264,30 @@ Setting up development environment
     git clone https://github.com/fx/fx_bin.git
     cd fx_bin
     
-    # Create virtual environment
-    python3 -m venv .venv
-    source .venv/bin/activate
+    # Install with Poetry (recommended)
+    poetry install --with dev
     
-    # Install development dependencies
+    # Or using pip
     pip install -e .
-    pip install click loguru pytest psutil
+    pip install -r requirements_dev.txt
 
 Running tests
 -------------
 
 .. code-block:: bash
 
-    # Run all tests
-    python tests/runners/simple_test_runner.py
+    # Run all tests with pytest
+    poetry run pytest
     
     # Run specific test modules
-    python -m unittest tests.test_size
-    python -m unittest tests.test_files
+    poetry run pytest tests/test_cli.py -v
+    poetry run pytest tests/test_size.py -v
     
-    # Run with pytest (if installed)
-    pytest tests/ -v
+    # Run with coverage
+    poetry run pytest --cov=fx_bin --cov-report=html
     
     # Run security tests only
-    pytest tests/test_*security*.py -v
+    poetry run pytest tests/test_*security*.py -v --no-cov
 
 Test Coverage
 -------------
@@ -246,6 +299,7 @@ The project maintains comprehensive test coverage:
 * Performance benchmarks
 * Integration tests
 * Unit tests for all modules
+* CLI command tests (new in v0.10.0)
 
 Code Quality
 ------------
@@ -253,13 +307,13 @@ Code Quality
 .. code-block:: bash
 
     # Run linting
-    flake8 fx_bin/
+    poetry run flake8 fx_bin/
     
     # Run type checking
-    mypy fx_bin/
+    poetry run mypy fx_bin/
     
     # Format code
-    black fx_bin/ tests/
+    poetry run black fx_bin/ tests/
 
 Architecture
 ============
@@ -271,6 +325,7 @@ Project Structure
 
     fx_bin/
     ├── fx_bin/              # Main package
+    │   ├── cli.py           # NEW: Unified CLI entry point
     │   ├── common.py        # Shared utilities
     │   ├── size.py          # fx_size implementation
     │   ├── files.py         # fx_files implementation
@@ -278,6 +333,7 @@ Project Structure
     │   ├── replace.py       # fx_replace implementation
     │   └── pd.py            # fx_grab_json_api_to_excel
     ├── tests/               # Test suite
+    │   ├── test_cli.py      # NEW: CLI tests
     │   ├── runners/         # Test execution scripts
     │   └── test_*.py        # Test modules
     └── docs/                # Documentation
@@ -291,6 +347,7 @@ Design Principles
 3. **Atomic Operations**: Prevent partial updates
 4. **Resource Efficient**: Memory and CPU constraints
 5. **Cross-Platform**: Works on Linux, macOS, Windows
+6. **User-Friendly**: Unified CLI for better usability (new in v0.10.0)
 
 Requirements
 ============
@@ -300,6 +357,36 @@ Requirements
 * loguru (logging)
 * psutil (system operations)
 * pandas (optional, for Excel features)
+
+Migration Guide (v0.10.0)
+==========================
+
+Version 0.10.0 introduces a unified ``fx`` command while maintaining backward compatibility:
+
+**Old way (still works):**
+
+.. code-block:: bash
+
+    fx_files
+    fx_size
+    fx_ff "*.py"
+    fx_replace "old" "new" file.txt
+
+**New way (recommended):**
+
+.. code-block:: bash
+
+    fx files
+    fx size
+    fx ff "*.py"
+    fx replace "old" "new" file.txt
+
+The new CLI provides:
+
+* Single entry point (``fx``)
+* Consistent command structure
+* Built-in command listing (``fx list``)
+* Better help system (``fx --help``, ``fx COMMAND --help``)
 
 Contributing
 ============

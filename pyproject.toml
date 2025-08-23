@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fx-bin"
-version = "0.9.7"
+version = "0.10.1"
 description = "A common bin collection for my own usage"
 authors = ["Frank Xu <frank@frankxu.me>"]
 readme = "README.rst"
@@ -35,6 +35,10 @@ pandas = "^2.3.2"
 openpyxl = "^3.1.5"
 
 [tool.poetry.scripts]
+# New unified command
+fx = "fx_bin.cli:main"
+
+# Legacy commands for backward compatibility
 fx_upgrade = "fx_bin.run_upgrade_program:main"
 fx_files = "fx_bin.files:main"
 fx_size = "fx_bin.size:main"
