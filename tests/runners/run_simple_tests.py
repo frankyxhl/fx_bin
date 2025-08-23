@@ -63,44 +63,12 @@ def test_basic_functionality():
         return False
 
 def test_security_features():
-    """测试安全功能"""
+    """测试安全功能 - 已移除 (upload_server 模块已删除)"""
     print("\n" + "="*60)
-    print("🔒 测试安全功能")
+    print("🔒 测试安全功能 - 已跳过")
     print("="*60)
-    
-    try:
-        from fx_bin.upload_server import SimpleHTTPRequestHandler
-        
-        # 创建一个模拟的handler来测试安全功能
-        class MockHandler(SimpleHTTPRequestHandler):
-            def __init__(self):
-                pass  # 不调用父类初始化避免服务器设置
-        
-        handler = MockHandler()
-        
-        # 测试安全文件名
-        safe_files = ['document.txt', 'image.jpg', 'data.pdf']
-        for filename in safe_files:
-            if handler._is_safe_filename(filename):
-                print(f"✓ 安全文件名 '{filename}' 正确允许")
-            else:
-                print(f"✗ 安全文件名 '{filename}' 错误拒绝")
-                return False
-        
-        # 测试不安全文件名
-        unsafe_files = ['../../../etc/passwd', 'file<script>.txt', 'CON.txt']
-        for filename in unsafe_files:
-            if not handler._is_safe_filename(filename):
-                print(f"✓ 不安全文件名 '{filename}' 正确拒绝")
-            else:
-                print(f"✗ 不安全文件名 '{filename}' 错误允许")
-                return False
-        
-        return True
-        
-    except Exception as e:
-        print(f"✗ 安全功能测试失败: {e}")
-        return False
+    print("✓ upload_server 模块已删除，推荐使用 uploadserver 包")
+    return True
 
 def test_pandas_import():
     """测试pandas导入处理"""

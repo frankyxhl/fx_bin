@@ -69,45 +69,7 @@ def main():
             print(f"💥 {module} error: {e}")
             failed += 1
     
-    # Run manual security tests
-    print(f"\n🔒 Running security tests...")
-    try:
-        from fx_bin.upload_server import SimpleHTTPRequestHandler
-        
-        class MockHandler(SimpleHTTPRequestHandler):
-            def __init__(self):
-                pass
-        
-        handler = MockHandler()
-        
-        # Test secure filenames
-        security_tests = [
-            ('document.txt', True, 'Safe filename'),
-            ('../../../etc/passwd', False, 'Path traversal attack'),
-            ('file<script>.txt', False, 'Dangerous characters'),
-            ('CON.txt', False, 'Windows reserved name'),
-            ('file.exe', False, 'Dangerous extension')
-        ]
-        
-        security_passed = 0
-        for filename, should_pass, desc in security_tests:
-            result = handler._is_safe_filename(filename)
-            if result == should_pass:
-                print(f"✅ {desc}: {filename}")
-                security_passed += 1
-            else:
-                print(f"❌ {desc}: {filename} (expected: {should_pass}, actual: {result})")
-        
-        if security_passed == len(security_tests):
-            print("✅ Security tests passed")
-            passed += 1
-        else:
-            print("❌ Security tests failed")
-            failed += 1
-            
-    except Exception as e:
-        print(f"❌ Security tests error: {e}")
-        failed += 1
+    # Security tests removed (upload_server module deleted)
     
     # Run basic functionality tests  
     print(f"\n⚙️ Running basic functionality tests...")

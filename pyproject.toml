@@ -41,7 +41,6 @@ fx_size = "fx_bin.size:main"
 fx_ff = "fx_bin.find_files:main"
 fx_replace = "fx_bin.replace:main"
 fx_grab_json_api_to_excel = "fx_bin.pd:main"
-fx_server = "fx_bin.upload_server:main"
 
 [tool.poetry.extras]
 excel = ["pandas"]

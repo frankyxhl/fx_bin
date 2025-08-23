@@ -159,34 +159,6 @@ Safe text replacement in files with atomic operations.
 * Backup creation
 * Dry-run mode for preview
 
-fx_server - Upload Server
--------------------------
-
-Simple HTTP server for file uploads with security features.
-
-.. code-block:: bash
-
-    # Start server on default port 8000
-    fx_server
-    
-    # Start on custom port
-    fx_server --port 3000
-    
-    # Require authentication
-    fx_server --auth username:password
-    
-    # Limit upload size to 5MB
-    fx_server --max-size 5242880
-
-**Security Features:**
-
-* Path traversal protection
-* Filename sanitization
-* File type validation
-* Size limits enforcement
-* Authentication support
-* Localhost-only binding by default
-
 fx_grab_json_api_to_excel - JSON to Excel Converter
 -----------------------------------------------------
 
@@ -304,7 +276,6 @@ Project Structure
     │   ├── files.py         # fx_files implementation
     │   ├── find_files.py    # fx_ff implementation
     │   ├── replace.py       # fx_replace implementation
-    │   ├── upload_server.py # fx_server implementation
     │   └── pd.py            # fx_grab_json_api_to_excel
     ├── tests/               # Test suite
     │   ├── runners/         # Test execution scripts

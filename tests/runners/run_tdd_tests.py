@@ -72,12 +72,6 @@ def main():
     print("These tests MUST pass - they validate security vulnerabilities are fixed.")
     
     security_tests = [
-        ("python3 -m unittest tests.test_upload_server_security.TestUploadServerSecurity.test_path_traversal_attack_blocked -v",
-         "Upload Server Path Traversal Protection"),
-        ("python3 -m unittest tests.test_upload_server_security.TestUploadServerSecurity.test_filename_sanitization -v", 
-         "Upload Server Filename Sanitization"),
-        ("python3 -m unittest tests.test_upload_server_security.TestUploadServerSecurity.test_authentication_required -v",
-         "Upload Server Authentication"),
         ("python3 -m unittest tests.test_pd_safety.TestPandasImportSafety.test_pandas_not_installed_exits_gracefully -v",
          "Pandas Import Safety"),
     ]
