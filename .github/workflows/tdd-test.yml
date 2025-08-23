@@ -35,7 +35,7 @@ jobs:
     - name: Run Security Tests (CRITICAL)
       run: |
         echo "🔒 Running CRITICAL security tests - these MUST pass!"
-        poetry run python -m pytest tests/test_pd_safety.py::TestPandasImportSafety -v --tb=short
+        poetry run python -m pytest tests/test_pd_safety.py::TestPandasImportSafety -v --tb=short --no-cov
 
     - name: Security Scan with Bandit
       run: |
@@ -87,8 +87,8 @@ jobs:
     - name: Run Safety Tests (HIGH Priority)
       run: |
         echo "🛡️ Running HIGH priority safety tests..."
-        poetry run python -m pytest tests/test_replace_safety.py -v --tb=short
-        poetry run python -m pytest tests/test_common_safety.py -v --tb=short
+        poetry run python -m pytest tests/test_replace_safety.py -v --tb=short --no-cov
+        poetry run python -m pytest tests/test_common_safety.py -v --tb=short --no-cov
 
   functionality-tests:
     name: ⚙️ Functionality Tests
@@ -119,7 +119,7 @@ jobs:
     - name: Run All Tests
       run: |
         echo "⚙️ Running all functionality tests..."
-        poetry run python -m pytest tests/ -v --tb=short --ignore=tests/runners/
+        poetry run python -m pytest tests/ -v --tb=short --ignore=tests/runners/ --no-cov
 
     - name: Code Coverage
       run: |
