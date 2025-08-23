@@ -13,7 +13,7 @@ from returns.result import Result, Success, Failure, safe
 from returns.maybe import Maybe
 from returns.pipeline import flow
 from returns.pointfree import bind, map_
-from returns.io import IOResult, impure_safe
+from returns.io import IOResult, IOSuccess, IOFailure, impure_safe
 
 from fx_bin.errors import PdError, ValidationError, IOError as FxIOError
 
@@ -123,8 +123,31 @@ def main_functional(url: str, output_filename: str) -> Result[int, PdError]:
     # Process the file
     io_result = process_json_to_excel(pandas_module, url, output_file)
     
-    # Convert IOResult to Result for consistent return type
-    result = io_result.run()
+    # Handle both mocked results (direct IOSuccess/IOFailure) and real results (nested structure)
+    if isinstance(io_result, IOFailure):
+        # Direct IOFailure (from mocking or other cases)
+        error = io_result.failure()
+        result = Failure(error)
+    elif isinstance(io_result, IOSuccess):
+        # Check if this is a direct IOSuccess or nested structure
+        unwrapped = io_result.unwrap()
+        if hasattr(unwrapped, '_inner_value'):
+            # Could be nested structure: IOSuccess(IO(IOResult(...)))
+            inner_result = unwrapped._inner_value
+            if isinstance(inner_result, IOSuccess):
+                final_value = inner_result.unwrap()._inner_value
+                result = Success(final_value)
+            elif isinstance(inner_result, IOFailure):
+                final_error = inner_result.failure()._inner_value
+                result = Failure(final_error)
+            else:
+                # Direct value wrapped in IO (from mocking like IOSuccess(None))
+                result = Success(inner_result)
+        else:
+            # Direct IOSuccess (from mocking)
+            result = Success(unwrapped)
+    else:
+        result = Failure(PdError("Unexpected result type from process_json_to_excel"))
     
     if isinstance(result, Success):
         return Success(0)

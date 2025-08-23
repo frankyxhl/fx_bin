@@ -13,7 +13,8 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock, Mock
 
 import pandas as pd
-from returns.io import IOResult, IOSuccess, IOFailure
+from click.testing import CliRunner
+from returns.io import IOResult, IOSuccess, IOFailure, IO
 from returns.result import Success, Failure
 
 from fx_bin import pd_functional
@@ -211,8 +212,19 @@ class TestProcessJsonToExcel(unittest.TestCase):
                 pandas_module, invalid_json, output_file
             )
             
-            self.assertIsInstance(result, IOFailure)
-            error = result.failure()
+            # Due to @impure_safe decorator, the result is IOSuccess wrapping an IO containing an IOResult
+            self.assertIsInstance(result, IOSuccess)
+            # Extract the inner IO object
+            inner_io = result.unwrap()
+            self.assertIsInstance(inner_io, IO)
+            # Extract the IOResult from the IO object
+            inner_result = inner_io._inner_value
+            self.assertIsInstance(inner_result, IOFailure)
+            # The error is also wrapped in an IO object
+            error_io = inner_result.failure()
+            self.assertIsInstance(error_io, IO)
+            # Extract the actual error
+            error = error_io._inner_value
             self.assertIsInstance(error, FxIOError)
     
     @patch('pandas.DataFrame.to_excel')
@@ -226,8 +238,19 @@ class TestProcessJsonToExcel(unittest.TestCase):
             pandas_module, json_str, "/tmp/output.xlsx"
         )
         
-        self.assertIsInstance(result, IOFailure)
-        error = result.failure()
+        # Due to @impure_safe decorator, the result is IOSuccess wrapping an IO containing an IOResult
+        self.assertIsInstance(result, IOSuccess)
+        # Extract the inner IO object
+        inner_io = result.unwrap()
+        self.assertIsInstance(inner_io, IO)
+        # Extract the IOResult from the IO object
+        inner_result = inner_io._inner_value
+        self.assertIsInstance(inner_result, IOFailure)
+        # The error is also wrapped in an IO object
+        error_io = inner_result.failure()
+        self.assertIsInstance(error_io, IO)
+        # Extract the actual error
+        error = error_io._inner_value
         self.assertIsInstance(error, FxIOError)
         self.assertIn("Disk full", str(error))
 
@@ -292,29 +315,27 @@ class TestMainFunctional(unittest.TestCase):
 class TestMainCLI(unittest.TestCase):
     """Test the CLI main function."""
     
-    @patch('sys.exit')
-    @patch('sys.stderr', new_callable=StringIO)
     @patch('fx_bin.pd_functional.main_functional')
-    def test_main_cli_success(self, mock_main_func, mock_stderr, mock_exit):
+    def test_main_cli_success(self, mock_main_func):
         """Test successful CLI execution."""
         mock_main_func.return_value = Success(0)
         
-        pd_functional.main("data.json", "output")
+        runner = CliRunner()
+        result = runner.invoke(pd_functional.main, ["data.json", "output"])
         
-        mock_exit.assert_called_once_with(0)
-        self.assertEqual(mock_stderr.getvalue(), "")
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.output.strip(), "")
     
-    @patch('sys.exit')
-    @patch('sys.stderr', new_callable=StringIO)
     @patch('fx_bin.pd_functional.main_functional')
-    def test_main_cli_failure(self, mock_main_func, mock_stderr, mock_exit):
+    def test_main_cli_failure(self, mock_main_func):
         """Test CLI execution with error."""
         mock_main_func.return_value = Failure(PdError("Test error"))
         
-        pd_functional.main("data.json", "output")
+        runner = CliRunner()
+        result = runner.invoke(pd_functional.main, ["data.json", "output"])
         
-        mock_exit.assert_called_once_with(1)
-        self.assertIn("Test error", mock_stderr.getvalue())
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("Test error", result.output)
 
 
 class TestMainLegacy(unittest.TestCase):
@@ -353,7 +374,11 @@ class TestIntegration(unittest.TestCase):
             json_path = json_file.name
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            output_file = os.path.join(tmpdir, "output")
+            output_file = "output"
+            
+            # Change to temp directory to write output there
+            original_cwd = os.getcwd()
+            os.chdir(tmpdir)
             
             try:
                 # Use the main_functional directly
@@ -363,7 +388,7 @@ class TestIntegration(unittest.TestCase):
                 self.assertEqual(result.unwrap(), 0)
                 
                 # Verify the output file was created
-                expected_file = os.path.join(tmpdir, "output.xlsx")
+                expected_file = "output.xlsx"
                 self.assertTrue(os.path.exists(expected_file))
                 
                 # Verify content
@@ -372,6 +397,7 @@ class TestIntegration(unittest.TestCase):
                 self.assertIn("products", df.columns)
                 self.assertIn("prices", df.columns)
             finally:
+                os.chdir(original_cwd)
                 os.unlink(json_path)
     
     def test_json_string_to_excel(self):

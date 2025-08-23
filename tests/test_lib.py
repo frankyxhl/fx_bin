@@ -50,9 +50,9 @@ class TestSpecialCharacterCounting(unittest.TestCase):
     
     def test_count_special_char_lst_with_apostrophe(self):
         """Test counting apostrophes (curly apostrophe)."""
-        # Note: SPECIAL_CHAR_LST contains curly apostrophe ' (U+2019) not straight apostrophe '
-        self.assertEqual(lib.count_special_char_lst("don't"), 1)  # Using curly apostrophe
-        self.assertEqual(lib.count_special_char_lst("it's Bob's"), 2)  # Using curly apostrophes
+        # Note: SPECIAL_CHAR_LST contains curly quotes ' (U+2018) and ' (U+2019) not straight apostrophe '
+        self.assertEqual(lib.count_special_char_lst("don’t"), 1)  # Using curly apostrophe
+        self.assertEqual(lib.count_special_char_lst("it’s Bob’s"), 2)  # Using curly apostrophes
     
     def test_count_special_char_lst_with_endash(self):
         """Test counting en-dashes."""
@@ -61,8 +61,8 @@ class TestSpecialCharacterCounting(unittest.TestCase):
     
     def test_count_special_char_lst_mixed(self):
         """Test counting mixed special characters."""
-        self.assertEqual(lib.count_special_char_lst("don't stop – keep going"), 2)  # curly apostrophe + en-dash
-        self.assertEqual(lib.count_special_char_lst("'quoted' – text"), 3)  # 2 curly apostrophes + en-dash
+        self.assertEqual(lib.count_special_char_lst("don’t stop – keep going"), 2)  # curly apostrophe + en-dash
+        self.assertEqual(lib.count_special_char_lst("‘quoted’ – text"), 3)  # 2 curly apostrophes + en-dash
     
     def test_count_special_char_lst_none_present(self):
         """Test when no special characters are present."""
@@ -84,13 +84,13 @@ class TestFullwidthCounting(unittest.TestCase):
     def test_count_fullwidth_with_special(self):
         """Test counting fullwidth with special characters."""
         # ASCII + special characters (using curly apostrophe)
-        self.assertEqual(lib.count_fullwidth("don't"), 5)  # 4 ASCII + 1 special
+        self.assertEqual(lib.count_fullwidth("don’t"), 5)  # 4 ASCII + 1 special
         self.assertEqual(lib.count_fullwidth("test–case"), 9)  # 8 ASCII + 1 special
     
     def test_count_fullwidth_mixed(self):
         """Test counting fullwidth with mixed content."""
         # Mix of ASCII, special, and non-ASCII
-        self.assertEqual(lib.count_fullwidth("Hello'世界"), 6)  # 5 ASCII + 1 special
+        self.assertEqual(lib.count_fullwidth("Hello’世界"), 6)  # 5 ASCII + 1 special
         self.assertEqual(lib.count_fullwidth("Test–你好"), 5)  # 4 ASCII + 1 special
 
 
@@ -153,9 +153,10 @@ class TestSpecialCharacterSet(unittest.TestCase):
     
     def test_special_char_lst_content(self):
         """Test that SPECIAL_CHAR_LST contains expected characters."""
-        self.assertIn("'", lib.SPECIAL_CHAR_LST)  # Right single quotation mark (U+2019)
+        self.assertIn("‘", lib.SPECIAL_CHAR_LST)  # Left single quotation mark (U+2018)
+        self.assertIn("’", lib.SPECIAL_CHAR_LST)  # Right single quotation mark (U+2019)
         self.assertIn("–", lib.SPECIAL_CHAR_LST)  # En-dash (U+2013)
-        self.assertEqual(len(lib.SPECIAL_CHAR_LST), 2)
+        self.assertEqual(len(lib.SPECIAL_CHAR_LST), 3)
     
     def test_special_char_lst_is_set(self):
         """Test that SPECIAL_CHAR_LST is a set."""

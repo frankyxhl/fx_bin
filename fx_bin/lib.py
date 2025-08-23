@@ -5,7 +5,7 @@ def count_ascii(s):
     return sum(ord(c) < 128 for c in s)
 
 
-SPECIAL_CHAR_LST = {"‘", "–"}
+SPECIAL_CHAR_LST = {"\u2018", "\u2019", "\u2013"}
 
 
 def count_special_char_lst(s):
