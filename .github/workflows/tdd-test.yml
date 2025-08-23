@@ -64,7 +64,7 @@ jobs:
     needs: security-tests
     strategy:
       matrix:
-        python-version: ["3.11", "3.12"]
+        python-version: ["3.12"]
 
     steps:
     - uses: actions/checkout@v4
@@ -96,7 +96,7 @@ jobs:
     needs: safety-tests
     strategy:
       matrix:
-        python-version: ["3.11", "3.12"]
+        python-version: ["3.12"]
 
     steps:
     - uses: actions/checkout@v4
@@ -141,7 +141,7 @@ jobs:
     needs: functionality-tests
     strategy:
       matrix:
-        python-version: ["3.11", "3.12"]
+        python-version: ["3.12"]
 
     steps:
     - uses: actions/checkout@v4
@@ -184,7 +184,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.11"
+        python-version: "3.12"
         cache: 'pip'
 
     - name: Install Poetry
