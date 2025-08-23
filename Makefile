@@ -10,7 +10,7 @@ install:  ## Install all dependencies with Poetry
 	poetry install --with dev
 
 test:  ## Run core tests that should pass (quick test)
-	poetry run pytest tests/test_size.py tests/test_files.py tests/test_find_files.py tests/test_replace.py -v --no-cov
+	poetry run pytest
 
 test-core:  ## Run only core functionality tests
 	poetry run pytest tests/test_size.py tests/test_files.py tests/test_find_files.py tests/test_replace.py -v --no-cov
@@ -19,10 +19,10 @@ test-all:  ## Run all tests without coverage requirement
 	poetry run pytest --no-cov
 
 test-security:  ## Run security tests only
-	poetry run pytest tests/test_*security*.py -v --no-cov
+	poetry run pytest -k "security" -v --no-cov
 
 test-safety:  ## Run safety tests only
-	poetry run pytest tests/test_*safety*.py -v --no-cov
+	poetry run pytest tests/test_common_safety.py tests/test_replace_safety.py tests/test_pd_safety.py -v --no-cov
 
 test-integration:  ## Run integration tests only
 	poetry run pytest tests/test_integration.py -v --no-cov
