@@ -98,8 +98,7 @@ run-size:  ## Run fx_size command
 run-files:  ## Run fx_files command
 	poetry run fx_files
 
-run-server:  ## Run fx_server command
-	poetry run fx_server
+
 
 # Default target
 .DEFAULT_GOAL := help

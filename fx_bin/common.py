@@ -148,9 +148,9 @@ class SizeEntry:
     def from_scandir(cls, obj) -> Optional['SizeEntry']:
         """Create SizeEntry from os.DirEntry object."""
         try:
-            if obj.is_file():
-                return cls(obj.name, obj.stat().st_size, EntryType.FILE)
-            elif obj.is_dir():
+            if obj.is_file(follow_symlinks=False):
+                return cls(obj.name, obj.stat(follow_symlinks=False).st_size, EntryType.FILE)
+            elif obj.is_dir(follow_symlinks=False):
                 total_size = sum_folder_size(obj.path)
                 return cls(obj.name, total_size, EntryType.FOLDER)
         except (PermissionError, OSError):
@@ -178,9 +178,9 @@ class FileCountEntry:
     def from_scandir(cls, obj) -> Optional['FileCountEntry']:
         """Create FileCountEntry from os.DirEntry object."""
         try:
-            if obj.is_file():
+            if obj.is_file(follow_symlinks=False):
                 return cls(obj.name, 1, EntryType.FILE)
-            elif obj.is_dir():
+            elif obj.is_dir(follow_symlinks=False):
                 count = sum_folder_files_count(obj.path)
                 return cls(obj.name, count, EntryType.FOLDER)
         except (PermissionError, OSError):

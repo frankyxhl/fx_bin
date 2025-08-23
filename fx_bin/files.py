@@ -51,9 +51,9 @@ def main():
             count_width = len(str(max_count))
 
             for entry in lst:
-                print(entry.display(count_width))
+                click.echo(entry.display(count_width))
         else:
-            print("No files or directories found.")
+            click.echo("No files or directories found.")
 
     cli()
 

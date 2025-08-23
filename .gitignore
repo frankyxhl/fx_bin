@@ -112,3 +112,4 @@ benchmarks/results/*.csv
 output_*.xlsx
 
 AGENTS.md
+.serena

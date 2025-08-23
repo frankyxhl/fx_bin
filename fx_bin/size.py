@@ -44,7 +44,7 @@ def main():
         """Display file and directory sizes in human-readable format."""
         lst = list_size(path, ignore_dot_file=not show_all)
         for entry in lst:
-            print(entry)
+            click.echo(entry)
 
     cli()
 

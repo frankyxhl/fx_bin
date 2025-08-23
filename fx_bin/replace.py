@@ -1,3 +1,4 @@
+import errno
 import os
 import sys
 import tempfile
@@ -53,7 +54,7 @@ def work(search_text: str, replace_text: str, filename: str) -> None:
             # Success - remove backup
             os.remove(backup_path)
         except OSError as e:
-            if e.errno == 18:  # Cross-device link error
+            if e.errno == errno.EXDEV:  # Cross-device link error
                 # Fall back to copy+delete for cross-filesystem moves
                 shutil.move(tmp_path, filename)
                 # Success - remove backup
