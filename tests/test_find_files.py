@@ -143,7 +143,7 @@ class TestFindFiles(unittest.TestCase):
         
         # Should show the help message
         self.assertEqual(result.exit_code, 0)
-        self.assertIn("Please type text to search. For example: fx_ff bar", result.output)
+        self.assertIn("Please type text to search. For example: fx ff bar", result.output)
 
 
 if __name__ == '__main__':

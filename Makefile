@@ -93,11 +93,11 @@ update:  ## Update dependencies
 show-deps:  ## Show dependency tree
 	poetry show --tree
 
-run-size:  ## Run fx_size command
-	poetry run fx_size
+run-size:  ## Run fx size command (unified CLI)
+	poetry run fx size
 
-run-files:  ## Run fx_files command
-	poetry run fx_files
+run-files:  ## Run fx files command (unified CLI)
+	poetry run fx files
 
 
 

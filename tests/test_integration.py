@@ -32,7 +32,7 @@ class TestCLIIntegration(unittest.TestCase):
         shutil.rmtree(self.test_dir)
     
     def test_fx_files_command_line(self):
-        """Test fx_files command via command line."""
+        """Test fx files command via command line."""
         # Create test structure
         (self.test_path / "file1.txt").write_text("content 1")
         (self.test_path / "file2.txt").write_text("content 2")
@@ -45,7 +45,7 @@ class TestCLIIntegration(unittest.TestCase):
         # Test command line execution
         try:
             result = subprocess.run(
-                [sys.executable, "-m", "fx_bin.files"],
+                [sys.executable, "-m", "fx_bin.cli", "files"],
                 capture_output=True,
                 text=True,
                 timeout=10
@@ -60,12 +60,12 @@ class TestCLIIntegration(unittest.TestCase):
             self.assertIn("subdir", result.stdout)
             
         except subprocess.TimeoutExpired:
-            self.fail("fx_files command timed out")
+            self.fail("fx files command timed out")
         except Exception as e:
-            self.skipTest(f"fx_files command test skipped: {e}")
+            self.skipTest(f"fx files command test skipped: {e}")
     
     def test_fx_size_command_line(self):
-        """Test fx_size command via command line."""
+        """Test fx size command via command line."""
         # Create files with known sizes
         (self.test_path / "small.txt").write_text("small")
         (self.test_path / "large.txt").write_text("x" * 1000)
@@ -74,7 +74,7 @@ class TestCLIIntegration(unittest.TestCase):
         
         try:
             result = subprocess.run(
-                [sys.executable, "-m", "fx_bin.size"],
+                [sys.executable, "-m", "fx_bin.cli", "size"],
                 capture_output=True,
                 text=True,
                 timeout=10
@@ -87,12 +87,12 @@ class TestCLIIntegration(unittest.TestCase):
             self.assertIn("large.txt", result.stdout)
             
         except subprocess.TimeoutExpired:
-            self.fail("fx_size command timed out")
+            self.fail("fx size command timed out")
         except Exception as e:
-            self.skipTest(f"fx_size command test skipped: {e}")
+            self.skipTest(f"fx size command test skipped: {e}")
     
     def test_fx_find_files_command_line(self):
-        """Test fx_ff (find files) command via command line."""
+        """Test fx ff (find files) command via command line."""
         # Create test files
         (self.test_path / "test_document.txt").write_text("content")
         (self.test_path / "other_file.py").write_text("code")
@@ -102,7 +102,7 @@ class TestCLIIntegration(unittest.TestCase):
         
         try:
             result = subprocess.run(
-                [sys.executable, "-m", "fx_bin.find_files", "test"],
+                [sys.executable, "-m", "fx_bin.cli", "ff", "test"],
                 capture_output=True,
                 text=True,
                 timeout=10
@@ -117,19 +117,19 @@ class TestCLIIntegration(unittest.TestCase):
             self.assertNotIn("other_file.py", result.stdout)
             
         except subprocess.TimeoutExpired:
-            self.fail("fx_ff command timed out")
+            self.fail("fx ff command timed out")
         except Exception as e:
-            self.skipTest(f"fx_ff command test skipped: {e}")
+            self.skipTest(f"fx ff command test skipped: {e}")
     
     def test_fx_replace_command_line(self):
-        """Test fx_replace command via command line."""
+        """Test fx replace command via command line."""
         # Create test file
         test_file = self.test_path / "replace_test.txt"
         test_file.write_text("Hello world\nGoodbye world\n")
         
         try:
             result = subprocess.run(
-                [sys.executable, "-m", "fx_bin.replace", "world", "Python", str(test_file)],
+                [sys.executable, "-m", "fx_bin.cli", "replace", "world", "Python", str(test_file)],
                 capture_output=True,
                 text=True,
                 timeout=10
@@ -144,9 +144,9 @@ class TestCLIIntegration(unittest.TestCase):
             self.assertNotIn("world", content)
             
         except subprocess.TimeoutExpired:
-            self.fail("fx_replace command timed out")
+            self.fail("fx replace command timed out")
         except Exception as e:
-            self.skipTest(f"fx_replace command test skipped: {e}")
+            self.skipTest(f"fx replace command test skipped: {e}")
     
     def test_workflow_size_then_replace(self):
         """Test workflow: analyze sizes, then replace content."""
@@ -161,7 +161,7 @@ class TestCLIIntegration(unittest.TestCase):
         try:
             # First, analyze sizes
             size_result = subprocess.run(
-                [sys.executable, "-m", "fx_bin.size"],
+                [sys.executable, "-m", "fx_bin.cli", "size"],
                 capture_output=True,
                 text=True,
                 timeout=10
@@ -171,7 +171,7 @@ class TestCLIIntegration(unittest.TestCase):
             
             # Then, replace content in both files
             replace_result = subprocess.run(
-                [sys.executable, "-m", "fx_bin.replace", "old", "new", 
+                [sys.executable, "-m", "fx_bin.cli", "replace", "old", "new", 
                  str(file1), str(file2)],
                 capture_output=True,
                 text=True,
