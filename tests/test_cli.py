@@ -271,23 +271,6 @@ class TestJson2ExcelCommand(unittest.TestCase):
         mock_pd_main.assert_called_once_with('https://api.example.com/data', 'output.xlsx')
 
 
-class TestUpgradeCommand(unittest.TestCase):
-    """Test the 'fx upgrade' command."""
-    
-    def setUp(self):
-        """Set up test fixtures."""
-        self.runner = CliRunner()
-    
-    @patch('fx_bin.run_upgrade_program.main')
-    def test_upgrade_command(self, mock_upgrade_main):
-        """Test 'fx upgrade' command."""
-        mock_upgrade_main.return_value = 0
-        
-        result = self.runner.invoke(cli, ['upgrade'])
-        self.assertEqual(result.exit_code, 0)
-        mock_upgrade_main.assert_called_once()
-
-
 class TestCommandHelp(unittest.TestCase):
     """Test help messages for each command."""
     
@@ -329,12 +312,6 @@ class TestCommandHelp(unittest.TestCase):
         self.assertEqual(result.exit_code, 0)
         self.assertIn('Convert JSON data to Excel file', result.output)
         self.assertIn('Examples:', result.output)
-    
-    def test_upgrade_command_help(self):
-        """Test 'fx upgrade --help'."""
-        result = self.runner.invoke(cli, ['upgrade', '--help'])
-        self.assertEqual(result.exit_code, 0)
-        self.assertIn('Run the upgrade program', result.output)
     
     def test_list_command_help(self):
         """Test 'fx list --help'."""

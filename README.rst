@@ -52,10 +52,10 @@ From source
     cd fx_bin
     pip install -e .
 
-Quick Start - New Unified CLI (v0.10.0+)
-=========================================
+Quick Start
+===========
 
-**NEW**: Starting from version 0.10.0, FX Bin provides a unified ``fx`` command with subcommands for better usability:
+FX Bin provides a unified ``fx`` command with subcommands for all utilities:
 
 .. code-block:: bash
 
@@ -76,11 +76,10 @@ Available fx Commands
     fx ff          - Find files by keyword
     fx replace     - Replace text in files
     fx json2excel  - Convert JSON to Excel
-    fx upgrade     - Run upgrade program
     fx list        - List all available commands
 
-Examples with New CLI
----------------------
+Examples
+--------
 
 .. code-block:: bash
 
@@ -99,29 +98,18 @@ Examples with New CLI
     # Convert JSON to Excel
     fx json2excel data.json output.xlsx
 
-Available Commands (Legacy)
-============================
+Available Commands
+==================
 
-For backward compatibility, the original commands are still available:
-
-fx_size - Directory Size Analyzer
+fx size - Directory Size Analyzer
 ----------------------------------
 
 Analyze and display file and directory sizes in human-readable format.
-
-**New CLI (recommended):**
 
 .. code-block:: bash
 
     fx size                    # Current directory
     fx size /path/to/dir       # Specific directory
-
-**Legacy CLI:**
-
-.. code-block:: bash
-
-    fx_size                    # Current directory
-    fx_size /path/to/dir       # Specific directory
 
 **Features:**
 
@@ -130,24 +118,15 @@ Analyze and display file and directory sizes in human-readable format.
 * Handle symbolic links safely
 * Recursive directory traversal with loop detection
 
-fx_files - File Counter
+fx files - File Counter
 ------------------------
 
 Count files in directories with detailed statistics.
-
-**New CLI (recommended):**
 
 .. code-block:: bash
 
     fx files                   # Current directory
     fx files /path/to/dir      # Specific directory
-
-**Legacy CLI:**
-
-.. code-block:: bash
-
-    fx_files                   # Current directory
-    fx_files /path/to/dir      # Specific directory
 
 **Features:**
 
@@ -156,24 +135,15 @@ Count files in directories with detailed statistics.
 * Hidden files detection
 * Recursive counting with depth control
 
-fx_ff - Find Files
+fx ff - Find Files
 ------------------
 
 Advanced file search utility with pattern matching.
-
-**New CLI (recommended):**
 
 .. code-block:: bash
 
     fx ff "*.py"               # Find Python files
     fx ff config               # Find files with 'config' in name
-
-**Legacy CLI:**
-
-.. code-block:: bash
-
-    fx_ff "*.py"               # Find Python files
-    fx_ff config               # Find files with 'config' in name
 
 **Features:**
 
@@ -183,24 +153,15 @@ Advanced file search utility with pattern matching.
 * Date filtering
 * Regular expression support
 
-fx_replace - Text Replacement
+fx replace - Text Replacement
 ------------------------------
 
 Safe text replacement in files with atomic operations.
-
-**New CLI (recommended):**
 
 .. code-block:: bash
 
     fx replace "old" "new" file.txt              # Single file
     fx replace "old" "new" *.txt                 # Multiple files
-
-**Legacy CLI:**
-
-.. code-block:: bash
-
-    fx_replace "old" "new" file.txt              # Single file
-    fx_replace "old" "new" *.txt                 # Multiple files
 
 **Features:**
 
@@ -210,24 +171,15 @@ Safe text replacement in files with atomic operations.
 * Backup creation
 * Dry-run mode for preview
 
-fx_grab_json_api_to_excel - JSON to Excel Converter
------------------------------------------------------
+fx json2excel - JSON to Excel Converter
+-----------------------------------------
 
 Convert JSON API responses to Excel spreadsheets.
-
-**New CLI (recommended):**
 
 .. code-block:: bash
 
     fx json2excel data.json output.xlsx          # Convert JSON file
     fx json2excel https://api.example.com/data output.xlsx  # From API
-
-**Legacy CLI:**
-
-.. code-block:: bash
-
-    fx_grab_json_api_to_excel data.json output.xlsx
-    fx_grab_json_api_to_excel https://api.example.com/data output.xlsx
 
 **Note:** Requires pandas installation: ``pip install fx-bin[excel]``
 
@@ -327,11 +279,11 @@ Project Structure
     ├── fx_bin/              # Main package
     │   ├── cli.py           # NEW: Unified CLI entry point
     │   ├── common.py        # Shared utilities
-    │   ├── size.py          # fx_size implementation
-    │   ├── files.py         # fx_files implementation
-    │   ├── find_files.py    # fx_ff implementation
-    │   ├── replace.py       # fx_replace implementation
-    │   └── pd.py            # fx_grab_json_api_to_excel
+    │   ├── size.py          # Size analyzer implementation
+    │   ├── files.py         # File counter implementation
+    │   ├── find_files.py    # File finder implementation
+    │   ├── replace.py       # Text replacement implementation
+    │   └── pd.py            # JSON to Excel converter
     ├── tests/               # Test suite
     │   ├── test_cli.py      # NEW: CLI tests
     │   ├── runners/         # Test execution scripts
@@ -358,28 +310,19 @@ Requirements
 * psutil (system operations)
 * pandas (optional, for Excel features)
 
-Migration Guide (v0.10.0)
-==========================
+Command Reference
+=================
 
-Version 0.10.0 introduces a unified ``fx`` command while maintaining backward compatibility:
-
-**Old way (still works):**
+All commands are accessed through the unified ``fx`` CLI:
 
 .. code-block:: bash
 
-    fx_files
-    fx_size
-    fx_ff "*.py"
-    fx_replace "old" "new" file.txt
-
-**New way (recommended):**
-
-.. code-block:: bash
-
-    fx files
-    fx size
-    fx ff "*.py"
-    fx replace "old" "new" file.txt
+    fx files                      # Count files
+    fx size                       # Analyze sizes
+    fx ff "*.py"                  # Find files
+    fx replace "old" "new" file   # Replace text
+    fx json2excel data.json out   # Convert JSON to Excel
+    fx list                       # List all commands
 
 The new CLI provides:
 

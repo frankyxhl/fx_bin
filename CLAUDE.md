@@ -114,14 +114,13 @@ poetry run pytest tests/test_*security*.py -v && poetry run bandit -r fx_bin/ &&
   - Each utility is a standalone module with a `main()` function entry point
   - Scripts are registered in `pyproject.toml` under `[tool.poetry.scripts]`
 
-### Available Commands
-- `fx_upgrade`: Run upgrade program (run_upgrade_program.py)
-- `fx_files`: Count files in directories (files.py)
-- `fx_size`: Analyze file/directory sizes (size.py)
-- `fx_ff`: Find files utility (find_files.py)
-- `fx_replace`: Text replacement utility (replace.py)
-- `fx_grab_json_api_to_excel`: JSON to Excel converter (pd.py)
-- `fx_server`: Simple upload server (upload_server.py)
+### Available Commands (via unified `fx` CLI)
+- `fx files`: Count files in directories (files.py)
+- `fx size`: Analyze file/directory sizes (size.py)
+- `fx ff`: Find files utility (find_files.py)
+- `fx replace`: Text replacement utility (replace.py)
+- `fx json2excel`: JSON to Excel converter (pd.py)
+- `fx list`: List all available commands
 
 ### Key Dependencies
 - **click**: Command-line interface creation

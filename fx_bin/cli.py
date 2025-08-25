@@ -12,7 +12,6 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("ff", "Find files by keyword"),
     ("replace", "Replace text in files"),
     ("json2excel", "Convert JSON to Excel"),
-    ("upgrade", "Run upgrade program"),
     ("list", "List all available commands"),
 ]
 
@@ -138,13 +137,6 @@ def json2excel(url, output_filename):
     from . import pd
     # Call the existing main function from pd module
     return pd.main(url, output_filename)
-
-
-@cli.command()
-def upgrade():
-    """Run the upgrade program."""
-    from . import run_upgrade_program
-    return run_upgrade_program.main()
 
 
 @cli.command(name='list')
