@@ -76,7 +76,7 @@ Whether you're organizing files, analyzing disk usage, performing bulk text repl
 
 ```bash
 # Install fx-bin
-pip install fx-bin
+pip install fx-bin  # or: pipx install fx-bin
 
 # Count Python files
 fx files . --pattern "*.py"
@@ -113,7 +113,8 @@ pipx install fx-bin
 ```bash
 git clone https://github.com/frankyxhl/fx_bin.git
 cd fx_bin
-pip install -e .
+poetry install
+poetry run fx --help
 ```
 
 ### Requirements
@@ -349,8 +350,9 @@ fx ff /var/log "ERROR" --ignore-case
 git clone https://github.com/frankyxhl/fx_bin.git
 cd fx_bin
 
-# Install Poetry
-pip install poetry
+# Install Poetry (if not already installed)
+curl -sSL https://install.python-poetry.org | python3 -
+# or: pipx install poetry
 
 # Install dependencies
 poetry install --with dev
@@ -398,7 +400,7 @@ poetry run bandit -r fx_bin/
 poetry build
 
 # Test installation
-pip install dist/fx_bin-*.whl
+pip install dist/fx_bin-*.whl  # or: poetry run fx --help
 
 # Publish to PyPI
 poetry publish

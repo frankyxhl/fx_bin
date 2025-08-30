@@ -102,6 +102,10 @@ ENV/
 .mypy_cache/
 .idea
 
+# Legacy files (use Poetry instead)
+requirements*.txt
+setup.py
+
 # Benchmark results
 benchmarks/results/*.txt
 benchmarks/results/*.json
