@@ -270,7 +270,7 @@ def _format_file_size_aligned(size: int) -> str:
 
     Examples:
         >>> _format_file_size_aligned(100)
-        '   100 B'
+        '    100 B'
         >>> _format_file_size_aligned(1536)
         '  1.5 KB'
         >>> _format_file_size_aligned(2097152)
@@ -278,7 +278,7 @@ def _format_file_size_aligned(size: int) -> str:
     """
     if size < 1024:
         formatted = f"{size} B"
-        return f"{formatted:>8}"
+        return f"{formatted:>9}"
     elif size < 1024 * 1024:
         formatted = f"{size / 1024:.1f} KB"
         return f"{formatted:>8}"
