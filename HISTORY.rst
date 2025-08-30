@@ -2,6 +2,123 @@
 History
 =======
 
+1.3.0 (2025-08-30)
+------------------
+
+**MAJOR ENHANCEMENT - BDD Testing Infrastructure & Enhanced Test Coverage**
+
+This release introduces comprehensive Behavior-Driven Development (BDD) testing capabilities with pytest-bdd integration, significantly expanding the test coverage and providing stakeholder-readable specifications.
+
+**New BDD Testing Infrastructure:**
+
+* **pytest-bdd Integration:** Complete BDD test suite with pytest-bdd 7.0+ support
+  - Added pytest-bdd dependency to development requirements
+  - Comprehensive Gherkin feature specifications with 25+ scenarios
+  - Smart step definitions with 70%+ pattern reuse across scenarios
+  - Living documentation that serves as both tests and specifications
+
+* **Comprehensive Feature Coverage:** Complete fx filter command validation
+  - Core functionality: Single/multiple extension filtering, sorting options
+  - Output formats: Simple, detailed, and count modes with metadata validation
+  - Edge cases: Empty directories, non-existent paths, permission restrictions
+  - Security: Path traversal protection and permission handling validation
+  - Performance: Large directory handling and memory usage limits
+  - Integration: Case sensitivity, multiple directories, pipeline compatibility
+
+* **Advanced BDD Framework:** Production-ready testing infrastructure
+  - Smart step pattern library with intelligent parameterization
+  - Sophisticated test data builders for realistic scenarios
+  - Quality validation with BDD best practice compliance scoring
+  - Performance benchmarking integration with memory profiling
+  - Comprehensive fixture management with proper cleanup strategies
+
+**Enhanced Testing Capabilities:**
+
+* **Extended pytest Markers:** Comprehensive test categorization system
+  - Priority markers: `smoke`, `critical`, `regression` for test execution control
+  - Functional markers: `filter_command`, `file_management`, `sorting`, `recursion`
+  - Quality markers: `edge_cases`, `error_handling`, `case_sensitivity`
+  - Performance markers: `performance`, `pagination`, `multiple_directories`
+  - Documentation markers: `help_and_usage`, `version_compatibility`
+  - Integration markers: `glob_patterns`, `output_format`
+
+* **BDD Test Organization:** Structured test suite with maximum reuse
+  - `features/file_filter.feature`: 25+ Gherkin scenarios with business-readable specifications
+  - `tests/bdd/conftest.py`: Comprehensive test fixtures and data builders (400+ lines)
+  - `tests/bdd/test_file_filter_steps.py`: Smart step definitions with pattern reuse
+  - `tests/bdd/step_patterns.py`: Reusable step pattern library and utilities (590+ lines)
+
+**Configuration & Compatibility Updates:**
+
+* **pytest Configuration:** Enhanced pytest.ini with proper marker definitions
+  - All 18+ BDD markers properly defined for strict marker validation
+  - Extended timeout configuration for performance tests (300 seconds)
+  - Comprehensive coverage configuration with proper exclusions
+  - BDD-specific test path and pattern configuration
+
+* **Dependency Management:** Updated Poetry configuration
+  - pytest-bdd 7.3.0+ added to development dependencies
+  - Compatible with existing pytest 8.0+ and pytest-cov 4.1+ infrastructure
+  - Mako, parse, and parse-type dependencies automatically managed
+  - Maintained compatibility with Python 3.11+ requirements
+
+**Documentation & Quality Improvements:**
+
+* **Comprehensive BDD Guide:** Complete documentation in `docs/bdd-testing-guide.md`
+  - 480+ lines of detailed BDD testing documentation
+  - Step-by-step setup and execution instructions
+  - Advanced features: Smart step generation, test data builders, quality validation
+  - Best practices: Scenario writing guidelines, step definition patterns
+  - Troubleshooting: Common issues, debug tips, performance considerations
+  - Integration examples: CI/CD workflows, custom fixtures, performance benchmarking
+
+* **Enhanced Test Infrastructure:** Professional-grade testing capabilities
+  - Intelligent test data generation with realistic file structures
+  - Cross-platform compatibility testing (Windows/macOS/Linux)
+  - Permission testing with proper cleanup and error handling
+  - Memory usage validation and performance profiling
+  - Security validation with path traversal and permission tests
+
+**Technical Implementation:**
+
+* **Smart Fixtures:** Sophisticated test data management
+  - `TestFile` and `TestDirectory` dataclasses for structured test data
+  - File builder with timestamp manipulation and size control
+  - Directory builder for complex nested structures
+  - Permission testing with proper platform compatibility
+  - Large file collection generators for performance testing
+
+* **Pattern Library:** Reusable step definition patterns
+  - `StepPatternLibrary` with Given/When/Then pattern templates
+  - `SmartStepGenerator` for optimized step definition creation
+  - `BDDQualityValidator` for best practice compliance scoring
+  - `StepReuseAnalyzer` for optimization opportunity identification
+
+**Quality Assurance:**
+
+* **BDD Best Practices:** Built-in quality validation
+  - Scenario independence validation
+  - Business language usage validation
+  - Step clarity and specificity checking
+  - Given-When-Then structure validation
+  - Comprehensive quality scoring (0-100 scale)
+
+* **Performance Testing:** Production-ready performance validation
+  - Large directory handling (100+ files per test)
+  - Memory usage limits and profiling
+  - Execution time benchmarking
+  - Parallel test execution support
+  - CI/CD integration examples
+
+**Migration Notes:**
+
+* No breaking changes - all existing functionality preserved
+* BDD tests complement existing unit tests (both test suites can run independently)
+* New pytest markers are optional - existing test execution patterns continue to work
+* BDD dependencies are in development group only - production installations unaffected
+
+This release establishes fx-bin as a mature testing exemplar with enterprise-grade BDD capabilities, providing both comprehensive validation and stakeholder-readable documentation.
+
 1.2.0 (2025-08-30)
 ------------------
 

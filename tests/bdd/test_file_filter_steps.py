@@ -22,7 +22,7 @@ from .conftest import (
 )
 
 # Load all scenarios from the feature file
-scenarios('../features/file_filter.feature')
+scenarios('../../features/file_filter.feature')
 
 
 # ==============================================================================

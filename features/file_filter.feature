@@ -1,5 +1,5 @@
 # language: en
-@file-management @filter-command
+@file_management @filter_command
 Feature: File Filtering by Extension
   As a developer working with file collections
   I want to filter files by their extensions with flexible sorting options
@@ -78,14 +78,14 @@ Feature: File Filtering by Extension
     Then I should see "file1.txt", "file2.txt", and "file3.txt"
     And the paths should show the relative directory structure
 
-  @output-format
+  @output_format
   Scenario: Simple format output shows filenames only
     Given I have files "document.pdf", "image.jpg", "video.mp4"
     When I run "fx filter pdf --format simple"
     Then I should see only the filename "document.pdf"
     And I should not see timestamps, sizes, or other metadata
 
-  @output-format
+  @output_format
   Scenario: Detailed format output shows file metadata
     Given I have a file "report.docx" with known metadata
     When I run "fx filter docx --format detailed"
@@ -102,21 +102,21 @@ Feature: File Filtering by Extension
     Then I should see exactly 10 results
     And the results should be the 10 most recently created files
 
-  @edge-cases
+  @edge_cases
   Scenario: No files found with specified extension
     Given I have a directory with only ".txt" and ".py" files
     When I run "fx filter pdf"
     Then I should see a message "No files found with extension(s): pdf"
     And the command should exit with status 0
 
-  @edge-cases
+  @edge_cases
   Scenario: Empty directory
     Given I have an empty directory
     When I run "fx filter txt"
     Then I should see a message "No files found in the specified directory"
     And the command should exit with status 0
 
-  @edge-cases
+  @edge_cases
   Scenario: Directory does not exist
     Given the directory "/nonexistent/path" does not exist
     When I run "fx filter txt /nonexistent/path"
@@ -139,14 +139,14 @@ Feature: File Filtering by Extension
     And accessible files should still be displayed
     And the command should exit with status 0
 
-  @error-handling
+  @error_handling
   Scenario: Invalid sort-by option
     Given I have files with ".txt" extension
     When I run "fx filter txt --sort-by invalid"
     Then I should see an error message "Invalid sort option: invalid. Use 'created' or 'modified'"
     And the command should exit with status 1
 
-  @error-handling
+  @error_handling
   Scenario: Invalid format option
     Given I have files with ".txt" extension
     When I run "fx filter txt --format invalid"
@@ -168,35 +168,35 @@ Feature: File Filtering by Extension
     Then I should see size information for only the Python files
     And the pipeline should execute successfully
 
-  @case-sensitivity
+  @case_sensitivity
   Scenario: Extension matching is case-insensitive
     Given I have files "Document.PDF", "image.JPG", "script.PY"
     When I run "fx filter pdf,jpg,py"
     Then I should see all three files
     And case variations should be handled correctly
 
-  @multiple-directories
+  @multiple_directories
   Scenario: Filter files across multiple directories
     Given I have directories "dir1" and "dir2" with ".txt" files
     When I run "fx filter txt dir1 dir2"
     Then I should see ".txt" files from both directories
     And each result should show which directory it came from
 
-  @glob-patterns
+  @glob_patterns
   Scenario: Support for glob-like patterns in extensions
     Given I have files with extensions "txt", "tx1", "tx2"
     When I run "fx filter 'tx*'"
     Then I should see files matching the pattern
     And files with "txt", "tx1", and "tx2" extensions should be included
 
-  @help-and-usage
+  @help_and_usage
   Scenario: Display help information
     When I run "fx filter --help"
     Then I should see usage information
     And I should see all available options explained
     And I should see example commands
 
-  @version-compatibility
+  @version_compatibility
   Scenario: Version information display
     When I run "fx filter --version"
     Then I should see the current version number
