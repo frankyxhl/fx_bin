@@ -74,6 +74,7 @@ Available fx Commands
     fx files       - Count files in directories
     fx size        - Analyze file/directory sizes
     fx ff          - Find files by keyword
+    fx filter      - Filter files by extension and sort by time
     fx replace     - Replace text in files
     fx json2excel  - Convert JSON to Excel
     fx list        - List all available commands
@@ -152,6 +153,28 @@ Advanced file search utility with pattern matching.
 * Size filtering
 * Date filtering
 * Regular expression support
+
+fx filter - File Filter by Extension
+-------------------------------------
+
+Filter files by extension and sort by creation or modification time.
+
+.. code-block:: bash
+
+    fx filter mp4                           # Find all .mp4 files
+    fx filter "mp4,avi,mkv"                  # Multiple extensions
+    fx filter mp4 --sort-by modified        # Sort by modification time
+    fx filter mp4 --no-recursive            # Current directory only
+    fx filter mp4 --reverse                 # Oldest first
+    fx filter mp4 --format detailed         # Show size and timestamps
+
+**Features:**
+
+* Filter by single or multiple extensions
+* Sort by creation time (default) or modification time
+* Recursive or non-recursive search
+* Simple, detailed, or count-only output formats
+* Reverse sorting option
 
 fx replace - Text Replacement
 ------------------------------

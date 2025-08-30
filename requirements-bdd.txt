@@ -1,0 +1,38 @@
+# BDD Testing Requirements for fx_bin
+# Install with: pip install -r requirements-bdd.txt
+
+# Core BDD Framework
+pytest-bdd>=6.1.1,<8.0.0        # Behavior-Driven Development for pytest
+gherkin-official>=1.0.0,<2.0.0  # Official Gherkin parser
+
+# Testing Framework Extensions
+pytest>=7.0.0,<9.0.0             # Core testing framework
+pytest-xdist>=3.0.0,<4.0.0      # Parallel test execution
+pytest-timeout>=2.1.0,<3.0.0    # Test timeout protection
+pytest-mock>=3.8.0,<4.0.0       # Mocking utilities
+pytest-cov>=4.0.0,<5.0.0        # Coverage reporting
+
+# Test Data and Fixtures
+factory-boy>=3.2.0,<4.0.0       # Test data factories
+faker>=19.0.0,<21.0.0            # Fake data generation
+freezegun>=1.2.0,<2.0.0          # Time/date mocking
+
+# Performance Testing
+memory-profiler>=0.60.0,<1.0.0  # Memory usage profiling
+psutil>=5.9.0,<6.0.0             # System and process utilities
+
+# Reporting and Documentation
+pytest-html>=3.1.0,<4.0.0       # HTML test reports
+pytest-json-report>=1.5.0,<2.0.0 # JSON test reports
+allure-pytest>=2.12.0,<3.0.0    # Allure reporting integration
+
+# Development and Quality
+black>=22.0.0,<24.0.0            # Code formatting
+flake8>=5.0.0,<7.0.0             # Linting
+mypy>=1.0.0,<2.0.0               # Type checking
+pre-commit>=2.20.0,<4.0.0        # Git hooks
+
+# Optional: Enhanced reporting
+# pytest-instafail>=0.4.0,<1.0.0  # Instant failure reporting
+# pytest-clarity>=1.0.0,<2.0.0     # Better assertion messages
+# pytest-sugar>=0.9.0,<1.0.0       # Better test output formatting

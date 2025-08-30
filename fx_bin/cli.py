@@ -10,6 +10,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("files", "Count files in directories"),
     ("size", "Analyze file/directory sizes"),
     ("ff", "Find files by keyword"),
+    ("filter", "Filter files by extension"),
     ("replace", "Replace text in files"),
     ("json2excel", "Convert JSON to Excel"),
     ("list", "List all available commands"),
@@ -105,6 +106,55 @@ def ff(keyword):
         return 1
     find_files.find_files(keyword)
     return 0
+
+
+@cli.command()
+@click.argument('extension')
+@click.argument('path', default='.')
+@click.option('--recursive/--no-recursive', default=True, 
+              help='Search recursively in subdirectories (default: True)')
+@click.option('--sort-by', type=click.Choice(['created', 'modified']), 
+              default=None, help='Sort files by creation or modification time')
+@click.option('--reverse', is_flag=True, default=False,
+              help='Reverse sort order (newest first for time sorts)')
+@click.option('--format', 'output_format', type=click.Choice(['simple', 'detailed', 'count']),
+              default='simple', help='Output format')
+def filter(extension, path, recursive, sort_by, reverse, output_format):
+    """Filter files by extension.
+
+    Examples:
+        fx filter txt                    # Find .txt files in current directory
+        fx filter py /path/to/code       # Find .py files in specific path
+        fx filter "txt,py" .             # Find multiple extensions
+        fx filter txt --no-recursive     # Search only current directory
+        fx filter py --sort-by modified  # Sort by modification time
+        fx filter txt --format count     # Show only count
+    """
+    from . import filter as filter_module
+    
+    try:
+        # Find files
+        files = filter_module.find_files_by_extension(path, extension, recursive)
+        
+        # Sort if requested
+        if sort_by:
+            files = filter_module.sort_files_by_time(files, sort_by, reverse)
+        
+        # Format and display output
+        output = filter_module.format_output(files, output_format)
+        click.echo(output)
+        
+        return 0
+        
+    except FileNotFoundError as e:
+        click.echo(f"Error: {e}", err=True)
+        return 1
+    except ValueError as e:
+        click.echo(f"Error: {e}", err=True)
+        return 1
+    except Exception as e:
+        click.echo(f"Unexpected error: {e}", err=True)
+        return 1
 
 
 @cli.command()

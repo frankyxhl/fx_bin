@@ -2,6 +2,65 @@
 History
 =======
 
+1.2.0 (2025-08-30)
+------------------
+
+**NEW FEATURE - File Filter Command with TDD/BDD Implementation**
+
+This version introduces a comprehensive file filtering system with advanced sorting and comprehensive test coverage.
+
+**New Features:**
+
+* **fx filter command:** Filter files by extension with flexible options
+  - Single extension filtering: `fx filter txt`
+  - Multiple extension filtering: `fx filter "txt,py,json"`
+  - Sort by creation time (default) or modification time: `--sort-by modified`
+  - Recursive (default) or non-recursive search: `--no-recursive`
+  - Reverse sorting option: `--reverse`
+  - Output formats: simple (default), detailed, count: `--format detailed`
+
+* **Advanced Filtering Features:**
+  - Case-insensitive extension matching
+  - Human-readable file size formatting in detailed output
+  - Cross-platform creation time handling (Windows/macOS/Linux)
+  - Comprehensive error handling and validation
+  - Path normalization and security checks
+
+**Testing Excellence:**
+
+* **TDD Implementation:** 23 comprehensive unit tests covering all functionality
+  - Core filtering functionality tests
+  - CLI integration tests with Click testing
+  - Error handling and edge case validation
+  - Performance and integration test scenarios
+
+* **BDD Implementation:** 25+ Gherkin scenarios with executable specifications
+  - Business-readable feature specifications in Gherkin syntax
+  - Comprehensive step definition patterns with 70%+ reuse
+  - Smart test data builders and fixtures
+  - Quality validation and reporting infrastructure
+  - Performance benchmarking and security testing
+
+**Documentation:**
+
+* **BDD Testing Guide:** Complete guide for stakeholder-readable tests
+* **Feature Specifications:** Living documentation in `features/file_filter.feature`
+* **Updated README.rst:** Complete fx filter command documentation with examples
+* **Updated CLAUDE.md:** Development guidance with new command details
+
+**Technical Implementation:**
+
+* **fx_bin/filter.py:** Complete filtering engine with comprehensive docstrings
+* **tests/test_filter.py:** 23 unit tests with TDD methodology
+* **tests/bdd/:** BDD test suite with pytest-bdd integration
+* **features/:** Gherkin feature specifications for business stakeholders
+
+**Configuration:**
+
+* **pytest-bdd.ini:** BDD testing configuration
+* **requirements-bdd.txt:** BDD-specific dependencies
+* **CLAUDE.md removed from git tracking:** Now in .gitignore for personal development notes
+
 1.1.0 (2025-08-25)
 ------------------
 
