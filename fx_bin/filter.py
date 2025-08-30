@@ -266,24 +266,28 @@ def _format_file_size_aligned(size: int) -> str:
         size: File size in bytes
 
     Returns:
-        Right-aligned size with left-aligned unit (total width ~8 chars)
+        Right-aligned size with unit (total width 8 chars)
 
     Examples:
         >>> _format_file_size_aligned(100)
-        '  100 B '
+        '   100 B'
         >>> _format_file_size_aligned(1536)
         '  1.5 KB'
         >>> _format_file_size_aligned(2097152)
         '  2.0 MB'
     """
     if size < 1024:
-        return f"{size:4} B "
+        formatted = f"{size} B"
+        return f"{formatted:>8}"
     elif size < 1024 * 1024:
-        return f"{size / 1024:4.1f} KB"
+        formatted = f"{size / 1024:.1f} KB"
+        return f"{formatted:>8}"
     elif size < 1024 * 1024 * 1024:
-        return f"{size / (1024 * 1024):4.1f} MB"
+        formatted = f"{size / (1024 * 1024):.1f} MB"
+        return f"{formatted:>8}"
     else:
-        return f"{size / (1024 * 1024 * 1024):4.1f} GB"
+        formatted = f"{size / (1024 * 1024 * 1024):.1f} GB"
+        return f"{formatted:>8}"
 
 
 def parse_extensions(extension_string: str) -> List[str]:
