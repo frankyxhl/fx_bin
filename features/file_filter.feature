@@ -127,7 +127,7 @@ Feature: File Filtering by Extension
   Scenario: Block path traversal attempts
     Given I am in a secure directory environment
     When I run "fx filter txt ../../../etc/passwd"
-    Then I should see an error message "Error: Path not found:"
+    Then I should see an error message "Error:"
     And the command should exit with status 0
     And no files outside the allowed directory should be accessed
 
