@@ -27,7 +27,7 @@ pytest-json-report>=1.5.0,<2.0.0 # JSON test reports
 allure-pytest>=2.12.0,<3.0.0    # Allure reporting integration
 
 # Development and Quality
-black>=22.0.0,<24.0.0            # Code formatting
+black>=24.3.0,<25.0.0            # Code formatting (fixed ReDoS vulnerability)
 flake8>=5.0.0,<7.0.0             # Linting
 mypy>=1.0.0,<2.0.0               # Type checking
 pre-commit>=2.20.0,<4.0.0        # Git hooks

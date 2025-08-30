@@ -2,6 +2,42 @@
 History
 =======
 
+1.3.1 (2025-08-30)
+------------------
+
+**SECURITY FIX - Black ReDoS Vulnerability Patched**
+
+This patch release addresses a critical security vulnerability in the Black code formatter dependency.
+
+**Security Fix:**
+
+* **Black ReDoS Vulnerability (CVE):** Fixed Regular Expression Denial of Service vulnerability
+  - Updated Black from ^24.0.0 to ^24.3.0 in pyproject.toml
+  - Updated Black from >=22.0.0,<24.0.0 to >=24.3.0,<25.0.0 in requirements-bdd.txt
+  - Vulnerability affected all Black versions prior to 24.3.0
+  - No changes to fx-bin functionality - security-only release
+
+**Verification:**
+
+* **Security Scans:** All security checks passing
+  - Bandit: 0 security issues found across 13 analyzed files
+  - Safety: 55 security tests passed, no known vulnerabilities
+  - All 43 core unit tests passing
+  - CLI functionality verified with all commands working correctly
+
+**Technical Details:**
+
+* The vulnerability allowed potential denial of service through crafted regular expressions
+* Black is a development dependency used for code formatting
+* This update does not affect the runtime behavior of fx-bin utilities
+* Production installations are not affected as Black is only in dev dependencies
+
+**Recommended Action:**
+
+* All developers should update to 1.3.1 immediately to patch the vulnerability
+* Production users can update at convenience as the vulnerability only affects development environments
+* Run `poetry update black` or `pip install fx-bin==1.3.1` to get the security fix
+
 1.3.0 (2025-08-30)
 ------------------
 

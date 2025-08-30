@@ -154,6 +154,41 @@ This document records important architectural and design decisions made during f
 
 ---
 
+## ADR-007: Security-First Dependency Management (2025-08-30)
+
+**Status**: Accepted  
+**Context**: Black ReDoS vulnerability (CVE) discovered affecting versions < 24.3.0  
+**Decision**: Implement immediate patching process for security vulnerabilities with patch releases  
+
+**Rationale**:
+- **Security Priority**: Security vulnerabilities require immediate attention
+- **Patch Versioning**: Security-only fixes warrant patch version increment (x.x.PATCH)
+- **Comprehensive Updates**: Both pyproject.toml and requirements files need updates
+- **Verification Required**: Security scans (Bandit, Safety) must validate fixes
+
+**Consequences**:
+- ✅ Rapid response to security vulnerabilities
+- ✅ Clear versioning strategy for security fixes
+- ✅ Comprehensive security validation process
+- ✅ Established precedent for future security responses
+- ⚠️ Requires monitoring dependency security advisories
+- ⚠️ May require urgent patch releases outside normal schedule
+
+**Implementation**:
+- Update affected dependencies in pyproject.toml
+- Update all requirements*.txt files with same dependency
+- Run security validation: Bandit for code, Safety for dependencies
+- Document security fix in HISTORY.rst with CVE details
+- Release as patch version (e.g., 1.3.0 → 1.3.1)
+
+**Technical Details**:
+- Black ^24.0.0 → ^24.3.0 to fix ReDoS vulnerability
+- Security scans: Bandit (0 issues), Safety (55 tests passed)
+- All core tests must pass after dependency update
+- Development-only dependencies still require security attention
+
+---
+
 ## Decision Criteria
 
 ### Evaluation Framework

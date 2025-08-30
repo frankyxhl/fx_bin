@@ -4,32 +4,36 @@
 
 ## Current State (2025-08-30)
 
-**Status**: v1.3.0 Release Ready ✅  
+**Status**: v1.3.1 Security Patch Ready 🔒  
 **Branch**: main  
-**New Feature**: Comprehensive BDD testing infrastructure with pytest-bdd integration  
+**Critical Fix**: Black ReDoS vulnerability (CVE) patched - updated to v24.3.0+  
 
 ## Immediate Next Steps
 
 ```bash
-# 1. Commit the v1.3.0 release
-git add .
-git commit -m "feat: v1.3.0 - comprehensive BDD testing infrastructure with pytest-bdd integration
+# 1. Commit the security fix
+git add pyproject.toml poetry.lock requirements-bdd.txt
+git commit -m "fix: v1.3.1 - patch Black ReDoS vulnerability (CVE)
+
+- Updated Black from ^24.0.0 to ^24.3.0
+- Security verified with Bandit and Safety
+- All tests passing
 
 🤖 Generated with Claude Code
 
 Co-Authored-By: Claude <noreply@anthropic.com>"
 
 # 2. Create release tag
-git tag -a v1.3.0 -m "v1.3.0: BDD Testing Infrastructure Release"
+git tag -a v1.3.1 -m "v1.3.1: Security Fix - Black ReDoS vulnerability patched"
 
-# 3. Build and publish
-poetry build
+# 3. Publish (build already done)
+ls dist/*1.3.1*  # Verify packages exist
 poetry publish
 ```
 
 ## Project Overview
 
-**fx_bin** is a Python utility collection providing command-line tools for file operations. Current version 1.3.0 adds comprehensive BDD testing infrastructure with pytest-bdd integration.
+**fx_bin** is a Python utility collection providing command-line tools for file operations. Current version 1.3.1 includes a critical security fix for the Black ReDoS vulnerability.
 
 ### Available Commands
 ```bash
@@ -42,7 +46,14 @@ fx json2excel  # Convert JSON to Excel
 fx list        # List all available commands
 ```
 
-## What's New in v1.3.0
+## What's New in v1.3.1
+
+### Security Fix
+- **Black ReDoS Vulnerability**: Patched CVE affecting Black < 24.3.0
+- Updated dependencies in both pyproject.toml and requirements-bdd.txt
+- Verified with comprehensive security scans (Bandit, Safety)
+
+## Features from v1.3.0
 
 ### BDD Testing Infrastructure
 ```bash

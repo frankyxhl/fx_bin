@@ -1898,4 +1898,4 @@ excel = ["pandas"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "f7caae92b01df89b6ca27b6c50d6980e2abb2651b62e67a67bdad4bdb8f2866a"
+content-hash = "d895fdd4d134d6ed73a2762ac5c64dadf5fab1b094a4e4167c7ec40a3749de43"
