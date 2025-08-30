@@ -19,7 +19,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
 
 @click.group(
     invoke_without_command=True,
-    context_settings={'help_option_names': ['-h', '--help']}
+    context_settings={"help_option_names": ["-h", "--help"]},
 )
 @click.version_option()
 @click.pass_context
@@ -34,7 +34,7 @@ def cli(ctx):
 
 
 @cli.command()
-@click.argument('paths', nargs=-1, type=click.Path(exists=True))
+@click.argument("paths", nargs=-1, type=click.Path(exists=True))
 def files(paths):
     """Count files in directories.
 
@@ -43,8 +43,9 @@ def files(paths):
         fx files /path    # Count files in specified path
     """
     from . import files as files_module
+
     # Convert tuple to list for compatibility
-    paths_list = list(paths) if paths else ['.']
+    paths_list = list(paths) if paths else ["."]
     # Call the list_files_count function with the paths
     for path in paths_list:
         files_list = files_module.list_files_count(path)
@@ -61,7 +62,7 @@ def files(paths):
 
 
 @cli.command()
-@click.argument('paths', nargs=-1, type=click.Path(exists=True))
+@click.argument("paths", nargs=-1, type=click.Path(exists=True))
 def size(paths):
     """Analyze file and directory sizes.
 
@@ -71,7 +72,7 @@ def size(paths):
     """
     from . import size as size_module
 
-    paths_list = list(paths) if paths else ['.']
+    paths_list = list(paths) if paths else ["."]
 
     for path in paths_list:
         if len(paths_list) > 1:
@@ -88,7 +89,7 @@ def size(paths):
 
 
 @cli.command()
-@click.argument('keyword')
+@click.argument("keyword")
 def ff(keyword):
     """Find files by keyword.
 
@@ -109,43 +110,97 @@ def ff(keyword):
 
 
 @cli.command()
-@click.argument('extension')
-@click.argument('path', default='.')
-@click.option('--recursive/--no-recursive', default=True, 
-              help='Search recursively in subdirectories (default: True)')
-@click.option('--sort-by', type=click.Choice(['created', 'modified']), 
-              default=None, help='Sort files by creation or modification time')
-@click.option('--reverse', is_flag=True, default=False,
-              help='Reverse sort order (newest first for time sorts)')
-@click.option('--format', 'output_format', type=click.Choice(['simple', 'detailed', 'count']),
-              default='simple', help='Output format')
-def filter(extension, path, recursive, sort_by, reverse, output_format):
+@click.argument("extension")
+@click.argument("paths", nargs=-1)
+@click.option(
+    "--recursive/--no-recursive",
+    default=True,
+    help="Search recursively in subdirectories (default: True)",
+)
+@click.option(
+    "--sort-by",
+    type=click.Choice(["created", "modified"]),
+    default=None,
+    help="Sort files by creation or modification time",
+)
+@click.option(
+    "--reverse",
+    is_flag=True,
+    default=False,
+    help="Reverse sort order (newest first for time sorts)",
+)
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["simple", "detailed"]),
+    default="detailed",
+    help="Output format (default: detailed)",
+)
+@click.option(
+    "--show-path",
+    is_flag=True,
+    default=False,
+    help="Show relative file paths instead of just filenames",
+)
+@click.option(
+    "--limit",
+    type=int,
+    default=None,
+    help="Limit the number of results returned",
+)
+def filter(
+    extension,
+    paths,
+    recursive,
+    sort_by,
+    reverse,
+    output_format,
+    show_path,
+    limit,
+):
     """Filter files by extension.
 
     Examples:
-        fx filter txt                    # Find .txt files in current directory
+        fx filter txt                    # Find .txt files with detailed format
         fx filter py /path/to/code       # Find .py files in specific path
         fx filter "txt,py" .             # Find multiple extensions
         fx filter txt --no-recursive     # Search only current directory
         fx filter py --sort-by modified  # Sort by modification time
-        fx filter txt --format count     # Show only count
+        fx filter txt --format simple    # Show only filenames
+        fx filter txt --show-path        # Show relative paths
     """
     from . import filter as filter_module
-    
+
     try:
-        # Find files
-        files = filter_module.find_files_by_extension(path, extension, recursive)
-        
+        # Use current directory if no paths provided
+        search_paths = list(paths) if paths else ["."]
+
+        # Find files in all paths
+        all_files = []
+        for path in search_paths:
+            files = filter_module.find_files_by_extension(
+                path, extension, recursive
+            )
+            all_files.extend(files)
+
         # Sort if requested
         if sort_by:
-            files = filter_module.sort_files_by_time(files, sort_by, reverse)
-        
+            all_files = filter_module.sort_files_by_time(
+                all_files, sort_by, reverse
+            )
+
+        # Apply limit if requested
+        if limit is not None and limit > 0:
+            all_files = all_files[:limit]
+
         # Format and display output
-        output = filter_module.format_output(files, output_format)
+        output = filter_module.format_output(
+            all_files, output_format, show_path
+        )
         click.echo(output)
-        
+
         return 0
-        
+
     except FileNotFoundError as e:
         click.echo(f"Error: {e}", err=True)
         return 1
@@ -158,9 +213,9 @@ def filter(extension, path, recursive, sort_by, reverse, output_format):
 
 
 @cli.command()
-@click.argument('search_text')
-@click.argument('replace_text')
-@click.argument('filenames', nargs=-1, required=True)
+@click.argument("search_text")
+@click.argument("replace_text")
+@click.argument("filenames", nargs=-1, required=True)
 def replace(search_text, replace_text, filenames):
     """Replace text in files.
 
@@ -175,8 +230,8 @@ def replace(search_text, replace_text, filenames):
 
 
 @cli.command()
-@click.argument('url')
-@click.argument('output_filename')
+@click.argument("url")
+@click.argument("output_filename")
 def json2excel(url, output_filename):
     """Convert JSON data to Excel file.
 
@@ -185,11 +240,12 @@ def json2excel(url, output_filename):
         fx json2excel https://api.example.com/data output.xlsx
     """
     from . import pd
+
     # Call the existing main function from pd module
     return pd.main(url, output_filename)
 
 
-@cli.command(name='list')
+@cli.command(name="list")
 def list_commands():
     """List all available fx commands."""
     click.echo("\nAvailable fx commands:\n")
@@ -217,5 +273,5 @@ def main():
         return 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

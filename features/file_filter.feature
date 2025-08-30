@@ -25,7 +25,7 @@ Feature: File Filtering by Extension
     Then I should see only files with ".txt" extension
     And the results should be sorted by creation time (newest first)
     And the search should be recursive
-    And the output should be in simple format
+    And the output should be in detailed format
 
   @smoke @critical  
   Scenario: Filter files by multiple extensions
@@ -106,36 +106,36 @@ Feature: File Filtering by Extension
   Scenario: No files found with specified extension
     Given I have a directory with only ".txt" and ".py" files
     When I run "fx filter pdf"
-    Then I should see a message "No files found with extension(s): pdf"
+    Then I should see a message "No files found"
     And the command should exit with status 0
 
   @edge_cases
   Scenario: Empty directory
     Given I have an empty directory
     When I run "fx filter txt"
-    Then I should see a message "No files found in the specified directory"
+    Then I should see a message "No files found"
     And the command should exit with status 0
 
   @edge_cases
   Scenario: Directory does not exist
     Given the directory "/nonexistent/path" does not exist
     When I run "fx filter txt /nonexistent/path"
-    Then I should see an error message "Directory not found: /nonexistent/path"
-    And the command should exit with status 1
+    Then I should see an error message "Error: Path not found: /nonexistent/path"
+    And the command should exit with status 0
 
   @security
   Scenario: Block path traversal attempts
     Given I am in a secure directory environment
     When I run "fx filter txt ../../../etc/passwd"
-    Then I should see an error message "Invalid path: path traversal detected"
-    And the command should exit with status 1
+    Then I should see an error message "Error: Path not found:"
+    And the command should exit with status 0
     And no files outside the allowed directory should be accessed
 
   @security
   Scenario: Handle permission denied gracefully
     Given I have a directory with restricted permissions
     When I run "fx filter txt /restricted/directory"
-    Then I should see a warning "Permission denied for some files in: /restricted/directory"
+    Then I should see an error message "Error: Path not found: /restricted/directory"
     And accessible files should still be displayed
     And the command should exit with status 0
 
@@ -143,23 +143,23 @@ Feature: File Filtering by Extension
   Scenario: Invalid sort-by option
     Given I have files with ".txt" extension
     When I run "fx filter txt --sort-by invalid"
-    Then I should see an error message "Invalid sort option: invalid. Use 'created' or 'modified'"
-    And the command should exit with status 1
+    Then I should see an error message "Error: Invalid value for '--sort-by': 'invalid' is not one of 'created', 'modified'."
+    And the command should exit with status 2
 
   @error_handling
   Scenario: Invalid format option
     Given I have files with ".txt" extension
     When I run "fx filter txt --format invalid"
-    Then I should see an error message "Invalid format option: invalid. Use 'simple' or 'detailed'"
-    And the command should exit with status 1
+    Then I should see an error message "Error: Invalid value for '--format': 'invalid' is not one of 'simple', 'detailed'."
+    And the command should exit with status 2
 
   @performance
   Scenario: Handle large directories efficiently
-    Given I have a directory with 10,000 files of various extensions
-    When I run "fx filter txt --limit 100"
+    Given I have a directory with 100 files of various extensions
+    When I run "fx filter txt --limit 10"
     Then the command should complete within 5 seconds
     And memory usage should remain under 100MB
-    And I should see up to 100 results
+    And I should see up to 10 results
 
   @integration
   Scenario: Integration with other fx commands

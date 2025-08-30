@@ -9,7 +9,7 @@ except ImportError:
     from importlib_metadata import version  # type: ignore
 
 __author__ = """Frank Xu"""
-__email__ = 'frank@frankxu.me'
+__email__ = "frank@frankxu.me"
 
 try:
     __version__ = version("fx-bin")

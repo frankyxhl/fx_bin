@@ -175,13 +175,15 @@ class TestFilterCore(unittest.TestCase):
         # Should include file size, modification time, etc.
         self.assertIsInstance(result, str)
         self.assertIn("document1.txt", result)
-        # Should contain size information
-        result_lower = result.lower()
-        has_size_info = ("bytes" in result_lower or "kb" in result_lower or "mb" in result_lower)
+        # Should contain size information with new format (B/KB/MB units)
+        has_size_info = (" B " in result or " KB " in result or " MB " in result)
         self.assertTrue(has_size_info)
+        # Should have date format YYYY-MM-DD
+        import re
+        self.assertTrue(re.search(r'\d{4}-\d{2}-\d{2}', result))
     
-    def test_format_output_count_only(self):
-        """Test count-only output formatting."""
+    def test_format_output_count_removed(self):
+        """Test that count format is no longer supported."""
         from fx_bin.filter import format_output
         
         files = [
@@ -189,12 +191,12 @@ class TestFilterCore(unittest.TestCase):
             str(self.test_path / "script.py"),
         ]
         
-        result = format_output(files, format='count')
+        # Count format should raise ValueError
+        with self.assertRaises(ValueError) as context:
+            format_output(files, format='count')
         
-        # Should return just the count
-        self.assertIsInstance(result, str)
-        self.assertIn("2", result)
-        self.assertNotIn("document1.txt", result)  # Shouldn't include file paths
+        self.assertIn("Invalid format: count", str(context.exception))
+        self.assertIn("['simple', 'detailed']", str(context.exception))
     
     def test_format_output_invalid_format(self):
         """Test output formatting with invalid format option."""

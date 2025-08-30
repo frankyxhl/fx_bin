@@ -1,4 +1,5 @@
 """File and directory size listing utility."""
+
 import os
 from typing import List
 
@@ -8,7 +9,7 @@ __all__ = ["list_size"]
 
 
 def list_size(
-    path: str = '.', ignore_dot_file: bool = True
+    path: str = ".", ignore_dot_file: bool = True
 ) -> List[SizeEntry]:
     """
     List sizes of files and directories in the given path.
@@ -36,9 +37,9 @@ def main():
     import click
 
     @click.command()
-    @click.option('--path', '-p', default='.', help='Path to analyze')
+    @click.option("--path", "-p", default=".", help="Path to analyze")
     @click.option(
-        '--all', '-a', 'show_all', is_flag=True, help='Show hidden files'
+        "--all", "-a", "show_all", is_flag=True, help="Show hidden files"
     )
     def cli(path, show_all):
         """Display file and directory sizes in human-readable format."""
@@ -49,5 +50,5 @@ def main():
     cli()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

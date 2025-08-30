@@ -189,6 +189,92 @@ This document records important architectural and design decisions made during f
 
 ---
 
+## ADR-008: Test Isolation Management Strategy (2025-08-30)
+
+**Status**: Accepted  
+**Context**: BDD tests were causing test suite failures due to working directory changes  
+**Decision**: Implement explicit working directory restoration using finally blocks  
+
+**Rationale**:
+- **Test Independence**: Each test must run in isolation without side effects
+- **Global State Management**: Working directory is global state requiring careful handling
+- **Guaranteed Cleanup**: Finally blocks ensure restoration even on test failures
+- **Explicit Over Implicit**: Clear restoration code is easier to debug than hidden state
+
+**Consequences**:
+- ✅ All 301 tests now pass consistently (was 21 failures)
+- ✅ Test execution order no longer affects results
+- ✅ Clear pattern for handling global state in tests
+- ✅ Easy to debug and understand cleanup logic
+- ⚠️ Must remember to add finally blocks to new tests
+- ⚠️ Slightly more verbose test code
+
+**Implementation**:
+```python
+def test_function():
+    original_dir = os.getcwd()
+    try:
+        # Test operations that might change directory
+        os.chdir(temp_dir)
+        # ... test logic ...
+    finally:
+        os.chdir(original_dir)  # ALWAYS restore
+```
+
+**Technical Details**:
+- Applied to ~15 BDD step definitions that change directories
+- Pattern works for both passing and failing tests
+- Alternative approaches considered: pytest fixtures, context managers
+- Chosen for simplicity and explicit visibility of cleanup
+
+**Lessons Learned**:
+- Test individual files before full suite to identify isolation issues
+- BDD tests commonly change working directory for file operations
+- Always restore global state (cwd, env vars, sys.path) in tests
+- Incremental testing strategy helps identify isolation problems early
+
+---
+
+## ADR-009: BDD Step Definition Architecture (2025-08-30)
+
+**Status**: Accepted  
+**Context**: Need comprehensive BDD step definitions for complex scenarios  
+**Decision**: Implement custom table parsing and directory structure validation  
+
+**Rationale**:
+- **Gherkin Tables**: Need to parse and validate table-formatted test data
+- **Directory Trees**: Complex directory structures require validation
+- **Pattern Matching**: Glob patterns need fnmatch integration
+- **Multi-path Support**: CLI commands need to handle multiple paths
+
+**Consequences**:
+- ✅ Complete BDD scenario coverage with table support
+- ✅ Flexible validation of complex output formats
+- ✅ Reusable parsing utilities for future scenarios
+- ✅ Support for advanced CLI features (glob, multi-path)
+- ⚠️ Custom parsing code requires maintenance
+- ⚠️ More complex than built-in pytest-bdd features
+
+**Implementation**:
+```python
+def parse_table(table_string):
+    lines = table_string.strip().split('\n')
+    headers = [h.strip() for h in lines[0].split('|')[1:-1]]
+    rows = []
+    for line in lines[1:]:
+        row = [cell.strip() for cell in line.split('|')[1:-1]]
+        rows.append(dict(zip(headers, row)))
+    return rows
+```
+
+**Technical Details**:
+- Table parser handles Gherkin pipe-delimited format
+- Directory structure validator compares expected vs actual trees
+- Glob pattern support via fnmatch.fnmatch()
+- Multi-path iteration in CLI command implementation
+
+---
+
 ## Decision Criteria
 
 ### Evaluation Framework

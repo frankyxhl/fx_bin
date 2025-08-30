@@ -22,6 +22,7 @@ from fx_bin.errors import ReplaceError, IOError as FxIOError
 @dataclass(frozen=True)
 class ReplaceContext:
     """Context for replacement operations."""
+
     search_text: str
     replace_text: str
     create_backup: bool = True
@@ -31,6 +32,7 @@ class ReplaceContext:
 @dataclass(frozen=True)
 class FileBackup:
     """Represents a file backup."""
+
     original_path: str
     backup_path: str
     original_mode: int
@@ -73,11 +75,13 @@ def create_backup(filename: str) -> IOResult[FileBackup, FxIOError]:
         # Copy file with metadata
         shutil.copy2(filename, backup_path)
 
-        return IOResult.from_value(FileBackup(
-            original_path=filename,
-            backup_path=backup_path,
-            original_mode=original_mode
-        ))
+        return IOResult.from_value(
+            FileBackup(
+                original_path=filename,
+                backup_path=backup_path,
+                original_mode=original_mode,
+            )
+        )
     except Exception as e:
         return IOResult.from_failure(
             FxIOError(f"Failed to create backup: {e}")
@@ -86,20 +90,19 @@ def create_backup(filename: str) -> IOResult[FileBackup, FxIOError]:
 
 @impure_safe
 def perform_replacement(
-    context: ReplaceContext,
-    backup: FileBackup
+    context: ReplaceContext, backup: FileBackup
 ) -> IOResult[str, FxIOError]:
     """Perform the actual text replacement."""
     try:
         # Create temporary file in same directory for atomic move
         temp_dir = os.path.dirname(os.path.abspath(backup.original_path))
-        fd, tmp_path = tempfile.mkstemp(dir=temp_dir, prefix='.tmp_replace_')
+        fd, tmp_path = tempfile.mkstemp(dir=temp_dir, prefix=".tmp_replace_")
 
         try:
             # Perform replacement
-            with os.fdopen(fd, 'w', encoding='utf-8') as tmp_file:
+            with os.fdopen(fd, "w", encoding="utf-8") as tmp_file:
                 with open(
-                    backup.original_path, 'r', encoding='utf-8'
+                    backup.original_path, "r", encoding="utf-8"
                 ) as original_file:
                     for line in original_file:
                         modified_line = line.replace(
@@ -112,7 +115,7 @@ def perform_replacement(
                 os.chmod(tmp_path, stat.S_IMODE(backup.original_mode))
 
             # Atomic replacement
-            if os.name == 'nt':  # Windows
+            if os.name == "nt":  # Windows
                 # Windows doesn't support atomic rename to existing file
                 os.unlink(backup.original_path)
                 os.rename(tmp_path, backup.original_path)
@@ -163,9 +166,7 @@ def restore_from_backup(backup: FileBackup) -> IOResult[None, FxIOError]:
 
 
 def work_functional(
-    search_text: str,
-    replace_text: str,
-    filename: str
+    search_text: str, replace_text: str, filename: str
 ) -> IOResult[None, ReplaceError]:
     """
     Replace text in a file with functional error handling.
@@ -186,7 +187,7 @@ def work_functional(
 
     # Perform replacement with automatic restore on failure
     def replace_with_restore(
-        backup: FileBackup
+        backup: FileBackup,
     ) -> IOResult[None, ReplaceError]:
         replacement_result = perform_replacement(context, backup)
 
@@ -210,9 +211,7 @@ def work_functional(
 
 
 def work_batch_functional(
-    search_text: str,
-    replace_text: str,
-    filenames: List[str]
+    search_text: str, replace_text: str, filenames: List[str]
 ) -> IOResult[List[Result[str, ReplaceError]], ReplaceError]:
     """
     Replace text in multiple files with transaction-like behavior.
@@ -292,9 +291,7 @@ def main(search_text: str, replace_text: str, filenames: tuple) -> None:
 
     if len(filenames) == 1:
         # Single file replacement
-        result = work_functional(
-            search_text, replace_text, filenames[0]
-        ).run()
+        result = work_functional(search_text, replace_text, filenames[0]).run()
 
         if isinstance(result, Failure):
             L.error(f"Replacement failed: {result.failure()}")

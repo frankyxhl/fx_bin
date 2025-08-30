@@ -6,11 +6,15 @@ This index tracks all development sessions with links and metadata for easy refe
 
 | Date | Title | Status | Tags | Link |
 |------|--------|---------|------|------|
+| 2025-08-30 | BDD Test Isolation Fix and Complete Test Suite Restoration | completed | testing, bdd, pytest, test-isolation, code-quality, flake8 | [Session](sessions/20250830_132203_bdd-test-isolation-fix.md) |
 | 2025-08-30 | fx_bin v1.3.1 Security Fix - Black ReDoS Vulnerability Patched | completed | security, dependencies, CVE-fix, black, v1.3.1, patch-release | [Session](sessions/20250830_111653_v1-3-1-security-fix-release.md) |
 | 2025-08-30 | fx_bin v1.3.0 Release - BDD Testing Infrastructure Implementation | completed | bdd, testing, pytest-bdd, release, v1.3.0, infrastructure, documentation | [Session](sessions/20250830_104500_v1-3-0-bdd-infrastructure-release.md) |
 | 2025-08-30 | fx_bin v1.2.0 Release - File Filter Command Implementation | completed | release, filter-command, tdd, bdd, documentation, v1.2.0 | [Session](sessions/20250830_v1.2.0_filter-command-release.md) |
 
 ## Sessions by Category
+
+### Bug Fixes & Testing
+- **Test Isolation Fix (2025-08-30)**: Fixed BDD test isolation issues causing suite-wide failures - [Session](sessions/20250830_132203_bdd-test-isolation-fix.md)
 
 ### Releases
 - **v1.3.1 (2025-08-30)**: Security Fix - Black ReDoS Vulnerability - [Session](sessions/20250830_111653_v1-3-1-security-fix-release.md)
@@ -31,12 +35,16 @@ This index tracks all development sessions with links and metadata for easy refe
 ## Quick Reference
 
 ### Latest Session
-**2025-08-30**: fx_bin v1.3.1 Security Fix Release
+**2025-08-30**: BDD Test Isolation Fix and Complete Test Suite Restoration
 - Status: Completed
-- Key Deliverables: Black ReDoS vulnerability fix, dependency updates, v1.3.1 build
-- Next Steps: Commit changes, tag v1.3.1, publish to PyPI
+- Key Deliverables: Fixed 21 test isolation failures, implemented missing BDD steps, code quality improvements
+- Next Steps: Commit changes, tag v1.3.2, prepare patch release
 
 ### Recent Changes
+- **Test Suite Fix**: Resolved BDD test isolation issues - all 301 tests now passing
+- **BDD Enhancements**: Added comprehensive step definitions for table parsing and directory structures
+- **CLI Improvements**: Added --limit option and multi-path support to fx filter
+- **Code Quality**: Fixed all flake8 linting errors and applied black formatting
 - **v1.3.1**: Fixed Black ReDoS vulnerability (CVE affecting versions < 24.3.0)
 - **v1.3.1**: Updated Black to ^24.3.0 in pyproject.toml and requirements-bdd.txt
 - **v1.3.1**: Verified security with Bandit and Safety scans (all passing)
@@ -51,4 +59,4 @@ This index tracks all development sessions with links and metadata for easy refe
 
 ## Search Tags
 
-**Available Tags**: security, CVE-fix, dependencies, black, v1.3.1, patch-release, release, filter-command, tdd, bdd, documentation, v1.2.0, v1.3.0, testing-excellence, changelog, pytest-bdd, infrastructure, gherkin, living-documentation, test-automation
+**Available Tags**: testing, test-isolation, bdd, pytest, code-quality, flake8, security, CVE-fix, dependencies, black, v1.3.1, patch-release, release, filter-command, tdd, documentation, v1.2.0, v1.3.0, testing-excellence, changelog, pytest-bdd, infrastructure, gherkin, living-documentation, test-automation, bug-fix

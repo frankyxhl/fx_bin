@@ -15,7 +15,8 @@ def _check_pandas_available():
     if pandas is None:
         try:
             import pandas as pd
-            globals()['pandas'] = pd
+
+            globals()["pandas"] = pd
         except ImportError:
             return False
     return True
@@ -37,11 +38,11 @@ def _validate_url(url: str) -> bool:
         parsed = urlparse(url)
 
         # Block file:// scheme
-        if parsed.scheme.lower() == 'file':
+        if parsed.scheme.lower() == "file":
             return False
 
         # Only allow http and https schemes
-        if parsed.scheme.lower() not in ['http', 'https']:
+        if parsed.scheme.lower() not in ["http", "https"]:
             return False
 
         # Check for dangerous hostnames/IPs
@@ -58,17 +59,17 @@ def _validate_url(url: str) -> bool:
                 return False
 
             # Block cloud metadata service (AWS, GCP, Azure)
-            if str(ip) == '169.254.169.254':
+            if str(ip) == "169.254.169.254":
                 return False
 
         except ValueError:
             # Not an IP address, check for dangerous hostnames
             hostname_lower = hostname.lower()
             dangerous_hosts = [
-                'localhost',
-                'metadata.google.internal',
-                'metadata.azure.com',
-                '169.254.169.254'
+                "localhost",
+                "metadata.google.internal",
+                "metadata.azure.com",
+                "169.254.169.254",
             ]
 
             if hostname_lower in dangerous_hosts:
@@ -82,8 +83,8 @@ def _validate_url(url: str) -> bool:
 
 
 @click.command()
-@click.argument('url', nargs=1)
-@click.argument('output_filename', nargs=1)
+@click.argument("url", nargs=1)
+@click.argument("output_filename", nargs=1)
 def main(url, output_filename: str, args=None) -> int:
     if not output_filename.endswith(".xlsx"):
         output_filename += ".xlsx"
@@ -102,19 +103,18 @@ def main(url, output_filename: str, args=None) -> int:
 
     try:
         # Check if url looks like a URL, file path, or JSON string
-        if url.startswith(('http://', 'https://')):
+        if url.startswith(("http://", "https://")):
             # It's definitely a URL - validate it first
             if not _validate_url(url):
                 click.echo(
-                    "Error: URL is not allowed for security reasons",
-                    err=True
+                    "Error: URL is not allowed for security reasons", err=True
                 )
                 click.echo("Blocked URLs include:", err=True)
                 click.echo("- file:// URLs", err=True)
                 click.echo(
                     "- Internal network addresses "
                     "(localhost, 127.x.x.x, 10.x.x.x, etc.)",
-                    err=True
+                    err=True,
                 )
                 click.echo("- Cloud metadata services", err=True)
                 raise click.ClickException("URL blocked for security reasons")

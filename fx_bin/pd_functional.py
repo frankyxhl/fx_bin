@@ -21,12 +21,15 @@ def check_pandas_available() -> Result[object, PdError]:
     """Check if pandas is available and return it."""
     try:
         import pandas as pd
+
         return Success(pd)
     except ImportError:
-        return Failure(PdError(
-            "could not find pandas please install:\n"
-            "Command: python -m pip install pandas"
-        ))
+        return Failure(
+            PdError(
+                "could not find pandas please install:\n"
+                "Command: python -m pip install pandas"
+            )
+        )
 
 
 def validate_output_filename(filename: str) -> Result[str, ValidationError]:
@@ -34,7 +37,7 @@ def validate_output_filename(filename: str) -> Result[str, ValidationError]:
     normalized = filename if filename.endswith(".xlsx") else f"{filename}.xlsx"
 
     # Check for invalid characters or paths
-    if os.path.sep in normalized or normalized.startswith('.'):
+    if os.path.sep in normalized or normalized.startswith("."):
         return Failure(ValidationError(f"Invalid filename: {normalized}"))
 
     return Success(normalized)
@@ -54,7 +57,7 @@ def validate_url(url: str) -> Result[str, ValidationError]:
         return Failure(ValidationError("URL cannot be empty"))
 
     # Prevent local file access via file:// protocol
-    if url.startswith('file://'):
+    if url.startswith("file://"):
         return Failure(ValidationError("Local file URLs not allowed"))
 
     # Could add more validation here (URL format, allowed domains, etc)
@@ -63,9 +66,7 @@ def validate_url(url: str) -> Result[str, ValidationError]:
 
 @impure_safe
 def process_json_to_excel(
-    pandas_module: object,
-    url: str,
-    output_filename: str
+    pandas_module: object, url: str, output_filename: str
 ) -> IOResult[None, FxIOError]:
     """Process JSON from URL and save as Excel file."""
     try:
@@ -73,7 +74,7 @@ def process_json_to_excel(
         pd = pandas_module
 
         # Check if url looks like a URL, file path, or JSON string
-        if url.startswith(('http://', 'https://')):
+        if url.startswith(("http://", "https://")):
             # It's definitely a URL
             df = pd.read_json(url)
         elif os.path.exists(url):
@@ -131,7 +132,7 @@ def main_functional(url: str, output_filename: str) -> Result[int, PdError]:
     elif isinstance(io_result, IOSuccess):
         # Check if this is a direct IOSuccess or nested structure
         unwrapped = io_result.unwrap()
-        if hasattr(unwrapped, '_inner_value'):
+        if hasattr(unwrapped, "_inner_value"):
             # Could be nested structure: IOSuccess(IO(IOResult(...)))
             inner_result = unwrapped._inner_value
             if isinstance(inner_result, IOSuccess):
@@ -159,8 +160,8 @@ def main_functional(url: str, output_filename: str) -> Result[int, PdError]:
 
 
 @click.command()
-@click.argument('url', nargs=1)
-@click.argument('output_filename', nargs=1)
+@click.argument("url", nargs=1)
+@click.argument("output_filename", nargs=1)
 def main(url: str, output_filename: str) -> None:
     """
     CLI entry point that bridges functional and traditional interfaces.

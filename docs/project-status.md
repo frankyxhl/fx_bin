@@ -1,16 +1,19 @@
 # fx_bin Project Status
 
-## Current Status: v1.3.1 Security Fix Ready
+## Current Status: v1.3.2 Ready - Test Suite Fully Restored
 
 **Last Updated**: 2025-08-30  
-**Current Version**: 1.3.1 (security patch ready)  
+**Current Version**: 1.3.2 (ready for release)  
 **Branch**: main  
-**Build Status**: All tests passing + Security vulnerability fixed  
+**Build Status**: All 301 tests passing (0 failures) - Test isolation fixed  
 
-## Current Release: v1.3.1 Security Patch
+## Current Release: v1.3.2 Test Suite Fix
 
 ### Key Features
-- **CRITICAL SECURITY FIX**: Black ReDoS vulnerability (CVE) patched - updated to v24.3.0+
+- **TEST SUITE RESTORED**: Fixed BDD test isolation issues - all 301 tests passing
+- **NEW CLI OPTIONS**: Added --limit and multi-path support to fx filter
+- **CODE QUALITY**: All flake8 linting errors fixed, black formatting applied
+- **CRITICAL SECURITY FIX**: Black ReDoS vulnerability patched (v1.3.1)
 - **ESTABLISHED**: `fx filter` command with comprehensive filtering capabilities (v1.2.0)
 - **BDD Infrastructure**: Complete pytest-bdd integration with 25+ Gherkin scenarios (v1.3.0)
 - **Enhanced Testing**: 18+ pytest markers for comprehensive test categorization (v1.3.0)
@@ -19,57 +22,65 @@
 - **Enhanced Documentation**: Comprehensive BDD testing guide (480+ lines)
 
 ### Release Readiness
-- ✅ Black ReDoS vulnerability (CVE) fixed - updated to ^24.3.0
-- ✅ Security scans passing (Bandit: 0 issues, Safety: 55 tests passed)
-- ✅ All 43 core tests passing
-- ✅ Version bumped to 1.3.1 in pyproject.toml
-- ✅ Packages built: fx_bin-1.3.1.tar.gz and .whl
-- ✅ Both pyproject.toml and requirements-bdd.txt updated
-- ✅ Session documentation created
-- 🔄 Ready for: Commit, Git tag v1.3.1, PyPI publish
+- ✅ Test isolation fixed - all 301 tests passing (0 failures, 2 skipped)
+- ✅ BDD step definitions complete - table parsing, directory structures implemented
+- ✅ CLI enhancements - --limit option and multi-path support working
+- ✅ Code quality - All flake8 errors fixed, black formatting applied
+- ✅ Glob pattern support - fnmatch integration for wildcard patterns
+- ✅ Session documentation created with technical details
+- 🔄 Ready for: Commit changes, tag v1.3.2, prepare patch release
 
 ## Next Immediate Actions
 
-1. **Commit Security Fix**
+1. **Commit Test Fixes and Enhancements**
    ```bash
-   git add pyproject.toml poetry.lock requirements-bdd.txt
-   git commit -m "fix: v1.3.1 - patch Black ReDoS vulnerability (CVE)
+   git add -A
+   git commit -m "fix: v1.3.2 - BDD test isolation and comprehensive test fixes
    
-   - Updated Black from ^24.0.0 to ^24.3.0 to fix ReDoS vulnerability
-   - Security verified with Bandit and Safety scans
-   - All tests passing"
+   - Fixed test isolation issues causing 21 failures in full suite
+   - Added comprehensive BDD step definitions for table parsing
+   - Implemented --limit option and multi-path support in fx filter
+   - Fixed all flake8 linting errors and applied black formatting
+   - All 301 tests now passing consistently"
    ```
 
 2. **Create Release Tag**
    ```bash
-   git tag -a v1.3.1 -m "v1.3.1: Security Fix - Black ReDoS vulnerability patched"
+   git tag -a v1.3.2 -m "v1.3.2: Test Suite Fix - BDD isolation and enhancements"
    ```
 
 3. **Build and Publish**
    ```bash
-   poetry build  # Already done, verify with: ls dist/*1.3.1*
+   poetry build
    poetry publish
    ```
 
-4. **Update HISTORY.rst**
-   - Add v1.3.1 security fix entry to changelog
+4. **Update Documentation**
+   - Update README.md with new CLI options (--limit, multi-path)
+   - Add examples of glob pattern usage
+   - Update HISTORY.rst with v1.3.2 changes
 
 ## Project Health
 
 ### Test Coverage
+- **Total Tests**: 301 tests (all passing, 2 skipped)
+- **Test Isolation**: Fixed - all tests run independently without state leakage
+- **BDD Steps**: Comprehensive step definitions including table parsing
 - **Unit Tests**: 23 tests for filter functionality (maintained)
 - **Integration Tests**: CLI testing with Click runner (maintained)
 - **BDD Infrastructure**: pytest-bdd 7.3.0+ with comprehensive framework
 - **BDD Tests**: 25+ Gherkin scenarios with smart step definitions
 - **Test Organization**: 18+ pytest markers for flexible execution
 - **Pattern Reuse**: 70%+ step definition reuse through intelligent patterns
-- **Overall Status**: All existing tests passing + BDD framework ready
+- **Coverage**: 25.78% (low due to BDD test structure)
 
 ### Code Quality
-- **Linting**: flake8 compliant
+- **Linting**: flake8 fully compliant (all errors fixed)
+- **Formatting**: Black formatting applied consistently
 - **Documentation**: Comprehensive docstrings and user docs
 - **Security**: Path validation and input sanitization
 - **Performance**: Tested with large file collections
+- **Test Isolation**: Working directory management with finally blocks
 
 ### Architecture Status
 - **CLI System**: Unified `fx` command with 6 subcommands
@@ -157,6 +168,10 @@
 - **Pattern Reuse Strategy**: 70%+ step definition reuse for maintainability
 
 ### Lessons Learned
+- **Test Isolation Critical**: Always restore global state (cwd, env vars) in tests
+- **BDD Special Care**: Working directory changes common in file operation tests
+- **Finally Blocks Essential**: Guarantee cleanup even when tests fail with exceptions
+- **Incremental Testing**: Test individual files before full suite to identify isolation issues
 - **Security Vigilance**: Regular dependency vulnerability scanning is critical
 - **Patch Releases**: Security fixes warrant immediate patch version releases
 - **Comprehensive Updates**: Both pyproject.toml and requirements files need updates

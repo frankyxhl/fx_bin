@@ -13,7 +13,7 @@ def find_files(keyword: str) -> None:
 
 
 @click.command()
-@click.argument('keyword')
+@click.argument("keyword")
 def main(keyword: str) -> int:
     if not keyword or keyword.strip() == "":
         click.echo(

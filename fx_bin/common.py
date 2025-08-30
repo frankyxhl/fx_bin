@@ -1,4 +1,5 @@
 """Common utilities and classes for fx_bin package."""
+
 import math
 import os
 from dataclasses import dataclass
@@ -9,6 +10,7 @@ from typing import Optional
 
 class EntryType(Enum):
     """Type of filesystem entry."""
+
     FILE = 1
     FOLDER = 2
 
@@ -25,7 +27,7 @@ def convert_size(size: int) -> str:
     return f"{round(s)}{size_name[i]}"
 
 
-def sum_folder_size(path: str = '.', _visited_inodes=None, _depth=0) -> int:
+def sum_folder_size(path: str = ".", _visited_inodes=None, _depth=0) -> int:
     """Recursively calculate total size of a folder with safety checks."""
     # Initialize visited inodes set on first call
     if _visited_inodes is None:
@@ -74,7 +76,7 @@ def sum_folder_size(path: str = '.', _visited_inodes=None, _depth=0) -> int:
 
 
 def sum_folder_files_count(
-    path: str = '.', _visited_inodes=None, _depth=0
+    path: str = ".", _visited_inodes=None, _depth=0
 ) -> int:
     """Recursively count total files in a folder with safety checks."""
     # Initialize visited inodes set on first call
@@ -127,7 +129,8 @@ def sum_folder_files_count(
 @total_ordering
 class SizeEntry:
     """Entry for size-based operations."""
-    __slots__ = ['name', 'size', 'tpe']
+
+    __slots__ = ["name", "size", "tpe"]
     name: str
     size: int
     tpe: EntryType
@@ -145,14 +148,14 @@ class SizeEntry:
         return convert_size(self.size)
 
     @classmethod
-    def from_scandir(cls, obj) -> Optional['SizeEntry']:
+    def from_scandir(cls, obj) -> Optional["SizeEntry"]:
         """Create SizeEntry from os.DirEntry object."""
         try:
             if obj.is_file(follow_symlinks=False):
                 return cls(
                     obj.name,
                     obj.stat(follow_symlinks=False).st_size,
-                    EntryType.FILE
+                    EntryType.FILE,
                 )
             elif obj.is_dir(follow_symlinks=False):
                 total_size = sum_folder_size(obj.path)
@@ -165,7 +168,8 @@ class SizeEntry:
 @total_ordering
 class FileCountEntry:
     """Entry for file count operations."""
-    __slots__ = ['name', 'count', 'tpe']
+
+    __slots__ = ["name", "count", "tpe"]
     name: str
     count: int
     tpe: EntryType
@@ -179,7 +183,7 @@ class FileCountEntry:
         return f"{self.count:>{count_max}} {self.name}"
 
     @classmethod
-    def from_scandir(cls, obj) -> Optional['FileCountEntry']:
+    def from_scandir(cls, obj) -> Optional["FileCountEntry"]:
         """Create FileCountEntry from os.DirEntry object."""
         try:
             if obj.is_file(follow_symlinks=False):

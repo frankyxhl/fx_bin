@@ -23,6 +23,7 @@ from fx_bin.errors import FolderError, IOError as FxIOError
 
 class EntryType(Enum):
     """Type of filesystem entry."""
+
     FILE = 1
     FOLDER = 2
 
@@ -52,9 +53,7 @@ class SizeEntry:
 
     @classmethod
     def from_scandir_functional(
-        cls,
-        entry: os.DirEntry,
-        parent_dir: str = ""
+        cls, entry: os.DirEntry, parent_dir: str = ""
     ) -> IOResult[Maybe[SizeEntry], FxIOError]:
         """
         Create SizeEntry from os.DirEntry with functional error handling.
@@ -62,6 +61,7 @@ class SizeEntry:
         Returns IOResult containing Maybe[SizeEntry] to handle both IO errors
         and cases where entry cannot be accessed.
         """
+
         @impure_safe
         def get_entry_stat() -> IOResult[os.stat_result, FxIOError]:
             """Safely get stat information for entry."""
@@ -76,7 +76,7 @@ class SizeEntry:
 
         @impure_safe
         def create_entry_from_stat(
-            stat: os.stat_result
+            stat: os.stat_result,
         ) -> IOResult[SizeEntry, FxIOError]:
             """Create SizeEntry from stat result."""
             try:
@@ -89,12 +89,14 @@ class SizeEntry:
                     else entry.name
                 )
 
-                return IOResult.from_value(cls(
-                    name=entry.name,
-                    size=stat.st_size,
-                    entry_type=entry_type,
-                    path=full_path
-                ))
+                return IOResult.from_value(
+                    cls(
+                        name=entry.name,
+                        size=stat.st_size,
+                        entry_type=entry_type,
+                        path=full_path,
+                    )
+                )
             except Exception as e:
                 return IOResult.from_failure(
                     FxIOError(f"Error creating entry: {e}")
@@ -129,12 +131,13 @@ def convert_size(size: int) -> str:
 @dataclass(frozen=True)
 class FolderContext:
     """Context for folder traversal operations."""
+
     visited_inodes: Set[Tuple[int, int]]
     max_depth: int = 100
 
 
 def sum_folder_size_functional(
-    path: str = '.'
+    path: str = ".",
 ) -> RequiresContext[IOResult[int, FolderError], FolderContext]:
     """
     Calculate total size of a folder using functional patterns.
@@ -142,6 +145,7 @@ def sum_folder_size_functional(
     Returns a RequiresContext that when given a FolderContext,
     produces an IOResult with the total size or an error.
     """
+
     def _sum_folder(context: FolderContext) -> IOResult[int, FolderError]:
         return _sum_folder_recursive(path, context, depth=0)
 
@@ -150,9 +154,7 @@ def sum_folder_size_functional(
 
 @impure_safe
 def _sum_folder_recursive(
-    path: str,
-    context: FolderContext,
-    depth: int
+    path: str, context: FolderContext, depth: int
 ) -> IOResult[int, FolderError]:
     """Recursive implementation of folder size calculation."""
 
@@ -195,13 +197,11 @@ def _sum_folder_recursive(
         return IOResult.from_value(total)
 
     except (OSError, PermissionError) as e:
-        return IOResult.from_failure(
-            FolderError(f"Cannot access {path}: {e}")
-        )
+        return IOResult.from_failure(FolderError(f"Cannot access {path}: {e}"))
 
 
 def sum_folder_files_count_functional(
-    path: str = '.'
+    path: str = ".",
 ) -> RequiresContext[IOResult[int, FolderError], FolderContext]:
     """
     Count files in a folder using functional patterns.
@@ -209,6 +209,7 @@ def sum_folder_files_count_functional(
     Returns a RequiresContext that when given a FolderContext,
     produces an IOResult with the file count or an error.
     """
+
     def _count_files(context: FolderContext) -> IOResult[int, FolderError]:
         return _count_files_recursive(path, context, depth=0)
 
@@ -217,9 +218,7 @@ def sum_folder_files_count_functional(
 
 @impure_safe
 def _count_files_recursive(
-    path: str,
-    context: FolderContext,
-    depth: int
+    path: str, context: FolderContext, depth: int
 ) -> IOResult[int, FolderError]:
     """Recursive implementation of file counting."""
 
@@ -258,34 +257,37 @@ def _count_files_recursive(
         return IOResult.from_value(count)
 
     except (OSError, PermissionError) as e:
-        return IOResult.from_failure(
-            FolderError(f"Cannot access {path}: {e}")
-        )
+        return IOResult.from_failure(FolderError(f"Cannot access {path}: {e}"))
 
 
 # Compatibility wrappers for existing code
 
+
 def sum_folder_size_legacy(
-    path: str = '.', _visited_inodes=None, _depth=0
+    path: str = ".", _visited_inodes=None, _depth=0
 ) -> int:
     """Legacy interface for backward compatibility."""
     context = FolderContext(
-        visited_inodes=_visited_inodes or set(),
-        max_depth=100
+        visited_inodes=_visited_inodes or set(), max_depth=100
     )
     result = sum_folder_size_functional(path)(context)
-    return (result._inner_value.value_or(0)
-            if hasattr(result, '_inner_value') else 0)
+    return (
+        result._inner_value.value_or(0)
+        if hasattr(result, "_inner_value")
+        else 0
+    )
 
 
 def sum_folder_files_count_legacy(
-    path: str = '.', _visited_inodes=None, _depth=0
+    path: str = ".", _visited_inodes=None, _depth=0
 ) -> int:
     """Legacy interface for backward compatibility."""
     context = FolderContext(
-        visited_inodes=_visited_inodes or set(),
-        max_depth=100
+        visited_inodes=_visited_inodes or set(), max_depth=100
     )
     result = sum_folder_files_count_functional(path)(context)
-    return (result._inner_value.value_or(0)
-            if hasattr(result, '_inner_value') else 0)
+    return (
+        result._inner_value.value_or(0)
+        if hasattr(result, "_inner_value")
+        else 0
+    )

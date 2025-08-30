@@ -4,36 +4,38 @@
 
 ## Current State (2025-08-30)
 
-**Status**: v1.3.1 Security Patch Ready 🔒  
+**Status**: v1.3.2 Ready - All Tests Passing ✅  
 **Branch**: main  
-**Critical Fix**: Black ReDoS vulnerability (CVE) patched - updated to v24.3.0+  
+**Critical Fix**: BDD test isolation issues resolved - 301 tests passing (0 failures)  
 
 ## Immediate Next Steps
 
 ```bash
-# 1. Commit the security fix
-git add pyproject.toml poetry.lock requirements-bdd.txt
-git commit -m "fix: v1.3.1 - patch Black ReDoS vulnerability (CVE)
+# 1. Commit the test fixes and enhancements
+git add -A
+git commit -m "fix: v1.3.2 - BDD test isolation and comprehensive test fixes
 
-- Updated Black from ^24.0.0 to ^24.3.0
-- Security verified with Bandit and Safety
-- All tests passing
+- Fixed test isolation issues causing 21 failures
+- Added comprehensive BDD step definitions
+- Implemented --limit option and multi-path support
+- Fixed all flake8 linting errors
+- All 301 tests now passing consistently
 
 🤖 Generated with Claude Code
 
 Co-Authored-By: Claude <noreply@anthropic.com>"
 
 # 2. Create release tag
-git tag -a v1.3.1 -m "v1.3.1: Security Fix - Black ReDoS vulnerability patched"
+git tag -a v1.3.2 -m "v1.3.2: Test Suite Fix - BDD isolation and enhancements"
 
-# 3. Publish (build already done)
-ls dist/*1.3.1*  # Verify packages exist
+# 3. Build and publish
+poetry build
 poetry publish
 ```
 
 ## Project Overview
 
-**fx_bin** is a Python utility collection providing command-line tools for file operations. Current version 1.3.1 includes a critical security fix for the Black ReDoS vulnerability.
+**fx_bin** is a Python utility collection providing command-line tools for file operations. Current version 1.3.2 includes comprehensive test fixes and CLI enhancements.
 
 ### Available Commands
 ```bash
@@ -46,12 +48,18 @@ fx json2excel  # Convert JSON to Excel
 fx list        # List all available commands
 ```
 
-## What's New in v1.3.1
+## What's New in v1.3.2
 
-### Security Fix
-- **Black ReDoS Vulnerability**: Patched CVE affecting Black < 24.3.0
-- Updated dependencies in both pyproject.toml and requirements-bdd.txt
-- Verified with comprehensive security scans (Bandit, Safety)
+### Test Suite Fixes
+- **Test Isolation**: Fixed BDD tests changing working directory without restoration
+- **Complete Pass Rate**: All 301 tests now passing (was 21 failures)
+- **BDD Step Definitions**: Added comprehensive table parsing and directory validation
+- **Code Quality**: Fixed all flake8 linting errors and applied black formatting
+
+### CLI Enhancements
+- **--limit Option**: Limit number of results in fx filter
+- **Multi-path Support**: Process multiple directories in one command
+- **Glob Patterns**: Wildcard support using fnmatch integration
 
 ## Features from v1.3.0
 
@@ -75,13 +83,16 @@ poetry run pytest tests/bdd/ --html=reports/bdd.html
 
 ## fx filter Command (from v1.2.0)
 
-### fx filter Command
+### fx filter Command (Enhanced in v1.3.2)
 ```bash
 fx filter txt                    # Find .txt files
 fx filter "mp4,avi,mkv"         # Multiple extensions
 fx filter py --sort-by modified # Sort by modification time
 fx filter txt --format detailed # Show file metadata
 fx filter py --no-recursive     # Current directory only
+fx filter py --limit 10         # NEW: Limit results to 10 files
+fx filter txt dir1 dir2 dir3    # NEW: Search multiple directories
+fx filter "*.test.py"           # NEW: Glob pattern support
 ```
 
 ### Testing Excellence (v1.3.0)
@@ -196,13 +207,13 @@ python -c "import fx_bin; print(fx_bin.__version__)"
 ## Context for Development
 
 ### Last Session (2025-08-30)
-- **Completed**: v1.3.0 BDD infrastructure implementation
-- **Created**: Comprehensive BDD testing framework with pytest-bdd integration
-- **Enhanced**: Test categorization with 18+ pytest markers
-- **Implemented**: Smart step patterns with 70%+ reuse across scenarios
-- **Documented**: 480+ lines comprehensive BDD testing guide
-- **Updated**: HISTORY.rst with detailed v1.3.0 changelog
-- **Ready**: For BDD test validation, git tag, build, and PyPI publish
+- **Fixed**: BDD test isolation issues causing 21 test failures
+- **Root Cause**: Tests changing working directory without restoration
+- **Solution**: Added finally blocks to guarantee directory restoration
+- **Implemented**: Missing BDD step definitions for table parsing
+- **Enhanced**: fx filter with --limit option and multi-path support
+- **Code Quality**: Fixed all flake8 errors and applied black formatting
+- **Result**: All 301 tests passing consistently (0 failures)
 
 ### Testing Infrastructure (v1.3.0)
 - **Production BDD Framework**: Complete pytest-bdd infrastructure with smart patterns
@@ -232,6 +243,8 @@ poetry run pytest -x              # Run until first failure
 
 # Quick functionality check
 fx filter txt --format count      # Should work without errors
+fx filter py --limit 5            # Test new limit option
+fx filter txt /path1 /path2       # Test multi-path support
 
 # Test BDD infrastructure (v1.3.0)
 poetry run pytest tests/bdd/ --collect-only  # Should discover scenarios

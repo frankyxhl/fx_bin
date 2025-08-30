@@ -9,7 +9,7 @@ __all__ = ["list_files_count"]
 
 
 def list_files_count(
-    path: str = '.', ignore_dot_file: bool = True
+    path: str = ".", ignore_dot_file: bool = True
 ) -> List[FileCountEntry]:
     """
     Count files in directories.
@@ -23,7 +23,7 @@ def list_files_count(
     """
     result = []
     for entry in os.scandir(path):
-        if ignore_dot_file and entry.name.startswith('.'):
+        if ignore_dot_file and entry.name.startswith("."):
             continue
         file_entry = FileCountEntry.from_scandir(entry)
         if file_entry is not None:
@@ -37,9 +37,9 @@ def main():
     import click
 
     @click.command()
-    @click.option('--path', '-p', default='.', help='Path to analyze')
+    @click.option("--path", "-p", default=".", help="Path to analyze")
     @click.option(
-        '--all', '-a', 'show_all', is_flag=True, help='Show hidden files'
+        "--all", "-a", "show_all", is_flag=True, help="Show hidden files"
     )
     def cli(path, show_all):
         """Count and display files in directories."""
@@ -58,5 +58,5 @@ def main():
     cli()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
