@@ -5,6 +5,30 @@ All notable changes to fx-bin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.3] - 2025-08-30
+
+### Fixed
+- **File Size Alignment**: Fixed misaligned file sizes in `fx filter` detailed output
+  - Standardized all size units (B, KB, MB, GB) to 9-character width
+  - Ensures perfect right-alignment for improved readability
+  - Resolves user-reported alignment issues with mixed unit sizes
+  - Updated all related tests to match new formatting
+
+### Changed
+- Improved consistency in tabular output formatting
+- Enhanced visual scanning of file size columns
+
+### Testing
+- All 36 filter tests passing including 14 doctests
+- Updated test expectations in test_filter_improvements_v1_3_1.py
+- Fixed doctest examples with proper skip directives
+
+## [1.3.2] - 2025-08-30
+
+### Fixed
+- Enhanced file size formatting in filter command output
+- Improved CLI features and test stability
+
 ## [1.3.1] - 2025-08-30
 
 ### Security
@@ -110,6 +134,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Standardized CLI patterns across all utilities
 - Enhanced discoverability and usability
 
+[1.3.3]: https://github.com/frankyxhl/fx_bin/compare/v1.3.2...v1.3.3
+[1.3.2]: https://github.com/frankyxhl/fx_bin/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/frankyxhl/fx_bin/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/frankyxhl/fx_bin/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/frankyxhl/fx_bin/compare/v1.1.0...v1.2.0

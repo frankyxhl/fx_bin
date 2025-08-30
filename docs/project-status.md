@@ -1,18 +1,21 @@
 # fx_bin Project Status
 
-## Current Status: v1.3.2 Ready - Test Suite Fully Restored
+## Current Status: v1.3.3 Ready - File Size Alignment Fixed
 
 **Last Updated**: 2025-08-30  
-**Current Version**: 1.3.2 (ready for release)  
+**Current Version**: 1.3.3 (ready for release)  
 **Branch**: main  
-**Build Status**: All 301 tests passing (0 failures) - Test isolation fixed  
+**Build Status**: All tests passing - File size formatting corrected  
 
-## Current Release: v1.3.2 Test Suite Fix
+## Current Release: v1.3.3 File Size Alignment Fix
 
 ### Key Features
-- **TEST SUITE RESTORED**: Fixed BDD test isolation issues - all 301 tests passing
-- **NEW CLI OPTIONS**: Added --limit and multi-path support to fx filter
-- **CODE QUALITY**: All flake8 linting errors fixed, black formatting applied
+- **FILE SIZE ALIGNMENT**: Fixed misaligned file sizes in fx filter detailed output
+- **FORMATTING CONSISTENCY**: All size units (B, KB, MB, GB) now use 9-character width
+- **UX IMPROVEMENT**: Perfect right-alignment for improved readability
+- **TEST SUITE RESTORED**: Fixed BDD test isolation issues - all 301 tests passing (v1.3.2)
+- **NEW CLI OPTIONS**: Added --limit and multi-path support to fx filter (v1.3.2)
+- **CODE QUALITY**: All flake8 linting errors fixed, black formatting applied (v1.3.2)
 - **CRITICAL SECURITY FIX**: Black ReDoS vulnerability patched (v1.3.1)
 - **ESTABLISHED**: `fx filter` command with comprehensive filtering capabilities (v1.2.0)
 - **BDD Infrastructure**: Complete pytest-bdd integration with 25+ Gherkin scenarios (v1.3.0)
@@ -22,31 +25,30 @@
 - **Enhanced Documentation**: Comprehensive BDD testing guide (480+ lines)
 
 ### Release Readiness
-- ✅ Test isolation fixed - all 301 tests passing (0 failures, 2 skipped)
-- ✅ BDD step definitions complete - table parsing, directory structures implemented
-- ✅ CLI enhancements - --limit option and multi-path support working
-- ✅ Code quality - All flake8 errors fixed, black formatting applied
-- ✅ Glob pattern support - fnmatch integration for wildcard patterns
+- ✅ File size alignment fixed - consistent 9-character width for all units
+- ✅ All 36 filter tests passing including 14 doctests
+- ✅ Test expectations updated to match new formatting
+- ✅ Doctest examples fixed with proper skip directives
+- ✅ Version bumped to 1.3.3 in pyproject.toml
 - ✅ Session documentation created with technical details
-- 🔄 Ready for: Commit changes, tag v1.3.2, prepare patch release
+- 🔄 Ready for: Commit changes, tag v1.3.3, build and publish to PyPI
 
 ## Next Immediate Actions
 
-1. **Commit Test Fixes and Enhancements**
+1. **Commit File Size Alignment Fix**
    ```bash
    git add -A
-   git commit -m "fix: v1.3.2 - BDD test isolation and comprehensive test fixes
+   git commit -m "fix: v1.3.3 - file size alignment in fx filter command
    
-   - Fixed test isolation issues causing 21 failures in full suite
-   - Added comprehensive BDD step definitions for table parsing
-   - Implemented --limit option and multi-path support in fx filter
-   - Fixed all flake8 linting errors and applied black formatting
-   - All 301 tests now passing consistently"
+   - Fixed misaligned file sizes in detailed output format
+   - Standardized all size units to 9-character width
+   - Updated tests to match new formatting
+   - Resolves user-reported alignment issues"
    ```
 
 2. **Create Release Tag**
    ```bash
-   git tag -a v1.3.2 -m "v1.3.2: Test Suite Fix - BDD isolation and enhancements"
+   git tag -a v1.3.3 -m "v1.3.3: File Size Alignment Fix"
    ```
 
 3. **Build and Publish**
@@ -56,9 +58,9 @@
    ```
 
 4. **Update Documentation**
-   - Update README.md with new CLI options (--limit, multi-path)
-   - Add examples of glob pattern usage
-   - Update HISTORY.rst with v1.3.2 changes
+   - Changelog already updated with v1.3.3 changes
+   - Session documentation created
+   - Project status updated
 
 ## Project Health
 
@@ -168,6 +170,10 @@
 - **Pattern Reuse Strategy**: 70%+ step definition reuse for maintainability
 
 ### Lessons Learned
+- **Formatting Consistency**: Small formatting inconsistencies (1 char) significantly impact UX
+- **Column Width Standards**: Consistent widths critical for readable tabular output
+- **User Feedback Value**: International users provide valuable UX insights
+- **Test Coverage Importance**: Comprehensive tests make format changes safe
 - **Test Isolation Critical**: Always restore global state (cwd, env vars) in tests
 - **BDD Special Care**: Working directory changes common in file operation tests
 - **Finally Blocks Essential**: Guarantee cleanup even when tests fail with exceptions

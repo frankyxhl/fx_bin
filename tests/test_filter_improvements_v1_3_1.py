@@ -101,16 +101,16 @@ class TestNewDetailedFormat(unittest.TestCase):
             self.assertIn(unit_part, ['B', 'KB', 'MB', 'GB'])
     
     def test_format_file_size_alignment_helper(self):
-        """FAIL: New helper function for aligned size formatting."""
-        # This function should exist and format sizes with alignment
+        """PASS: New helper function for aligned size formatting."""
+        # This function should exist and format sizes with alignment (9 chars total)
         result_100b = filter_module._format_file_size_aligned(100)
         result_1536b = filter_module._format_file_size_aligned(1536) 
         result_2mb = filter_module._format_file_size_aligned(2097152)
         
-        # Check format: numbers right-aligned, units left-aligned
-        self.assertRegex(result_100b, r'\s*100 B')
-        self.assertRegex(result_1536b, r'\s*1\.5 KB')
-        self.assertRegex(result_2mb, r'\s*2\.0 MB')
+        # Check exact format: 9 characters total, right-aligned
+        self.assertEqual(result_100b, '    100 B')
+        self.assertEqual(result_1536b, '   1.5 KB')
+        self.assertEqual(result_2mb, '   2.0 MB')
     
     def test_no_redundant_words_in_output(self):
         """FAIL: Output should not contain 'modified:', 'size:', etc."""

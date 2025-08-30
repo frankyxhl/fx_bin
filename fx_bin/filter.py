@@ -4,7 +4,7 @@ This module provides functionality to filter files by extension with various
 sorting and formatting options.
 
 Examples:
-    >>> find_files_by_extension('/path/to/dir', 'py')
+    >>> find_files_by_extension('/path/to/dir', 'py')  # doctest: +SKIP
     ['/path/to/dir/script.py', '/path/to/dir/module.py']
     >>> parse_extensions('py,txt,json')
     ['py', 'txt', 'json']
@@ -266,28 +266,28 @@ def _format_file_size_aligned(size: int) -> str:
         size: File size in bytes
 
     Returns:
-        Right-aligned size with unit (total width 8 chars)
+        Right-aligned size with unit (total width 9 chars)
 
     Examples:
         >>> _format_file_size_aligned(100)
         '    100 B'
         >>> _format_file_size_aligned(1536)
-        '  1.5 KB'
+        '   1.5 KB'
         >>> _format_file_size_aligned(2097152)
-        '  2.0 MB'
+        '   2.0 MB'
     """
     if size < 1024:
         formatted = f"{size} B"
         return f"{formatted:>9}"
     elif size < 1024 * 1024:
         formatted = f"{size / 1024:.1f} KB"
-        return f"{formatted:>8}"
+        return f"{formatted:>9}"
     elif size < 1024 * 1024 * 1024:
         formatted = f"{size / (1024 * 1024):.1f} MB"
-        return f"{formatted:>8}"
+        return f"{formatted:>9}"
     else:
         formatted = f"{size / (1024 * 1024 * 1024):.1f} GB"
-        return f"{formatted:>8}"
+        return f"{formatted:>9}"
 
 
 def parse_extensions(extension_string: str) -> List[str]:

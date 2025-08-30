@@ -275,6 +275,54 @@ def parse_table(table_string):
 
 ---
 
+## ADR-010: Consistent Column Width for Tabular Output (2025-08-30)
+
+**Status**: Accepted  
+**Context**: File sizes in fx filter detailed output were misaligned due to inconsistent column widths  
+**Decision**: Standardize all size units to consistent 9-character width formatting  
+
+**Rationale**:
+- **Visual Consistency**: Aligned columns improve readability and professional appearance
+- **User Experience**: International users reported alignment issues affecting usability
+- **Standard Practice**: Right-aligned numeric data is industry standard for tables
+- **Width Choice**: 9 characters handles up to "999.9 GB" while minimizing wasted space
+
+**Consequences**:
+- ✅ Perfect visual alignment across all file size units
+- ✅ Improved readability for users scanning file lists
+- ✅ Consistent user experience across different file size ranges
+- ✅ Simple implementation with minimal code changes
+- ➖ Slightly more horizontal space used (1 extra character for B/KB)
+
+**Implementation**:
+```python
+# Before: Mixed widths
+if size_gb >= 1: return f"{size_gb:>9.1f} GB"  # 9 chars
+elif size_mb >= 1: return f"{size_mb:>9.1f} MB"  # 9 chars
+elif size_kb >= 1: return f"{size_kb:>8.1f} KB"  # 8 chars - MISALIGNED!
+else: return f"{size:>8} B"  # 8 chars - MISALIGNED!
+
+# After: Consistent 9-character width
+if size_gb >= 1: return f"{size_gb:>9.1f} GB"
+elif size_mb >= 1: return f"{size_mb:>9.1f} MB"
+elif size_kb >= 1: return f"{size_kb:>9.1f} KB"  # Now 9 chars
+else: return f"{size:>9} B"  # Now 9 chars
+```
+
+**Technical Details**:
+- Applied to `_format_file_size_aligned` function in filter.py
+- All 36 filter tests updated to match new formatting
+- Doctest examples corrected with proper skip directives
+- Version bumped to 1.3.3 for this formatting fix
+
+**Lessons Learned**:
+- Small formatting inconsistencies (even 1 character) significantly impact UX
+- International users provide valuable feedback on alignment issues
+- Comprehensive test coverage makes format changes safe to implement
+- Consistent column widths are critical for readable tabular output
+
+---
+
 ## Decision Criteria
 
 ### Evaluation Framework

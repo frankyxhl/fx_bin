@@ -4,29 +4,28 @@
 
 ## Current State (2025-08-30)
 
-**Status**: v1.3.2 Ready - All Tests Passing ✅  
+**Status**: v1.3.3 Ready - File Size Alignment Fixed ✅  
 **Branch**: main  
-**Critical Fix**: BDD test isolation issues resolved - 301 tests passing (0 failures)  
+**Latest Fix**: File sizes now properly aligned in fx filter detailed output  
 
 ## Immediate Next Steps
 
 ```bash
-# 1. Commit the test fixes and enhancements
+# 1. Commit the file size alignment fix
 git add -A
-git commit -m "fix: v1.3.2 - BDD test isolation and comprehensive test fixes
+git commit -m "fix: v1.3.3 - file size alignment in fx filter command
 
-- Fixed test isolation issues causing 21 failures
-- Added comprehensive BDD step definitions
-- Implemented --limit option and multi-path support
-- Fixed all flake8 linting errors
-- All 301 tests now passing consistently
+- Fixed misaligned file sizes in detailed output format
+- Standardized all size units to 9-character width
+- Updated tests to match new formatting
+- Resolves user-reported alignment issues
 
 🤖 Generated with Claude Code
 
 Co-Authored-By: Claude <noreply@anthropic.com>"
 
 # 2. Create release tag
-git tag -a v1.3.2 -m "v1.3.2: Test Suite Fix - BDD isolation and enhancements"
+git tag -a v1.3.3 -m "v1.3.3: File Size Alignment Fix"
 
 # 3. Build and publish
 poetry build
@@ -35,7 +34,7 @@ poetry publish
 
 ## Project Overview
 
-**fx_bin** is a Python utility collection providing command-line tools for file operations. Current version 1.3.2 includes comprehensive test fixes and CLI enhancements.
+**fx_bin** is a Python utility collection providing command-line tools for file operations. Current version 1.3.3 includes file size alignment fixes for improved readability.
 
 ### Available Commands
 ```bash
@@ -47,6 +46,14 @@ fx replace     # Replace text in files
 fx json2excel  # Convert JSON to Excel
 fx list        # List all available commands
 ```
+
+## What's New in v1.3.3
+
+### File Size Alignment Fix
+- **Formatting Consistency**: All size units (B, KB, MB, GB) now use 9-character width
+- **Perfect Alignment**: Right-aligned numeric values for easy visual scanning
+- **User Experience**: Resolved alignment issues reported by international users
+- **Test Updates**: All 36 filter tests updated to match new formatting
 
 ## What's New in v1.3.2
 
@@ -207,13 +214,17 @@ python -c "import fx_bin; print(fx_bin.__version__)"
 ## Context for Development
 
 ### Last Session (2025-08-30)
+- **Fixed**: File size alignment issues in fx filter detailed output
+- **Root Cause**: Inconsistent column widths (8 chars for B/KB, 9 chars for MB/GB)
+- **Solution**: Standardized all units to 9-character right-aligned format
+- **Updated**: Test expectations in test_filter_improvements_v1_3_1.py
+- **Version**: Bumped from 1.3.2 to 1.3.3
+- **Result**: All 36 filter tests passing including 14 doctests
+
+### Previous Session
 - **Fixed**: BDD test isolation issues causing 21 test failures
-- **Root Cause**: Tests changing working directory without restoration
-- **Solution**: Added finally blocks to guarantee directory restoration
-- **Implemented**: Missing BDD step definitions for table parsing
 - **Enhanced**: fx filter with --limit option and multi-path support
 - **Code Quality**: Fixed all flake8 errors and applied black formatting
-- **Result**: All 301 tests passing consistently (0 failures)
 
 ### Testing Infrastructure (v1.3.0)
 - **Production BDD Framework**: Complete pytest-bdd infrastructure with smart patterns
