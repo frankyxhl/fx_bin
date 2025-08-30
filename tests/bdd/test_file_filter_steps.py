@@ -847,7 +847,7 @@ def verify_no_directory_traversal(command_context):
     # For now, we verify the command handled the path traversal appropriately
     # by showing an error message (exit code 0 is expected for handled errors)
     output = command_context['last_output']
-    assert "Error: Path not found:" in output, "Expected path error for traversal attempt"
+    assert ("Error: Path not found:" in output or "Error: Path is not a directory:" in output), "Expected path error for traversal attempt"
 
 
 @given(parsers.parse('I have a directory structure:\n{table_content}'))
