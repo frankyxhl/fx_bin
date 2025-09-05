@@ -90,22 +90,43 @@ def size(paths):
 
 @cli.command()
 @click.argument("keyword")
-def ff(keyword):
+@click.option(
+    "--include-ignored",
+    is_flag=True,
+    default=False,
+    help="Include default-ignored dirs (.git, .venv, node_modules)",
+)
+@click.option(
+    "--exclude",
+    "excludes",
+    multiple=True,
+    help=(
+        "Exclude names (repeatable). Supports globs, e.g. "
+        "--exclude build --exclude '*.log'"
+    ),
+)
+def ff(keyword, include_ignored, excludes):
     """Find files by keyword.
 
     Examples:
-        fx ff config      # Find files containing 'config'
-        fx ff "*.py"      # Find Python files
+        fx ff config                      # Names containing 'config'
+        fx ff test --include-ignored      # Include .git/.venv/node_modules
+        fx ff test --exclude build --exclude "*.log"  # Exclude patterns
     """
     from . import find_files
 
     if not keyword or keyword.strip() == "":
-        click.echo(
-            "Please type text to search. For example: fx ff bar", err=True
-        )
+        click.echo("Please type text to search. For example: fx ff bar", err=True)
         click.echo("Usage: fx ff KEYWORD", err=True)
         return 1
-    find_files.find_files(keyword)
+    # Backward-compatible call shape for default options
+    exclude_list = list(excludes)
+    if not include_ignored and not exclude_list:
+        find_files.find_files(keyword)
+    else:
+        find_files.find_files(
+            keyword, include_ignored=include_ignored, exclude=exclude_list
+        )
     return 0
 
 
@@ -178,25 +199,19 @@ def filter(
         # Find files in all paths
         all_files = []
         for path in search_paths:
-            files = filter_module.find_files_by_extension(
-                path, extension, recursive
-            )
+            files = filter_module.find_files_by_extension(path, extension, recursive)
             all_files.extend(files)
 
         # Sort if requested
         if sort_by:
-            all_files = filter_module.sort_files_by_time(
-                all_files, sort_by, reverse
-            )
+            all_files = filter_module.sort_files_by_time(all_files, sort_by, reverse)
 
         # Apply limit if requested
         if limit is not None and limit > 0:
             all_files = all_files[:limit]
 
         # Format and display output
-        output = filter_module.format_output(
-            all_files, output_format, show_path
-        )
+        output = filter_module.format_output(all_files, output_format, show_path)
         click.echo(output)
 
         return 0
@@ -225,8 +240,8 @@ def replace(search_text, replace_text, filenames):
     """
     from . import replace as replace_module
 
-    # Call the existing replace module's main function
-    return replace_module.main(search_text, replace_text, filenames)
+    # Call the replace_files function directly (not the Click-decorated main)
+    return replace_module.replace_files(search_text, replace_text, filenames)
 
 
 @cli.command()
@@ -258,8 +273,7 @@ def list_commands():
         click.echo(f"  fx {cmd:<{max_len}}  - {description}")
 
     click.echo(
-        "\nUse 'fx COMMAND --help' for more information on a "
-        "specific command."
+        "\nUse 'fx COMMAND --help' for more information on a " "specific command."
     )
     return 0
 

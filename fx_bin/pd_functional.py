@@ -149,9 +149,7 @@ def main_functional(url: str, output_filename: str) -> Result[int, PdError]:
             # Direct IOSuccess (from mocking)
             result = Success(unwrapped)
     else:
-        result = Failure(
-            PdError("Unexpected result type from process_json_to_excel")
-        )
+        result = Failure(PdError("Unexpected result type from process_json_to_excel"))
 
     if isinstance(result, Success):
         return Success(0)

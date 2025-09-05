@@ -218,27 +218,22 @@ fx filter . txt --no-recursive --format count
 
 #### 🔍 fx ff - File Finder
 
-Find files containing specific keywords or patterns.
+Find files whose names contain a keyword, with useful exclusions.
 
 ```bash
-# Find files containing "TODO"
-fx ff . "TODO"
+# Find files containing "test" in their names
+fx ff test
 
-# Case-insensitive search
-fx ff . "config" --ignore-case
+# Include default-ignored directories (.git, .venv, node_modules)
+fx ff test --include-ignored
 
-# Search only in Python files
-fx ff . "import" --extension py
-
-# Use regex pattern
-fx ff . "^class.*Model" --regex
+# Exclude additional names or patterns (repeatable)
+fx ff test --exclude build --exclude "*.log"
 ```
 
 **Options:**
-- `--extension`: Limit to specific file extensions
-- `--ignore-case`: Case-insensitive search
-- `--regex`: Use regular expressions
-- `--content`: Search file contents
+- `--include-ignored`: Include `.git`, `.venv`, `node_modules` (default is skip).
+- `--exclude NAME`: Exclude names or glob patterns; repeatable.
 
 #### 🔄 fx replace - Text Replacer
 

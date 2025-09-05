@@ -8,9 +8,7 @@ from .common import SizeEntry
 __all__ = ["list_size"]
 
 
-def list_size(
-    path: str = ".", ignore_dot_file: bool = True
-) -> List[SizeEntry]:
+def list_size(path: str = ".", ignore_dot_file: bool = True) -> List[SizeEntry]:
     """
     List sizes of files and directories in the given path.
 
@@ -38,9 +36,7 @@ def main():
 
     @click.command()
     @click.option("--path", "-p", default=".", help="Path to analyze")
-    @click.option(
-        "--all", "-a", "show_all", is_flag=True, help="Show hidden files"
-    )
+    @click.option("--all", "-a", "show_all", is_flag=True, help="Show hidden files")
     def cli(path, show_all):
         """Display file and directory sizes in human-readable format."""
         lst = list_size(path, ignore_dot_file=not show_all)

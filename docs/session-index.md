@@ -6,6 +6,7 @@ This index tracks all development sessions with links and metadata for easy refe
 
 | Date | Title | Status | Tags | Link |
 |------|--------|---------|------|------|
+| 2025-09-05 | Complete Test Reorganization and Project Cleanup | completed | testing, reorganization, cleanup, bug-fix, pytest, v1.3.5 | [Session](sessions/20250905_175802_test_reorganization_and_fixes.md) |
 | 2025-08-30 | Fix File Size Alignment in fx filter Command | completed | formatting, ux, filter-command, v1.3.3 | [Session](sessions/20250830_143808_file-size-alignment-fix.md) |
 | 2025-08-30 | BDD Test Isolation Fix and Complete Test Suite Restoration | completed | testing, bdd, pytest, test-isolation, code-quality, flake8 | [Session](sessions/20250830_132203_bdd-test-isolation-fix.md) |
 | 2025-08-30 | fx_bin v1.3.1 Security Fix - Black ReDoS Vulnerability Patched | completed | security, dependencies, CVE-fix, black, v1.3.1, patch-release | [Session](sessions/20250830_111653_v1-3-1-security-fix-release.md) |
@@ -15,6 +16,7 @@ This index tracks all development sessions with links and metadata for easy refe
 ## Sessions by Category
 
 ### Bug Fixes & Testing
+- **Test Reorganization (2025-09-05)**: Complete test suite reorganization with categorized structure and bug fixes - [Session](sessions/20250905_175802_test_reorganization_and_fixes.md)
 - **File Size Alignment Fix (2025-08-30)**: Fixed alignment issues in fx filter command output - [Session](sessions/20250830_143808_file-size-alignment-fix.md)
 - **Test Isolation Fix (2025-08-30)**: Fixed BDD test isolation issues causing suite-wide failures - [Session](sessions/20250830_132203_bdd-test-isolation-fix.md)
 
@@ -37,12 +39,15 @@ This index tracks all development sessions with links and metadata for easy refe
 ## Quick Reference
 
 ### Latest Session
-**2025-08-30**: Fix File Size Alignment in fx filter Command
+**2025-09-05**: Complete Test Reorganization and Project Cleanup
 - Status: Completed
-- Key Deliverables: Fixed file size alignment issues, updated tests, version bump to 1.3.3
-- Next Steps: Commit changes, tag v1.3.3, build and publish to PyPI
+- Key Deliverables: Reorganized test suite, fixed replace command bug, consolidated documentation, cleaned project structure
+- Next Steps: Commit changes, update version to 1.3.5, build and release
 
 ### Recent Changes
+- **Test Suite Reorganization**: Split tests into unit/integration/security/performance/functional categories (v1.3.5)
+- **Replace Command Fix**: Fixed "str expected, not tuple" error with function refactoring (v1.3.5)
+- **Documentation Consolidation**: Merged to single Markdown format, removed Sphinx files (v1.3.5)
 - **File Size Alignment**: Fixed inconsistent column widths in fx filter output (v1.3.3)
 - **Test Suite Fix**: Resolved BDD test isolation issues - all 301 tests now passing
 - **BDD Enhancements**: Added comprehensive step definitions for table parsing and directory structures
@@ -62,4 +67,4 @@ This index tracks all development sessions with links and metadata for easy refe
 
 ## Search Tags
 
-**Available Tags**: formatting, ux, v1.3.3, testing, test-isolation, bdd, pytest, code-quality, flake8, security, CVE-fix, dependencies, black, v1.3.1, patch-release, release, filter-command, tdd, documentation, v1.2.0, v1.3.0, testing-excellence, changelog, pytest-bdd, infrastructure, gherkin, living-documentation, test-automation, bug-fix
+**Available Tags**: testing, reorganization, cleanup, bug-fix, pytest, v1.3.5, pytest-forked, replace-command, documentation-consolidation, project-structure, formatting, ux, v1.3.3, test-isolation, bdd, code-quality, flake8, security, CVE-fix, dependencies, black, v1.3.1, patch-release, release, filter-command, tdd, documentation, v1.2.0, v1.3.0, testing-excellence, changelog, pytest-bdd, infrastructure, gherkin, living-documentation, test-automation

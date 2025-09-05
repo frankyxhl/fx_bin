@@ -1,19 +1,23 @@
 # fx_bin Project Status
 
-## Current Status: v1.3.3 Ready - File Size Alignment Fixed
+## Current Status: v1.3.5 Ready - Test Suite Reorganized and Bugs Fixed
 
-**Last Updated**: 2025-08-30  
-**Current Version**: 1.3.3 (ready for release)  
+**Last Updated**: 2025-09-05  
+**Current Version**: 1.3.5 (ready for release)  
 **Branch**: main  
-**Build Status**: All tests passing - File size formatting corrected  
+**Build Status**: All 317 tests passing - No warnings, no skipped tests  
 
-## Current Release: v1.3.3 File Size Alignment Fix
+## Current Release: v1.3.5 Test Reorganization and Bug Fixes
 
 ### Key Features
-- **FILE SIZE ALIGNMENT**: Fixed misaligned file sizes in fx filter detailed output
-- **FORMATTING CONSISTENCY**: All size units (B, KB, MB, GB) now use 9-character width
-- **UX IMPROVEMENT**: Perfect right-alignment for improved readability
-- **TEST SUITE RESTORED**: Fixed BDD test isolation issues - all 301 tests passing (v1.3.2)
+- **TEST REORGANIZATION**: Complete test suite restructured into categorized folders (unit/integration/security/performance/functional)
+- **CRITICAL BUG FIX**: Fixed replace command "str expected, not tuple" error with function refactoring
+- **TEST ISOLATION**: Added pytest-forked for proper test isolation - fixed 18 failing tests
+- **DOCUMENTATION CONSOLIDATION**: Merged to single Markdown format, removed Sphinx files
+- **PROJECT CLEANUP**: Comprehensive cleanup of cache, build artifacts, and duplicate files
+- **FILE SIZE ALIGNMENT**: Fixed misaligned file sizes in fx filter detailed output (v1.3.3)
+- **FORMATTING CONSISTENCY**: All size units (B, KB, MB, GB) now use 9-character width (v1.3.3)
+- **UX IMPROVEMENT**: Perfect right-alignment for improved readability (v1.3.3)
 - **NEW CLI OPTIONS**: Added --limit and multi-path support to fx filter (v1.3.2)
 - **CODE QUALITY**: All flake8 linting errors fixed, black formatting applied (v1.3.2)
 - **CRITICAL SECURITY FIX**: Black ReDoS vulnerability patched (v1.3.1)
@@ -25,29 +29,33 @@
 - **Enhanced Documentation**: Comprehensive BDD testing guide (480+ lines)
 
 ### Release Readiness
-- ✅ File size alignment fixed - consistent 9-character width for all units
-- ✅ All 36 filter tests passing including 14 doctests
-- ✅ Test expectations updated to match new formatting
-- ✅ Doctest examples fixed with proper skip directives
-- ✅ Version bumped to 1.3.3 in pyproject.toml
-- ✅ Session documentation created with technical details
-- 🔄 Ready for: Commit changes, tag v1.3.3, build and publish to PyPI
+- ✅ Test suite reorganized into logical categories
+- ✅ Replace command bug fixed with new replace_files() function
+- ✅ All 317 tests passing with --forked option
+- ✅ Zero warnings, zero skipped tests
+- ✅ Documentation consolidated to Markdown format
+- ✅ Project structure cleaned (no cache files, organized tests)
+- ✅ Session documentation created with full details
+- 🔄 Ready for: Commit changes, update to v1.3.5, build and publish to PyPI
 
 ## Next Immediate Actions
 
-1. **Commit File Size Alignment Fix**
+1. **Commit All Reorganization Changes**
    ```bash
    git add -A
-   git commit -m "fix: v1.3.3 - file size alignment in fx filter command
+   git commit -m "refactor: v1.3.5 - complete test reorganization and bug fixes
    
-   - Fixed misaligned file sizes in detailed output format
-   - Standardized all size units to 9-character width
-   - Updated tests to match new formatting
-   - Resolves user-reported alignment issues"
+   - Reorganized test suite into categorized folders
+   - Fixed critical replace command bug (str expected, not tuple)
+   - Added pytest-forked for proper test isolation
+   - Consolidated documentation to Markdown format
+   - Removed Sphinx files and cleaned project structure"
    ```
 
-2. **Create Release Tag**
+2. **Update Version and Create Release Tag**
    ```bash
+   # Update version in pyproject.toml to 1.3.5
+   poetry version 1.3.5
    git tag -a v1.3.3 -m "v1.3.3: File Size Alignment Fix"
    ```
 

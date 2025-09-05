@@ -2,6 +2,61 @@
 
 This document records important architectural and design decisions made during fx_bin development.
 
+## ADR-003: Test Suite Reorganization (2025-09-05)
+
+**Status**: Accepted  
+**Context**: Test suite grew organically without clear structure, making test discovery and maintenance difficult  
+**Decision**: Reorganize tests into categorized folders based on test type  
+
+**Rationale**:
+- **Clear Separation**: Different test types have different purposes and requirements
+- **Easier Navigation**: Developers can quickly find relevant tests
+- **Better CI/CD**: Can run specific test categories independently
+- **Test Isolation**: Separation helps identify test interdependencies
+
+**Consequences**:
+- ✅ Improved test organization and maintainability
+- ✅ Clear separation of concerns (unit vs integration vs security)
+- ✅ Easier to run specific test categories
+- ✅ Better understanding of test coverage gaps
+- ⚠️ Initial migration effort to move and update imports
+- ⚠️ Need to update CI/CD configurations
+
+**Implementation**:
+- Created 5 test categories: unit/, integration/, security/, performance/, functional/
+- Moved all test files to appropriate categories
+- Consolidated duplicate test files
+- Updated all import paths
+
+---
+
+## ADR-002: Separate CLI from Business Logic (2025-09-05)
+
+**Status**: Accepted  
+**Context**: Replace command had tightly coupled CLI and business logic causing "str expected, not tuple" error  
+**Decision**: Refactor to separate core functionality from CLI handling  
+
+**Rationale**:
+- **Testability**: Pure functions easier to test without Click context
+- **Reusability**: Core logic can be used programmatically
+- **Maintainability**: Clear separation of concerns
+- **Error Prevention**: Type safety between layers
+
+**Consequences**:
+- ✅ Fixed critical runtime error in replace command
+- ✅ Improved testability - no need to mock Click context
+- ✅ Better API for programmatic usage
+- ✅ Cleaner code architecture
+- ⚠️ Additional function layer (minimal overhead)
+
+**Implementation**:
+- Created `replace_files()` function for core logic
+- CLI `replace()` function now delegates to `replace_files()`
+- Updated all tests to use new function
+- Pattern can be applied to other commands
+
+---
+
 ## ADR-001: TDD + BDD Testing Strategy (2025-08-30)
 
 **Status**: Accepted  

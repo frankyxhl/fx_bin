@@ -50,11 +50,7 @@ def validate_file_access(filename: str) -> Result[str, ReplaceError]:
             return Failure(ReplaceError(f"File is not writable: {filename}"))
 
         # Follow symlinks to get real path
-        real_path = (
-            os.path.realpath(filename)
-            if os.path.islink(filename)
-            else filename
-        )
+        real_path = os.path.realpath(filename) if os.path.islink(filename) else filename
 
         return Success(real_path)
     except Exception as e:
@@ -83,9 +79,7 @@ def create_backup(filename: str) -> IOResult[FileBackup, FxIOError]:
             )
         )
     except Exception as e:
-        return IOResult.from_failure(
-            FxIOError(f"Failed to create backup: {e}")
-        )
+        return IOResult.from_failure(FxIOError(f"Failed to create backup: {e}"))
 
 
 @impure_safe
@@ -101,9 +95,7 @@ def perform_replacement(
         try:
             # Perform replacement
             with os.fdopen(fd, "w", encoding="utf-8") as tmp_file:
-                with open(
-                    backup.original_path, "r", encoding="utf-8"
-                ) as original_file:
+                with open(backup.original_path, "r", encoding="utf-8") as original_file:
                     for line in original_file:
                         modified_line = line.replace(
                             context.search_text, context.replace_text
@@ -131,9 +123,7 @@ def perform_replacement(
             raise e
 
     except Exception as e:
-        return IOResult.from_failure(
-            FxIOError(f"Failed to perform replacement: {e}")
-        )
+        return IOResult.from_failure(FxIOError(f"Failed to perform replacement: {e}"))
 
 
 @impure_safe
@@ -160,9 +150,7 @@ def restore_from_backup(backup: FileBackup) -> IOResult[None, FxIOError]:
             os.chmod(backup.original_path, stat.S_IMODE(backup.original_mode))
         return IOResult.from_value(None)
     except Exception as e:
-        return IOResult.from_failure(
-            FxIOError(f"Failed to restore from backup: {e}")
-        )
+        return IOResult.from_failure(FxIOError(f"Failed to restore from backup: {e}"))
 
 
 def work_functional(
@@ -300,20 +288,15 @@ def main(search_text: str, replace_text: str, filenames: tuple) -> None:
             L.info(f"Successfully replaced in {filenames[0]}")
     else:
         # Batch replacement with transaction semantics
-        result = work_batch_functional(
-            search_text, replace_text, list(filenames)
-        ).run()
+        result = work_batch_functional(search_text, replace_text, list(filenames)).run()
 
         if isinstance(result, Failure):
             L.error(f"Batch replacement failed: {result.failure()}")
             raise SystemExit(1)
         else:
-            success_count = sum(
-                1 for r in result.unwrap() if isinstance(r, Success)
-            )
+            success_count = sum(1 for r in result.unwrap() if isinstance(r, Success))
             L.info(
-                f"Successfully replaced in {success_count}/"
-                f"{len(filenames)} files"
+                f"Successfully replaced in {success_count}/" f"{len(filenames)} files"
             )
 
 

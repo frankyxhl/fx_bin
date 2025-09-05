@@ -64,9 +64,7 @@ def find_files_by_extension(
         # Non-recursive search - only current directory
         try:
             files = [
-                f
-                for f in os.listdir(path)
-                if os.path.isfile(os.path.join(path, f))
+                f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))
             ]
             found_files.extend(
                 _filter_files_by_extension(path, files, extensions_lower)
@@ -94,9 +92,7 @@ def _filter_files_by_extension(
     matching_files = []
     for file in files:
         file_path = os.path.join(directory, file)
-        file_ext = (
-            Path(file).suffix[1:].lower()
-        )  # Remove dot and convert to lowercase
+        file_ext = Path(file).suffix[1:].lower()  # Remove dot and convert to lowercase
 
         # Check for matches
         match_found = False
@@ -143,9 +139,7 @@ def sort_files_by_time(
         return []
 
     if sort_by not in ["created", "modified"]:
-        raise ValueError(
-            f"Invalid sort_by: {sort_by}. Must be 'created' or 'modified'"
-        )
+        raise ValueError(f"Invalid sort_by: {sort_by}. Must be 'created' or 'modified'")
 
     def get_time(file_path: str) -> float:
         """Get file time based on sort criteria."""
@@ -187,9 +181,7 @@ def format_output(
     """
     VALID_FORMATS = ["simple", "detailed"]
     if format not in VALID_FORMATS:
-        raise ValueError(
-            f"Invalid format: {format}. Must be one of {VALID_FORMATS}."
-        )
+        raise ValueError(f"Invalid format: {format}. Must be one of {VALID_FORMATS}.")
 
     if not files:
         return "No files found"
@@ -206,9 +198,7 @@ def format_output(
                 mtime = stat_info.st_mtime
 
                 # Format date as YYYY-MM-DD HH:MM:SS
-                date_str = time.strftime(
-                    "%Y-%m-%d %H:%M:%S", time.localtime(mtime)
-                )
+                date_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(mtime))
 
                 # Convert size to aligned human-readable format
                 size_str = _format_file_size_aligned(size)

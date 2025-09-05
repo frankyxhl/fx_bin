@@ -100,7 +100,21 @@ ENV/
 
 # mypy
 .mypy_cache/
-.idea
+.dmypy.json
+dmypy.json
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
 
 # Legacy files (use Poetry instead)
 requirements*.txt
@@ -114,7 +128,21 @@ benchmarks/results/*.csv
 # Test output files
 *.xlsx
 output_*.xlsx
+test_output_*.txt
+test_results_*.json
 
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Claude Code specific files (keep in gitignore)
 AGENTS.md
-.serena
+.serena/
 CLAUDE.md

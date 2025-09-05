@@ -55,9 +55,7 @@ def sum_folder_size(path: str = ".", _visited_inodes=None, _depth=0) -> int:
                     total += entry.stat(follow_symlinks=False).st_size
                 elif entry.is_dir(follow_symlinks=False):
                     # Recursively calculate subdirectory size
-                    total += sum_folder_size(
-                        entry.path, _visited_inodes, _depth + 1
-                    )
+                    total += sum_folder_size(entry.path, _visited_inodes, _depth + 1)
                 elif entry.is_symlink():
                     # Handle symlinks carefully
                     try:
@@ -75,9 +73,7 @@ def sum_folder_size(path: str = ".", _visited_inodes=None, _depth=0) -> int:
     return total
 
 
-def sum_folder_files_count(
-    path: str = ".", _visited_inodes=None, _depth=0
-) -> int:
+def sum_folder_files_count(path: str = ".", _visited_inodes=None, _depth=0) -> int:
     """Recursively count total files in a folder with safety checks."""
     # Initialize visited inodes set on first call
     if _visited_inodes is None:

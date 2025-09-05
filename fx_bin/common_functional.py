@@ -80,13 +80,9 @@ class SizeEntry:
         ) -> IOResult[SizeEntry, FxIOError]:
             """Create SizeEntry from stat result."""
             try:
-                entry_type = (
-                    EntryType.FOLDER if entry.is_dir() else EntryType.FILE
-                )
+                entry_type = EntryType.FOLDER if entry.is_dir() else EntryType.FILE
                 full_path = (
-                    os.path.join(parent_dir, entry.name)
-                    if parent_dir
-                    else entry.name
+                    os.path.join(parent_dir, entry.name) if parent_dir else entry.name
                 )
 
                 return IOResult.from_value(
@@ -98,9 +94,7 @@ class SizeEntry:
                     )
                 )
             except Exception as e:
-                return IOResult.from_failure(
-                    FxIOError(f"Error creating entry: {e}")
-                )
+                return IOResult.from_failure(FxIOError(f"Error creating entry: {e}"))
 
         # Try to get stat, if it fails return Nothing wrapped in Success
         stat_result = get_entry_stat()
@@ -263,31 +257,17 @@ def _count_files_recursive(
 # Compatibility wrappers for existing code
 
 
-def sum_folder_size_legacy(
-    path: str = ".", _visited_inodes=None, _depth=0
-) -> int:
+def sum_folder_size_legacy(path: str = ".", _visited_inodes=None, _depth=0) -> int:
     """Legacy interface for backward compatibility."""
-    context = FolderContext(
-        visited_inodes=_visited_inodes or set(), max_depth=100
-    )
+    context = FolderContext(visited_inodes=_visited_inodes or set(), max_depth=100)
     result = sum_folder_size_functional(path)(context)
-    return (
-        result._inner_value.value_or(0)
-        if hasattr(result, "_inner_value")
-        else 0
-    )
+    return result._inner_value.value_or(0) if hasattr(result, "_inner_value") else 0
 
 
 def sum_folder_files_count_legacy(
     path: str = ".", _visited_inodes=None, _depth=0
 ) -> int:
     """Legacy interface for backward compatibility."""
-    context = FolderContext(
-        visited_inodes=_visited_inodes or set(), max_depth=100
-    )
+    context = FolderContext(visited_inodes=_visited_inodes or set(), max_depth=100)
     result = sum_folder_files_count_functional(path)(context)
-    return (
-        result._inner_value.value_or(0)
-        if hasattr(result, "_inner_value")
-        else 0
-    )
+    return result._inner_value.value_or(0) if hasattr(result, "_inner_value") else 0

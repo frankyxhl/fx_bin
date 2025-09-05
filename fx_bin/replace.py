@@ -87,11 +87,7 @@ def work(search_text: str, replace_text: str, filename: str) -> None:
         raise
 
 
-@click.command()
-@click.argument("search_text", nargs=1)
-@click.argument("replace_text", nargs=1)
-@click.argument("filenames", nargs=-1)
-def main(
+def replace_files(
     search_text: str, replace_text: str, filenames: Tuple[str, ...]
 ) -> int:
     """Replace text in multiple files with transaction-like behavior."""
@@ -141,6 +137,15 @@ def main(
 
         # Re-raise the original exception
         raise
+
+
+@click.command()
+@click.argument("search_text", nargs=1)
+@click.argument("replace_text", nargs=1)
+@click.argument("filenames", nargs=-1)
+def main(search_text: str, replace_text: str, filenames: Tuple[str, ...]) -> int:
+    """CLI wrapper for replace_files."""
+    return replace_files(search_text, replace_text, filenames)
 
 
 if __name__ == "__main__":

@@ -31,7 +31,7 @@ All individual `fx_*` command entries have been removed from the package. These 
 ```bash
 fx_files /path/to/directory
 fx_size /path/to/directory
-fx_ff "*.py"
+fx_ff test
 fx_replace "old" "new" file.txt
 fx_grab_json_api_to_excel data.json output.xlsx
 fx_upgrade
@@ -41,7 +41,7 @@ fx_upgrade
 ```bash
 fx files /path/to/directory
 fx size /path/to/directory
-fx ff "*.py"
+fx ff test
 fx replace "old" "new" file.txt
 fx json2excel data.json output.xlsx
 # fx_upgrade is no longer available

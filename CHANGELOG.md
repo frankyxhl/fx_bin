@@ -5,6 +5,56 @@ All notable changes to fx-bin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.5] - 2025-09-05
+
+### Added
+- **Test Organization**: Reorganized test suite into categorized structure
+  - `tests/unit/` - Unit tests for individual functions
+  - `tests/integration/` - Integration and command interaction tests
+  - `tests/security/` - Security and safety validation tests
+  - `tests/performance/` - Performance benchmarks and profiling
+  - `tests/functional/` - End-to-end functional testing
+- **Test Isolation**: Added pytest-forked for proper test isolation
+- **Documentation**: Created CONTRIBUTING.md from contributing.rst
+
+### Fixed
+- **Critical Bug**: Fixed replace command "str expected, not tuple" error
+  - Refactored replace.py to separate CLI from core logic
+  - Created new `replace_files()` function for programmatic access
+- **Test Suite**: Fixed 18 failing tests with proper isolation
+- **Warnings**: Resolved 26 test warnings (24 pytest-bdd, 2 dataclass naming)
+- **Skipped Tests**: Fixed 2 skipped tests in replace module
+
+### Changed
+- **Documentation Format**: Consolidated to Markdown throughout project
+  - Merged README.rst → README.md
+  - Merged HISTORY.rst → CHANGELOG.md
+  - Removed 8 obsolete Sphinx documentation files
+- **Build Configuration**: Updated Makefile to use --forked for tests
+- **Project Structure**: Comprehensive cleanup of cache and build artifacts
+
+### Removed
+- Sphinx documentation files (Makefile, conf.py, *.rst files in docs/)
+- Duplicate test files (merged into consolidated versions)
+- All __pycache__, .pytest_cache, .mypy_cache directories
+
+## [1.3.4] - 2025-08-31
+
+### Added
+- **Default exclusions for fx ff**: Now skips `.git`, `.venv`, and `node_modules` by default to reduce unnecessary traversal
+- **New fx ff options**:
+  - `--include-ignored`: Include default-ignored directories
+  - `--exclude NAME`: Repeatable option supporting glob patterns to prune names/paths
+- **Enhanced testing**: Added `tests/test_ff_exclude.py` covering default skip, include-ignored, and exclude patterns
+- **Poetry Migration**: Complete transition from pip/setuptools to Poetry
+  - Removed legacy requirements files
+  - Updated installation instructions
+  - Added Poetry-specific .gitignore entries
+
+### Changed
+- **Documentation updates**: Updated README, docs/quick-start.md, and migration guide examples for new fx ff behavior
+- **Improved file finding efficiency**: Reduces traversal time by intelligently skipping common development directories
+
 ## [1.3.3] - 2025-08-30
 
 ### Fixed
@@ -134,6 +184,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Standardized CLI patterns across all utilities
 - Enhanced discoverability and usability
 
+## [0.10.1] - 2025-08-24
+
+### Added
+- **Unified CLI**: Implemented unified CLI with single fx command
+- **Comprehensive Click-based command group**: New 'fx' command with subcommands: files, size, ff, replace, json2excel, upgrade, list
+- **Extensive test coverage**: Added comprehensive tests in tests/test_cli.py
+- **Migration guide**: Updated README.rst with migration guide and new CLI documentation
+- **Backward compatibility**: Maintained backward compatibility with all original commands
+
+## [0.9.7] - 2025-08-24
+
+### Fixed
+- **Comprehensive linting fixes**: Applied across fx_bin/common.py, fx_bin/find_files.py, fx_bin/lib.py
+- **flake8 compliance**: All remaining flake8 issues resolved
+- **Code quality**: Entire fx_bin package now fully compliant with flake8 linting standards
+
+## [0.9.6] - 2025-08-24
+
+### Fixed
+- **flake8 issues**: Resolved flake8 linting issues in fx_bin/pd.py
+- **Code formatting**: Fixed line length violations and whitespace issues
+- **Readability**: Improved code readability while maintaining functionality
+
+## [0.9.5] - 2025-08-24
+
+### Security
+- **SSRF protection**: Enhanced SSRF protection in pd.py
+- **Symlink security**: Fixed symlink security issues in common.py
+
+### Changed
+- **Version management**: Replace hardcoded version with dynamic importlib.metadata.version()
+- **Error handling**: Fixed cross-device error handling, improved CLI consistency
+- **Code cleanup**: Removed obsolete files, fixed Makefile targets, improved documentation
+
+### Fixed
+- **Comprehensive improvements**: Addressed security, consistency, and maintainability issues
+
+## [0.1.0] - 2019-07-27
+
+### Added
+- **First release**: Initial release on PyPI
+
+[1.3.4]: https://github.com/frankyxhl/fx_bin/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/frankyxhl/fx_bin/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/frankyxhl/fx_bin/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/frankyxhl/fx_bin/compare/v1.3.0...v1.3.1
@@ -142,3 +235,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.1.0]: https://github.com/frankyxhl/fx_bin/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/frankyxhl/fx_bin/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/frankyxhl/fx_bin/releases/tag/v1.0.0
+[0.10.1]: https://github.com/frankyxhl/fx_bin/compare/v0.9.7...v0.10.1
+[0.9.7]: https://github.com/frankyxhl/fx_bin/compare/v0.9.6...v0.9.7
+[0.9.6]: https://github.com/frankyxhl/fx_bin/compare/v0.9.5...v0.9.6
+[0.9.5]: https://github.com/frankyxhl/fx_bin/compare/v0.1.0...v0.9.5
+[0.1.0]: https://github.com/frankyxhl/fx_bin/releases/tag/v0.1.0

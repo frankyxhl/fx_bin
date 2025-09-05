@@ -29,10 +29,10 @@ class TestPy_fx_bin(unittest.TestCase):
         result = runner.invoke(cli.cli)
         assert result.exit_code == 0
         # The CLI should show help when no command is provided
-        assert 'FX - A collection of file and text utilities' in result.output
-        
+        assert "FX - A collection of file and text utilities" in result.output
+
         # Test help command
-        help_result = runner.invoke(cli.cli, ['--help'])
+        help_result = runner.invoke(cli.cli, ["--help"])
         assert help_result.exit_code == 0
-        assert '--help' in help_result.output
-        assert 'Show this message and exit' in help_result.output
+        assert "--help" in help_result.output
+        assert "Show this message and exit" in help_result.output

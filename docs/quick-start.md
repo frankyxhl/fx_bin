@@ -47,6 +47,20 @@ fx json2excel  # Convert JSON to Excel
 fx list        # List all available commands
 ```
 
+Note: `fx ff` skips `.git`, `.venv`, `node_modules` by default. Use `--include-ignored` to include them, and `--exclude NAME` (repeatable, supports globs) to prune additional names/patterns.
+
+### fx ff examples
+```bash
+# Names containing 'test' (skips .git/.venv/node_modules by default)
+fx ff test
+
+# Include default-ignored directories
+fx ff test --include-ignored
+
+# Exclude additional names/patterns (repeatable)
+fx ff test --exclude build --exclude "*.log"
+```
+
 ## What's New in v1.3.3
 
 ### File Size Alignment Fix

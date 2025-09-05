@@ -97,18 +97,14 @@ def main(url, output_filename: str, args=None) -> int:
     if pandas is None and not _check_pandas_available():
         click.echo("could not find pandas please install:", err=True)
         click.echo("Command: python -m pip install pandas", err=True)
-        raise click.ClickException(
-            "pandas package is required but not installed"
-        )
+        raise click.ClickException("pandas package is required but not installed")
 
     try:
         # Check if url looks like a URL, file path, or JSON string
         if url.startswith(("http://", "https://")):
             # It's definitely a URL - validate it first
             if not _validate_url(url):
-                click.echo(
-                    "Error: URL is not allowed for security reasons", err=True
-                )
+                click.echo("Error: URL is not allowed for security reasons", err=True)
                 click.echo("Blocked URLs include:", err=True)
                 click.echo("- file:// URLs", err=True)
                 click.echo(
@@ -132,12 +128,8 @@ def main(url, output_filename: str, args=None) -> int:
         df.to_excel(output_filename, index=False)
         return 0
     except Exception as e:
-        click.echo(
-            f"Error processing JSON or writing Excel file: {e}", err=True
-        )
-        raise click.ClickException(
-            f"Failed to process JSON or write Excel file: {e}"
-        )
+        click.echo(f"Error processing JSON or writing Excel file: {e}", err=True)
+        raise click.ClickException(f"Failed to process JSON or write Excel file: {e}")
 
 
 if __name__ == "__main__":
