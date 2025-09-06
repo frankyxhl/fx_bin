@@ -2,36 +2,34 @@
 
 **Get up to speed in < 2 minutes**
 
-## Current State (2025-09-06 07:09 UTC)
+## Current State (2025-09-06 11:45 UTC)
 
-**Status**: v1.3.7+ GitHub Actions Fixed - Complete Local CI Available 🚀  
+**Status**: v1.3.7+ fx root Shell Integration Complete 🚀  
 **Branch**: develop  
-**Latest Fixes**: Test expectation mismatch resolved, `make test` provides full CI simulation  
+**Latest Enhancement**: Cross-platform shell wrappers enable `fxroot` directory switching  
 
 ## Immediate Next Steps
 
 ```bash
-# 1. Commit Makefile enhancements
-git add Makefile
-git commit -m "feat: create ultimate local CI simulation with make test
+# 1. Commit shell integration files
+git add -A
+git commit -m "feat: add cross-platform shell integration for fx root"
 
-- Add complete GitHub Actions simulation in Makefile
-- Integrate security (Bandit), safety, coverage, and quality checks
-- Create unified 'make test' command for everything
-- Optimize test execution to ~60 seconds locally"
+# 2. Set up fx root directory switching (one-time)
+./scripts/setup-fx-root.sh
+# Restart your shell after setup
 
-# 2. Test everything locally (simulates GitHub Actions)
-make test  # Runs EVERYTHING - security, safety, all tests, coverage, quality
+# 3. Test fx root functionality
+fxroot  # Changes to Git project root
+fx root --cd  # Outputs path only (for scripts)
 
-# 3. Verify specific test areas if needed
-make test-security  # Security tests only
-make test-core      # Core functionality tests
-make test-coverage  # Tests with coverage report
+# 4. Run comprehensive tests
+make test  # Full CI simulation (~60 seconds)
 ```
 
 ## Project Overview
 
-**fx_bin** is a Python utility collection providing command-line tools for file operations. Version 1.3.7+ includes GitHub Actions fixes and complete local CI simulation via Makefile.
+**fx_bin** is a Python utility collection providing command-line tools for file operations. Version 1.3.7+ includes shell integration for fx root, GitHub Actions fixes, and complete local CI simulation via Makefile.
 
 ### Available Commands
 ```bash
@@ -41,7 +39,7 @@ fx ff          # Find files by keyword
 fx filter      # Filter files by extension (v1.2.0)
 fx replace     # Replace text in files
 fx json2excel  # Convert JSON to Excel
-fx root        # Find Git project root directory (v1.3.6)
+fx root        # Find Git project root (v1.3.6, shell integration v1.3.7+)
 fx help        # Display main help (v1.3.6)
 fx list        # List all available commands
 ```
