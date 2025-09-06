@@ -7,17 +7,11 @@ from typing import List, Tuple
 import importlib.metadata
 
 def get_version_info() -> str:
-    """Get professional version information."""
+    """Get version information."""
     try:
         version = importlib.metadata.version("fx-bin")
         return f"""FX-Bin v{version}
-A powerful, secure, and well-tested collection of Python file operation utilities.
-
-Repository: https://github.com/frankyxhl/fx_bin
-Documentation: https://github.com/frankyxhl/fx_bin/blob/main/README.md
-License: MIT
-
-Python {sys.version.split()[0]} • Built with Poetry • Cross-platform support"""
+Repository: https://github.com/frankyxhl/fx_bin"""
     except Exception:
         return "fx-bin (development version)"
 
