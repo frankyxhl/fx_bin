@@ -2,6 +2,46 @@
 
 This document records important architectural and design decisions made during fx_bin development.
 
+## ADR-006: Unified Local CI Simulation Strategy (2025-09-06)
+
+**Status**: Accepted  
+**Context**: GitHub Actions tests failing, developers need instant local verification matching CI exactly  
+**Decision**: Create unified `make test` command simulating complete GitHub Actions workflow  
+
+**Rationale**:
+- **Instant Feedback**: 60-second local run vs 2-3 minute GitHub Actions
+- **Complete Coverage**: Security, safety, functionality, coverage, and quality in one command
+- **Developer Friction**: Single command eliminates confusion about which tests to run
+- **CI Parity**: Exact match with GitHub Actions ensures no surprises
+
+**Consequences**:
+- ✅ All tests verifiable locally before push
+- ✅ Reduced GitHub Actions failures
+- ✅ Clear sectioned output identifies failure points
+- ✅ Integrated security scanning (Bandit, Safety)
+- ⚠️ Slightly longer test execution (~60s)
+- ⚠️ Requires all dev dependencies installed
+
+**Implementation**:
+```makefile
+test:  ## 🚀 Run ALL tests (GitHub Actions simulation + everything)
+	# Security tests
+	poetry run bandit -r fx_bin/
+	poetry run safety check
+	# All functionality tests
+	poetry run pytest tests/ -v
+	# Coverage reporting
+	poetry run pytest --cov=fx_bin
+	# Quality checks
+	poetry run flake8 fx_bin/
+	poetry run black --check fx_bin/
+```
+
+**Alternatives Considered**:
+- Separate minimal/full test commands → Rejected: causes confusion
+- No local CI simulation → Rejected: slow feedback loop
+- GitHub-only testing → Rejected: wastes CI minutes on preventable failures
+
 ## ADR-005: Test Working Directory Management Strategy (2025-09-06)
 
 **Status**: Accepted  

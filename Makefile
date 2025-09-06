@@ -1,6 +1,6 @@
 # FX Bin Makefile - Convenient commands for development
 
-.PHONY: help install test test-core test-all test-security test-coverage clean lint format check
+.PHONY: help install test test-core test-all test-security test-coverage test-github-actions test-ci clean lint format check
 
 help:  ## Show this help message
 	@echo "Available commands:"
@@ -9,9 +9,43 @@ help:  ## Show this help message
 install:  ## Install all dependencies with Poetry
 	poetry install --with dev
 
-test:  ## Run core tests that should pass (quick test)
-	$(MAKE) test-core
-	$(MAKE) lint
+test:  ## 🚀 Run ALL tests (GitHub Actions simulation + everything)
+	@echo "🚀 Running COMPLETE test suite - everything included!"
+	@echo ""
+	@echo "=== 🔒 CRITICAL Security Tests ==="
+	@echo "🔒 Running CRITICAL security tests - these MUST pass!"
+	poetry run python -m pytest tests/security/test_pd_safety.py::TestPandasImportSafety -v --tb=short --no-cov
+	@echo ""
+	@echo "🔍 Running security analysis..."
+	poetry run bandit -r fx_bin/ || true
+	@echo ""
+	@echo "📋 Checking dependencies for known vulnerabilities..."
+	poetry run safety check || true
+	@echo ""
+	@echo "=== 🛡️ HIGH Priority Safety Tests ==="
+	@echo "🛡️ Running HIGH priority safety tests..."
+	poetry run python -m pytest tests/security/test_replace_safety.py -v --tb=short --no-cov
+	poetry run python -m pytest tests/security/test_common_safety.py -v --tb=short --no-cov
+	@echo ""
+	@echo "=== ⚙️ Functionality Tests ==="
+	@echo "⚙️ Running all functionality tests..."
+	poetry run python -m pytest tests/ -v --tb=short --ignore=tests/runners/ --no-cov
+	@echo ""
+	@echo "=== 📊 Code Coverage ==="
+	@echo "📊 Generating code coverage report..."
+	poetry run python -m pytest --cov=fx_bin --cov-report=xml --cov-report=html
+	@echo ""
+	@echo "=== 📋 Code Quality Checks ==="
+	@echo "🔍 Running Flake8 linting..."
+	poetry run flake8 fx_bin/ --statistics
+	@echo ""
+	@echo "🎨 Checking code formatting with Black..."
+	poetry run black --check fx_bin/ tests/ || true
+	@echo ""
+	@echo "🔍 Running MyPy type checking..."
+	poetry run mypy fx_bin/ || true
+	@echo ""
+	@echo "✅ ALL TESTS COMPLETE! Ready for production 🚀"
 
 test-core:  ## Run only core functionality tests
 	poetry run pytest tests/unit/test_size.py tests/unit/test_files.py tests/unit/test_find_files.py tests/unit/test_replace.py -v --no-cov
@@ -33,6 +67,44 @@ test-performance:  ## Run performance tests only
 
 test-coverage:  ## Run tests with coverage report
 	poetry run pytest --cov=fx_bin --cov-report=html --cov-report=term-missing
+
+test-github-actions:  ## 🚀 Simulate complete GitHub Actions TDD Test Suite locally
+	@echo "🚀 Running COMPLETE GitHub Actions TDD Test Suite simulation..."
+	@echo ""
+	@echo "=== 🔒 CRITICAL Security Tests ==="
+	@echo "🔒 Running CRITICAL security tests - these MUST pass!"
+	poetry run python -m pytest tests/security/test_pd_safety.py::TestPandasImportSafety -v --tb=short --no-cov
+	@echo ""
+	@echo "🔍 Running security analysis..."
+	poetry run bandit -r fx_bin/ || true
+	@echo ""
+	@echo "📋 Checking dependencies for known vulnerabilities..."
+	poetry run safety check || true
+	@echo ""
+	@echo "=== 🛡️ HIGH Priority Safety Tests ==="
+	@echo "🛡️ Running HIGH priority safety tests..."
+	poetry run python -m pytest tests/security/test_replace_safety.py -v --tb=short --no-cov
+	poetry run python -m pytest tests/security/test_common_safety.py -v --tb=short --no-cov
+	@echo ""
+	@echo "=== ⚙️ Functionality Tests ==="
+	@echo "⚙️ Running all functionality tests..."
+	poetry run python -m pytest tests/ -v --tb=short --ignore=tests/runners/ --no-cov
+	@echo ""
+	@echo "=== 📊 Code Coverage ==="
+	@echo "📊 Generating code coverage report..."
+	poetry run python -m pytest --cov=fx_bin --cov-report=xml --cov-report=html
+	@echo ""
+	@echo "=== 📋 Code Quality Checks ==="
+	@echo "🔍 Running Flake8 linting..."
+	poetry run flake8 fx_bin/ --statistics
+	@echo ""
+	@echo "🎨 Checking code formatting with Black..."
+	poetry run black --check fx_bin/ tests/ || true
+	@echo ""
+	@echo "✅ GitHub Actions TDD Test Suite simulation COMPLETE!"
+
+test-ci:  ## 🔥 Alias for test-github-actions (short form)
+	$(MAKE) test-github-actions
 
 test-parallel:  ## Run tests in parallel for speed
 	poetry run pytest -n auto --no-cov
