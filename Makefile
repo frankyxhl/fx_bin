@@ -10,14 +10,14 @@ install:  ## Install all dependencies with Poetry
 	poetry install --with dev
 
 test:  ## Run core tests that should pass (quick test)
-	$(MAKE) test-all
+	$(MAKE) test-core
 	$(MAKE) lint
 
 test-core:  ## Run only core functionality tests
-	poetry run pytest tests/test_size.py tests/test_files.py tests/test_find_files.py tests/test_replace.py -v --no-cov
+	poetry run pytest tests/unit/test_size.py tests/unit/test_files.py tests/unit/test_find_files.py tests/unit/test_replace.py -v --no-cov
 
 test-all:  ## Run all tests without coverage requirement
-	poetry run pytest --forked --no-cov
+	poetry run pytest --no-cov
 
 test-security:  ## Run security tests only
 	poetry run pytest -k "security" -v --no-cov
@@ -35,7 +35,10 @@ test-coverage:  ## Run tests with coverage report
 	poetry run pytest --cov=fx_bin --cov-report=html --cov-report=term-missing
 
 test-parallel:  ## Run tests in parallel for speed
-	poetry run pytest -n auto --forked --no-cov
+	poetry run pytest -n auto --no-cov
+
+test-forked:  ## Run tests with process forking (may have directory issues)
+	poetry run pytest --forked --no-cov
 
 test-simple:  ## Run simple test runner (no Poetry)
 	python tests/runners/simple_test_runner.py

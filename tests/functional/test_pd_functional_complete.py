@@ -456,12 +456,16 @@ class TestEdgeCases(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmpdir:
             output_file = os.path.join(tmpdir, "empty")
-            os.chdir(tmpdir)
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
 
-            result = pd_functional.main_functional(json_str, "empty")
+                result = pd_functional.main_functional(json_str, "empty")
 
-            # Empty JSON should still create a file
-            self.assertIsInstance(result, Success)
+                # Empty JSON should still create a file
+                self.assertIsInstance(result, Success)
+            finally:
+                os.chdir(original_cwd)
 
     def test_nested_json(self):
         """Test with nested JSON structure."""
@@ -469,12 +473,16 @@ class TestEdgeCases(unittest.TestCase):
         json_str = '{"data": {"nested": {"value": 123}}}'
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            os.chdir(tmpdir)
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
 
-            result = pd_functional.main_functional(json_str, "nested")
+                result = pd_functional.main_functional(json_str, "nested")
 
-            # Just verify it returns a result (could be Success or Failure)
-            self.assertIsInstance(result, (Success, Failure))
+                # Just verify it returns a result (could be Success or Failure)
+                self.assertIsInstance(result, (Success, Failure))
+            finally:
+                os.chdir(original_cwd)
 
     def test_large_json(self):
         """Test with large JSON data."""
@@ -484,12 +492,16 @@ class TestEdgeCases(unittest.TestCase):
         )
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            os.chdir(tmpdir)
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(tmpdir)
 
-            result = pd_functional.main_functional(large_data, "large")
+                result = pd_functional.main_functional(large_data, "large")
 
-            self.assertIsInstance(result, Success)
-            self.assertTrue(os.path.exists("large.xlsx"))
+                self.assertIsInstance(result, Success)
+                self.assertTrue(os.path.exists("large.xlsx"))
+            finally:
+                os.chdir(original_cwd)
 
 
 if __name__ == "__main__":
