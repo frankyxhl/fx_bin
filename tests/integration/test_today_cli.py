@@ -44,12 +44,13 @@ class TestTodayCLI(unittest.TestCase):
         
     @patch('fx_bin.today.datetime')
     def test_today_command_default(self, mock_datetime):
-        """Test 'fx today' with default settings."""
+        """Test 'fx today' with default settings (with --no-exec for testing)."""
         mock_datetime.now.return_value = self.test_date
         mock_datetime.strftime = datetime.strftime
         
         with self.runner.isolated_filesystem():
-            result = self.runner.invoke(cli, ['today'])
+            # Use --no-exec to prevent shell execution in tests
+            result = self.runner.invoke(cli, ['today', '--no-exec'])
             
             self.assertEqual(result.exit_code, 0)
             self.assertIn("Today's workspace:", result.output)

@@ -305,9 +305,16 @@ class TestDetectShell(unittest.TestCase):
         
         with patch('sys.platform', 'win32'):
             with patch.dict(os.environ, {}, clear=True):
-                with patch('os.system', return_value=0):
+                with patch('shutil.which') as mock_which:
+                    # Mock that pwsh is available
+                    def side_effect(name):
+                        if name == 'pwsh':
+                            return 'C:\\Program Files\\PowerShell\\7\\pwsh.exe'
+                        return None
+                    mock_which.side_effect = side_effect
+                    
                     result = detect_shell_executable()
-                    self.assertEqual(result, 'powershell')
+                    self.assertTrue(result.endswith('pwsh.exe'))
                     
     def test_detect_shell_windows_fallback(self):
         """Test Windows shell fallback to cmd."""
@@ -317,9 +324,16 @@ class TestDetectShell(unittest.TestCase):
         
         with patch('sys.platform', 'win32'):
             with patch.dict(os.environ, {}, clear=True):
-                with patch('os.system', return_value=1):  # PowerShell not available
+                with patch('shutil.which') as mock_which:
+                    # Mock that only cmd is available
+                    def side_effect(name):
+                        if name == 'cmd':
+                            return 'C:\\Windows\\System32\\cmd.exe'
+                        return None
+                    mock_which.side_effect = side_effect
+                    
                     result = detect_shell_executable()
-                    self.assertEqual(result, 'cmd')
+                    self.assertTrue(result.endswith('cmd.exe'))
 
 
 class TestExecShell(unittest.TestCase):

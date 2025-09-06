@@ -85,15 +85,15 @@ def validate_date_format(date_format: Optional[str]) -> bool:
         # Make sure it produced something meaningful
         if not result or result == date_format:
             return False
-            
+
         # SECURITY: Validate that the formatted result is safe
         # Import regex module once at the top of the validation block
         import re
-        
+
         # Check for traversal sequences (most critical)
         if ".." in result:
             return False
-            
+
         # For single directory names, ensure no path separators
         # For multi-level paths, ensure no traversal but allow valid structure
         if result != Path(result).name:
@@ -104,19 +104,19 @@ def validate_date_format(date_format: Optional[str]) -> bool:
                     return False
                 if not part:  # Empty parts indicate // or similar
                     return False
-                # Ensure each part contains only safe characters and at least one format result
+                # Ensure each part contains only safe characters
                 # This prevents arbitrary prefixes/suffixes like "prefix/20250906"
                 if not re.match(r"^[A-Za-z0-9._-]+$", part):
                     return False
-                # For security, require each part to contain at least one digit (date component)
+                # For security, require each part to contain at least one digit
                 if not re.search(r"\d", part):
                     return False
-        
-        # Whitelist safe characters for directory names  
+
+        # Whitelist safe characters for directory names
         # Allow alphanumeric, dots, underscores, hyphens, and path separators
         if not re.fullmatch(r"[A-Za-z0-9._/-]+", result):
             return False
-            
+
         return True
     except (ValueError, TypeError, Exception):
         return False
@@ -131,8 +131,27 @@ def validate_base_path(base_path: str) -> bool:
     Returns:
         True if path is safe, False otherwise.
     """
+    import re
+
     # Check for path traversal attempts
     if ".." in base_path:
+        return False
+
+    # Check for null bytes (security vulnerability)
+    if "\x00" in base_path:
+        return False
+
+    # On Unix systems, reject backslashes (Windows path separators)
+    if sys.platform != "win32" and "\\" in base_path:
+        return False
+
+    # Reject unusual whitespace and control characters
+    if re.search(r"[\x00-\x1f\x7f-\x9f]", base_path):
+        return False
+
+    # Reject paths that are just dots or contain only dots and separators
+    normalized = base_path.replace("/", "").replace("\\", "").replace(".", "")
+    if not normalized.strip():
         return False
 
     return True
@@ -140,26 +159,38 @@ def validate_base_path(base_path: str) -> bool:
 
 def detect_shell_executable() -> str:
     """Detect the user's preferred shell executable.
-    
+
     Returns:
-        Path to shell executable.
+        Absolute path to shell executable.
     """
+    import shutil
+
     # Try environment variable first
     shell_env = os.environ.get("SHELL")
     if shell_env and os.path.isfile(shell_env):
-        return shell_env
-    
-    # Platform-specific fallbacks
+        return os.path.abspath(shell_env)
+
+    # Platform-specific fallbacks using shutil.which
     if sys.platform == "win32":
-        # Windows: prefer PowerShell, fallback to cmd
-        if os.system("powershell -Command 'exit 0'") == 0:
-            return "powershell"
+        # Windows: prefer PowerShell variants, fallback to cmd
+        for shell_name in ["pwsh", "powershell", "cmd"]:
+            shell_path = shutil.which(shell_name)
+            if shell_path:
+                return os.path.abspath(shell_path)
+        # Last resort
         return "cmd"
     else:
-        # Unix-like: try common shells
+        # Unix-like: try common shells with shutil.which for portability
+        for shell_name in ["zsh", "bash", "fish", "sh"]:
+            shell_path = shutil.which(shell_name)
+            if shell_path:
+                return os.path.abspath(shell_path)
+
+        # Fallback to fixed paths if which fails
         for shell in ["/bin/zsh", "/bin/bash", "/bin/sh"]:
             if os.path.isfile(shell):
                 return shell
+
         # Last resort
         return "/bin/sh"
 
@@ -217,14 +248,14 @@ def main(
         try:
             shell_cmd = detect_shell_executable()
             if not output_for_cd:
-                click.echo(f"🚀 Starting new shell in: {today_path}")
+                click.echo(f"Starting new shell in: {today_path}")
                 click.echo(f"Shell: {shell_cmd}")
                 click.echo("Type 'exit' to return to the previous directory.")
                 click.echo("-" * 50)
-            
+
             # Change to target directory
             os.chdir(str(today_path))
-            
+
             # Execute new shell (replaces current process)
             if sys.platform == "win32":
                 if "powershell" in shell_cmd.lower():
@@ -236,7 +267,7 @@ def main(
                 # Unix-like systems
                 shell_name = os.path.basename(shell_cmd)
                 os.execv(shell_cmd, [shell_name])
-                
+
         except Exception as e:
             click.echo(f"Error starting shell: {e}", err=True)
             sys.exit(1)
@@ -248,5 +279,3 @@ def main(
     else:
         # Friendly output with description
         click.echo(f"Today's workspace: {today_path}")
-
-

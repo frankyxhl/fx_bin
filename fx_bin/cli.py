@@ -421,7 +421,9 @@ def today(output_for_cd, base_dir, date_format, verbose, dry_run, no_exec):
     try:
         # Default behavior is to exec shell, unless disabled
         exec_shell = not no_exec and not output_for_cd and not dry_run
-        today_module.main(output_for_cd, base_dir, date_format, verbose, dry_run, exec_shell)
+        today_module.main(
+            output_for_cd, base_dir, date_format, verbose, dry_run, exec_shell
+        )
     except Exception as e:
         if not output_for_cd:
             click.echo(f"Error: {e}", err=True)
