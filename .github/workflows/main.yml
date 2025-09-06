@@ -54,10 +54,17 @@ jobs:
         echo "2. Commit and push the changes"
         exit 0
     
+    - name: Install Poetry
+      if: steps.pypi_check.outputs.version_exists == 'false'
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
     - name: Install dependencies and build
       if: steps.pypi_check.outputs.version_exists == 'false'
       run: |
         echo "📦 Building package version ${{ steps.version.outputs.current_version }}..."
+        export PATH="$HOME/.local/bin:$PATH"
         poetry install
         poetry build
     

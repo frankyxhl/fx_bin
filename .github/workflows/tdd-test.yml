@@ -30,22 +30,26 @@ jobs:
 
     - name: Install dependencies
       run: |
+        export PATH="$HOME/.local/bin:$PATH"
         poetry install --with dev
 
     - name: Run Security Tests (CRITICAL)
       run: |
         echo "🔒 Running CRITICAL security tests - these MUST pass!"
+        export PATH="$HOME/.local/bin:$PATH"
         poetry run python -m pytest tests/security/test_pd_safety.py::TestPandasImportSafety -v --tb=short --no-cov
 
     - name: Security Scan with Bandit
       run: |
         echo "🔍 Running security analysis..."
+        export PATH="$HOME/.local/bin:$PATH"
         poetry run bandit -r fx_bin/ -f json -o bandit-report.json || true
         poetry run bandit -r fx_bin/ || true
 
     - name: Dependency Security Check
       run: |
         echo "📋 Checking dependencies for known vulnerabilities..."
+        export PATH="$HOME/.local/bin:$PATH"
         poetry run safety check --json --output safety-report.json || true
         poetry run safety check || true
 
@@ -82,11 +86,13 @@ jobs:
 
     - name: Install dependencies
       run: |
+        export PATH="$HOME/.local/bin:$PATH"
         poetry install --with dev
 
     - name: Run Safety Tests (HIGH Priority)
       run: |
         echo "🛡️ Running HIGH priority safety tests..."
+        export PATH="$HOME/.local/bin:$PATH"
         poetry run python -m pytest tests/security/test_replace_safety.py -v --tb=short --no-cov
         poetry run python -m pytest tests/security/test_common_safety.py -v --tb=short --no-cov
 
@@ -114,17 +120,20 @@ jobs:
 
     - name: Install dependencies
       run: |
+        export PATH="$HOME/.local/bin:$PATH"
         poetry install --with dev
 
     - name: Run All Tests
       continue-on-error: true
       run: |
         echo "⚙️ Running all functionality tests..."
+        export PATH="$HOME/.local/bin:$PATH"
         poetry run python -m pytest tests/ -v --tb=short --ignore=tests/runners/ --no-cov
 
     - name: Code Coverage
       run: |
         echo "📊 Generating code coverage report..."
+        export PATH="$HOME/.local/bin:$PATH"
         poetry run python -m pytest --cov=fx_bin --cov-report=xml --cov-report=html
 
     - name: Upload Coverage Reports
@@ -159,18 +168,21 @@ jobs:
 
     - name: Install dependencies
       run: |
+        export PATH="$HOME/.local/bin:$PATH"
         poetry install --with dev
 
     - name: Run Performance Tests (Informational)
       continue-on-error: true
       run: |
         echo "🏃 Running performance tests (informational only)..."
+        export PATH="$HOME/.local/bin:$PATH"
         poetry run python -m pytest tests/performance/test_performance.py -v --tb=short || true
 
     - name: Performance Benchmarks
       continue-on-error: true
       run: |
         echo "📈 Running performance benchmarks..."
+        export PATH="$HOME/.local/bin:$PATH"
         poetry run python -m pytest tests/performance/test_performance.py::TestBenchmarks::test_baseline_performance -v -s || true
 
   code-quality:
@@ -194,22 +206,26 @@ jobs:
 
     - name: Install dependencies
       run: |
+        export PATH="$HOME/.local/bin:$PATH"
         poetry install --with dev
 
     - name: Run Flake8
       run: |
         echo "🔍 Running Flake8 linting..."
+        export PATH="$HOME/.local/bin:$PATH"
         poetry run flake8 fx_bin/ --statistics
 
     - name: Run MyPy
       continue-on-error: true
       run: |
         echo "🔍 Running MyPy type checking..."
+        export PATH="$HOME/.local/bin:$PATH"
         poetry run mypy fx_bin/ || true
 
     - name: Check Code Formatting
       run: |
         echo "🎨 Checking code formatting with Black..."
+        export PATH="$HOME/.local/bin:$PATH"
         poetry run black --check fx_bin/ tests/ || true
 
   deployment-readiness:
