@@ -330,6 +330,21 @@ class TestCommandHelp(unittest.TestCase):
         self.assertEqual(result.exit_code, 0)
         self.assertIn("List all available fx commands", result.output)
 
+    def test_help_command(self):
+        """Test 'fx help' command."""
+        result = self.runner.invoke(cli, ["help"])
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("FX - A collection of file and text utilities", result.output)
+        self.assertIn("Commands:", result.output)
+        self.assertIn("help", result.output)
+
+    def test_help_command_help(self):
+        """Test 'fx help --help'."""
+        result = self.runner.invoke(cli, ["help", "--help"])
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Show help information", result.output)
+        self.assertIn("same as fx -h", result.output)
+
 
 if __name__ == "__main__":
     unittest.main()

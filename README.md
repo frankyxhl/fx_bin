@@ -78,6 +78,10 @@ Whether you're organizing files, analyzing disk usage, performing bulk text repl
 # Install fx-bin
 pip install fx-bin  # or: pipx install fx-bin
 
+# Show help and available commands
+fx help              # Same as fx -h
+fx list              # Show all available commands
+
 # Count Python files
 fx files . --pattern "*.py"
 

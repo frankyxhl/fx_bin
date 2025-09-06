@@ -14,6 +14,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("replace", "Replace text in files"),
     ("json2excel", "Convert JSON to Excel"),
     ("list", "List all available commands"),
+    ("help", "Show help information (same as fx -h)"),
 ]
 
 
@@ -275,6 +276,25 @@ def list_commands():
     click.echo(
         "\nUse 'fx COMMAND --help' for more information on a " "specific command."
     )
+    return 0
+
+
+@cli.command()
+@click.pass_context
+def help(ctx):
+    """Show help information (same as fx -h).
+
+    Examples:
+        fx help           # Show main help
+        fx help files     # Show help for files command (equivalent to fx files --help)
+    """
+    # Get the parent context to show the main help
+    parent_ctx = ctx.parent
+    if parent_ctx:
+        click.echo(parent_ctx.get_help())
+    else:
+        # Fallback to showing available commands
+        list_commands()
     return 0
 
 
