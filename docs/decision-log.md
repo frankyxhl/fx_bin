@@ -2,6 +2,44 @@
 
 This document records important architectural and design decisions made during fx_bin development.
 
+## ADR-007: Shell Wrapper Approach for Directory Navigation (2025-09-06)
+
+**Status**: Accepted  
+**Context**: fx root command finds Git root but cannot change parent shell's working directory  
+**Decision**: Implement shell wrapper functions that call Python script and execute cd in parent  
+
+**Rationale**:
+- **Unix Process Model**: Child processes cannot modify parent environment variables
+- **Industry Standard**: Tools like autojump, z, and fasd use same wrapper approach
+- **User Experience**: Seamless integration - works like native cd command
+- **Cross-Platform**: Solution works across Bash, Zsh, Fish, PowerShell, CMD
+
+**Consequences**:
+- ✅ Natural user experience with `fxroot` command
+- ✅ No need for backticks or command substitution
+- ✅ Works identically across all platforms
+- ✅ Automatic setup script reduces friction
+- ⚠️ Requires one-time setup per shell environment
+- ⚠️ Shell restart needed after installation
+
+**Implementation**:
+```bash
+# Shell function wrapper (Bash/Zsh)
+fxroot() {
+    local target
+    target=$(fx root --cd "$@")
+    if [ $? -eq 0 ] && [ -n "$target" ]; then
+        cd "$target"
+    fi
+}
+```
+
+**Alternatives Considered**:
+- Command substitution `cd "$(fx root)"` → Rejected: poor UX
+- Temporary file state → Rejected: complex, race conditions
+- Direct parent modification → Rejected: technically impossible
+- Alias approach → Rejected: doesn't handle arguments properly
+
 ## ADR-006: Unified Local CI Simulation Strategy (2025-09-06)
 
 **Status**: Accepted  
