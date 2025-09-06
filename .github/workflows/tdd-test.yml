@@ -35,7 +35,7 @@ jobs:
     - name: Run Security Tests (CRITICAL)
       run: |
         echo "🔒 Running CRITICAL security tests - these MUST pass!"
-        poetry run python -m pytest tests/test_pd_safety.py::TestPandasImportSafety -v --tb=short --no-cov
+        poetry run python -m pytest tests/security/test_pd_safety.py::TestPandasImportSafety -v --tb=short --no-cov
 
     - name: Security Scan with Bandit
       run: |
@@ -87,8 +87,8 @@ jobs:
     - name: Run Safety Tests (HIGH Priority)
       run: |
         echo "🛡️ Running HIGH priority safety tests..."
-        poetry run python -m pytest tests/test_replace_safety.py -v --tb=short --no-cov
-        poetry run python -m pytest tests/test_common_safety.py -v --tb=short --no-cov
+        poetry run python -m pytest tests/security/test_replace_safety.py -v --tb=short --no-cov
+        poetry run python -m pytest tests/security/test_common_safety.py -v --tb=short --no-cov
 
   functionality-tests:
     name: ⚙️ Functionality Tests
@@ -165,13 +165,13 @@ jobs:
       continue-on-error: true
       run: |
         echo "🏃 Running performance tests (informational only)..."
-        poetry run python -m pytest tests/test_performance.py -v --tb=short || true
+        poetry run python -m pytest tests/performance/test_performance.py -v --tb=short || true
 
     - name: Performance Benchmarks
       continue-on-error: true
       run: |
         echo "📈 Running performance benchmarks..."
-        poetry run python -m pytest tests/test_performance.py::TestBenchmarks::test_baseline_performance -v -s || true
+        poetry run python -m pytest tests/performance/test_performance.py::TestBenchmarks::test_baseline_performance -v -s || true
 
   code-quality:
     name: 📋 Code Quality Checks
