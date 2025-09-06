@@ -2,39 +2,38 @@
 
 **Get up to speed in < 2 minutes**
 
-## Current State (2025-08-30)
+## Current State (2025-09-06)
 
-**Status**: v1.3.3 Ready - File Size Alignment Fixed ✅  
-**Branch**: main  
-**Latest Fix**: File sizes now properly aligned in fx filter detailed output  
+**Status**: v1.3.6 Development - Git Root Command Added 🚀  
+**Branch**: develop  
+**Latest Addition**: New `fx root` command for finding Git project root directories  
 
 ## Immediate Next Steps
 
 ```bash
-# 1. Commit the file size alignment fix
-git add -A
-git commit -m "fix: v1.3.3 - file size alignment in fx filter command
+# 1. Commit the Git root command implementation
+git add fx_bin/root.py fx_bin/cli.py tests/unit/test_root.py tests/integration/test_root_cli.py
+git commit -m "feat: add fx root command for finding Git project root
 
-- Fixed misaligned file sizes in detailed output format
-- Standardized all size units to 9-character width
-- Updated tests to match new formatting
-- Resolves user-reported alignment issues
+- New command to find Git project root directory
+- Support for --cd flag for shell integration
+- Handles Git worktrees and symlinks properly
+- Comprehensive unit and integration tests (24 tests)
+- Enables cd \"\$(fx root --cd)\" navigation pattern"
 
-🤖 Generated with Claude Code
+# 2. Update documentation
+# Add fx root examples to README.md
 
-Co-Authored-By: Claude <noreply@anthropic.com>"
-
-# 2. Create release tag
-git tag -a v1.3.3 -m "v1.3.3: File Size Alignment Fix"
-
-# 3. Build and publish
+# 3. Prepare for v1.3.6 release
+poetry version 1.3.6
 poetry build
-poetry publish
+# Test before publishing
+poetry run pytest tests/unit/test_root.py tests/integration/test_root_cli.py -v
 ```
 
 ## Project Overview
 
-**fx_bin** is a Python utility collection providing command-line tools for file operations. Current version 1.3.3 includes file size alignment fixes for improved readability.
+**fx_bin** is a Python utility collection providing command-line tools for file operations. Current development version 1.3.6 adds Git project root finding capabilities.
 
 ### Available Commands
 ```bash
@@ -44,6 +43,7 @@ fx ff          # Find files by keyword
 fx filter      # Filter files by extension (v1.2.0)
 fx replace     # Replace text in files
 fx json2excel  # Convert JSON to Excel
+fx root        # Find Git project root directory (NEW v1.3.6)
 fx list        # List all available commands
 ```
 
@@ -59,6 +59,34 @@ fx ff test --include-ignored
 
 # Exclude additional names/patterns (repeatable)
 fx ff test --exclude build --exclude "*.log"
+```
+
+## What's New in Development (v1.3.6)
+
+### Git Root Command
+- **New Command**: `fx root` to find Git project root directory
+- **Shell Integration**: `--cd` flag for use with shell cd command
+- **Git Worktree Support**: Handles `.git` files for worktrees
+- **Cross-Platform**: Proper symlink resolution on macOS
+- **Comprehensive Testing**: 24 tests (12 unit, 12 integration)
+
+### Usage Examples
+```bash
+# Show Git project root
+fx root
+# Output: Git project root: /Users/frank/Projects/fx_bin
+
+# Change to Git project root
+cd "$(fx root --cd)"
+# or
+cd "$(fx root -c)"
+
+# Use in scripts
+if fx root --cd > /dev/null 2>&1; then
+  echo "In a Git repository"
+else
+  echo "Not in a Git repository"
+fi
 ```
 
 ## What's New in v1.3.3
@@ -227,7 +255,15 @@ python -c "import fx_bin; print(fx_bin.__version__)"
 
 ## Context for Development
 
-### Last Session (2025-08-30)
+### Last Session (2025-09-06)
+- **Added**: New `fx root` command for finding Git project root
+- **Implementation**: Recursive upward search with pathlib
+- **Shell Support**: `--cd` flag for clean path output
+- **Testing**: 24 comprehensive tests covering all edge cases
+- **Files**: Created fx_bin/root.py, updated cli.py, added tests
+- **Version**: Preparing for 1.3.6 release
+
+### Previous Session (2025-08-30)
 - **Fixed**: File size alignment issues in fx filter detailed output
 - **Root Cause**: Inconsistent column widths (8 chars for B/KB, 9 chars for MB/GB)
 - **Solution**: Standardized all units to 9-character right-aligned format

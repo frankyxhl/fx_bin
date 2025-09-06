@@ -1,13 +1,21 @@
 # fx_bin Project Status
 
-## Current Status: v1.3.5 Ready - Test Suite Reorganized and Bugs Fixed
+## Current Status: v1.3.6 Development - Git Root Command Added
 
-**Last Updated**: 2025-09-05  
-**Current Version**: 1.3.5 (ready for release)  
-**Branch**: main  
-**Build Status**: All 317 tests passing - No warnings, no skipped tests  
+**Last Updated**: 2025-09-06  
+**Current Version**: 1.3.5 (released) → 1.3.6 (in development)  
+**Branch**: develop  
+**Build Status**: All tests passing + 24 new tests for fx root command  
 
-## Current Release: v1.3.5 Test Reorganization and Bug Fixes
+## Current Development: v1.3.6 Git Root Command
+
+### New Features in Development
+- **GIT ROOT COMMAND**: New `fx root` command for finding Git project root directories
+- **SHELL INTEGRATION**: Support for `cd "$(fx root --cd)"` navigation pattern
+- **COMPREHENSIVE TESTING**: 24 new tests (12 unit, 12 integration) for root command
+- **CROSS-PLATFORM**: Handles macOS symlinks and Git worktrees properly
+
+## Previous Release: v1.3.5 Test Reorganization and Bug Fixes
 
 ### Key Features
 - **TEST REORGANIZATION**: Complete test suite restructured into categorized folders (unit/integration/security/performance/functional)
@@ -40,29 +48,36 @@
 
 ## Next Immediate Actions
 
-1. **Commit All Reorganization Changes**
+1. **Commit Git Root Command Implementation**
    ```bash
-   git add -A
-   git commit -m "refactor: v1.3.5 - complete test reorganization and bug fixes
+   git add fx_bin/root.py fx_bin/cli.py tests/unit/test_root.py tests/integration/test_root_cli.py
+   git commit -m "feat: add fx root command for finding Git project root
    
-   - Reorganized test suite into categorized folders
-   - Fixed critical replace command bug (str expected, not tuple)
-   - Added pytest-forked for proper test isolation
-   - Consolidated documentation to Markdown format
-   - Removed Sphinx files and cleaned project structure"
+   - New command to find Git project root directory
+   - Support for --cd flag for shell integration
+   - Handles Git worktrees and symlinks properly
+   - Comprehensive unit and integration tests (24 tests)
+   - Enables cd \"\$(fx root --cd)\" navigation pattern"
    ```
 
-2. **Update Version and Create Release Tag**
+2. **Update Version for Next Release**
    ```bash
-   # Update version in pyproject.toml to 1.3.5
-   poetry version 1.3.5
-   git tag -a v1.3.3 -m "v1.3.3: File Size Alignment Fix"
+   # Update version in pyproject.toml to 1.3.6
+   poetry version 1.3.6
+   # Tag will be created after testing and documentation updates
    ```
 
-3. **Build and Publish**
+3. **Update Documentation**
+   - Add `fx root` command examples to README.md
+   - Document shell integration patterns
+   - Update command list in documentation
+
+4. **Build and Test**
    ```bash
+   poetry install
+   poetry run pytest tests/unit/test_root.py tests/integration/test_root_cli.py -v
    poetry build
-   poetry publish
+   # Publish after documentation is complete
    ```
 
 4. **Update Documentation**
@@ -73,7 +88,7 @@
 ## Project Health
 
 ### Test Coverage
-- **Total Tests**: 301 tests (all passing, 2 skipped)
+- **Total Tests**: 325+ tests (including 24 new tests for fx root)
 - **Test Isolation**: Fixed - all tests run independently without state leakage
 - **BDD Steps**: Comprehensive step definitions including table parsing
 - **Unit Tests**: 23 tests for filter functionality (maintained)
@@ -93,8 +108,8 @@
 - **Test Isolation**: Working directory management with finally blocks
 
 ### Architecture Status
-- **CLI System**: Unified `fx` command with 6 subcommands
-- **Commands Available**: files, size, ff, filter, replace, json2excel, list
+- **CLI System**: Unified `fx` command with 7 subcommands
+- **Commands Available**: files, size, ff, filter, replace, json2excel, root, list
 - **Testing Infrastructure**: Mature TDD + production-grade BDD infrastructure
 - **BDD Framework**: pytest-bdd with smart fixtures and pattern library
 - **Documentation**: Comprehensive and up-to-date
@@ -196,6 +211,8 @@
 - **Testing Excellence**: Mature TDD + BDD infrastructure provides enterprise-grade confidence
 
 ### Future Session Context
+- **Git Root Command**: New command ready for release, needs README documentation
+- **Shell Integration Pattern**: Established pattern for shell-friendly command output
 - **Production BDD Framework**: Complete pytest-bdd infrastructure ready for expansion
 - **Smart Testing Patterns**: Reusable step library and fixture builders available
 - **Quality Validation Tools**: BDD best practice validators and analyzers implemented
