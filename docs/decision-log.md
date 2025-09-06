@@ -2,6 +2,39 @@
 
 This document records important architectural and design decisions made during fx_bin development.
 
+## ADR-004: Git Root Command Implementation (2025-09-06)
+
+**Status**: Accepted  
+**Context**: Users need quick access to Git project root for navigation and scripting  
+**Decision**: Add `fx root` command with shell integration support  
+
+**Rationale**:
+- **Common Need**: Finding project root is frequent developer task
+- **Shell Integration**: `--cd` flag enables `cd "$(fx root --cd)"` pattern
+- **Cross-Platform**: Handles macOS symlinks and Git worktrees properly
+- **Minimal Dependencies**: Uses only pathlib from standard library
+
+**Consequences**:
+- ✅ Simplifies navigation to project root
+- ✅ Shell-friendly output with `--cd` flag
+- ✅ Proper exit codes for scripting (0 success, 1 not found)
+- ✅ Handles edge cases (worktrees, symlinks, permissions)
+- ⚠️ Additional command increases CLI surface area
+
+**Implementation**:
+- Core logic in `fx_bin/root.py` with `find_git_root()` function
+- Recursive upward search using pathlib's `parents` iterator
+- Different output modes: verbose (default) vs path-only (--cd)
+- Comprehensive testing: 12 unit tests, 12 integration tests
+
+**Technical Decisions**:
+- Use `Path.resolve()` for absolute paths and symlink resolution
+- Silent errors in `--cd` mode for shell compatibility
+- Support both `.git` directories and worktree files
+- Exit code 1 when not in Git repository
+
+---
+
 ## ADR-003: Test Suite Reorganization (2025-09-05)
 
 **Status**: Accepted  

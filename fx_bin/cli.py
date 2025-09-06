@@ -4,6 +4,18 @@
 import click
 import sys
 from typing import List, Tuple
+import importlib.metadata
+
+
+def get_version_info() -> str:
+    """Get version information."""
+    try:
+        version = importlib.metadata.version("fx-bin")
+        return f"""FX-Bin v{version}
+Repository: https://github.com/frankyxhl/fx_bin"""
+    except Exception:
+        return "fx-bin (development version)"
+
 
 # Command metadata for the list command
 COMMANDS_INFO: List[Tuple[str, str]] = [
@@ -13,8 +25,10 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("filter", "Filter files by extension"),
     ("replace", "Replace text in files"),
     ("json2excel", "Convert JSON to Excel"),
+    ("root", "Find Git project root directory"),
     ("list", "List all available commands"),
     ("help", "Show help information (same as fx -h)"),
+    ("version", "Show version and system information"),
 ]
 
 
@@ -22,10 +36,17 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     invoke_without_command=True,
     context_settings={"help_option_names": ["-h", "--help"]},
 )
-@click.version_option()
+@click.version_option(version=None, message=get_version_info())
 @click.pass_context
 def cli(ctx):
     """FX - A collection of file and text utilities.
+
+    Common commands:
+
+    \b
+      fx help      Show this help
+      fx list      Show all commands
+      fx version   Show version info
 
     Use 'fx COMMAND --help' for more information on a specific command.
     """
@@ -261,6 +282,59 @@ def json2excel(url, output_filename):
     return pd.main(url, output_filename)
 
 
+@cli.command()
+@click.option(
+    '--cd', '-c', 'output_for_cd', is_flag=True,
+    help='Output path suitable for cd command (no extra text)'
+)
+def root(output_for_cd):
+    """Find Git project root directory.
+
+    Searches upward from current directory to find the first directory
+    containing a .git folder.
+
+    Examples:
+        fx root              # Show root directory with description
+        fx root --cd         # Output just the path for cd command
+        cd "$(fx root --cd)" # Change to root directory
+    """
+    from . import root as root_module
+
+    try:
+        git_root = root_module.find_git_root()
+
+        if git_root is None:
+            if output_for_cd:
+                # Silent exit for --cd mode
+                import sys
+                sys.exit(1)
+            else:
+                # Print error and exit for regular mode
+                raise click.ClickException(
+                    "No git repository found in current directory or parent directories"
+                )
+
+        if output_for_cd:
+            # Just output the path for shell usage
+            click.echo(str(git_root))
+        else:
+            # Friendly output with description
+            click.echo(f"Git project root: {git_root}")
+
+        return 0
+
+    except PermissionError as e:
+        if not output_for_cd:
+            click.echo(f"Error: Permission denied accessing directory: {e}", err=True)
+        ctx = click.get_current_context()
+        ctx.exit(1)
+    except Exception as e:
+        if not output_for_cd:
+            click.echo(f"Error: {e}", err=True)
+        ctx = click.get_current_context()
+        ctx.exit(1)
+
+
 @cli.command(name="list")
 def list_commands():
     """List all available fx commands."""
@@ -295,6 +369,18 @@ def help(ctx):
     else:
         # Fallback to showing available commands
         list_commands()
+    return 0
+
+
+@cli.command()
+def version():
+    """Show version and system information.
+
+    Examples:
+        fx version        # Show detailed version info
+        fx --version      # Same as above
+    """
+    click.echo(get_version_info())
     return 0
 
 
