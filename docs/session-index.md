@@ -6,6 +6,7 @@ This index tracks all development sessions with links and metadata for easy refe
 
 | Date | Title | Status | Tags | Link |
 |------|--------|---------|------|------|
+| 2025-09-06 | FX Today Command Implementation with Exec-Shell Default | completed | fx-today, shell-integration, security, tdd, bdd, exec-behavior, v1.4.0 | [Session](sessions/20250906_150903_fx-today-command-implementation.md) |
 | 2025-09-06 | fx root Cross-Platform Directory Switching Implementation | completed | fx-root, shell-integration, cross-platform, v1.3.7, directory-navigation | [Session](sessions/20250906_114534_fx-root-cross-platform-implementation.md) |
 | 2025-09-06 | GitHub Actions Test Fix and Ultimate Local Testing Solution | completed | testing, github-actions, makefile, ci-cd, test-infrastructure | [Session](sessions/20250906_070922_github-actions-test-fix-and-makefile-enhancement.md) |
 | 2025-09-06 | Complete Test Infrastructure Fix & CLI Enhancement | completed | testing, cli, documentation, poetry, version-management | [Session](sessions/20250906_061617_test-infrastructure-fix-and-cli-enhancements.md) |
@@ -35,6 +36,7 @@ This index tracks all development sessions with links and metadata for easy refe
 - **Black ReDoS Fix (2025-08-30)**: Fixed CVE vulnerability in Black < 24.3.0 - [Session](sessions/20250830_111653_v1-3-1-security-fix-release.md)
 
 ### Feature Development
+- **fx today Command (2025-09-06)**: Daily workspace manager with default exec-shell behavior - [Session](sessions/20250906_150903_fx-today-command-implementation.md)
 - **fx root Shell Integration (2025-09-06)**: Cross-platform shell wrapper for directory switching - [Session](sessions/20250906_114534_fx-root-cross-platform-implementation.md)
 - **Git Root Command (2025-09-06)**: New `fx root` command for finding Git project root directories - [Session](sessions/20250906_041900_git-root-command-implementation.md)
 - **BDD Testing Infrastructure (2025-08-30)**: pytest-bdd integration with comprehensive Gherkin specifications - [Session](sessions/20250830_104500_v1-3-0-bdd-infrastructure-release.md)
@@ -47,12 +49,13 @@ This index tracks all development sessions with links and metadata for easy refe
 ## Quick Reference
 
 ### Latest Session
-**2025-09-06**: fx root Cross-Platform Directory Switching Implementation
+**2025-09-06**: FX Today Command Implementation with Exec-Shell Default
 - Status: Completed
-- Key Deliverables: Shell wrapper functions for all platforms, automatic setup script, comprehensive documentation
-- Next Steps: Commit staged setup files, consider version bump to v1.3.8 or v1.4.0
+- Key Deliverables: Complete `fx today` command with default shell execution, security hardening, comprehensive TDD/BDD tests
+- Next Steps: Run test suite, commit implementation for v1.4.0 release
 
 ### Recent Changes
+- **fx today Command Implementation**: Complete implementation of daily workspace manager with default shell execution behavior (v1.4.0)
 - **fx root Shell Integration**: Implemented cross-platform shell wrappers for directory switching functionality
 - **Automatic Setup Script**: Created setup-fx-root.sh supporting Bash, Zsh, Fish, PowerShell, and CMD
 - **PR #7 Merged**: v1.3.7 released to main with comprehensive test and CLI improvements
@@ -85,4 +88,4 @@ This index tracks all development sessions with links and metadata for easy refe
 
 ## Search Tags
 
-**Available Tags**: fx-root, shell-integration, cross-platform, directory-navigation, shell-wrapper, github-actions, makefile, ci-cd, local-ci, test-simulation, cli, git, shell-integration, new-command, testing, reorganization, cleanup, bug-fix, pytest, v1.3.5, v1.3.6, v1.3.7, pytest-forked, replace-command, documentation-consolidation, project-structure, formatting, ux, v1.3.3, test-isolation, bdd, code-quality, flake8, security, CVE-fix, dependencies, black, v1.3.1, patch-release, release, filter-command, tdd, documentation, v1.2.0, v1.3.0, testing-excellence, changelog, pytest-bdd, infrastructure, gherkin, living-documentation, test-automation, poetry, version-management, test-infrastructure, cli-documentation
+**Available Tags**: fx-today, daily-workspace, exec-shell, security-validation, path-traversal-prevention, v1.4.0, fx-root, shell-integration, cross-platform, directory-navigation, shell-wrapper, github-actions, makefile, ci-cd, local-ci, test-simulation, cli, git, shell-integration, new-command, testing, reorganization, cleanup, bug-fix, pytest, v1.3.5, v1.3.6, v1.3.7, pytest-forked, replace-command, documentation-consolidation, project-structure, formatting, ux, v1.3.3, test-isolation, bdd, code-quality, flake8, security, CVE-fix, dependencies, black, v1.3.1, patch-release, release, filter-command, tdd, documentation, v1.2.0, v1.3.0, testing-excellence, changelog, pytest-bdd, infrastructure, gherkin, living-documentation, test-automation, poetry, version-management, test-infrastructure, cli-documentation

@@ -1,20 +1,20 @@
 # fx_bin Project Status
 
-## Current Status: v1.3.7+ fx root Shell Integration Complete
+## Current Status: v1.4.0 fx today Command Implementation Complete
 
-**Last Updated**: 2025-09-06 (11:45 UTC)  
-**Current Version**: 1.3.7 (released) - Shell integration pending commit  
+**Last Updated**: 2025-09-06 (15:09 UTC)  
+**Current Version**: 1.4.0 (pending commit) - fx today command fully implemented  
 **Branch**: develop  
-**Build Status**: All 334 tests passing (GitHub Actions and local)  
+**Build Status**: Implementation complete, tests pending validation  
 
-## Latest Updates: fx root Cross-Platform Shell Integration
+## Latest Updates: fx today Daily Workspace Manager Implementation
 
-### Shell Integration Implementation (Post v1.3.7)
-- **CROSS-PLATFORM SUPPORT**: Shell wrapper functions for Bash, Zsh, Fish, PowerShell, CMD
-- **AUTOMATIC SETUP**: setup-fx-root.sh script auto-detects shell and configures
-- **SEAMLESS UX**: `fxroot` command changes directory like native `cd`
-- **DOCUMENTATION**: Comprehensive setup guide with troubleshooting
-- **PR #7 MERGED**: v1.3.7 successfully released to main branch
+### fx today Command Implementation (v1.4.0)
+- **EXEC-SHELL DEFAULT**: Default behavior spawns new shell in today's workspace (user requirement)
+- **SECURITY HARDENED**: Comprehensive path traversal prevention and input validation
+- **CROSS-PLATFORM**: Shell detection for Windows PowerShell/cmd and Unix bash/zsh/sh
+- **COMPREHENSIVE TESTING**: TDD unit tests + BDD scenarios + CLI integration tests
+- **VERSION BUMP**: Incremented to v1.4.0 for significant new feature addition
 
 ### Critical Fixes (v1.3.7)
 - **GITHUB ACTIONS FIX**: Fixed test expectation mismatch in test_cli.py:310
@@ -74,36 +74,36 @@
 
 ## Next Immediate Actions
 
-1. **Commit Shell Integration Files**
+1. **Run Test Suite Validation**
+   ```bash
+   poetry run pytest tests/unit/test_today.py tests/integration/test_today_cli.py -v
+   # Validate all TDD unit tests and CLI integration tests pass
+   ```
+
+2. **Commit fx today Implementation**
    ```bash
    git add -A
-   git commit -m "feat: add cross-platform shell integration for fx root directory switching
+   git commit -m "feat: implement fx today command with default exec-shell behavior v1.4.0
    
-   - Add shell wrapper functions supporting all major shells
-   - Create automatic setup script with shell detection
-   - Provide comprehensive setup documentation
-   - Enable seamless directory switching with fxroot command"
+   - Complete daily workspace manager with security-hardened directory creation
+   - Default behavior spawns new shell in target directory (user requirement)
+   - Cross-platform shell detection supporting Windows and Unix systems
+   - Comprehensive TDD/BDD test coverage with 27+ scenarios
+   - Path traversal prevention and input validation security
+   - Version bumped to 1.4.0 for significant new feature"
    ```
 
-2. **Consider Version Bump**
+3. **Validate BDD Scenarios**
    ```bash
-   # These are significant post-v1.3.7 enhancements
-   # Update to v1.3.8 or v1.4.0 in pyproject.toml
-   poetry version patch  # or minor for v1.4.0
+   # Run comprehensive BDD test scenarios
+   poetry run pytest features/ -v --tb=short
    ```
 
-3. **Test User Experience**
+4. **Optional Shell Integration Setup**
    ```bash
-   # Run setup and verify functionality
-   ./scripts/setup-fx-root.sh
-   # Restart shell
-   fxroot  # Should change to Git root
+   # Set up shell wrapper functions for enhanced UX
+   bash scripts/setup-fx-today.sh
    ```
-
-4. **Monitor Adoption**
-   - Track user feedback on setup experience
-   - Consider package manager integration (homebrew, apt, etc.)
-   - Document common issues in troubleshooting guide
 
 ## Project Health
 
@@ -128,8 +128,8 @@
 - **Test Isolation**: Working directory management with finally blocks
 
 ### Architecture Status
-- **CLI System**: Unified `fx` command with 8 subcommands
-- **Commands Available**: files, size, ff, filter, replace, json2excel, root, list, help
+- **CLI System**: Unified `fx` command with 9 subcommands
+- **Commands Available**: files, size, ff, filter, replace, json2excel, root, today, list, help
 - **Shell Integration**: fx root now supports directory switching via shell wrappers
 - **CLI Documentation**: Comprehensive in-command help with real-world examples
 - **Testing Infrastructure**: Mature TDD + production-grade BDD infrastructure
@@ -247,11 +247,11 @@
 - **Testing Excellence**: Mature TDD + BDD infrastructure provides enterprise-grade confidence
 
 ### Future Session Context
-- **Shell Integration Ready**: fx root wrapper functions pending commit
-- **Setup Scripts Complete**: Automatic configuration for all platforms
-- **Complete Local CI**: `make test` provides full GitHub Actions simulation locally
-- **Test Confidence**: All 334 tests passing both locally and in CI
-- **v1.3.7 Released**: Test fix deployed, GitHub Actions green, PR #7 merged
+- **fx today Implementation**: Complete with exec-shell default behavior, security hardening, comprehensive tests
+- **Version 1.4.0**: Major feature addition ready for release
+- **Test Suite**: TDD unit + integration + BDD scenarios implemented and ready for validation
+- **Shell Integration**: Optional setup scripts available for enhanced UX
+- **Security Features**: Path traversal prevention and input validation implemented
 - **Test Infrastructure**: Stable test suite with proper isolation and enhanced Makefile commands
 - **CLI Documentation**: In-command help now comprehensive - no need to open README
 - **Poetry Compatibility**: Shell command working with poetry-plugin-shell
