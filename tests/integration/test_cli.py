@@ -307,7 +307,7 @@ class TestCommandHelp(unittest.TestCase):
         """Test 'fx ff --help'."""
         result = self.runner.invoke(cli, ["ff", "--help"])
         self.assertEqual(result.exit_code, 0)
-        self.assertIn("Find files by keyword", result.output)
+        self.assertIn("Find files whose names contain KEYWORD", result.output)
         self.assertIn("Examples:", result.output)
 
     def test_replace_command_help(self):
