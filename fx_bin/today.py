@@ -79,6 +79,32 @@ def validate_date_format(date_format: Optional[str]) -> bool:
     if "%" not in date_format:
         return False
 
+    # Check for problematic literal prefixes/suffixes
+    import re
+    
+    # Check if format starts with literal text (not a % format code)
+    if not date_format.startswith('%'):
+        # Allow some common safe prefixes, but reject arbitrary literal text
+        safe_prefixes = ['./']  # Relative path indicator
+        if not any(date_format.startswith(prefix) for prefix in safe_prefixes):
+            # If it contains letters before the first %, it's likely a literal prefix
+            first_percent = date_format.find('%')
+            if first_percent > 0:
+                prefix = date_format[:first_percent]
+                if re.search(r'[A-Za-z]', prefix):  # Contains letters = literal text
+                    return False
+    
+    # Check if format ends with literal text after the last format code
+    last_percent_pos = date_format.rfind('%')
+    if last_percent_pos >= 0 and last_percent_pos < len(date_format) - 2:
+        # There's content after the last % code
+        suffix_start = last_percent_pos + 2  # Skip the %X format code
+        if suffix_start < len(date_format):
+            suffix = date_format[suffix_start:]
+            # Allow safe suffixes (separators), reject literal text
+            if re.search(r'[A-Za-z]', suffix):  # Contains letters = literal text
+                return False
+    
     try:
         # Try to format current date with the given format
         result = datetime.now().strftime(date_format)
@@ -108,9 +134,13 @@ def validate_date_format(date_format: Optional[str]) -> bool:
                 # This prevents arbitrary prefixes/suffixes like "prefix/20250906"
                 if not re.match(r"^[A-Za-z0-9._-]+$", part):
                     return False
-                # For security, require each part to contain at least one digit
-                if not re.search(r"\d", part):
-                    return False
+        
+        # For security, require at least one part to contain digits
+        # This allows month names like "January" while still requiring date info
+        path_parts = Path(result).parts if result != Path(result).name else [result]
+        has_digit = any(re.search(r"\d", part) for part in path_parts)
+        if not has_digit:
+            return False
 
         # Whitelist safe characters for directory names
         # Allow alphanumeric, dots, underscores, hyphens, and path separators
@@ -150,9 +180,13 @@ def validate_base_path(base_path: str) -> bool:
         return False
 
     # Reject paths that are just dots or contain only dots and separators
+    # But allow POSIX root "/" and Windows drive roots like "C:\"
     normalized = base_path.replace("/", "").replace("\\", "").replace(".", "")
-    if not normalized.strip():
-        return False
+    if not normalized.strip() and base_path not in ("/", "\\"):
+        # Allow POSIX root and check for Windows drive patterns
+        if not (len(base_path) >= 2 and base_path[1] == ":" and 
+                base_path[0].isalpha()):  # Windows drive like C:\
+            return False
 
     return True
 
@@ -177,7 +211,19 @@ def detect_shell_executable() -> str:
             shell_path = shutil.which(shell_name)
             if shell_path:
                 return os.path.abspath(shell_path)
-        # Last resort
+        
+        # Last resort: try to find cmd in common locations
+        common_cmd_paths = [
+            r"C:\Windows\System32\cmd.exe",
+            r"C:\WINDOWS\system32\cmd.exe", 
+            "cmd.exe",  # PATH fallback
+        ]
+        
+        for cmd_path in common_cmd_paths:
+            if os.path.isfile(cmd_path):
+                return os.path.abspath(cmd_path)
+        
+        # Final fallback if nothing else works
         return "cmd"
     else:
         # Unix-like: try common shells with shutil.which for portability
@@ -258,7 +304,11 @@ def main(
 
             # Execute new shell (replaces current process)
             if sys.platform == "win32":
-                if "powershell" in shell_cmd.lower():
+                # Check if it's PowerShell (pwsh or powershell)
+                shell_name = os.path.basename(shell_cmd).lower()
+                is_powershell = shell_name.startswith(("powershell", "pwsh"))
+                
+                if is_powershell:
                     os.execv(shell_cmd, [shell_cmd, "-NoLogo"])
                 else:
                     # cmd.exe

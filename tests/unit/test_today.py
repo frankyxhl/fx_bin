@@ -243,6 +243,21 @@ class TestValidation(unittest.TestCase):
         for fmt in valid_formats:
             with self.subTest(format=fmt):
                 self.assertTrue(validate_date_format(fmt))
+
+    def test_validate_date_format_month_names(self):
+        """Test that date formats with month names are allowed."""
+        from fx_bin.today import validate_date_format
+        
+        month_formats = [
+            "%Y/%B/%d",        # 2025/September/06  
+            "%B-%d-%Y",        # September-06-2025
+            "%d_%B_%Y",        # 06_September_2025 (single directory, underscore)
+            "%Y/%b/%d",        # 2025/Sep/06 (abbreviated month)
+        ]
+        
+        for fmt in month_formats:
+            with self.subTest(format=fmt):
+                self.assertTrue(validate_date_format(fmt))
                 
     def test_validate_date_format_security_special_chars(self):
         """Test that date formats with special characters are rejected."""
