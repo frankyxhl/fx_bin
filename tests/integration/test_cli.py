@@ -345,6 +345,22 @@ class TestCommandHelp(unittest.TestCase):
         self.assertIn("Show help information", result.output)
         self.assertIn("same as fx -h", result.output)
 
+    def test_version_command(self):
+        """Test 'fx version' command."""
+        result = self.runner.invoke(cli, ["version"])
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("FX-Bin v", result.output)
+        self.assertIn("Python file operation utilities", result.output)
+        self.assertIn("Repository:", result.output)
+        self.assertIn("License: MIT", result.output)
+
+    def test_version_flag(self):
+        """Test 'fx --version' flag."""
+        result = self.runner.invoke(cli, ["--version"])
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("FX-Bin v", result.output)
+        self.assertIn("Python file operation utilities", result.output)
+
 
 if __name__ == "__main__":
     unittest.main()

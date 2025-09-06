@@ -4,6 +4,23 @@
 import click
 import sys
 from typing import List, Tuple
+import importlib.metadata
+
+def get_version_info() -> str:
+    """Get professional version information."""
+    try:
+        version = importlib.metadata.version("fx-bin")
+        return f"""FX-Bin v{version}
+A powerful, secure, and well-tested collection of Python file operation utilities.
+
+Repository: https://github.com/frankyxhl/fx_bin
+Documentation: https://github.com/frankyxhl/fx_bin/blob/main/README.md
+License: MIT
+
+Python {sys.version.split()[0]} • Built with Poetry • Cross-platform support"""
+    except Exception:
+        return "fx-bin (development version)"
+
 
 # Command metadata for the list command
 COMMANDS_INFO: List[Tuple[str, str]] = [
@@ -15,6 +32,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("json2excel", "Convert JSON to Excel"),
     ("list", "List all available commands"),
     ("help", "Show help information (same as fx -h)"),
+    ("version", "Show version and system information"),
 ]
 
 
@@ -22,10 +40,17 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     invoke_without_command=True,
     context_settings={"help_option_names": ["-h", "--help"]},
 )
-@click.version_option()
+@click.version_option(version=None, message=get_version_info())
 @click.pass_context
 def cli(ctx):
     """FX - A collection of file and text utilities.
+
+    Common commands:
+
+    \b
+      fx help      Show this help
+      fx list      Show all commands  
+      fx version   Show version info
 
     Use 'fx COMMAND --help' for more information on a specific command.
     """
@@ -295,6 +320,18 @@ def help(ctx):
     else:
         # Fallback to showing available commands
         list_commands()
+    return 0
+
+
+@cli.command()
+def version():
+    """Show version and system information.
+    
+    Examples:
+        fx version        # Show detailed version info
+        fx --version      # Same as above
+    """
+    click.echo(get_version_info())
     return 0
 
 
