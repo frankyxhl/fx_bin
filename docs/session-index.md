@@ -6,6 +6,7 @@ This index tracks all development sessions with links and metadata for easy refe
 
 | Date | Title | Status | Tags | Link |
 |------|--------|---------|------|------|
+| 2025-09-06 | Complete Test Infrastructure Fix & CLI Enhancement | completed | testing, cli, documentation, poetry, version-management | [Session](sessions/20250906_061617_test-infrastructure-fix-and-cli-enhancements.md) |
 | 2025-09-06 | Git Root Command Implementation | completed | cli, git, shell-integration, new-command, testing | [Session](sessions/20250906_041900_git-root-command-implementation.md) |
 | 2025-09-05 | Complete Test Reorganization and Project Cleanup | completed | testing, reorganization, cleanup, bug-fix, pytest, v1.3.5 | [Session](sessions/20250905_175802_test_reorganization_and_fixes.md) |
 | 2025-08-30 | Fix File Size Alignment in fx filter Command | completed | formatting, ux, filter-command, v1.3.3 | [Session](sessions/20250830_143808_file-size-alignment-fix.md) |
@@ -17,6 +18,7 @@ This index tracks all development sessions with links and metadata for easy refe
 ## Sessions by Category
 
 ### Bug Fixes & Testing
+- **Test Infrastructure Fix (2025-09-06)**: Fixed 26 failing tests, enhanced CLI help documentation - [Session](sessions/20250906_061617_test-infrastructure-fix-and-cli-enhancements.md)
 - **Test Reorganization (2025-09-05)**: Complete test suite reorganization with categorized structure and bug fixes - [Session](sessions/20250905_175802_test_reorganization_and_fixes.md)
 - **File Size Alignment Fix (2025-08-30)**: Fixed alignment issues in fx filter command output - [Session](sessions/20250830_143808_file-size-alignment-fix.md)
 - **Test Isolation Fix (2025-08-30)**: Fixed BDD test isolation issues causing suite-wide failures - [Session](sessions/20250830_132203_bdd-test-isolation-fix.md)
@@ -41,13 +43,16 @@ This index tracks all development sessions with links and metadata for easy refe
 ## Quick Reference
 
 ### Latest Session
-**2025-09-06**: Git Root Command Implementation
+**2025-09-06**: Complete Test Infrastructure Fix & CLI Enhancement
 - Status: Completed
-- Key Deliverables: New `fx root` command with shell integration, comprehensive unit and integration tests
-- Next Steps: Commit changes, consider version bump for release, update README with usage examples
+- Key Deliverables: Fixed all 26 failing tests (334/334 passing), enhanced CLI help with real-world examples, version bump to 1.3.7
+- Next Steps: Deploy v1.3.7 to PyPI, monitor user feedback on enhanced CLI help
 
 ### Recent Changes
-- **New Command**: Added `fx root` command for finding Git project root directories
+- **Test Infrastructure**: Fixed 26 failing tests - all 334 tests now passing (v1.3.7)
+- **CLI Enhancements**: Added comprehensive real-world examples to fx ff and fx filter help (v1.3.7)
+- **Poetry Fix**: Resolved Poetry 2.x shell command with poetry-plugin-shell
+- **New Command**: Added `fx root` command for finding Git project root directories (v1.3.6)
 - **Shell Integration**: Support for `cd "$(fx root --cd)"` navigation pattern
 - **Test Suite Reorganization**: Split tests into unit/integration/security/performance/functional categories (v1.3.5)
 - **Replace Command Fix**: Fixed "str expected, not tuple" error with function refactoring (v1.3.5)
@@ -71,4 +76,4 @@ This index tracks all development sessions with links and metadata for easy refe
 
 ## Search Tags
 
-**Available Tags**: cli, git, shell-integration, new-command, testing, reorganization, cleanup, bug-fix, pytest, v1.3.5, pytest-forked, replace-command, documentation-consolidation, project-structure, formatting, ux, v1.3.3, test-isolation, bdd, code-quality, flake8, security, CVE-fix, dependencies, black, v1.3.1, patch-release, release, filter-command, tdd, documentation, v1.2.0, v1.3.0, testing-excellence, changelog, pytest-bdd, infrastructure, gherkin, living-documentation, test-automation
+**Available Tags**: cli, git, shell-integration, new-command, testing, reorganization, cleanup, bug-fix, pytest, v1.3.5, v1.3.6, v1.3.7, pytest-forked, replace-command, documentation-consolidation, project-structure, formatting, ux, v1.3.3, test-isolation, bdd, code-quality, flake8, security, CVE-fix, dependencies, black, v1.3.1, patch-release, release, filter-command, tdd, documentation, v1.2.0, v1.3.0, testing-excellence, changelog, pytest-bdd, infrastructure, gherkin, living-documentation, test-automation, poetry, version-management, test-infrastructure, cli-documentation

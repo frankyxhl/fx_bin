@@ -9,21 +9,6 @@
 
 **A powerful, secure, and well-tested collection of Python file operation utilities with a unified CLI.**
 
-## 🎉 New in v1.2.0
-
-Introducing **`fx filter`** - A powerful file filtering utility that helps you find and organize files by extension with intelligent sorting options!
-
-```bash
-# Find all Python files sorted by creation time
-fx filter . py
-
-# Find multiple file types with detailed output
-fx filter . "py,txt,json" --format detailed
-
-# Sort by modification time, newest first
-fx filter ~/Documents pdf --sort-by mtime --reverse
-```
-
 ## 📋 Table of Contents
 
 - [Why fx-bin?](#-why-fx-bin)
@@ -222,22 +207,59 @@ fx filter . txt --no-recursive --format count
 
 #### 🔍 fx ff - File Finder
 
-Find files whose names contain a keyword, with useful exclusions.
+Find files whose names contain a keyword, with powerful filtering options and smart exclusions.
 
 ```bash
-# Find files containing "test" in their names
+# Basic usage: Find files containing "test" in their names
 fx ff test
 
-# Include default-ignored directories (.git, .venv, node_modules)
+# Find configuration files
+fx ff config
+
+# Find all Python files (using partial match)
+fx ff .py
+
+# Include normally ignored directories (.git, .venv, node_modules)
 fx ff test --include-ignored
 
-# Exclude additional names or patterns (repeatable)
+# Exclude specific directories or patterns
 fx ff test --exclude build --exclude "*.log"
+
+# Complex filtering example: find "api" files but exclude build and cache directories
+fx ff api --exclude build --exclude cache --exclude "*.pyc"
+
+# Find source files while excluding test directories
+fx ff src --exclude "*test*" --exclude "*spec*"
+
+# Case-sensitive search for specific components
+fx ff Component --exclude node_modules
+```
+
+**Real-World Use Cases:**
+
+```bash
+# Development workflow: Find all TODO comments in code files
+fx ff TODO --exclude node_modules --exclude .git
+
+# Project cleanup: Find all backup files
+fx ff .bak
+
+# Debug logging: Find all log files
+fx ff .log --exclude archive
+
+# Configuration management: Find all config files across subdirectories
+fx ff config --exclude backup
+
+# Library hunting: Find specific library files
+fx ff jquery --exclude node_modules --exclude dist
+
+# Testing: Find test files but exclude coverage reports
+fx ff test --exclude coverage --exclude .nyc_output
 ```
 
 **Options:**
-- `--include-ignored`: Include `.git`, `.venv`, `node_modules` (default is skip).
-- `--exclude NAME`: Exclude names or glob patterns; repeatable.
+- `--include-ignored`: Include `.git`, `.venv`, `node_modules` (default skips these heavy directories)
+- `--exclude NAME`: Exclude names or glob patterns; repeatable for complex filtering
 
 #### 🔄 fx replace - Text Replacer
 

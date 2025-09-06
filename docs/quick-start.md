@@ -4,36 +4,38 @@
 
 ## Current State (2025-09-06)
 
-**Status**: v1.3.6 Development - Git Root Command Added 🚀  
+**Status**: v1.3.7 Ready for Release - Test Infrastructure Fixed & CLI Enhanced 🚀  
 **Branch**: develop  
-**Latest Addition**: New `fx root` command for finding Git project root directories  
+**Latest Fixes**: Fixed 26 failing tests, enhanced CLI help with real-world examples  
 
 ## Immediate Next Steps
 
 ```bash
-# 1. Commit the Git root command implementation
-git add fx_bin/root.py fx_bin/cli.py tests/unit/test_root.py tests/integration/test_root_cli.py
-git commit -m "feat: add fx root command for finding Git project root
+# 1. Commit CLI enhancement changes
+git add README.md fx_bin/cli.py fx_bin/find_files.py pyproject.toml
+git commit -m "feat: v1.3.7 - enhance CLI help with real-world examples
 
-- New command to find Git project root directory
-- Support for --cd flag for shell integration
-- Handles Git worktrees and symlinks properly
-- Comprehensive unit and integration tests (24 tests)
-- Enables cd \"\$(fx root --cd)\" navigation pattern"
+- Add comprehensive real-world examples to fx ff and fx filter help
+- Use Click \\b markers for proper help text formatting
+- Clean up README.md, remove outdated v1.2.0 announcement
+- Bump version to 1.3.7"
 
-# 2. Update documentation
-# Add fx root examples to README.md
-
-# 3. Prepare for v1.3.6 release
-poetry version 1.3.6
+# 2. Tag and release
+git tag v1.3.7
+git push origin develop --tags
 poetry build
-# Test before publishing
-poetry run pytest tests/unit/test_root.py tests/integration/test_root_cli.py -v
+poetry publish
+
+# 3. Update local installation
+pipx upgrade fx-bin
+# Test enhanced help
+fx ff --help
+fx filter --help
 ```
 
 ## Project Overview
 
-**fx_bin** is a Python utility collection providing command-line tools for file operations. Current development version 1.3.6 adds Git project root finding capabilities.
+**fx_bin** is a Python utility collection providing command-line tools for file operations. Version 1.3.7 fixes critical test infrastructure issues and enhances CLI documentation.
 
 ### Available Commands
 ```bash
@@ -43,7 +45,8 @@ fx ff          # Find files by keyword
 fx filter      # Filter files by extension (v1.2.0)
 fx replace     # Replace text in files
 fx json2excel  # Convert JSON to Excel
-fx root        # Find Git project root directory (NEW v1.3.6)
+fx root        # Find Git project root directory (v1.3.6)
+fx help        # Display main help (v1.3.6)
 fx list        # List all available commands
 ```
 

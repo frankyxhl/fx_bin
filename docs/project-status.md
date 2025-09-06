@@ -1,21 +1,32 @@
 # fx_bin Project Status
 
-## Current Status: v1.3.6 Development - Git Root Command Added
+## Current Status: v1.3.7 Ready for Release - Test Infrastructure Fixed & CLI Enhanced
 
 **Last Updated**: 2025-09-06  
-**Current Version**: 1.3.5 (released) → 1.3.6 (in development)  
+**Current Version**: 1.3.6 (released) → 1.3.7 (ready for release)  
 **Branch**: develop  
-**Build Status**: All tests passing + 24 new tests for fx root command  
+**Build Status**: All 334 tests passing (fixed 26 failing tests)  
 
-## Current Development: v1.3.6 Git Root Command
+## Current Release: v1.3.7 Test Infrastructure & CLI Enhancements
 
-### New Features in Development
+### Critical Fixes & Enhancements
+- **TEST INFRASTRUCTURE FIX**: Fixed 26 failing tests - all 334 tests now pass
+- **CLI HELP ENHANCEMENT**: Added comprehensive real-world examples to fx ff and fx filter
+- **MAKEFILE IMPROVEMENTS**: Fixed test paths and removed problematic --forked parameter
+- **POETRY COMPATIBILITY**: Resolved Poetry 2.x shell command with poetry-plugin-shell
+- **DOCUMENTATION UPDATES**: README cleaned up, removed outdated v1.2.0 section
+
+## Previous Release: v1.3.6 Git Root Command
+
+### Key Features
 - **GIT ROOT COMMAND**: New `fx root` command for finding Git project root directories
 - **SHELL INTEGRATION**: Support for `cd "$(fx root --cd)"` navigation pattern
 - **COMPREHENSIVE TESTING**: 24 new tests (12 unit, 12 integration) for root command
 - **CROSS-PLATFORM**: Handles macOS symlinks and Git worktrees properly
 
-## Previous Release: v1.3.5 Test Reorganization and Bug Fixes
+## Earlier Releases
+
+### v1.3.5 Test Reorganization and Bug Fixes
 
 ### Key Features
 - **TEST REORGANIZATION**: Complete test suite restructured into categorized folders (unit/integration/security/performance/functional)
@@ -36,60 +47,56 @@
 - **Production-Grade Testing**: Advanced fixture builders and quality validation (v1.3.0)
 - **Enhanced Documentation**: Comprehensive BDD testing guide (480+ lines)
 
-### Release Readiness
-- ✅ Test suite reorganized into logical categories
-- ✅ Replace command bug fixed with new replace_files() function
-- ✅ All 317 tests passing with --forked option
-- ✅ Zero warnings, zero skipped tests
-- ✅ Documentation consolidated to Markdown format
-- ✅ Project structure cleaned (no cache files, organized tests)
-- ✅ Session documentation created with full details
-- 🔄 Ready for: Commit changes, update to v1.3.5, build and publish to PyPI
+### Release Readiness for v1.3.7
+- ✅ All 334 tests passing (fixed 26 failing tests)
+- ✅ Working directory management fixed in test_pd_functional_complete.py
+- ✅ Makefile test commands corrected with proper paths
+- ✅ CLI help documentation enhanced with real-world examples
+- ✅ Click help formatting optimized with \b markers
+- ✅ README.md cleaned up and reorganized
+- ✅ Poetry 2.x compatibility resolved
+- ✅ Version bumped to 1.3.7 in pyproject.toml
+- 🔄 Ready for: Commit changes, tag v1.3.7, build and publish to PyPI
 
 ## Next Immediate Actions
 
-1. **Commit Git Root Command Implementation**
+1. **Commit CLI Enhancement Changes**
    ```bash
-   git add fx_bin/root.py fx_bin/cli.py tests/unit/test_root.py tests/integration/test_root_cli.py
-   git commit -m "feat: add fx root command for finding Git project root
+   git add README.md fx_bin/cli.py fx_bin/find_files.py pyproject.toml
+   git commit -m "feat: v1.3.7 - enhance CLI help with real-world examples
    
-   - New command to find Git project root directory
-   - Support for --cd flag for shell integration
-   - Handles Git worktrees and symlinks properly
-   - Comprehensive unit and integration tests (24 tests)
-   - Enables cd \"\$(fx root --cd)\" navigation pattern"
+   - Add comprehensive real-world examples to fx ff and fx filter help
+   - Use Click \\b markers for proper help text formatting
+   - Clean up README.md, remove outdated v1.2.0 announcement
+   - Bump version to 1.3.7"
    ```
 
-2. **Update Version for Next Release**
+2. **Tag and Release**
    ```bash
-   # Update version in pyproject.toml to 1.3.6
-   poetry version 1.3.6
-   # Tag will be created after testing and documentation updates
-   ```
-
-3. **Update Documentation**
-   - Add `fx root` command examples to README.md
-   - Document shell integration patterns
-   - Update command list in documentation
-
-4. **Build and Test**
-   ```bash
-   poetry install
-   poetry run pytest tests/unit/test_root.py tests/integration/test_root_cli.py -v
+   git tag v1.3.7
+   git push origin develop --tags
    poetry build
-   # Publish after documentation is complete
+   poetry publish
    ```
 
-4. **Update Documentation**
-   - Changelog already updated with v1.3.3 changes
-   - Session documentation created
-   - Project status updated
+3. **Update Local Installation**
+   ```bash
+   pipx upgrade fx-bin
+   # Test enhanced help
+   fx ff --help
+   fx filter --help
+   ```
+
+4. **Monitor User Feedback**
+   - Watch for issues on GitHub
+   - Monitor PyPI download stats
+   - Collect feedback on enhanced CLI documentation
 
 ## Project Health
 
 ### Test Coverage
-- **Total Tests**: 325+ tests (including 24 new tests for fx root)
-- **Test Isolation**: Fixed - all tests run independently without state leakage
+- **Total Tests**: 334 tests (all passing, fixed 26 failing tests)
+- **Test Isolation**: Complete - proper working directory restoration with try/finally
 - **BDD Steps**: Comprehensive step definitions including table parsing
 - **Unit Tests**: 23 tests for filter functionality (maintained)
 - **Integration Tests**: CLI testing with Click runner (maintained)
@@ -108,8 +115,9 @@
 - **Test Isolation**: Working directory management with finally blocks
 
 ### Architecture Status
-- **CLI System**: Unified `fx` command with 7 subcommands
-- **Commands Available**: files, size, ff, filter, replace, json2excel, root, list
+- **CLI System**: Unified `fx` command with 8 subcommands
+- **Commands Available**: files, size, ff, filter, replace, json2excel, root, list, help
+- **CLI Documentation**: Comprehensive in-command help with real-world examples
 - **Testing Infrastructure**: Mature TDD + production-grade BDD infrastructure
 - **BDD Framework**: pytest-bdd with smart fixtures and pattern library
 - **Documentation**: Comprehensive and up-to-date
@@ -193,6 +201,10 @@
 - **Pattern Reuse Strategy**: 70%+ step definition reuse for maintainability
 
 ### Lessons Learned
+- **Working Directory Management**: Always use try/finally blocks when changing cwd in tests
+- **Click Help Formatting**: Use \b markers for proper multi-paragraph help text
+- **Poetry 2.x Changes**: Some v1.x features moved to plugins (e.g., shell command)
+- **Makefile Parameters**: Order matters - --forked can cause pytest issues
 - **Formatting Consistency**: Small formatting inconsistencies (1 char) significantly impact UX
 - **Column Width Standards**: Consistent widths critical for readable tabular output
 - **User Feedback Value**: International users provide valuable UX insights
@@ -211,8 +223,10 @@
 - **Testing Excellence**: Mature TDD + BDD infrastructure provides enterprise-grade confidence
 
 ### Future Session Context
-- **Git Root Command**: New command ready for release, needs README documentation
-- **Shell Integration Pattern**: Established pattern for shell-friendly command output
+- **v1.3.7 Ready**: All tests passing, CLI enhanced, ready for PyPI deployment
+- **Test Infrastructure**: Stable test suite with proper isolation and Makefile commands
+- **CLI Documentation**: In-command help now comprehensive - no need to open README
+- **Poetry Compatibility**: Shell command working with poetry-plugin-shell
 - **Production BDD Framework**: Complete pytest-bdd infrastructure ready for expansion
 - **Smart Testing Patterns**: Reusable step library and fixture builders available
 - **Quality Validation Tools**: BDD best practice validators and analyzers implemented
