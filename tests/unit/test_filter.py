@@ -165,7 +165,7 @@ class TestFilterCore(unittest.TestCase):
             str(self.test_path / "script.py"),
         ]
 
-        result = format_output(files, format="simple")
+        result = format_output(files, output_format="simple")
 
         # Should return formatted string with file paths
         self.assertIsInstance(result, str)
@@ -178,7 +178,7 @@ class TestFilterCore(unittest.TestCase):
 
         files = [str(self.test_path / "document1.txt")]
 
-        result = format_output(files, format="detailed")
+        result = format_output(files, output_format="detailed")
 
         # Should include file size, modification time, etc.
         self.assertIsInstance(result, str)
@@ -202,7 +202,7 @@ class TestFilterCore(unittest.TestCase):
 
         # Count format should raise ValueError
         with self.assertRaises(ValueError) as context:
-            format_output(files, format="count")
+            format_output(files, output_format="count")
 
         self.assertIn("Invalid format: count", str(context.exception))
         self.assertIn("['simple', 'detailed']", str(context.exception))
@@ -214,7 +214,7 @@ class TestFilterCore(unittest.TestCase):
         files = [str(self.test_path / "document1.txt")]
 
         with self.assertRaises(ValueError):
-            format_output(files, format="invalid")
+            format_output(files, output_format="invalid")
 
     def test_parse_extensions_single(self):
         """Test parsing single extension."""
@@ -404,7 +404,7 @@ class TestShowPathParameter(unittest.TestCase):
             str(self.test_path / "src" / "utils" / "helper.txt"),
         ]
 
-        # New signature: format_output(files, format, show_path=False)
+        # New signature: format_output(files, output_format, show_path=False)
         output = filter_module.format_output(files, "detailed", show_path=False)
         lines = output.split("\n")
 
@@ -615,7 +615,7 @@ class TestFilterIntegration(unittest.TestCase):
         self.assertEqual(len(sorted_files), 4)
 
         # Format output
-        output = format_output(sorted_files, format="simple")
+        output = format_output(sorted_files, output_format="simple")
 
         self.assertIsInstance(output, str)
         self.assertIn(".py", output)

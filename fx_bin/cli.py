@@ -230,22 +230,22 @@ def filter(
       fx filter py                     # Find Python files
       fx filter "py,js,ts" .           # Find multiple file types
       fx filter txt --format simple   # Show only filenames
-      fx filter py --sort-by mtime --reverse  # Newest files first
+      fx filter py --sort-by modified --reverse  # Newest files first
 
     \b
     Real-World Use Cases:
       fx filter "jpg,png,gif"          # Find all images
       fx filter "pdf,docx" ~/Documents # Find documents in folder
-      fx filter log --sort-by ctime    # Find logs by creation time
+      fx filter log --sort-by created  # Find logs by creation time
       fx filter "py,js" --limit 10     # Find recent source files
       fx filter csv ~/data --format detailed  # Analyze data files
       fx filter "md,txt" --no-recursive  # Docs in current dir only
 
     \b
     Project Analysis:
-      fx filter py --sort-by mtime     # Recent Python changes
+      fx filter py --sort-by modified  # Recent Python changes
       fx filter "js,ts,jsx,tsx"        # All JavaScript/TypeScript
-      fx filter "yaml,yml,json" --format count  # Config file summary
+      fx filter "yaml,yml,json"         # Find config files
     """
     from . import filter as filter_module
 

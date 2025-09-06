@@ -57,13 +57,13 @@ test-security:  ## Run security tests only
 	poetry run pytest -k "security" -v --no-cov
 
 test-safety:  ## Run safety tests only
-	poetry run pytest tests/test_common_safety.py tests/test_replace_safety.py tests/test_pd_safety.py -v --no-cov
+	poetry run pytest tests/security/test_common_safety.py tests/security/test_replace_safety.py tests/security/test_pd_safety.py -v --no-cov
 
 test-integration:  ## Run integration tests only
-	poetry run pytest tests/test_integration.py -v --no-cov
+	poetry run pytest tests/integration/ -v --no-cov
 
 test-performance:  ## Run performance tests only
-	poetry run pytest tests/test_performance.py -v --no-cov
+	poetry run pytest tests/performance/ -v --no-cov
 
 test-coverage:  ## Run tests with coverage report
 	poetry run pytest --cov=fx_bin --cov-report=html --cov-report=term-missing

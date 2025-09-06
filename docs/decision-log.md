@@ -2,6 +2,40 @@
 
 This document records important architectural and design decisions made during fx_bin development.
 
+## ADR-009: Parameter Naming Convention - Avoiding Built-in Shadowing (2025-09-06)
+
+**Status**: Accepted  
+**Context**: Multiple modules used 'format' as parameter name, shadowing Python's built-in format()  
+**Decision**: Rename all 'format' parameters to 'output_format' throughout codebase  
+
+**Rationale**:
+- **Code Clarity**: Avoids confusion between parameter and built-in function
+- **Linting Compliance**: Resolves static analysis warnings about shadowing
+- **Consistency**: Establishes naming pattern for future similar cases
+- **Self-Documenting**: 'output_format' more clearly indicates purpose
+
+**Consequences**:
+- ✅ Improved code clarity and maintainability
+- ✅ Better IDE support and autocomplete suggestions
+- ✅ Consistent naming convention across all modules
+- ⚠️ Breaking change for any direct API consumers (mitigated by being pre-release)
+
+**Implementation**:
+```python
+# Before (problematic)
+def format_output(files, format='simple'):  # shadows built-in
+    pass
+
+# After (fixed)
+def format_output(files, output_format='simple'):  # clear naming
+    pass
+```
+
+**Alternatives Considered**:
+- Using underscore prefix (_format) → Rejected: suggests private variable
+- Using fmt abbreviation → Rejected: less clear than output_format
+- Keeping original → Rejected: violates best practices
+
 ## ADR-008: Default Exec-Shell Behavior for fx today Command (2025-09-06)
 
 **Status**: Accepted  

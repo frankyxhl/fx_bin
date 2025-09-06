@@ -5,7 +5,9 @@ This module provides JSON to Excel conversion with functional error handling.
 
 import os
 import sys
+import ipaddress
 from io import StringIO
+from urllib.parse import urlparse
 
 import click
 from returns.result import Result, Success, Failure
@@ -51,17 +53,78 @@ def check_file_not_exists(filename: str) -> Result[str, ValidationError]:
 
 
 def validate_url(url: str) -> Result[str, ValidationError]:
-    """Validate that URL is safe and well-formed."""
-    # Basic URL validation
+    """Validate that URL is safe and well-formed.
+
+    Blocks:
+    - file:// URLs
+    - Internal network addresses (127.0.0.1, 10.x.x.x, 172.16-31.x.x, 192.168.x.x)
+    - Cloud metadata addresses (169.254.169.254)
+    """
     if not url:
         return Failure(ValidationError("URL cannot be empty"))
 
-    # Prevent local file access via file:// protocol
-    if url.startswith("file://"):
-        return Failure(ValidationError("Local file URLs not allowed"))
+    # For local files, just check they exist (backward compatibility)
+    if os.path.exists(url):
+        return Success(url)
 
-    # Could add more validation here (URL format, allowed domains, etc)
-    return Success(url)
+    # For JSON strings, accept them as-is
+    if not url.startswith(("http://", "https://", "file://")):
+        # Might be JSON content, let process_json_to_excel handle it
+        return Success(url)
+
+    # Now validate URLs
+    try:
+        parsed = urlparse(url)
+
+        # Block file:// scheme
+        if parsed.scheme.lower() == "file":
+            return Failure(ValidationError("Local file URLs not allowed"))
+
+        # Only allow http and https schemes
+        if parsed.scheme.lower() not in ["http", "https"]:
+            return Failure(ValidationError(f"Invalid URL scheme: {parsed.scheme}"))
+
+        # Check for dangerous hostnames/IPs
+        hostname = parsed.hostname
+        if not hostname:
+            return Failure(ValidationError("URL must have a hostname"))
+
+        # Try to parse as IP address
+        try:
+            ip = ipaddress.ip_address(hostname)
+
+            # Block private/internal networks
+            if ip.is_private or ip.is_loopback:
+                return Failure(
+                    ValidationError(
+                        f"Private/internal network access not allowed: {hostname}"
+                    )
+                )
+
+            # Block cloud metadata service (AWS, GCP, Azure)
+            if str(ip) == "169.254.169.254":
+                return Failure(
+                    ValidationError("Cloud metadata service access not allowed")
+                )
+
+        except ValueError:
+            # Not an IP address, check for dangerous hostnames
+            hostname_lower = hostname.lower()
+            dangerous_hosts = [
+                "localhost",
+                "metadata.google.internal",
+                "metadata.azure.com",
+                "169.254.169.254",
+            ]
+            if hostname_lower in dangerous_hosts:
+                return Failure(
+                    ValidationError(f"Dangerous hostname not allowed: {hostname}")
+                )
+
+        return Success(url)
+
+    except Exception as e:
+        return Failure(ValidationError(f"Invalid URL: {e}"))
 
 
 @impure_safe

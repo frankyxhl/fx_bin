@@ -141,6 +141,52 @@ class TestValidateUrl(unittest.TestCase):
         # Local file paths are actually allowed (not URLs)
         result = pd_functional.validate_url("/path/to/file.json")
         self.assertIsInstance(result, Success)
+    
+    def test_validate_localhost_url(self):
+        """Test localhost URL (should be rejected for security)."""
+        result = pd_functional.validate_url("http://localhost:8000/data.json")
+        self.assertIsInstance(result, Failure)
+        error = result.failure()
+        self.assertIsInstance(error, ValidationError)
+        self.assertIn("not allowed", str(error).lower())
+    
+    def test_validate_private_ip(self):
+        """Test private IP addresses (should be rejected)."""
+        private_ips = [
+            "http://127.0.0.1/data.json",
+            "http://192.168.1.1/data.json",
+            "http://10.0.0.1/data.json",
+            "http://172.16.0.1/data.json"
+        ]
+        for ip_url in private_ips:
+            with self.subTest(url=ip_url):
+                result = pd_functional.validate_url(ip_url)
+                self.assertIsInstance(result, Failure)
+                error = result.failure()
+                self.assertIsInstance(error, ValidationError)
+                self.assertIn("not allowed", str(error).lower())
+    
+    def test_validate_cloud_metadata_ip(self):
+        """Test cloud metadata service IP (should be rejected)."""
+        result = pd_functional.validate_url("http://169.254.169.254/latest/meta-data/")
+        self.assertIsInstance(result, Failure)
+        error = result.failure()
+        self.assertIsInstance(error, ValidationError)
+        self.assertIn("not allowed", str(error).lower())
+    
+    def test_validate_dangerous_hostnames(self):
+        """Test dangerous hostnames (should be rejected)."""
+        dangerous_urls = [
+            "http://metadata.google.internal/data",
+            "http://metadata.azure.com/data"
+        ]
+        for url in dangerous_urls:
+            with self.subTest(url=url):
+                result = pd_functional.validate_url(url)
+                self.assertIsInstance(result, Failure)
+                error = result.failure()
+                self.assertIsInstance(error, ValidationError)
+                self.assertIn("not allowed", str(error).lower())
 
 
 class TestProcessJsonToExcel(unittest.TestCase):
