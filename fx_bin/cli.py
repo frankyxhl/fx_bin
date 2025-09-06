@@ -128,12 +128,33 @@ def size(paths):
     ),
 )
 def ff(keyword, include_ignored, excludes):
-    """Find files by keyword.
+    """Find files whose names contain KEYWORD.
 
-    Examples:
-        fx ff config                      # Names containing 'config'
-        fx ff test --include-ignored      # Include .git/.venv/node_modules
-        fx ff test --exclude build --exclude "*.log"  # Exclude patterns
+    \b
+    Basic Examples:
+      fx ff test                        # Find files with 'test' in name
+      fx ff config                      # Find configuration files
+      fx ff .py                         # Find Python files
+      fx ff api --exclude build         # Find 'api' files, skip build dirs
+
+    \b
+    Real-World Use Cases:
+      fx ff TODO --exclude .git         # Find TODO comments in code
+      fx ff .bak                        # Find all backup files
+      fx ff .log --exclude archive      # Find log files, skip archived
+      fx ff config --exclude backup     # Find configs, skip backups
+      fx ff jquery --exclude node_modules  # Find jQuery files
+      fx ff test --exclude coverage     # Find tests, skip coverage reports
+      fx ff Component --exclude node_modules  # Find React components
+
+    \b
+    Advanced Filtering:
+      fx ff api --exclude build --exclude cache --exclude "*.pyc"
+      fx ff src --exclude "*test*" --exclude "*spec*"
+
+    \b
+    By default, skips heavy directories: .git, .venv, node_modules
+    Use --include-ignored to search these directories too.
     """
     from . import find_files
 
@@ -203,14 +224,27 @@ def filter(
 ):
     """Filter files by extension.
 
-    Examples:
-        fx filter txt                    # Find .txt files with detailed format
-        fx filter py /path/to/code       # Find .py files in specific path
-        fx filter "txt,py" .             # Find multiple extensions
-        fx filter txt --no-recursive     # Search only current directory
-        fx filter py --sort-by modified  # Sort by modification time
-        fx filter txt --format simple    # Show only filenames
-        fx filter txt --show-path        # Show relative paths
+    \b
+    Basic Examples:
+      fx filter py                     # Find Python files
+      fx filter "py,js,ts" .           # Find multiple file types
+      fx filter txt --format simple   # Show only filenames
+      fx filter py --sort-by mtime --reverse  # Newest files first
+
+    \b
+    Real-World Use Cases:
+      fx filter "jpg,png,gif"          # Find all images
+      fx filter "pdf,docx" ~/Documents # Find documents in folder
+      fx filter log --sort-by ctime    # Find logs by creation time
+      fx filter "py,js" --limit 10     # Find recent source files
+      fx filter csv ~/data --format detailed  # Analyze data files
+      fx filter "md,txt" --no-recursive  # Docs in current dir only
+
+    \b
+    Project Analysis:
+      fx filter py --sort-by mtime     # Recent Python changes
+      fx filter "js,ts,jsx,tsx"        # All JavaScript/TypeScript
+      fx filter "yaml,yml,json" --format count  # Config file summary
     """
     from . import filter as filter_module
 

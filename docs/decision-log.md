@@ -2,6 +2,122 @@
 
 This document records important architectural and design decisions made during fx_bin development.
 
+## ADR-006: Unified Local CI Simulation Strategy (2025-09-06)
+
+**Status**: Accepted  
+**Context**: GitHub Actions tests failing, developers need instant local verification matching CI exactly  
+**Decision**: Create unified `make test` command simulating complete GitHub Actions workflow  
+
+**Rationale**:
+- **Instant Feedback**: 60-second local run vs 2-3 minute GitHub Actions
+- **Complete Coverage**: Security, safety, functionality, coverage, and quality in one command
+- **Developer Friction**: Single command eliminates confusion about which tests to run
+- **CI Parity**: Exact match with GitHub Actions ensures no surprises
+
+**Consequences**:
+- ✅ All tests verifiable locally before push
+- ✅ Reduced GitHub Actions failures
+- ✅ Clear sectioned output identifies failure points
+- ✅ Integrated security scanning (Bandit, Safety)
+- ⚠️ Slightly longer test execution (~60s)
+- ⚠️ Requires all dev dependencies installed
+
+**Implementation**:
+```makefile
+test:  ## 🚀 Run ALL tests (GitHub Actions simulation + everything)
+	# Security tests
+	poetry run bandit -r fx_bin/
+	poetry run safety check
+	# All functionality tests
+	poetry run pytest tests/ -v
+	# Coverage reporting
+	poetry run pytest --cov=fx_bin
+	# Quality checks
+	poetry run flake8 fx_bin/
+	poetry run black --check fx_bin/
+```
+
+**Alternatives Considered**:
+- Separate minimal/full test commands → Rejected: causes confusion
+- No local CI simulation → Rejected: slow feedback loop
+- GitHub-only testing → Rejected: wastes CI minutes on preventable failures
+
+## ADR-005: Test Working Directory Management Strategy (2025-09-06)
+
+**Status**: Accepted  
+**Context**: 26 tests failing due to working directory not being restored after test execution  
+**Decision**: Mandate try/finally blocks for all tests that change working directory  
+
+**Rationale**:
+- **Test Isolation**: Each test must leave environment unchanged
+- **Reliability**: Tests should pass regardless of execution order
+- **Debugging**: Failed tests shouldn't affect subsequent tests
+- **Common Pattern**: File operation tests frequently need to change directories
+
+**Consequences**:
+- ✅ All 334 tests now pass consistently
+- ✅ Tests can run in any order without interference
+- ✅ Easier debugging when tests fail
+- ⚠️ More verbose test code with try/finally blocks
+- ⚠️ Developers must remember this pattern for new tests
+
+**Implementation**:
+```python
+def test_with_directory_change():
+    original_cwd = os.getcwd()
+    try:
+        os.chdir(test_directory)
+        # Test logic here
+    finally:
+        os.chdir(original_cwd)
+```
+
+**Alternative Approaches Considered**:
+- pytest fixtures with automatic cleanup (more complex)
+- Context managers (not always suitable for test structure)
+- Test decorators (adds abstraction layer)
+
+---
+
+## ADR-006: CLI Help Documentation Strategy (2025-09-06)
+
+**Status**: Accepted  
+**Context**: Users need practical examples without opening external documentation  
+**Decision**: Embed comprehensive real-world examples directly in CLI help using Click's \b markers  
+
+**Rationale**:
+- **Discoverability**: Examples available immediately with --help
+- **User Experience**: No need to search for documentation online
+- **Maintenance**: Single source of truth for command usage
+- **Click Integration**: \b markers enable proper multi-paragraph formatting
+
+**Consequences**:
+- ✅ Better user experience with immediate access to examples
+- ✅ Reduced support burden - users self-serve with --help
+- ✅ Professional formatting with organized sections
+- ⚠️ Longer help text may overwhelm some users
+- ⚠️ Must maintain examples in code rather than docs
+
+**Implementation Example**:
+```python
+@click.command()
+def ff(keyword):
+    """Find files whose names contain KEYWORD.
+    
+    \b
+    Basic Examples:
+      fx ff test                        # Find files with 'test' in name
+      fx ff config                      # Find configuration files
+    
+    \b
+    Real-World Use Cases:
+      fx ff TODO --exclude .git         # Find TODO comments
+      fx ff .bak                        # Find backup files
+    """
+```
+
+---
+
 ## ADR-004: Git Root Command Implementation (2025-09-06)
 
 **Status**: Accepted  

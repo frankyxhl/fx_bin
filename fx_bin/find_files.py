@@ -48,14 +48,14 @@ def find_files(
     "--include-ignored",
     is_flag=True,
     default=False,
-    help="Include default-ignored dirs (.git, .venv, node_modules)",
+    help="Include normally skipped dirs (.git, .venv, node_modules)",
 )
 @click.option(
     "--exclude",
     "excludes",
     multiple=True,
     help=(
-        "Exclude names (repeatable). Supports globs, e.g. "
+        "Exclude names/patterns (repeatable). Supports globs: "
         "--exclude build --exclude '*.log'"
     ),
 )
