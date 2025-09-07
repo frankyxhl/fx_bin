@@ -56,15 +56,16 @@ jobs:
     
     - name: Install Poetry
       if: steps.pypi_check.outputs.version_exists == 'false'
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
 
     - name: Install dependencies and build
       if: steps.pypi_check.outputs.version_exists == 'false'
       run: |
         echo "📦 Building package version ${{ steps.version.outputs.current_version }}..."
-        export PATH="$HOME/.local/bin:$PATH"
         poetry install
         poetry build
     
