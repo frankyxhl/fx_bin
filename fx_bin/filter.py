@@ -160,13 +160,13 @@ def sort_files_by_time(
 
 
 def format_output(
-    files: List[str], format: str = "detailed", show_path: bool = False
+    files: List[str], output_format: str = "detailed", show_path: bool = False
 ) -> str:
     """Format the output of found files.
 
     Args:
         files: List of file paths to format
-        format: Output format - 'simple' or 'detailed' (default: 'detailed')
+        output_format: Output format - 'simple' or 'detailed' (default: 'detailed')
         show_path: Whether to show paths (default: False, shows filenames only)
 
     Returns:
@@ -176,20 +176,26 @@ def format_output(
         ValueError: If format is not supported
 
     Examples:
-        >>> format_output(['file1.txt', 'file2.py'], 'simple')
+        >>> format_output(['file1.txt', 'file2.py'], 'simple')  # Positional
         'file1.txt\\nfile2.py'
+        >>> # Using keyword arguments:
+        >>> format_output(['f1.txt'], output_format='detailed', show_path=True)
+        ... # doctest: +SKIP
+        '2024-01-01 12:00:00       100 B  /path/to/f1.txt'
     """
     VALID_FORMATS = ["simple", "detailed"]
-    if format not in VALID_FORMATS:
-        raise ValueError(f"Invalid format: {format}. Must be one of {VALID_FORMATS}.")
+    if output_format not in VALID_FORMATS:
+        raise ValueError(
+            f"Invalid format: {output_format}. Must be one of {VALID_FORMATS}."
+        )
 
     if not files:
         return "No files found"
 
-    if format == "simple":
+    if output_format == "simple":
         return "\n".join(files)
 
-    elif format == "detailed":
+    elif output_format == "detailed":
         output_lines = []
         for file_path in files:
             try:

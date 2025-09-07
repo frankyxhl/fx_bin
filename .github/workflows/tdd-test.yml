@@ -24,13 +24,14 @@ jobs:
         cache: 'pip'
 
     - name: Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
 
     - name: Install dependencies
-      run: |
-        poetry install --with dev
+      run: poetry install --with dev
 
     - name: Run Security Tests (CRITICAL)
       run: |
@@ -76,13 +77,14 @@ jobs:
         cache: 'pip'
 
     - name: Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
 
     - name: Install dependencies
-      run: |
-        poetry install --with dev
+      run: poetry install --with dev
 
     - name: Run Safety Tests (HIGH Priority)
       run: |
@@ -108,13 +110,14 @@ jobs:
         cache: 'pip'
 
     - name: Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
 
     - name: Install dependencies
-      run: |
-        poetry install --with dev
+      run: poetry install --with dev
 
     - name: Run All Tests
       continue-on-error: true
@@ -153,13 +156,14 @@ jobs:
         cache: 'pip'
 
     - name: Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
 
     - name: Install dependencies
-      run: |
-        poetry install --with dev
+      run: poetry install --with dev
 
     - name: Run Performance Tests (Informational)
       continue-on-error: true
@@ -188,13 +192,14 @@ jobs:
         cache: 'pip'
 
     - name: Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
 
     - name: Install dependencies
-      run: |
-        poetry install --with dev
+      run: poetry install --with dev
 
     - name: Run Flake8
       run: |

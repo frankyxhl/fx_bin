@@ -2,6 +2,80 @@
 
 This document records important architectural and design decisions made during fx_bin development.
 
+## ADR-009: Parameter Naming Convention - Avoiding Built-in Shadowing (2025-09-06)
+
+**Status**: Accepted  
+**Context**: Multiple modules used 'format' as parameter name, shadowing Python's built-in format()  
+**Decision**: Rename all 'format' parameters to 'output_format' throughout codebase  
+
+**Rationale**:
+- **Code Clarity**: Avoids confusion between parameter and built-in function
+- **Linting Compliance**: Resolves static analysis warnings about shadowing
+- **Consistency**: Establishes naming pattern for future similar cases
+- **Self-Documenting**: 'output_format' more clearly indicates purpose
+
+**Consequences**:
+- ✅ Improved code clarity and maintainability
+- ✅ Better IDE support and autocomplete suggestions
+- ✅ Consistent naming convention across all modules
+- ⚠️ Breaking change for any direct API consumers (mitigated by being pre-release)
+
+**Implementation**:
+```python
+# Before (problematic)
+def format_output(files, format='simple'):  # shadows built-in
+    pass
+
+# After (fixed)
+def format_output(files, output_format='simple'):  # clear naming
+    pass
+```
+
+**Alternatives Considered**:
+- Using underscore prefix (_format) → Rejected: suggests private variable
+- Using fmt abbreviation → Rejected: less clear than output_format
+- Keeping original → Rejected: violates best practices
+
+## ADR-008: Default Exec-Shell Behavior for fx today Command (2025-09-06)
+
+**Status**: Accepted  
+**Context**: fx today command should create workspace directories and provide seamless navigation  
+**Decision**: Make shell execution the default behavior, not optional  
+
+**Rationale**:
+- **User Requirement**: User explicitly requested exec-shell as PRIMARY use case
+- **Workflow Integration**: Daily workspace management requires seamless directory switching
+- **Process Replacement**: `os.execv()` enables true directory navigation (stays after exit)
+- **Cross-Platform**: Works on Windows PowerShell/cmd and Unix bash/zsh/sh systems
+
+**Consequences**:
+- ✅ Seamless workflow - user lands in workspace directory automatically
+- ✅ True directory switching - stays in directory after shell exit
+- ✅ Cross-platform shell detection and execution
+- ✅ Optional override with `--no-exec` for scripting use cases
+- ⚠️ More complex implementation requiring shell detection
+- ⚠️ Process replacement requires understanding of os.execv()
+
+**Implementation**:
+```python
+# Default behavior enables shell execution
+exec_shell = not no_exec and not output_for_cd and not dry_run
+if exec_shell:
+    shell_cmd = detect_shell_executable()
+    os.chdir(str(today_path))
+    os.execv(shell_cmd, [os.path.basename(shell_cmd)])
+```
+
+**Security Considerations**:
+- Path traversal prevention in date format validation
+- Input sanitization for base directory paths
+- Shell command validation and safe execution
+
+**Alternatives Considered**:
+- Subprocess approach → Rejected: doesn't enable true directory switching
+- Optional flag → Rejected: user specified default behavior requirement
+- Shell wrapper functions → Rejected: adds setup complexity
+
 ## ADR-007: Shell Wrapper Approach for Directory Navigation (2025-09-06)
 
 **Status**: Accepted  
@@ -39,6 +113,46 @@ fxroot() {
 - Temporary file state → Rejected: complex, race conditions
 - Direct parent modification → Rejected: technically impossible
 - Alias approach → Rejected: doesn't handle arguments properly
+
+## ADR-009: Security-First Input Validation for fx today (2025-09-06)
+
+**Status**: Accepted  
+**Context**: User-controlled date formats and base paths could enable directory traversal attacks  
+**Decision**: Implement multi-layer security validation for all user inputs  
+
+**Rationale**:
+- **Security Priority**: User inputs directly control directory creation paths
+- **Path Traversal Risk**: Date format strings like `%Y/../../../etc/%m` could escape intended directory
+- **Defense in Depth**: Multiple validation layers prevent bypass attempts
+- **Whitelist Approach**: Safer than blacklist-based filtering
+
+**Consequences**:
+- ✅ Comprehensive protection against path traversal attacks
+- ✅ Input validation prevents malicious directory creation
+- ✅ Whitelist approach ensures only safe characters allowed
+- ✅ Multi-layer validation provides defense in depth
+- ⚠️ More restrictive on edge case inputs
+- ⚠️ Additional validation complexity
+
+**Implementation**:
+```python
+def validate_date_format(date_format: Optional[str]) -> bool:
+    # Layer 1: Check for obvious traversal
+    if ".." in result: return False
+    
+    # Layer 2: Validate each path component
+    for part in Path(result).parts:
+        if part in ["..", "."]: return False
+        
+    # Layer 3: Character whitelisting  
+    if not re.fullmatch(r"[A-Za-z0-9._/-]+", result): return False
+```
+
+**Security Layers**:
+1. **Traversal Detection**: Blocks `../` sequences in any form
+2. **Component Validation**: Validates each path component individually
+3. **Character Whitelisting**: Only allows alphanumeric, dots, underscores, hyphens, slashes
+4. **Format Verification**: Ensures date format produces meaningful output
 
 ## ADR-006: Unified Local CI Simulation Strategy (2025-09-06)
 
@@ -79,6 +193,42 @@ test:  ## 🚀 Run ALL tests (GitHub Actions simulation + everything)
 - Separate minimal/full test commands → Rejected: causes confusion
 - No local CI simulation → Rejected: slow feedback loop
 - GitHub-only testing → Rejected: wastes CI minutes on preventable failures
+
+## ADR-010: Comprehensive TDD/BDD Testing for Complex Features (2025-09-06)
+
+**Status**: Accepted  
+**Context**: fx today command requires complex shell integration and security validation  
+**Decision**: Implement comprehensive testing with TDD unit tests, BDD scenarios, and CLI integration tests  
+
+**Rationale**:
+- **Feature Complexity**: Shell execution, security validation, cross-platform support require thorough testing
+- **User Requirements**: Default exec behavior must be validated through behavior-driven scenarios
+- **Security Critical**: Path traversal prevention needs extensive security testing
+- **Living Documentation**: BDD scenarios document expected user workflows
+
+**Consequences**:
+- ✅ Comprehensive test coverage across all functionality layers
+- ✅ BDD scenarios document user workflows and business requirements
+- ✅ TDD unit tests validate individual functions and edge cases
+- ✅ CLI integration tests verify command interface behavior
+- ✅ Security tests validate input validation and attack prevention
+- ⚠️ Significant test development time (27 BDD scenarios)
+- ⚠️ Complex test maintenance with multiple testing approaches
+
+**Implementation**:
+- **TDD Unit Tests**: `tests/unit/test_today.py` - Core function validation
+- **CLI Integration**: `tests/integration/test_today_cli.py` - Command interface testing
+- **BDD Scenarios**: `features/today_workspace.feature` - 27 user workflow scenarios
+- **Security Testing**: Path traversal, input validation, shell injection prevention
+
+**Test Categories**:
+```gherkin
+@smoke @critical      # Core functionality
+@security             # Path traversal prevention
+@exec_shell           # Shell integration behavior
+@cross_platform       # Windows/Unix compatibility
+@error_handling       # Failure scenarios
+```
 
 ## ADR-005: Test Working Directory Management Strategy (2025-09-06)
 

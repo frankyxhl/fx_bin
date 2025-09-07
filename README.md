@@ -310,6 +310,50 @@ fx json2excel data.json output.xlsx --pretty
 - `--sheet`: Excel sheet name
 - `--pretty`: Apply formatting
 
+#### 📅 fx today - Daily Workspace Manager
+
+Create and navigate to date-organized workspace directories for daily file management.
+
+```bash
+# Navigate to today's workspace (~/Downloads/YYYYMMDD)
+fx today
+
+# Custom base directory
+fx today --base ~/Projects
+
+# Custom date format
+fx today --format %Y-%m-%d  # Creates ~/Downloads/2025-09-06
+
+# Output path for shell scripts
+fx today --cd
+
+# Dry run to see what would be created
+fx today --dry-run
+
+# Verbose output
+fx today --verbose
+```
+
+**Options:**
+- `--cd, -c`: Output path only (for shell integration)
+- `--base, -b`: Base directory (default: ~/Downloads)
+- `--format, -f`: Date format string (default: %Y%m%d)
+- `--verbose, -v`: Show detailed output
+- `--dry-run`: Preview without creating directory
+
+**Shell Integration:**
+With proper setup, `fx today` can change your shell directory:
+```bash
+# After running setup script
+$ fx today
+📅 Changed to today's workspace: /Users/you/Downloads/20250906
+
+# Or use aliases
+$ ft  # Short alias for fx today
+```
+
+See [fx-today-setup.md](docs/fx-today-setup.md) for shell integration setup.
+
 ## 📚 Usage Examples
 
 ### Real-World Scenarios

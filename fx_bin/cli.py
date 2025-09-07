@@ -26,6 +26,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("replace", "Replace text in files"),
     ("json2excel", "Convert JSON to Excel"),
     ("root", "Find Git project root directory"),
+    ("today", "Create/navigate to today's workspace directory"),
     ("list", "List all available commands"),
     ("help", "Show help information (same as fx -h)"),
     ("version", "Show version and system information"),
@@ -229,22 +230,22 @@ def filter(
       fx filter py                     # Find Python files
       fx filter "py,js,ts" .           # Find multiple file types
       fx filter txt --format simple   # Show only filenames
-      fx filter py --sort-by mtime --reverse  # Newest files first
+      fx filter py --sort-by modified --reverse  # Newest files first
 
     \b
     Real-World Use Cases:
       fx filter "jpg,png,gif"          # Find all images
       fx filter "pdf,docx" ~/Documents # Find documents in folder
-      fx filter log --sort-by ctime    # Find logs by creation time
+      fx filter log --sort-by created  # Find logs by creation time
       fx filter "py,js" --limit 10     # Find recent source files
       fx filter csv ~/data --format detailed  # Analyze data files
       fx filter "md,txt" --no-recursive  # Docs in current dir only
 
     \b
     Project Analysis:
-      fx filter py --sort-by mtime     # Recent Python changes
+      fx filter py --sort-by modified  # Recent Python changes
       fx filter "js,ts,jsx,tsx"        # All JavaScript/TypeScript
-      fx filter "yaml,yml,json" --format count  # Config file summary
+      fx filter "yaml,yml,json"         # Find config files
     """
     from . import filter as filter_module
 
@@ -318,8 +319,11 @@ def json2excel(url, output_filename):
 
 @cli.command()
 @click.option(
-    '--cd', '-c', 'output_for_cd', is_flag=True,
-    help='Output path suitable for cd command (no extra text)'
+    "--cd",
+    "-c",
+    "output_for_cd",
+    is_flag=True,
+    help="Output path suitable for cd command (no extra text)",
 )
 def root(output_for_cd):
     """Find Git project root directory.
@@ -341,6 +345,7 @@ def root(output_for_cd):
             if output_for_cd:
                 # Silent exit for --cd mode
                 import sys
+
                 sys.exit(1)
             else:
                 # Print error and exit for regular mode
@@ -362,6 +367,63 @@ def root(output_for_cd):
             click.echo(f"Error: Permission denied accessing directory: {e}", err=True)
         ctx = click.get_current_context()
         ctx.exit(1)
+    except Exception as e:
+        if not output_for_cd:
+            click.echo(f"Error: {e}", err=True)
+        ctx = click.get_current_context()
+        ctx.exit(1)
+
+
+@cli.command()
+@click.option(
+    "--cd",
+    "-c",
+    "output_for_cd",
+    is_flag=True,
+    help="Output path suitable for cd command (no extra text)",
+)
+@click.option(
+    "--base",
+    "-b",
+    "base_dir",
+    default="~/Downloads",
+    help="Base directory for daily workspaces",
+)
+@click.option(
+    "--format",
+    "-f",
+    "date_format",
+    default="%Y%m%d",
+    help="Date format (strftime) for directory names",
+)
+@click.option("--verbose", "-v", is_flag=True, help="Show verbose output")
+@click.option(
+    "--dry-run", is_flag=True, help="Show what would be created without creating it"
+)
+@click.option(
+    "--no-exec", is_flag=True, help="Don't start new shell, just create directory"
+)
+def today(output_for_cd, base_dir, date_format, verbose, dry_run, no_exec):
+    """Create and navigate to today's workspace directory.
+
+    Creates a date-organized directory (default: ~/Downloads/YYYYMMDD)
+    and starts a new shell there for daily work organization.
+
+    Examples:
+        fx today              # Create workspace and start new shell there
+        fx today --no-exec    # Just create directory without starting shell
+        fx today --cd         # Output path for shell integration
+        fx today --base ~/Projects  # Use custom base directory
+        fx today --format %Y-%m-%d  # Use custom date format
+    """
+    from . import today as today_module
+
+    try:
+        # Default behavior is to exec shell, unless disabled
+        exec_shell = not no_exec and not output_for_cd and not dry_run
+        today_module.main(
+            output_for_cd, base_dir, date_format, verbose, dry_run, exec_shell
+        )
     except Exception as e:
         if not output_for_cd:
             click.echo(f"Error: {e}", err=True)

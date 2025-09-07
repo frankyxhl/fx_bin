@@ -5,6 +5,40 @@ All notable changes to fx-bin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- **CLI Documentation**: Improved help text consistency and grammar
+  - Changed "mtime" to "modified" in filter command for clarity
+  - Fixed grammar: "creation or modification time" 
+  - Removed outdated "count" format from documentation
+- **Code Quality**: Resolved multiple code quality issues
+  - Renamed `format` parameter to `output_format` to avoid shadowing built-in
+  - Removed duplicate import statements in today.py
+  - Enhanced docstrings with keyword argument examples
+  - Cleaned up whitespace issues across multiple files
+- **Security**: Enhanced URL validation in pd_functional module
+  - Aligned validation with pd._validate_url implementation
+  - Added comprehensive security checks for malicious URLs
+  - Prevents path traversal, command injection, and SSRF attacks
+- **Build System**: Fixed Makefile test target paths
+  - Corrected paths for test-safety, test-integration, test-performance
+- **Platform Compatibility**: Fixed Windows-specific issues
+  - Enhanced literal-suffix heuristic for date format flags
+  - Improved Windows shell detection test
+
+### Added
+- **Security Tests**: 5 new comprehensive security tests for URL validation
+  - Path traversal prevention tests
+  - Command injection prevention tests  
+  - SSRF prevention tests
+  - Protocol validation tests
+  - Malicious host blocking tests
+
+### Changed
+- Test suite now includes 400 tests (added 5 security tests)
+- Test coverage maintained at 83.56%
+
 ## [1.3.5] - 2025-09-05
 
 ### Added

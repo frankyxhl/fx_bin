@@ -128,7 +128,8 @@ benchmarks/results/*.csv
 # Test output files
 *.xlsx
 output_*.xlsx
-test_output_*.txt
+test_output*.txt
+test_output*.log
 test_results_*.json
 
 # Temporary files
@@ -137,12 +138,5 @@ test_results_*.json
 *.bak
 *.backup
 
-# Build artifacts
-build/
-dist/
-*.egg-info/
-
-# Claude Code specific files (keep in gitignore)
-AGENTS.md
+# Claude Code specific files
 .serena/
-CLAUDE.md

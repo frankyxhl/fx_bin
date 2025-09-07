@@ -54,6 +54,14 @@ jobs:
         echo "2. Commit and push the changes"
         exit 0
     
+    - name: Install Poetry
+      if: steps.pypi_check.outputs.version_exists == 'false'
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
     - name: Install dependencies and build
       if: steps.pypi_check.outputs.version_exists == 'false'
       run: |
