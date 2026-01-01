@@ -122,7 +122,8 @@ extend-exclude = '''
 
 [tool.mypy]
 python_version = "3.11"
-plugins = ["returns.contrib.mypy.returns_plugin"]
+# Plugin disabled due to mypy internal error with returns library HKT types
+# plugins = ["returns.contrib.mypy.returns_plugin"]
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -141,6 +142,10 @@ module = [
     "psutil.*",
 ]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["returns.*", "returns.primitives.*"]
+follow_imports = "skip"
 
 [tool.bandit]
 exclude_dirs = ["tests"]
