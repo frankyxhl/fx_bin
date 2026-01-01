@@ -184,7 +184,9 @@ class TestFFCommand(unittest.TestCase):
         """Test 'fx ff keyword' with valid keyword."""
         result = self.runner.invoke(cli, ["ff", "test"])
         self.assertEqual(result.exit_code, 0)
-        mock_find_files.assert_called_once_with("test")
+        mock_find_files.assert_called_once_with(
+            "test", include_ignored=False, exclude=[], first=False
+        )
 
     @patch("fx_bin.find_files.find_files")
     def test_ff_command_with_empty_keyword(self, mock_find_files):
@@ -202,7 +204,9 @@ class TestFFCommand(unittest.TestCase):
         """Test 'fx ff' with pattern like '*.py'."""
         result = self.runner.invoke(cli, ["ff", "*.py"])
         self.assertEqual(result.exit_code, 0)
-        mock_find_files.assert_called_once_with("*.py")
+        mock_find_files.assert_called_once_with(
+            "*.py", include_ignored=False, exclude=[], first=False
+        )
 
 
 class TestReplaceCommand(unittest.TestCase):

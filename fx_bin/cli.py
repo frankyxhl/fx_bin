@@ -22,6 +22,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("files", "Count files in directories"),
     ("size", "Analyze file/directory sizes"),
     ("ff", "Find files by keyword"),
+    ("fff", "Find first file matching keyword (alias for ff --first)"),
     ("filter", "Filter files by extension"),
     ("replace", "Replace text in files"),
     ("json2excel", "Convert JSON to Excel"),
@@ -111,8 +112,36 @@ def size(paths):
     return 0
 
 
+def _run_ff(
+    keyword: str,
+    include_ignored: bool,
+    excludes: tuple,
+    first: bool,
+) -> int:
+    """Shared implementation for ff and fff commands."""
+    from . import find_files
+
+    if not keyword or keyword.strip() == "":
+        click.echo("Please type text to search. For example: fx ff bar", err=True)
+        click.echo("Usage: fx ff KEYWORD", err=True)
+        return 1
+    find_files.find_files(
+        keyword,
+        include_ignored=include_ignored,
+        exclude=list(excludes),
+        first=first,
+    )
+    return 0
+
+
 @cli.command()
 @click.argument("keyword")
+@click.option(
+    "--first",
+    is_flag=True,
+    default=False,
+    help="Stop after first match (for speed)",
+)
 @click.option(
     "--include-ignored",
     is_flag=True,
@@ -128,7 +157,7 @@ def size(paths):
         "--exclude build --exclude '*.log'"
     ),
 )
-def ff(keyword, include_ignored, excludes):
+def ff(keyword, first, include_ignored, excludes):
     """Find files whose names contain KEYWORD.
 
     \b
@@ -137,6 +166,7 @@ def ff(keyword, include_ignored, excludes):
       fx ff config                      # Find configuration files
       fx ff .py                         # Find Python files
       fx ff api --exclude build         # Find 'api' files, skip build dirs
+      fx ff test --first                # Find first match only
 
     \b
     Real-World Use Cases:
@@ -157,21 +187,24 @@ def ff(keyword, include_ignored, excludes):
     By default, skips heavy directories: .git, .venv, node_modules
     Use --include-ignored to search these directories too.
     """
-    from . import find_files
+    return _run_ff(keyword, include_ignored, excludes, first)
 
-    if not keyword or keyword.strip() == "":
-        click.echo("Please type text to search. For example: fx ff bar", err=True)
-        click.echo("Usage: fx ff KEYWORD", err=True)
-        return 1
-    # Backward-compatible call shape for default options
-    exclude_list = list(excludes)
-    if not include_ignored and not exclude_list:
-        find_files.find_files(keyword)
-    else:
-        find_files.find_files(
-            keyword, include_ignored=include_ignored, exclude=exclude_list
-        )
-    return 0
+
+@cli.command()
+@click.argument("keyword")
+def fff(keyword):
+    """Find first file matching KEYWORD.
+
+    Alias for `fx ff KEYWORD --first`. Returns only the first match
+    and exits immediately for speed.
+
+    \b
+    Examples:
+      fx fff test      # Find first file with 'test' in name
+      fx fff config    # Find first config file
+      fx fff .py       # Find first Python file
+    """
+    return _run_ff(keyword, include_ignored=False, excludes=(), first=True)
 
 
 @cli.command()
