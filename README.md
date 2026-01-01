@@ -46,7 +46,7 @@ Whether you're organizing files, analyzing disk usage, performing bulk text repl
 - 🔍 **File Finding** - Search for files by keywords with multiple search strategies
 - 🎯 **File Filtering** - Filter files by extension with intelligent sorting (NEW in v1.2.0!)
 - 🔄 **Text Replacement** - Safe, bulk text replacement across files with backup options
-- 📈 **JSON to Excel** - Convert JSON data to Excel spreadsheets
+
 - 📋 **Command Listing** - Built-in help and command discovery
 
 ### Technical Excellence
@@ -77,10 +77,10 @@ fx size . --limit 10 --unit MB
 fx filter ~/Documents "pdf,docx" --format detailed
 
 # Find files containing keyword
-fx ff . "TODO"
+fx ff TODO
 
 # Safe text replacement
-fx replace . "old_text" "new_text" --preview
+fx replace "old_text" "new_text" file.txt
 ```
 
 ## 📦 Installation
@@ -95,6 +95,9 @@ pip install fx-bin
 
 ```bash
 pipx install fx-bin
+
+# Upgrade to latest version
+pipx upgrade fx-bin
 ```
 
 ### From Source
@@ -110,7 +113,6 @@ poetry run fx --help
 
 - Python 3.11 or higher
 - No external dependencies required for core functionality
-- Optional: pandas for Excel operations (`pip install fx-bin[excel]`)
 
 ## 🛠️ Commands
 
@@ -122,8 +124,7 @@ poetry run fx --help
 | `fx size` | Analyze file/directory sizes | Human-readable units, sorting, limit results |
 | `fx ff` | Find files by keyword | Multiple search modes, content search, regex support |
 | `fx filter` | Filter files by extension | Time-based sorting, multiple formats, recursive search |
-| `fx replace` | Replace text in files | Preview mode, backup creation, pattern exclusion |
-| `fx json2excel` | Convert JSON to Excel | Automatic formatting, multiple sheets |
+| `fx replace` | Replace text in files | Atomic file operations, safe text replacement |
 | `fx list` | List all available commands | Help and usage information |
 
 ### Detailed Command Documentation
@@ -188,22 +189,20 @@ fx filter . py
 fx filter . "jpg,png,gif" --format detailed
 
 # Sort by modification time, newest first
-fx filter ~/Documents pdf --sort-by mtime --reverse
+fx filter ~/Documents pdf --sort-by modified --reverse
 
-# Non-recursive search with count
-fx filter . txt --no-recursive --format count
+# Non-recursive search
+fx filter txt --no-recursive
 ```
 
 **Options:**
-- `--sort-by`: Sort by 'ctime' (creation) or 'mtime' (modification)
+- `--sort-by`: Sort by 'created' (creation time) or 'modified' (modification time)
 - `--reverse`: Reverse sort order (newest first)
-- `--format`: Output format (simple/detailed/count)
-- `--no-recursive`: Don't search subdirectories
+- `--format`: Output format (simple/detailed, default: detailed)
 
 **Output Formats:**
 - **simple**: Just file paths
-- **detailed**: Includes timestamp and relative time
-- **count**: Summary statistics
+- **detailed**: Includes timestamp, size, and relative time
 
 #### 🔍 fx ff - File Finder
 
@@ -263,52 +262,28 @@ fx ff test --exclude coverage --exclude .nyc_output
 
 #### 🔄 fx replace - Text Replacer
 
-Safely replace text across multiple files with preview and backup options.
+Replace text across multiple files with atomic write operations.
 
 ```bash
-# Preview changes without applying
-fx replace . "old_text" "new_text" --preview
+# Replace in a specific file
+fx replace "old_text" "new_text" file.txt
 
-# Create backups before replacing
-fx replace . "v1.0" "v2.0" --backup
+# Replace across multiple files
+fx replace "v1.0" "v2.0" *.py
 
-# Exclude certain patterns
-fx replace . "foo" "bar" --exclude "*.min.js"
-
-# Interactive mode
-fx replace . "test" "production" --interactive
+# Replace in all matching files
+fx replace "foo" "bar" src/*.js tests/*.js
 ```
 
-**Options:**
-- `--preview`: Show changes without applying
-- `--backup`: Create .bak files
-- `--exclude`: Exclude file patterns
-- `--interactive`: Confirm each replacement
+**Usage:**
+```
+fx replace SEARCH_TEXT REPLACE_TEXT FILES...
+```
 
 **Safety Features:**
-- Always preview changes first
-- Automatic backup creation available
-- Pattern exclusion for sensitive files
-- Dry-run mode for testing
-
-#### 📈 fx json2excel - JSON to Excel Converter
-
-Convert JSON files to Excel spreadsheets.
-
-```bash
-# Basic conversion
-fx json2excel data.json output.xlsx
-
-# With custom sheet name
-fx json2excel data.json report.xlsx --sheet "Results"
-
-# Pretty formatting
-fx json2excel data.json output.xlsx --pretty
-```
-
-**Options:**
-- `--sheet`: Excel sheet name
-- `--pretty`: Apply formatting
+- Atomic file writes prevent corruption
+- Binary files are automatically skipped
+- Reports number of replacements made per file
 
 #### 📅 fx today - Daily Workspace Manager
 
@@ -366,44 +341,41 @@ fx files . --pattern "*test*.py"
 # Identify large log files
 fx size . --pattern "*.log" --limit 5 --unit MB
 
-# Remove old backup files
-fx ff . ".bak" | xargs rm -f
+# Find backup files for review
+fx ff .bak
 ```
 
 #### 2. Codebase Analysis
 ```bash
-# Count source files by type
-fx filter . "py,js,ts,jsx,tsx" --format count
+# Find all source files with details
+fx filter "py,js,ts,jsx,tsx"
 
-# Find TODO comments
-fx ff . "TODO" --extension "py,js"
+# Find TODO markers in filenames
+fx ff TODO
 
-# Update version strings
-fx replace . "version='1.1.0'" "version='1.2.0'" --preview
+# Update version strings in Python files
+fx replace "version='1.1.0'" "version='1.2.0'" *.py
 ```
 
 #### 3. Data Processing
 ```bash
 # Find recent data files
-fx filter ./data csv --sort-by mtime --reverse --limit 10
-
-# Convert JSON reports to Excel
-fx json2excel report.json summary.xlsx
+fx filter csv ./data --sort-by modified --reverse --limit 10
 
 # Analyze dataset sizes
-fx size ./datasets --unit GB
+fx size ./datasets
 ```
 
 #### 4. System Maintenance
 ```bash
-# Find old log files
-fx filter /var/log "log,txt" --sort-by mtime --format detailed
+# Find log files sorted by modification time
+fx filter "log,txt" /var/log --sort-by modified
 
 # Count configuration files
-fx files /etc --pattern "*.conf"
+fx files /etc
 
-# Search for error patterns
-fx ff /var/log "ERROR" --ignore-case
+# Find error-related files
+fx ff error
 ```
 
 ## 🔧 Development

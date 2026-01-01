@@ -8,10 +8,33 @@ import click
 from loguru import logger as L
 
 
+def _is_binary_file(file_path: str, sample_size: int = 8192) -> bool:
+    """Check if a file appears to be binary by looking for null bytes.
+
+    Args:
+        file_path: Path to the file to check.
+        sample_size: Number of bytes to read for detection (default: 8192).
+
+    Returns:
+        True if the file appears to be binary, False otherwise.
+        Unreadable files are treated as binary (skipped).
+    """
+    try:
+        with open(file_path, "rb") as f:
+            chunk = f.read(sample_size)
+            return b"\x00" in chunk
+    except (OSError, IOError):
+        return True  # Treat unreadable files as binary (skip them)
+
+
 def work(search_text: str, replace_text: str, filename: str) -> None:
     """Replace text in a file safely with atomic operations and backup."""
     import shutil
     import stat
+
+    if _is_binary_file(filename):
+        L.debug(f"Skipping binary file: {filename}")
+        return
 
     # Check if file is readonly
     if not os.access(filename, os.W_OK):

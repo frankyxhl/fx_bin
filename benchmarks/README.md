@@ -32,11 +32,6 @@ python benchmarks/benchmark_suite.py --iterations 10
    - Batch file operations
    - Backup/restore overhead
 
-2. **JSON to Excel** (`pd` vs `pd_functional`)
-   - JSON parsing performance
-   - Excel writing speed
-   - Validation overhead
-
 3. **Folder Operations** (`common` vs `common_functional`)
    - Directory traversal
    - Size calculation

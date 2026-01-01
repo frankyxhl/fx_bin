@@ -48,10 +48,9 @@ fx_bin/
 ├── common.py            # Shared utils (SizeEntry, FileCountEntry)
 ├── errors.py            # Error hierarchy (FxBinError base)
 ├── files.py, size.py    # fx files, fx size
-├── find_files.py        # fx ff
+├── find_files.py        # fx ff, fx fff
 ├── filter.py            # fx filter
 ├── replace.py           # fx replace (atomic writes)
-├── pd.py                # fx json2excel
 ├── root.py, today.py    # fx root, fx today
 
 tests/

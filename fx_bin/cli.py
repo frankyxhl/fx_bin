@@ -25,7 +25,6 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("fff", "Find first file matching keyword (alias for ff --first)"),
     ("filter", "Filter files by extension"),
     ("replace", "Replace text in files"),
-    ("json2excel", "Convert JSON to Excel"),
     ("root", "Find Git project root directory"),
     ("today", "Create/navigate to today's workspace directory"),
     ("list", "List all available commands"),
@@ -332,22 +331,6 @@ def replace(search_text, replace_text, filenames):
 
     # Call the replace_files function directly (not the Click-decorated main)
     return replace_module.replace_files(search_text, replace_text, filenames)
-
-
-@cli.command()
-@click.argument("url")
-@click.argument("output_filename")
-def json2excel(url, output_filename):
-    """Convert JSON data to Excel file.
-
-    Examples:
-        fx json2excel data.json output.xlsx
-        fx json2excel https://api.example.com/data output.xlsx
-    """
-    from . import pd
-
-    # Call the existing main function from pd module
-    return pd.main(url, output_filename)
 
 
 @cli.command()

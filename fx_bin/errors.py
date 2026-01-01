@@ -46,12 +46,6 @@ class ReplaceError(FxBinError):
     pass
 
 
-class PdError(FxBinError):
-    """Errors in pandas/Excel operations."""
-
-    pass
-
-
 class FolderError(FxBinError):
     """Errors during folder traversal."""
 
@@ -89,7 +83,6 @@ AppError = Union[
     SecurityError,
     PermissionError,
     ReplaceError,
-    PdError,
     FolderError,
     UploadError,
     SizeError,
@@ -99,6 +92,5 @@ AppError = Union[
 
 # Specific error union types for modules
 ReplaceErrors = Union[ReplaceError, IOError, PermissionError]
-PdErrors = Union[PdError, ValidationError, IOError]
 CommonErrors = Union[FolderError, IOError, PermissionError]
 UploadErrors = Union[UploadError, SecurityError, ValidationError]

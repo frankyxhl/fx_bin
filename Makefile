@@ -14,7 +14,6 @@ test:  ## 🚀 Run ALL tests (GitHub Actions simulation + everything)
 	@echo ""
 	@echo "=== 🔒 CRITICAL Security Tests ==="
 	@echo "🔒 Running CRITICAL security tests - these MUST pass!"
-	poetry run python -m pytest tests/security/test_pd_safety.py::TestPandasImportSafety -v --tb=short --no-cov
 	@echo ""
 	@echo "🔍 Running security analysis..."
 	poetry run bandit -r fx_bin/ || true
@@ -57,7 +56,7 @@ test-security:  ## Run security tests only
 	poetry run pytest -k "security" -v --no-cov
 
 test-safety:  ## Run safety tests only
-	poetry run pytest tests/security/test_common_safety.py tests/security/test_replace_safety.py tests/security/test_pd_safety.py -v --no-cov
+	poetry run pytest tests/security/test_common_safety.py tests/security/test_replace_safety.py  -v --no-cov
 
 test-integration:  ## Run integration tests only
 	poetry run pytest tests/integration/ -v --no-cov
@@ -73,8 +72,6 @@ test-github-actions:  ## 🚀 Simulate complete GitHub Actions TDD Test Suite lo
 	@echo ""
 	@echo "=== 🔒 CRITICAL Security Tests ==="
 	@echo "🔒 Running CRITICAL security tests - these MUST pass!"
-	poetry run python -m pytest tests/security/test_pd_safety.py::TestPandasImportSafety -v --tb=short --no-cov
-	@echo ""
 	@echo "🔍 Running security analysis..."
 	poetry run bandit -r fx_bin/ || true
 	@echo ""
