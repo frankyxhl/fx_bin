@@ -143,10 +143,6 @@ module = [
 ]
 ignore_missing_imports = true
 
-[[tool.mypy.overrides]]
-module = ["returns.*", "returns.primitives.*"]
-follow_imports = "skip"
-
 [tool.bandit]
 exclude_dirs = ["tests"]
 skips = ["B101"]  # Skip assert_used test
