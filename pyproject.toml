@@ -78,8 +78,10 @@ markers = [
     "recursion: Recursion tests",
     "sorting: Sorting tests",
     "version_compatibility: Version compatibility tests",
+    "bdd: BDD tests",
 ]
 timeout = 300
+bdd_features_base_dir = "features"
 
 [tool.coverage.run]
 source = ["fx_bin"]

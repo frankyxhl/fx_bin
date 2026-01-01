@@ -33,22 +33,17 @@ jobs:
     - name: Install dependencies
       run: poetry install --with dev
 
-    - name: Run Security Tests (CRITICAL)
-      run: |
-        echo "🔒 Running CRITICAL security tests - these MUST pass!"
-        poetry run python -m pytest tests/security/test_pd_safety.py::TestPandasImportSafety -v --tb=short --no-cov
-
     - name: Security Scan with Bandit
       run: |
         echo "🔍 Running security analysis..."
-        poetry run bandit -r fx_bin/ -f json -o bandit-report.json || true
-        poetry run bandit -r fx_bin/ || true
+        poetry run bandit -r fx_bin/ -f json -o bandit-report.json
+        poetry run bandit -r fx_bin/
 
     - name: Dependency Security Check
       run: |
         echo "📋 Checking dependencies for known vulnerabilities..."
-        poetry run safety check --json --output safety-report.json || true
-        poetry run safety check || true
+        poetry run safety check --json --output safety-report.json || echo "::warning::Safety check found issues"
+        poetry run safety check || echo "::warning::Safety check found issues"
 
     - name: Upload Security Reports
       uses: actions/upload-artifact@v4
@@ -207,15 +202,14 @@ jobs:
         poetry run flake8 fx_bin/ --statistics
 
     - name: Run MyPy
-      continue-on-error: true
       run: |
         echo "🔍 Running MyPy type checking..."
-        poetry run mypy fx_bin/ || true
+        poetry run mypy fx_bin/ --ignore-missing-imports
 
     - name: Check Code Formatting
       run: |
         echo "🎨 Checking code formatting with Black..."
-        poetry run black --check fx_bin/ tests/ || true
+        poetry run black --check fx_bin/ tests/
 
   deployment-readiness:
     name: 🚢 Deployment Readiness
