@@ -13,6 +13,7 @@ def find_files(
     keyword: str,
     include_ignored: bool = False,
     exclude: Optional[List[str]] = None,
+    first: bool = False,
 ) -> None:
     """Print files/dirs under CWD whose names contain keyword.
 
@@ -40,6 +41,8 @@ def find_files(
         for name in dirs + files:
             if keyword in name and not is_excluded(name):
                 click.echo(os.path.join(root, name))
+                if first:
+                    return
 
 
 @click.command()

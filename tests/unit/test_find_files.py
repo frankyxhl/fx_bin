@@ -245,5 +245,69 @@ class TestFFExclude(unittest.TestCase):
             shutil.rmtree(tmp, ignore_errors=True)
 
 
+class TestFFFirst(unittest.TestCase):
+    """Test fx ff --first and fx fff commands."""
+
+    def test_ff_first_returns_single_result(self):
+        """Test that ff --first returns only one result."""
+        tmp = Path(tempfile.mkdtemp(prefix="fx_ff_first_"))
+        try:
+            (tmp / "test_one.txt").write_text("x")
+            (tmp / "test_two.txt").write_text("x")
+            (tmp / "test_three.txt").write_text("x")
+
+            result = _run_ff(["test", "--first"], tmp)
+            assert result.returncode == 0, result.stderr
+            lines = [l for l in result.stdout.strip().split("\n") if l]
+            assert len(lines) == 1, f"Expected 1 line, got {len(lines)}: {lines}"
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    def test_ff_first_no_match(self):
+        """Test ff --first with no matches."""
+        tmp = Path(tempfile.mkdtemp(prefix="fx_ff_first_none_"))
+        try:
+            (tmp / "file.txt").write_text("x")
+
+            result = _run_ff(["nonexistent", "--first"], tmp)
+            assert result.returncode == 0
+            assert result.stdout.strip() == ""
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    def test_fff_returns_single_result(self):
+        """Test that fff returns only one result (alias for ff --first)."""
+        tmp = Path(tempfile.mkdtemp(prefix="fx_fff_"))
+        try:
+            (tmp / "config_one.json").write_text("x")
+            (tmp / "config_two.json").write_text("x")
+            (tmp / "config_three.json").write_text("x")
+
+            cmd = [sys.executable, "-m", "fx_bin.cli", "fff", "config"]
+            result = subprocess.run(
+                cmd, cwd=str(tmp), capture_output=True, text=True, timeout=15
+            )
+            assert result.returncode == 0, result.stderr
+            lines = [l for l in result.stdout.strip().split("\n") if l]
+            assert len(lines) == 1, f"Expected 1 line, got {len(lines)}: {lines}"
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    def test_fff_no_match(self):
+        """Test fff with no matches."""
+        tmp = Path(tempfile.mkdtemp(prefix="fx_fff_none_"))
+        try:
+            (tmp / "file.txt").write_text("x")
+
+            cmd = [sys.executable, "-m", "fx_bin.cli", "fff", "nonexistent"]
+            result = subprocess.run(
+                cmd, cwd=str(tmp), capture_output=True, text=True, timeout=15
+            )
+            assert result.returncode == 0
+            assert result.stdout.strip() == ""
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+
 if __name__ == "__main__":
     unittest.main()

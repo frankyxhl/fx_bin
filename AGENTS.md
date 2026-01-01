@@ -1,46 +1,190 @@
-# Repository Guidelines
+# FX-Bin Agent Guidelines
 
-## Project Structure & Module Organization
-- Source in `fx_bin/`:
-  - `cli.py`: unified `fx` entry point (v1.1.0).
-  - `files.py`: file counting.
-  - `size.py`: directory size analysis.
-  - `find_files.py`: pattern search (`fx ff`).
-  - `replace.py`: safe, atomic text replacement.
-  - `pd.py`: JSON → Excel (`json2excel`).
-  - `common*.py`, `*_functional.py`: shared safety/FP utilities.
-- Tests in `tests/` as `test_*.py`; markers: `security`, `safety`, `integration`, `performance`.
+Python CLI toolkit for file operations. Entry: `fx` command with subcommands.
 
-## Build, Test, and Development Commands
-- `make install` — install dev environment (Poetry).
-- `make shell` — open Poetry shell.
-- `make check` — format, lint, type, and security checks.
-- `make test-coverage` — run tests with ≥80% coverage gate.
-- `make test-security` — run critical security tests.
-- Run app: `poetry run fx --help`, `poetry run fx list`.
-  Examples: `poetry run fx files`, `poetry run fx size`, `poetry run fx ff "*.py"`, `poetry run fx replace OLD NEW file.txt`, `poetry run fx json2excel in.json out.xlsx`.
+## Commands
 
-## Coding Style & Naming Conventions
-- Python 3.11+, 4-space indentation, 88-char lines (Black).
-- Tools: Black, flake8 (zero tolerance), mypy (strict), bandit.
-- Naming: functions/vars `snake_case`; classes `PascalCase`; constants `UPPER_CASE`; files `snake_case.py`.
+```bash
+# Setup & Run
+make install              # Install dev deps (Poetry)
+poetry run fx --help      # All commands
+poetry run fx filter py   # Filter by extension
 
-## Testing Guidelines
-- Framework: pytest. Place tests in `tests/` named `test_*.py`.
-- Use markers above; prefer fast, deterministic tests.
-- Commands: `make test-core`, `make test-security`, `make test-coverage`.
+# Quality
+make check                # lint + format + type + security
+make lint                 # Flake8
+make format               # Black
+make type-check           # Mypy strict
+make security-scan        # Bandit
+```
 
-## Commit & Pull Request Guidelines
-- Conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, `test:`.
-- Before PR: run `make check` and `make test-coverage`; attach relevant output.
-- PRs: clear description, linked issues, rationale, and usage examples (commands).
-- Note: legacy commands removed (`fx_files`, `fx_size`, `fx_ff`, etc.). Use `fx` subcommands.
+## Testing
 
-## Security & Configuration Tips
-- Enforce safe paths, atomic writes, input sanitization, and symlink loop detection.
-- Validate with: `make test-security`, `make security-scan`, `poetry run safety check`.
-- Prefer safe paths under the workspace; avoid destructive operations.
+```bash
+# Full suite
+make test                 # All tests + coverage (≥80%)
+make test-all             # No coverage gate
 
-## Agent-Specific Notes
-- This AGENTS.md applies repo-wide; deeper files may override within their subtree.
+# Single test file
+poetry run pytest tests/unit/test_filter.py -v --no-cov
 
+# Single test function
+poetry run pytest tests/unit/test_filter.py::TestFilterCore::test_find_files_by_extension_single_txt -v --no-cov
+
+# By marker
+poetry run pytest -m security -v --no-cov
+poetry run pytest -m integration -v --no-cov
+poetry run pytest -m "not slow" --no-cov
+
+# Parallel
+make test-parallel        # pytest-xdist (-n auto)
+```
+
+## Structure
+
+```
+fx_bin/
+├── cli.py               # Click CLI entry point
+├── common.py            # Shared utils (SizeEntry, FileCountEntry)
+├── errors.py            # Error hierarchy (FxBinError base)
+├── files.py, size.py    # fx files, fx size
+├── find_files.py        # fx ff
+├── filter.py            # fx filter
+├── replace.py           # fx replace (atomic writes)
+├── pd.py                # fx json2excel
+├── root.py, today.py    # fx root, fx today
+
+tests/
+├── unit/                # Unit tests
+├── integration/         # CLI tests
+├── security/            # Safety tests
+└── bdd/                 # BDD tests
+```
+
+## Code Style
+
+- **Python**: 3.11+
+- **Black**: 88 char lines
+- **Flake8**: Zero tolerance
+- **Mypy**: Strict mode
+
+### Imports
+```python
+#!/usr/bin/env python
+"""Module docstring required."""
+
+# 1. stdlib
+import os
+from pathlib import Path
+from typing import List, Optional
+
+# 2. third-party
+import click
+from returns.result import Result, Success, Failure
+
+# 3. local
+from .errors import FxBinError
+```
+
+### Naming
+| Type | Convention | Example |
+|------|------------|---------|
+| Functions/vars | snake_case | `find_files_by_extension` |
+| Classes | PascalCase | `SizeEntry` |
+| Constants | UPPER_CASE | `COMMANDS_INFO` |
+| Private | _prefix | `_visited_inodes` |
+
+### Type Annotations (Required)
+```python
+def find_files(path: str, ext: str, recursive: bool = True) -> List[Path]:
+    ...
+
+def from_scandir(cls, obj) -> Optional["SizeEntry"]:
+    ...
+```
+
+### Error Handling
+```python
+# Use errors.py hierarchy
+from .errors import FxBinError, ValidationError
+
+# Catch specific, handle gracefully
+try:
+    result = risky_op()
+except (PermissionError, OSError):
+    pass  # Skip inaccessible
+
+# CLI: report via click.echo
+try:
+    process()
+except FileNotFoundError as e:
+    click.echo(f"Error: {e}", err=True)
+    return 1
+```
+
+### Dataclass Pattern
+```python
+@dataclass
+@total_ordering
+class SizeEntry:
+    __slots__ = ["name", "size", "tpe"]  # Memory opt
+    name: str
+    size: int
+    tpe: EntryType
+```
+
+## Security (CRITICAL)
+
+- Path traversal protection
+- Symlink loop detection (track inodes)
+- Atomic writes (replace operations)
+- Max recursion depth: 100
+- Input sanitization
+
+```bash
+make test-security
+make security-scan
+poetry run safety check
+```
+
+## Test Markers
+
+```python
+@pytest.mark.security     # Security tests
+@pytest.mark.integration  # CLI tests
+@pytest.mark.performance  # Benchmarks
+@pytest.mark.slow         # Long-running
+```
+
+## Commits
+
+Format: `feat:`, `fix:`, `chore:`, `docs:`, `test:`, `refactor:`
+
+Before commit: `make check && make test-coverage`
+
+## CLI Template
+
+```python
+@cli.command()
+@click.argument("path", type=click.Path(exists=True))
+def cmd(path):
+    """Docstring with examples."""
+    from . import module  # Lazy import
+    try:
+        click.echo(module.process(path))
+        return 0
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        return 1
+```
+
+## Functional Pattern
+
+```python
+from returns.result import Result, Success, Failure
+
+def safe_op(path: str) -> Result[str, FxBinError]:
+    if not valid(path):
+        return Failure(ValidationError("Invalid"))
+    return Success(process(path))
+```
