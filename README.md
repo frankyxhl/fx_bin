@@ -80,7 +80,7 @@ fx filter ~/Documents "pdf,docx" --format detailed
 fx ff TODO
 
 # Safe text replacement
-fx replace . "old_text" "new_text" --preview
+fx replace "old_text" "new_text" file.txt
 ```
 
 ## 📦 Installation
@@ -186,7 +186,7 @@ fx filter . py
 fx filter . "jpg,png,gif" --format detailed
 
 # Sort by modification time, newest first
-fx filter ~/Documents pdf --sort-by mtime --reverse
+fx filter ~/Documents pdf --sort-by modified --reverse
 
 # Non-recursive search
 fx filter txt --no-recursive

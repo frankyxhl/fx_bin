@@ -20,7 +20,7 @@ All individual `fx_*` command entries have been removed from the package. These 
 | `fx_size` | `fx size` | ✅ Available |
 | `fx_ff` | `fx ff` | ✅ Available |
 | `fx_replace` | `fx replace` | ✅ Available |
-| `fx_grab_json_api_to_excel` | `fx json2excel` | ✅ Available |
+| `fx_grab_json_api_to_excel` | ~~`fx json2excel`~~ | ❌ **REMOVED in v1.5.0** |
 | `fx_upgrade` | ❌ **REMOVED** | ❌ No replacement |
 
 ## Migration Steps
@@ -43,7 +43,7 @@ fx files /path/to/directory
 fx size /path/to/directory
 fx ff test
 fx replace "old" "new" file.txt
-fx json2excel data.json output.xlsx
+# fx_grab_json_api_to_excel was removed in v1.5.0 (pandas dependency dropped)
 # fx_upgrade is no longer available
 ```
 
@@ -107,7 +107,6 @@ fx files --help
 fx size --help
 fx ff --help
 fx replace --help
-fx json2excel --help
 ```
 
 ## Compatibility Check Script
@@ -124,10 +123,10 @@ LEGACY_COMMANDS=("fx_files" "fx_size" "fx_ff" "fx_replace" "fx_grab_json_api_to_
 
 for cmd in "${LEGACY_COMMANDS[@]}"; do
     if command -v "$cmd" &> /dev/null; then
-        if [ "$cmd" = "fx_upgrade" ]; then
+        if [ "$cmd" = "fx_upgrade" ] || [ "$cmd" = "fx_grab_json_api_to_excel" ]; then
             echo "❌ $cmd: REMOVED - No replacement available"
         else
-            NEW_CMD=$(echo "$cmd" | sed 's/fx_/fx /' | sed 's/grab_json_api_to_excel/json2excel/')
+            NEW_CMD=$(echo "$cmd" | sed 's/fx_/fx /')
             echo "⚠️  $cmd: Replace with '$NEW_CMD'"
         fi
     fi
