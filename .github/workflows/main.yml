@@ -2,8 +2,8 @@ name: Deploy to PyPi
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
 jobs:
   deploy:
     runs-on: ubuntu-latest
