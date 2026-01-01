@@ -132,12 +132,10 @@ class TestCLIIntegration(unittest.TestCase):
 
         # Import and use Click's testing runner
         from fx_bin.cli import cli
+
         runner = CliRunner()
-        
-        result = runner.invoke(
-            cli,
-            ["replace", "world", "Python", str(test_file)]
-        )
+
+        result = runner.invoke(cli, ["replace", "world", "Python", str(test_file)])
 
         self.assertEqual(result.exit_code, 0, f"Command failed: {result.output}")
 
@@ -159,16 +157,16 @@ class TestCLIIntegration(unittest.TestCase):
 
         # Import and use Click's testing runner
         from fx_bin.cli import cli
+
         runner = CliRunner()
-        
+
         # First, analyze sizes
         size_result = runner.invoke(cli, ["size"])
         self.assertEqual(size_result.exit_code, 0)
 
         # Then, replace content in both files
         replace_result = runner.invoke(
-            cli,
-            ["replace", "old", "new", str(file1), str(file2)]
+            cli, ["replace", "old", "new", str(file1), str(file2)]
         )
         self.assertEqual(replace_result.exit_code, 0)
 

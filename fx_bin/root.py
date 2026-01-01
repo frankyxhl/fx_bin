@@ -28,7 +28,7 @@ def find_git_root(start_path: Optional[Path] = None) -> Optional[Path]:
     current = start_path
 
     while True:
-        git_dir = current / '.git'
+        git_dir = current / ".git"
         if git_dir.exists():
             return current
 
@@ -42,8 +42,11 @@ def find_git_root(start_path: Optional[Path] = None) -> Optional[Path]:
 
 @click.command()
 @click.option(
-    '--cd', '-c', 'output_for_cd', is_flag=True,
-    help='Output path suitable for cd command (no extra text)'
+    "--cd",
+    "-c",
+    "output_for_cd",
+    is_flag=True,
+    help="Output path suitable for cd command (no extra text)",
 )
 def main(output_for_cd: bool) -> None:
     """Find and display Git project root directory.
@@ -64,7 +67,7 @@ def main(output_for_cd: bool) -> None:
                 click.echo(
                     "Error: No git repository found in current directory "
                     "or parent directories",
-                    err=True
+                    err=True,
                 )
             sys.exit(1)
 

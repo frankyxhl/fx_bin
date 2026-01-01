@@ -263,7 +263,7 @@ class TestFormatOptionRemoval(unittest.TestCase):
     def test_count_format_no_longer_supported(self):
         """FAIL: Count format should raise ValueError."""
         from fx_bin import filter as filter_module
-        
+
         files = ["test1.txt", "test2.txt"]
 
         with self.assertRaises(ValueError) as context:
@@ -275,7 +275,7 @@ class TestFormatOptionRemoval(unittest.TestCase):
     def test_valid_formats_only_simple_and_detailed(self):
         """PASS: Only 'simple' and 'detailed' formats are valid."""
         from fx_bin import filter as filter_module
-        
+
         files = ["test.txt"]
 
         # These should work
@@ -312,7 +312,7 @@ class TestNewDetailedFormat(unittest.TestCase):
     def test_new_detailed_format_alignment(self):
         """FAIL: New detailed format should have aligned columns."""
         from fx_bin import filter as filter_module
-        
+
         files = [
             str(self.test_path / "small.txt"),
             str(self.test_path / "medium.py"),
@@ -347,7 +347,7 @@ class TestNewDetailedFormat(unittest.TestCase):
     def test_format_file_size_alignment_helper(self):
         """PASS: New helper function for aligned size formatting."""
         from fx_bin import filter as filter_module
-        
+
         # This function should exist and format sizes with alignment (9 chars total)
         result_100b = filter_module._format_file_size_aligned(100)
         result_1536b = filter_module._format_file_size_aligned(1536)
@@ -361,7 +361,7 @@ class TestNewDetailedFormat(unittest.TestCase):
     def test_no_redundant_words_in_output(self):
         """FAIL: Output should not contain 'modified:', 'size:', etc."""
         from fx_bin import filter as filter_module
-        
+
         files = [str(self.test_path / "small.txt")]
         output = filter_module.format_output(files, "detailed")
 
@@ -397,7 +397,7 @@ class TestShowPathParameter(unittest.TestCase):
     def test_format_output_with_show_path_false(self):
         """FAIL: Should show only filenames by default."""
         from fx_bin import filter as filter_module
-        
+
         files = [
             str(self.test_path / "root.txt"),
             str(self.test_path / "docs" / "guide.txt"),
@@ -420,7 +420,7 @@ class TestShowPathParameter(unittest.TestCase):
     def test_format_output_with_show_path_true(self):
         """FAIL: Should show relative paths when show_path=True."""
         from fx_bin import filter as filter_module
-        
+
         files = [
             str(self.test_path / "root.txt"),
             str(self.test_path / "docs" / "guide.txt"),
@@ -529,7 +529,7 @@ class TestCLIParameterIntegration(unittest.TestCase):
     def test_cli_show_path_parameter_exists(self):
         """FAIL: CLI should accept --show-path parameter."""
         from fx_bin.cli import cli
-        
+
         runner = CliRunner()
         result = runner.invoke(cli, ["filter", "--help"])
 
@@ -539,7 +539,7 @@ class TestCLIParameterIntegration(unittest.TestCase):
     def test_cli_count_format_removed(self):
         """FAIL: CLI should reject count format."""
         from fx_bin.cli import cli
-        
+
         with tempfile.TemporaryDirectory() as temp_dir:
             test_file = Path(temp_dir) / "test.txt"
             test_file.touch()
@@ -648,7 +648,7 @@ class TestBackwardsCompatibility(unittest.TestCase):
     def test_simple_format_still_works(self):
         """PASS: Simple format should still work for backwards compatibility."""
         from fx_bin import filter as filter_module
-        
+
         files = ["test1.txt", "test2.txt"]
         output = filter_module.format_output(files, "simple")
 
@@ -658,7 +658,7 @@ class TestBackwardsCompatibility(unittest.TestCase):
     def test_sorting_still_works(self):
         """PASS: Sorting functionality should be unchanged."""
         from fx_bin import filter as filter_module
-        
+
         # This should pass as existing functionality
         with tempfile.TemporaryDirectory() as temp_dir:
             files = []
@@ -678,7 +678,7 @@ class TestErrorHandling(unittest.TestCase):
     def test_invalid_format_error_message_updated(self):
         """FAIL: Error message should reflect only 'simple' and 'detailed'."""
         from fx_bin import filter as filter_module
-        
+
         with self.assertRaises(ValueError) as context:
             filter_module.format_output([], "invalid")
 
