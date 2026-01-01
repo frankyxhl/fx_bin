@@ -16,7 +16,6 @@ classifiers = [
 python = "^3.11"
 click = "^8.1.3"
 loguru = "^0.7.0"
-pandas = {version = "^2.0.0", optional = true}
 returns = "^0.22.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -32,16 +31,11 @@ mypy = "^1.8.0"
 bandit = "^1.7.5"
 safety = "^3.0.0"
 psutil = "^5.9.0"
-pandas = "^2.3.2"
-openpyxl = "^3.1.5"
 pytest-forked = "^1.6.0"
 
 [tool.poetry.scripts]
 # Unified CLI command
 fx = "fx_bin.cli:main"
-
-[tool.poetry.extras]
-excel = ["pandas"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -142,7 +136,6 @@ strict_equality = true
 
 [[tool.mypy.overrides]]
 module = [
-    "pandas.*",
     "psutil.*",
 ]
 ignore_missing_imports = true

@@ -248,44 +248,6 @@ class TestReplaceCommand(unittest.TestCase):
             self.assertIn("test.txt", args[2])
 
 
-class TestJson2ExcelCommand(unittest.TestCase):
-    """Test the 'fx json2excel' command."""
-
-    def setUp(self):
-        """Set up test fixtures."""
-        self.runner = CliRunner()
-
-    def test_json2excel_command_missing_arguments(self):
-        """Test 'fx json2excel' with missing arguments."""
-        result = self.runner.invoke(cli, ["json2excel"])
-        self.assertEqual(result.exit_code, 2)  # Click error
-
-        result = self.runner.invoke(cli, ["json2excel", "input.json"])
-        self.assertEqual(result.exit_code, 2)  # Click error
-
-    @patch("fx_bin.pd.main")
-    def test_json2excel_command_with_arguments(self, mock_pd_main):
-        """Test 'fx json2excel input.json output.xlsx'."""
-        mock_pd_main.return_value = 0
-
-        result = self.runner.invoke(cli, ["json2excel", "input.json", "output.xlsx"])
-        self.assertEqual(result.exit_code, 0)
-        mock_pd_main.assert_called_once_with("input.json", "output.xlsx")
-
-    @patch("fx_bin.pd.main")
-    def test_json2excel_command_with_url(self, mock_pd_main):
-        """Test 'fx json2excel' with URL."""
-        mock_pd_main.return_value = 0
-
-        result = self.runner.invoke(
-            cli, ["json2excel", "https://api.example.com/data", "output.xlsx"]
-        )
-        self.assertEqual(result.exit_code, 0)
-        mock_pd_main.assert_called_once_with(
-            "https://api.example.com/data", "output.xlsx"
-        )
-
-
 class TestCommandHelp(unittest.TestCase):
     """Test help messages for each command."""
 
@@ -319,13 +281,6 @@ class TestCommandHelp(unittest.TestCase):
         result = self.runner.invoke(cli, ["replace", "--help"])
         self.assertEqual(result.exit_code, 0)
         self.assertIn("Replace text in files", result.output)
-        self.assertIn("Examples:", result.output)
-
-    def test_json2excel_command_help(self):
-        """Test 'fx json2excel --help'."""
-        result = self.runner.invoke(cli, ["json2excel", "--help"])
-        self.assertEqual(result.exit_code, 0)
-        self.assertIn("Convert JSON data to Excel file", result.output)
         self.assertIn("Examples:", result.output)
 
     def test_list_command_help(self):
