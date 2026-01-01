@@ -1,0 +1,29 @@
+name: Semantic Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  release:
+    # Prevent infinite loop when the workflow itself pushes release commits
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Semantic Version Release
+        uses: python-semantic-release/python-semantic-release@v9
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git_committer_name: "github-actions[bot]"
+          git_committer_email: "41898282+github-actions[bot]@users.noreply.github.com"
