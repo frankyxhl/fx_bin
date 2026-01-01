@@ -95,6 +95,9 @@ pip install fx-bin
 
 ```bash
 pipx install fx-bin
+
+# Upgrade to latest version
+pipx upgrade fx-bin
 ```
 
 ### From Source
@@ -193,7 +196,7 @@ fx filter txt --no-recursive
 ```
 
 **Options:**
-- `--sort-by`: Sort by 'ctime' (creation) or 'mtime' (modification)
+- `--sort-by`: Sort by 'created' (creation time) or 'modified' (modification time)
 - `--reverse`: Reverse sort order (newest first)
 - `--format`: Output format (simple/detailed, default: detailed)
 
