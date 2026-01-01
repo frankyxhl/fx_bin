@@ -5,6 +5,29 @@ All notable changes to fx-bin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-01-01
+
+### Removed
+- **BREAKING: `fx json2excel` command removed**: Simplified project by removing pandas dependency
+- **pandas and openpyxl dependencies**: Project now has no heavy optional dependencies
+
+### Fixed
+- **Documentation accuracy**: Fixed README CLI examples to match actual implementation
+  - Fixed `fx replace` example (removed non-existent `--preview` flag)
+  - Fixed `fx filter --sort-by` options (`created`/`modified`, not `ctime`/`mtime`)
+  - Updated MIGRATION_GUIDE to mark json2excel as REMOVED
+- **Benchmark suite**: Removed references to deleted pandas/pd_functional modules
+- **Test runners**: Removed references to deleted test_pd_safety module
+
+### Changed
+- **CI pipeline hardened**:
+  - Bandit security scans now enforced (removed `|| true`)
+  - MyPy type checking now enforced
+  - Added test/lint gates before PyPI deployment
+
+### Added
+- **pipx upgrade instructions**: Added `pipx upgrade fx-bin` example in README
+
 ## [1.5.0] - 2026-01-01
 
 ### Added
@@ -12,22 +35,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`fx ff --first` option**: Stop after first match for faster searches
 - **Binary file detection**: `fx replace` now automatically skips binary files to prevent corruption
 
-### Removed
-- **`fx json2excel` command**: Removed to simplify project (pandas dependency removed)
-- **pandas and openpyxl dependencies**: Project now has no heavy optional dependencies
-
 ### Fixed
 - **`__version__` fallback**: Updated from "0.9.4" to "1.5.0" to match current version
 - **Documentation accuracy**: README examples now match actual CLI behavior
   - Fixed `fx ff` examples (takes only KEYWORD, not PATH)
   - Fixed `fx filter` format options (only `simple`/`detailed`, no `count`)
-  - Fixed `fx replace` documentation (removed non-existent options)
 
 ### Changed
-- **CI pipeline hardened**:
-  - Bandit security scans now enforced (removed `|| true`)
-  - MyPy type checking now enforced
-  - Added test/lint gates before PyPI deployment
 - **pytest configuration**: Consolidated pytest-bdd.ini into pyproject.toml
 
 ## [Unreleased]

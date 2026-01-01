@@ -15,4 +15,4 @@ try:
     __version__ = version("fx-bin")
 except Exception:
     # Fallback version in case package is not installed
-    __version__ = "1.5.0"
+    __version__ = "1.6.0"
