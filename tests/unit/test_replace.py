@@ -298,5 +298,55 @@ class TestReplaceErrorHandling(unittest.TestCase):
                 self.assertIn("fdopen failed", str(cm.exception))
 
 
+class TestBinaryFileDetection(unittest.TestCase):
+    """Test binary file detection and skipping."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.test_dir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        """Clean up test fixtures."""
+        import shutil
+
+        shutil.rmtree(self.test_dir, ignore_errors=True)
+
+    def test_skip_binary_files(self):
+        """Test that binary files are skipped during replacement."""
+        from fx_bin.replace import _is_binary_file
+
+        binary_file = Path(self.test_dir) / "test.bin"
+        binary_file.write_bytes(b"\x00\x01\x02\x03hello\x00world")
+
+        self.assertTrue(_is_binary_file(str(binary_file)))
+
+    def test_text_file_not_detected_as_binary(self):
+        """Test that normal text files are not detected as binary."""
+        from fx_bin.replace import _is_binary_file
+
+        text_file = Path(self.test_dir) / "test.txt"
+        text_file.write_text("Hello World\nThis is a text file.")
+
+        self.assertFalse(_is_binary_file(str(text_file)))
+
+    def test_binary_file_skipped_in_work(self):
+        """Test that work() skips binary files without raising errors."""
+        binary_file = Path(self.test_dir) / "test.bin"
+        original_content = b"\x00\x01\x02\x03binary\x00data"
+        binary_file.write_bytes(original_content)
+
+        work("binary", "replaced", str(binary_file))
+
+        self.assertEqual(binary_file.read_bytes(), original_content)
+
+    def test_unreadable_file_treated_as_binary(self):
+        """Test that unreadable files are treated as binary."""
+        from fx_bin.replace import _is_binary_file
+
+        nonexistent = str(Path(self.test_dir) / "nonexistent.txt")
+
+        self.assertTrue(_is_binary_file(nonexistent))
+
+
 if __name__ == "__main__":
     unittest.main()
