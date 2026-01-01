@@ -208,7 +208,8 @@ fx_bin/
 │   ├── find_files.py    # File finder
 │   ├── filter.py        # File filter
 │   ├── replace.py       # Text replacement
-│   └── pd.py            # JSON to Excel converter
+│   ├── root.py          # Git root finder
+│   └── today.py         # Daily workspace manager
 ├── tests/               # Test suite
 ├── docs/                # Documentation
 └── pyproject.toml       # Project configuration

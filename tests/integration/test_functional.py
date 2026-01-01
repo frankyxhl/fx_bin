@@ -9,12 +9,6 @@ from returns.result import Success, Failure
 from returns.io import IOResult
 from returns.maybe import Some, Nothing
 
-from fx_bin.pd_functional import (
-    validate_output_filename,
-    check_file_not_exists,
-    validate_url,
-    main_functional,
-)
 from fx_bin.common_functional import (
     convert_size,
     SizeEntry,
@@ -27,51 +21,6 @@ from fx_bin.replace_functional import (
     work_functional,
     ReplaceContext,
 )
-
-
-class TestPdFunctional(unittest.TestCase):
-    """Test pd_functional module."""
-
-    def test_validate_output_filename(self):
-        """Test filename validation."""
-        # Valid filename
-        result = validate_output_filename("output.xlsx")
-        self.assertIsInstance(result, Success)
-        self.assertEqual(result.unwrap(), "output.xlsx")
-
-        # Filename without extension
-        result = validate_output_filename("output")
-        self.assertIsInstance(result, Success)
-        self.assertEqual(result.unwrap(), "output.xlsx")
-
-        # Invalid filename with path separator
-        result = validate_output_filename("/etc/passwd")
-        self.assertIsInstance(result, Failure)
-
-    def test_validate_url(self):
-        """Test URL validation."""
-        # Valid URL
-        result = validate_url("https://example.com/data.json")
-        self.assertIsInstance(result, Success)
-
-        # Invalid file:// URL
-        result = validate_url("file:///etc/passwd")
-        self.assertIsInstance(result, Failure)
-
-        # Empty URL
-        result = validate_url("")
-        self.assertIsInstance(result, Failure)
-
-    def test_check_file_not_exists(self):
-        """Test file existence check."""
-        with tempfile.NamedTemporaryFile(suffix=".xlsx") as tmp:
-            # File exists
-            result = check_file_not_exists(tmp.name)
-            self.assertIsInstance(result, Failure)
-
-        # File doesn't exist
-        result = check_file_not_exists("/nonexistent/file.xlsx")
-        self.assertIsInstance(result, Success)
 
 
 class TestCommonFunctional(unittest.TestCase):

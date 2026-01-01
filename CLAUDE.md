@@ -119,9 +119,11 @@ poetry run pytest tests/test_*security*.py -v && poetry run bandit -r fx_bin/ &&
 - `fx files`: Count files in directories (files.py)
 - `fx size`: Analyze file/directory sizes (size.py)
 - `fx ff`: Find files utility (find_files.py)
+- `fx fff`: Find first file (alias for ff --first)
 - `fx filter`: Filter files by extension and sort by time (filter.py)
 - `fx replace`: Text replacement utility (replace.py)
-- `fx json2excel`: JSON to Excel converter (pd.py)
+- `fx root`: Find Git project root (root.py)
+- `fx today`: Daily workspace manager (today.py)
 - `fx list`: List all available commands
 
 ### Key Dependencies

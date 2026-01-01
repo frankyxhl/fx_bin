@@ -62,6 +62,21 @@ jobs:
         virtualenvs-create: true
         virtualenvs-in-project: true
 
+    - name: Run tests before deploy
+      if: steps.pypi_check.outputs.version_exists == 'false'
+      run: |
+        echo "🧪 Running tests before deployment..."
+        poetry install --with dev
+        poetry run pytest tests/ -v --no-cov -q
+        echo "✅ All tests passed"
+    
+    - name: Run lint checks
+      if: steps.pypi_check.outputs.version_exists == 'false'
+      run: |
+        echo "🔍 Running lint checks..."
+        poetry run flake8 fx_bin/
+        echo "✅ Lint passed"
+
     - name: Install dependencies and build
       if: steps.pypi_check.outputs.version_exists == 'false'
       run: |

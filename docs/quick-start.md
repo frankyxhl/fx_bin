@@ -41,11 +41,11 @@ bash scripts/setup-fx-today.sh
 fx files       # Count files in directories
 fx size        # Analyze file/directory sizes  
 fx ff          # Find files by keyword
+fx fff         # Find first file (alias for ff --first)
 fx filter      # Filter files by extension (v1.2.0)
 fx replace     # Replace text in files
-fx json2excel  # Convert JSON to Excel
 fx root        # Find Git project root (v1.3.6, shell integration v1.3.7+)
-fx today       # Daily workspace manager (v1.4.0) - NEW!
+fx today       # Daily workspace manager (v1.4.0)
 fx help        # Display main help (v1.3.6)
 fx list        # List all available commands
 ```
@@ -249,8 +249,8 @@ pip install -e .
 fx --help
 fx list
 
-# Test new filter command
-fx filter py --format count
+# Test filter command
+fx filter py
 
 # Check version
 python -c "import fx_bin; print(fx_bin.__version__)"
@@ -306,7 +306,7 @@ poetry run pytest --co -q | wc -l  # Count tests
 poetry run pytest -x              # Run until first failure
 
 # Quick functionality check
-fx filter txt --format count      # Should work without errors
+fx filter txt                     # Should work without errors
 fx filter py --limit 5            # Test new limit option
 fx filter txt /path1 /path2       # Test multi-path support
 

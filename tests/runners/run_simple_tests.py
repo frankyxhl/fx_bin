@@ -75,45 +75,6 @@ def test_security_features():
     return True
 
 
-def test_pandas_import():
-    """测试pandas导入处理"""
-    print("\n" + "=" * 60)
-    print("📋 测试pandas导入处理")
-    print("=" * 60)
-
-    try:
-        # 测试pandas导入错误处理
-        result = subprocess.run(
-            [
-                sys.executable,
-                "-c",
-                """
-import sys
-sys.path.insert(0, ".")
-try:
-    from fx_bin import pd
-    print("ERROR: Should have exited")
-except SystemExit as e:
-    print(f"EXIT_CODE:{e.code}")
-            """,
-            ],
-            capture_output=True,
-            text=True,
-            timeout=10,
-        )
-
-        if "EXIT_CODE:1" in result.stdout:
-            print("✓ pd.py 在pandas缺失时正确退出")
-            return True
-        else:
-            print(f"✗ pd.py 退出行为异常: {result.stdout} | {result.stderr}")
-            return False
-
-    except Exception as e:
-        print(f"✗ pandas导入测试失败: {e}")
-        return False
-
-
 def test_file_replacement():
     """测试文件替换功能"""
     print("\n" + "=" * 60)
@@ -216,7 +177,6 @@ def main():
     tests = [
         ("基本功能", test_basic_functionality),
         ("安全功能", test_security_features),
-        ("pandas导入", test_pandas_import),
         ("文件替换", test_file_replacement),
         ("pytest测试", run_pytest_if_available),
     ]

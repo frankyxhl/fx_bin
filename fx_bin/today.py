@@ -98,7 +98,7 @@ def validate_date_format(date_format: Optional[str]) -> bool:
     # Parse format tokens robustly to handle platform flags like %-d, %_d, etc.
     # Format pattern: %[flags][width][.precision]specifier
     # Flags can be: -, _, 0, ^, #
-    format_token_pattern = r"%[-_0^#]?[A-Za-z]"
+    format_token_pattern = r"%[-_0^#]?[A-Za-z]"  # nosec B105
 
     # Find all format tokens
     tokens = list(re.finditer(format_token_pattern, date_format))
@@ -313,14 +313,14 @@ def main(
                 is_powershell = shell_name.startswith(("powershell", "pwsh"))
 
                 if is_powershell:
-                    os.execv(shell_cmd, [shell_cmd, "-NoLogo"])
+                    os.execv(shell_cmd, [shell_cmd, "-NoLogo"])  # nosec B606
                 else:
                     # cmd.exe
-                    os.execv(shell_cmd, [shell_cmd])
+                    os.execv(shell_cmd, [shell_cmd])  # nosec B606
             else:
                 # Unix-like systems
                 shell_name = os.path.basename(shell_cmd)
-                os.execv(shell_cmd, [shell_name])
+                os.execv(shell_cmd, [shell_name])  # nosec B606
 
         except Exception as e:
             click.echo(f"Error starting shell: {e}", err=True)

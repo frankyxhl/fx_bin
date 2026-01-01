@@ -5,39 +5,48 @@ All notable changes to fx-bin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.6.0] - 2026-01-01
+
+### Removed
+- **BREAKING: `fx json2excel` command removed**: Simplified project by removing pandas dependency
+- **pandas and openpyxl dependencies**: Project now has no heavy optional dependencies
 
 ### Fixed
-- **CLI Documentation**: Improved help text consistency and grammar
-  - Changed "mtime" to "modified" in filter command for clarity
-  - Fixed grammar: "creation or modification time" 
-  - Removed outdated "count" format from documentation
-- **Code Quality**: Resolved multiple code quality issues
-  - Renamed `format` parameter to `output_format` to avoid shadowing built-in
-  - Removed duplicate import statements in today.py
-  - Enhanced docstrings with keyword argument examples
-  - Cleaned up whitespace issues across multiple files
-- **Security**: Enhanced URL validation in pd_functional module
-  - Aligned validation with pd._validate_url implementation
-  - Added comprehensive security checks for malicious URLs
-  - Prevents path traversal, command injection, and SSRF attacks
-- **Build System**: Fixed Makefile test target paths
-  - Corrected paths for test-safety, test-integration, test-performance
-- **Platform Compatibility**: Fixed Windows-specific issues
-  - Enhanced literal-suffix heuristic for date format flags
-  - Improved Windows shell detection test
-
-### Added
-- **Security Tests**: 5 new comprehensive security tests for URL validation
-  - Path traversal prevention tests
-  - Command injection prevention tests  
-  - SSRF prevention tests
-  - Protocol validation tests
-  - Malicious host blocking tests
+- **Documentation accuracy**: Fixed README CLI examples to match actual implementation
+  - Fixed `fx replace` example (removed non-existent `--preview` flag)
+  - Fixed `fx filter --sort-by` options (`created`/`modified`, not `ctime`/`mtime`)
+  - Updated MIGRATION_GUIDE to mark json2excel as REMOVED
+- **Benchmark suite**: Removed references to deleted pandas/pd_functional modules
+- **Test runners**: Removed references to deleted test_pd_safety module
 
 ### Changed
-- Test suite now includes 400 tests (added 5 security tests)
-- Test coverage maintained at 83.56%
+- **CI pipeline hardened**:
+  - Bandit security scans now enforced (removed `|| true`)
+  - MyPy type checking now enforced
+  - Added test/lint gates before PyPI deployment
+
+### Added
+- **pipx upgrade instructions**: Added `pipx upgrade fx-bin` example in README
+
+## [1.5.0] - 2026-01-01
+
+### Added
+- **`fx fff` command**: New alias for `fx ff --first` - finds first matching file and exits immediately
+- **`fx ff --first` option**: Stop after first match for faster searches
+- **Binary file detection**: `fx replace` now automatically skips binary files to prevent corruption
+
+### Fixed
+- **`__version__` fallback**: Updated from "0.9.4" to "1.5.0" to match current version
+- **Documentation accuracy**: README examples now match actual CLI behavior
+  - Fixed `fx ff` examples (takes only KEYWORD, not PATH)
+  - Fixed `fx filter` format options (only `simple`/`detailed`, no `count`)
+
+### Changed
+- **pytest configuration**: Consolidated pytest-bdd.ini into pyproject.toml
+
+## [Unreleased]
+
+_Nothing yet_
 
 ## [1.3.5] - 2025-09-05
 
