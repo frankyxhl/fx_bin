@@ -146,7 +146,7 @@
 
 ### Architecture Status
 - **CLI System**: Unified `fx` command with 9 subcommands
-- **Commands Available**: files, size, ff, filter, replace, json2excel, root, today, list, help
+- **Commands Available**: files, size, ff, fff, filter, replace, root, today, list, help, version
 - **Shell Integration**: fx root now supports directory switching via shell wrappers
 - **CLI Documentation**: Comprehensive in-command help with real-world examples
 - **Testing Infrastructure**: Mature TDD + production-grade BDD infrastructure
