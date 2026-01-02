@@ -26,6 +26,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("filter", "Filter files by extension"),
     ("replace", "Replace text in files"),
     ("root", "Find Git project root directory"),
+    ("realpath", "Get absolute path of a file or directory"),
     ("today", "Create/navigate to today's workspace directory"),
     ("list", "List all available commands"),
     ("help", "Show help information (same as fx -h)"),
@@ -386,6 +387,39 @@ def root(output_for_cd):
     except Exception as e:
         if not output_for_cd:
             click.echo(f"Error: {e}", err=True)
+        ctx = click.get_current_context()
+        ctx.exit(1)
+
+
+@cli.command()
+@click.argument("path", default=".")
+def realpath(path):
+    """Get absolute path of a file or directory.
+
+    Resolves relative paths, symlinks, and ~ to the canonical absolute path.
+    The path must exist.
+
+    Examples:
+        fx realpath .           # Current directory
+        fx realpath ../foo      # Relative path
+        fx realpath ~/Downloads # Home directory
+    """
+    from . import realpath as realpath_module
+
+    try:
+        resolved = realpath_module.resolve_path(path)
+        click.echo(str(resolved))
+        return 0
+    except FileNotFoundError:
+        click.echo(f"Error: Path does not exist: {path}", err=True)
+        ctx = click.get_current_context()
+        ctx.exit(1)
+    except PermissionError:
+        click.echo(f"Error: Permission denied: {path}", err=True)
+        ctx = click.get_current_context()
+        ctx.exit(1)
+    except OSError as e:
+        click.echo(f"Error: Cannot resolve path: {path} ({e})", err=True)
         ctx = click.get_current_context()
         ctx.exit(1)
 
