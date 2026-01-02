@@ -102,9 +102,7 @@ class TestRealpathCLIEdgeCases(unittest.TestCase):
         result = self.runner.invoke(cli, ["realpath", str(target_dir)])
 
         self.assertEqual(result.exit_code, 0)
-        self.assertEqual(
-            Path(result.output.strip()).resolve(), target_dir.resolve()
-        )
+        self.assertEqual(Path(result.output.strip()).resolve(), target_dir.resolve())
 
     def test_tilde_expansion(self):
         """Test ~ expansion in CLI."""
@@ -125,9 +123,7 @@ class TestRealpathCLIEdgeCases(unittest.TestCase):
             result = self.runner.invoke(cli, ["realpath", str(link_path)])
 
             self.assertEqual(result.exit_code, 0)
-            self.assertEqual(
-                Path(result.output.strip()).resolve(), real_file.resolve()
-            )
+            self.assertEqual(Path(result.output.strip()).resolve(), real_file.resolve())
         except OSError:
             self.skipTest("Symbolic links not supported on this system")
 

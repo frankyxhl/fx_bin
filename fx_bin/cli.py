@@ -393,7 +393,7 @@ def root(output_for_cd):
 
 @cli.command()
 @click.argument("path", default=".")
-def realpath(path):
+def realpath(path: str) -> int:
     """Get absolute path of a file or directory.
 
     Resolves relative paths, symlinks, and ~ to the canonical absolute path.
