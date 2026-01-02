@@ -140,3 +140,6 @@ test_results_*.json
 
 # Claude Code specific files
 .serena/
+
+# OpenCode session data
+.opencode/
