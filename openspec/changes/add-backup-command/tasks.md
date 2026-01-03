@@ -1,10 +1,10 @@
 # Implementation Tasks
 
 ## 1. Core Module Structure
-- [ ] 1.1 Create backup.py with constants (KNOWN_MULTI_EXTS, DEFAULT_TIMESTAMP_FORMAT)
-- [ ] 1.2 Implement get_multi_ext() helper function
-- [ ] 1.3 Implement get_base_name() helper function
-- [ ] 1.4 Write unit tests for helper functions
+- [x] 1.1 Create backup.py with constants (KNOWN_MULTI_EXTS, DEFAULT_TIMESTAMP_FORMAT)
+- [x] 1.2 Implement get_multi_ext() helper function
+- [x] 1.3 Implement get_base_name() helper function
+- [x] 1.4 Write unit tests for helper functions
 
 ## 2. File Backup Functionality
 - [ ] 2.1 Implement backup_file() with timestamp generation
