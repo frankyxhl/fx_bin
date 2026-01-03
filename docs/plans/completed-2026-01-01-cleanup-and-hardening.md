@@ -1,5 +1,8 @@
 # fx-bin 清理与强化计划
 
+> **Status:** Completed  
+> **Completed:** 2026-01-03
+
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** 移除 pandas/json2excel 依赖，修复 Oracle 审查发现的问题，强化 CI/CD 和文档

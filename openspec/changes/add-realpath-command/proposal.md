@@ -23,7 +23,7 @@ macOS lacks the GNU `realpath` command by default. Users need a cross-platform w
 
 ## Design Reference
 
-See `docs/plans/2026-01-02-fx-realpath-design.md` for technical design details.
+See `docs/plans/completed-2026-01-02-fx-realpath-design.md` for technical design details.
 
 ## Workflow Mode
 

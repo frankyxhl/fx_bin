@@ -1,5 +1,8 @@
 # Python Semantic Release Automation Plan
 
+> **Status:** Completed  
+> **Completed:** 2026-01-03
+
 > **For Claude:** REQUIRED SUB-SKILL: Use `superpowers:executing-plans` to implement this plan task-by-task.
 
 **Goal:** Automatically bump versions (and optionally publish to PyPI) on merges to `main` using `python-semantic-release`, so humans don’t manually edit version numbers.

@@ -1,5 +1,8 @@
 # fx realpath 设计文档
 
+> **Status:** Completed  
+> **Completed:** 2026-01-03
+
 **日期**: 2026-01-02
 **状态**: 已确认
 **审核**: Oracle APPROVED (2026-01-02)
@@ -80,7 +83,7 @@ Sisyphus (协调者)
    - Do NOT make any code changes
    - Do NOT modify existing files
 7. CONTEXT:
-   - Design doc: `docs/plans/2026-01-02-fx-realpath-design.md`
+   - Design doc: `docs/plans/completed-2026-01-02-fx-realpath-design.md`
    - Working directory: `/Users/frank/Projects/fx_bin`
    - Target branch: `feature/add-realpath-command`
    - Agent: `coder` using `openai/gpt-5.2-codex-high`
@@ -99,7 +102,7 @@ Sisyphus (协调者)
    - Do NOT make any code changes
    - Do NOT modify existing files
 7. CONTEXT:
-   - Design doc: `docs/plans/2026-01-02-fx-realpath-design.md`
+   - Design doc: `docs/plans/completed-2026-01-02-fx-realpath-design.md`
    - Working directory: `/Users/frank/Projects/fx_bin`
    - Target branch: `feature/add-realpath-command`
 ```
@@ -128,7 +131,7 @@ Sisyphus (协调者)
    - Do NOT use type suppression (`as any`, `@ts-ignore`)
    - Do NOT commit changes
 7. CONTEXT:
-   - Design doc: `docs/plans/2026-01-02-fx-realpath-design.md`
+   - Design doc: `docs/plans/completed-2026-01-02-fx-realpath-design.md`
    - Worktree path: `../fx_bin-realpath`
    - Reference implementation: `fx_bin/root.py`
    - Code style: Black 88 chars, Flake8 strict, Mypy strict
@@ -155,7 +158,7 @@ Sisyphus (协调者)
    - Do NOT make code changes (only review)
    - Do NOT modify test expectations
 7. CONTEXT:
-    - Design doc: `docs/plans/2026-01-02-fx-realpath-design.md`
+    - Design doc: `docs/plans/completed-2026-01-02-fx-realpath-design.md`
     - Worktree path: `../fx_bin-realpath`
     - Project patterns: `fx_bin/errors.py` for error hierarchy
     - Security requirements: path traversal protection, symlink handling
