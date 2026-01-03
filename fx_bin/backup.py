@@ -15,9 +15,10 @@ import shutil
 import tarfile
 from datetime import datetime
 from pathlib import Path
-from typing import Tuple
+
 
 # Known multi-part extensions
+
 KNOWN_MULTI_EXTS = (".tar.gz", ".tar.bz2")
 
 # Default timestamp format (YYYYMMDDHHMMSS)
