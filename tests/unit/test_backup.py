@@ -212,5 +212,91 @@ class TestBackupDirectory(unittest.TestCase):
             backup_directory("/nonexistent/dir", backup_dir=str(self.backup_dir))
 
 
+class TestBackupCleanup(unittest.TestCase):
+    """Test backup cleanup functionality."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.test_dir = tempfile.mkdtemp()
+        self.test_path = Path(self.test_dir)
+        self.backup_dir = self.test_path / "backups"
+        self.backup_dir.mkdir()
+
+    def tearDown(self):
+        """Clean up test fixtures."""
+        import shutil
+
+        shutil.rmtree(self.test_dir)
+
+    def test_cleanup_old_backups_keeps_newest(self):
+        """Test cleanup keeps only the N newest backups."""
+        from fx_bin.backup import cleanup_old_backups
+        import time
+
+        base = "test"
+        files = []
+        for i in range(5):
+            f = self.backup_dir / f"{base}_2025010100000{i}.txt"
+            f.write_text(str(i))
+            os.utime(f, (time.time() + i, time.time() + i))
+            files.append(f)
+
+        removed_count = cleanup_old_backups(
+            str(self.backup_dir), base_name=base, max_backups=3
+        )
+
+        self.assertEqual(removed_count, 2)
+        remaining = list(self.backup_dir.glob(f"{base}_*"))
+        self.assertEqual(len(remaining), 3)
+
+        remaining_names = [f.name for f in remaining]
+        self.assertIn(f"{base}_20250101000002.txt", remaining_names)
+        self.assertIn(f"{base}_20250101000003.txt", remaining_names)
+        self.assertIn(f"{base}_20250101000004.txt", remaining_names)
+
+    def test_cleanup_old_backups_under_limit(self):
+        """Test cleanup does nothing if count is under limit."""
+        from fx_bin.backup import cleanup_old_backups
+
+        base = "test"
+        for i in range(2):
+            f = self.backup_dir / f"{base}_2025010100000{i}.txt"
+            f.write_text(str(i))
+
+        removed_count = cleanup_old_backups(
+            str(self.backup_dir), base_name=base, max_backups=5
+        )
+
+        self.assertEqual(removed_count, 0)
+        self.assertEqual(len(list(self.backup_dir.glob(f"{base}_*"))), 2)
+
+    def test_cleanup_old_backups_mixed_types(self):
+        """Test cleanup handles both files and directories."""
+        from fx_bin.backup import cleanup_old_backups
+        import time
+
+        base = "app"
+        f1 = self.backup_dir / f"{base}_20250101000000.txt"
+        f1.write_text("v1")
+        os.utime(f1, (time.time() - 100, time.time() - 100))
+
+        d1 = self.backup_dir / f"{base}_20250101000001"
+        d1.mkdir()
+        os.utime(d1, (time.time() - 50, time.time() - 50))
+
+        f2 = self.backup_dir / f"{base}_20250101000002.tar.gz"
+        f2.write_text("v2")
+        os.utime(f2, (time.time(), time.time()))
+
+        removed_count = cleanup_old_backups(
+            str(self.backup_dir), base_name=base, max_backups=1
+        )
+
+        self.assertEqual(removed_count, 2)
+        remaining = list(self.backup_dir.glob(f"{base}_*"))
+        self.assertEqual(len(remaining), 1)
+        self.assertEqual(remaining[0].name, f"{base}_20250101000002.tar.gz")
+
+
 if __name__ == "__main__":
     unittest.main()

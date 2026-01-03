@@ -188,3 +188,40 @@ def _backup_directory_compressed(
         tar.add(source_path, arcname=dir_name)
 
     return str(backup_path)
+
+
+def cleanup_old_backups(backup_dir: str, base_name: str, max_backups: int) -> int:
+    """Remove old backups keeping only the most recent ones.
+
+    Args:
+        backup_dir: Directory containing backups
+        base_name: Base name of the file/directory to cleanup
+        max_backups: Maximum number of backups to keep
+
+    Returns:
+        Number of backups removed
+    """
+    if max_backups <= 0:
+        return 0
+
+    backup_path = Path(backup_dir)
+    if not backup_path.exists():
+        return 0
+
+    backups = list(backup_path.glob(f"{base_name}_*"))
+
+    if len(backups) <= max_backups:
+        return 0
+
+    backups.sort(key=lambda x: x.stat().st_mtime, reverse=True)
+
+    to_remove = backups[max_backups:]
+    removed_count = 0
+    for item in to_remove:
+        if item.is_dir():
+            shutil.rmtree(item)
+        else:
+            item.unlink()
+        removed_count += 1
+
+    return removed_count
