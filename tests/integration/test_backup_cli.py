@@ -26,7 +26,7 @@ class TestBackupCLI(unittest.TestCase):
 
         self.assertEqual(result.exit_code, 0)
         self.assertIn("Backup created:", result.output)
-        
+
         backups = list(self.backup_dir.glob("test_*"))
         self.assertEqual(len(backups), 1)
         self.assertTrue(backups[0].name.endswith(".txt"))
@@ -42,7 +42,7 @@ class TestBackupCLI(unittest.TestCase):
 
         self.assertEqual(result.exit_code, 0)
         self.assertIn("Backup created:", result.output)
-        
+
         backups = list(self.backup_dir.glob("src_*"))
         self.assertEqual(len(backups), 1)
         self.assertTrue(backups[0].is_dir())
@@ -52,12 +52,19 @@ class TestBackupCLI(unittest.TestCase):
         source_dir.mkdir()
 
         result = self.runner.invoke(
-            cli, ["backup", str(source_dir), "--backup-dir", str(self.backup_dir), "--compress"]
+            cli,
+            [
+                "backup",
+                str(source_dir),
+                "--backup-dir",
+                str(self.backup_dir),
+                "--compress",
+            ],
         )
 
         self.assertEqual(result.exit_code, 0)
         self.assertIn("Backup created:", result.output)
-        
+
         backups = list(self.backup_dir.glob("src_*"))
         self.assertEqual(len(backups), 1)
         self.assertTrue(backups[0].name.endswith(".tar.gz"))
@@ -67,9 +74,18 @@ class TestBackupCLI(unittest.TestCase):
         test_file.write_text("hello")
 
         import time
+
         for i in range(3):
             self.runner.invoke(
-                cli, ["backup", str(test_file), "--backup-dir", str(self.backup_dir), "--max-backups", "2"]
+                cli,
+                [
+                    "backup",
+                    str(test_file),
+                    "--backup-dir",
+                    str(self.backup_dir),
+                    "--max-backups",
+                    "2",
+                ],
             )
             time.sleep(1.1)
 

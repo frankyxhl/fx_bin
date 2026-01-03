@@ -147,7 +147,9 @@ class TestBackupFile(unittest.TestCase):
         source_file = self.test_path / "protected.txt"
         source_file.write_text("content")
 
-        with mock.patch("shutil.copy2", side_effect=PermissionError("Permission denied")):
+        with mock.patch(
+            "shutil.copy2", side_effect=PermissionError("Permission denied")
+        ):
             with self.assertRaises(PermissionError):
                 backup_file(str(source_file), backup_dir=str(self.backup_dir))
 
