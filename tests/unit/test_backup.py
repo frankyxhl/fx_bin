@@ -140,6 +140,17 @@ class TestBackupFile(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             backup_file("/nonexistent/file.txt", backup_dir=str(self.backup_dir))
 
+    def test_backup_file_permission_error(self):
+        from fx_bin.backup import backup_file
+        import unittest.mock as mock
+
+        source_file = self.test_path / "protected.txt"
+        source_file.write_text("content")
+
+        with mock.patch("shutil.copy2", side_effect=PermissionError("Permission denied")):
+            with self.assertRaises(PermissionError):
+                backup_file(str(source_file), backup_dir=str(self.backup_dir))
+
 
 class TestBackupDirectory(unittest.TestCase):
     """Test directory backup functionality."""

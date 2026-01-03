@@ -3,7 +3,7 @@
 
 import click
 import sys
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 import importlib.metadata
 
 
@@ -359,7 +359,13 @@ def replace(search_text, replace_text, filenames):
     default=None,
     help="Custom timestamp format (strftime)",
 )
-def backup(path, backup_dir, compress, max_backups, timestamp_format):
+def backup(
+    path: str,
+    backup_dir: str,
+    compress: bool,
+    max_backups: Optional[int],
+    timestamp_format: Optional[str],
+) -> int:
     """Create a timestamped backup of a file or directory.
 
     Examples:
