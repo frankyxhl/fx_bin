@@ -141,5 +141,76 @@ class TestBackupFile(unittest.TestCase):
             backup_file("/nonexistent/file.txt", backup_dir=str(self.backup_dir))
 
 
+class TestBackupDirectory(unittest.TestCase):
+    """Test directory backup functionality."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.test_dir = tempfile.mkdtemp()
+        self.test_path = Path(self.test_dir)
+        self.backup_dir = self.test_path / "backups"
+
+        self.source_dir = self.test_path / "source_dir"
+        self.source_dir.mkdir()
+        (self.source_dir / "file1.txt").write_text("content1")
+        (self.source_dir / "file2.txt").write_text("content2")
+
+        subdir = self.source_dir / "subdir"
+        subdir.mkdir()
+        (subdir / "nested.txt").write_text("nested content")
+
+    def tearDown(self):
+        """Clean up test fixtures."""
+        import shutil
+
+        shutil.rmtree(self.test_dir)
+
+    def test_backup_directory_uncompressed(self):
+        """Test backing up directory without compression."""
+        from fx_bin.backup import backup_directory
+
+        result = backup_directory(
+            str(self.source_dir), backup_dir=str(self.backup_dir), compress=False
+        )
+
+        self.assertTrue(os.path.exists(result))
+        self.assertTrue(os.path.isdir(result))
+        self.assertIn("source_dir_", os.path.basename(result))
+
+        backup_file1 = Path(result) / "file1.txt"
+        self.assertTrue(backup_file1.exists())
+        self.assertEqual(backup_file1.read_text(), "content1")
+
+        backup_nested = Path(result) / "subdir" / "nested.txt"
+        self.assertTrue(backup_nested.exists())
+        self.assertEqual(backup_nested.read_text(), "nested content")
+
+    def test_backup_directory_compressed(self):
+        """Test backing up directory with compression."""
+        from fx_bin.backup import backup_directory
+        import tarfile
+
+        result = backup_directory(
+            str(self.source_dir), backup_dir=str(self.backup_dir), compress=True
+        )
+
+        self.assertTrue(os.path.exists(result))
+        self.assertTrue(result.endswith(".tar.gz"))
+        self.assertIn("source_dir_", os.path.basename(result))
+
+        with tarfile.open(result, "r:gz") as tar:
+            members = tar.getnames()
+            self.assertIn("source_dir/file1.txt", members)
+            self.assertIn("source_dir/file2.txt", members)
+            self.assertIn("source_dir/subdir/nested.txt", members)
+
+    def test_backup_directory_nonexistent(self):
+        """Test backing up nonexistent directory raises FileNotFoundError."""
+        from fx_bin.backup import backup_directory
+
+        with self.assertRaises(FileNotFoundError):
+            backup_directory("/nonexistent/dir", backup_dir=str(self.backup_dir))
+
+
 if __name__ == "__main__":
     unittest.main()

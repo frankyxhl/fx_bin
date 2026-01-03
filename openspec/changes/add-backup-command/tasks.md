@@ -13,14 +13,14 @@
 - [x] 2.4 Write unit tests for file backup error cases
 
 ## 3. Directory Backup (Uncompressed)
-- [ ] 3.1 Implement backup_directory() dispatcher
-- [ ] 3.2 Implement _backup_directory_uncompressed()
-- [ ] 3.3 Write unit tests for uncompressed directory backup
+- [x] 3.1 Implement backup_directory() dispatcher
+- [x] 3.2 Implement _backup_directory_uncompressed()
+- [x] 3.3 Write unit tests for uncompressed directory backup
 
 ## 4. Directory Backup (Compressed)
-- [ ] 4.1 Implement _backup_directory_compressed() with tarfile
-- [ ] 4.2 Write unit tests for compressed directory backup
-- [ ] 4.3 Verify .tar.gz file creation
+- [x] 4.1 Implement _backup_directory_compressed() with tarfile
+- [x] 4.2 Write unit tests for compressed directory backup
+- [x] 4.3 Verify .tar.gz file creation
 
 ## 5. Backup Cleanup
 - [ ] 5.1 Implement cleanup_old_backups() with max_backups limit
