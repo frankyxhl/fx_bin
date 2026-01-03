@@ -7,10 +7,10 @@
 - [x] 1.4 Write unit tests for helper functions
 
 ## 2. File Backup Functionality
-- [ ] 2.1 Implement backup_file() with timestamp generation
-- [ ] 2.2 Handle multi-part extensions (.tar.gz, .tar.bz2)
-- [ ] 2.3 Write unit tests for file backup success cases
-- [ ] 2.4 Write unit tests for file backup error cases
+- [x] 2.1 Implement backup_file() with timestamp generation
+- [x] 2.2 Handle multi-part extensions (.tar.gz, .tar.bz2)
+- [x] 2.3 Write unit tests for file backup success cases
+- [x] 2.4 Write unit tests for file backup error cases
 
 ## 3. Directory Backup (Uncompressed)
 - [ ] 3.1 Implement backup_directory() dispatcher

@@ -10,6 +10,10 @@ Examples:
     'data'
 """
 
+import os
+import shutil
+from datetime import datetime
+from pathlib import Path
 from typing import Tuple
 
 # Known multi-part extensions
@@ -66,3 +70,45 @@ def get_base_name(filename: str) -> str:
     if ext:
         return filename[: -len(ext)]
     return filename
+
+
+def backup_file(
+    source_path: str,
+    backup_dir: str = "backups",
+    timestamp_format: str = DEFAULT_TIMESTAMP_FORMAT,
+) -> str:
+    """Create a timestamped backup of a file.
+
+    Args:
+        source_path: Path to the file to backup
+        backup_dir: Directory to store the backup (default: 'backups')
+        timestamp_format: Format string for timestamp (default: '%Y%m%d%H%M%S')
+
+    Returns:
+        Path to the created backup file
+
+    Raises:
+        FileNotFoundError: If source file doesn't exist
+
+    Examples:
+        >>> backup_file("document.txt")  # doctest: +SKIP
+        'backups/document_20250104120000.txt'
+    """
+    if not os.path.exists(source_path):
+        raise FileNotFoundError(f"Source file not found: {source_path}")
+
+    source_path_obj = Path(source_path)
+    filename = source_path_obj.name
+    base_name = get_base_name(filename)
+    ext = get_multi_ext(filename)
+
+    timestamp = datetime.now().strftime(timestamp_format)
+    backup_filename = f"{base_name}_{timestamp}{ext}"
+
+    backup_dir_path = Path(backup_dir)
+    backup_dir_path.mkdir(parents=True, exist_ok=True)
+
+    backup_path = backup_dir_path / backup_filename
+    shutil.copy2(source_path, backup_path)
+
+    return str(backup_path)

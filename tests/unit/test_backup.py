@@ -74,5 +74,72 @@ class TestBackupHelpers(unittest.TestCase):
         self.assertEqual(result, "README")
 
 
+class TestBackupFile(unittest.TestCase):
+    """Test file backup functionality."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.test_dir = tempfile.mkdtemp()
+        self.test_path = Path(self.test_dir)
+        self.backup_dir = self.test_path / "backups"
+
+    def tearDown(self):
+        """Clean up test fixtures."""
+        import shutil
+
+        shutil.rmtree(self.test_dir)
+
+    def test_backup_file_regular(self):
+        """Test backing up a regular file with timestamp."""
+        from fx_bin.backup import backup_file
+
+        source_file = self.test_path / "test.txt"
+        source_file.write_text("test content")
+
+        result = backup_file(
+            str(source_file), backup_dir=str(self.backup_dir), timestamp_format="%Y%m%d"
+        )
+
+        self.assertTrue(os.path.exists(result))
+        self.assertTrue(result.endswith(".txt"))
+        self.assertIn("test_", os.path.basename(result))
+
+        with open(result, "r") as f:
+            self.assertEqual(f.read(), "test content")
+
+    def test_backup_file_multi_ext(self):
+        """Test backing up file with multi-part extension (.tar.gz)."""
+        from fx_bin.backup import backup_file
+
+        source_file = self.test_path / "archive.tar.gz"
+        source_file.write_text("archive content")
+
+        result = backup_file(str(source_file), backup_dir=str(self.backup_dir))
+
+        self.assertTrue(os.path.exists(result))
+        self.assertTrue(result.endswith(".tar.gz"))
+        self.assertIn("archive_", os.path.basename(result))
+
+    def test_backup_file_creates_backup_dir(self):
+        """Test backup_file creates backup directory if it doesn't exist."""
+        from fx_bin.backup import backup_file
+
+        source_file = self.test_path / "test.txt"
+        source_file.write_text("content")
+
+        self.assertFalse(self.backup_dir.exists())
+
+        backup_file(str(source_file), backup_dir=str(self.backup_dir))
+
+        self.assertTrue(self.backup_dir.exists())
+
+    def test_backup_file_nonexistent(self):
+        """Test backing up nonexistent file raises FileNotFoundError."""
+        from fx_bin.backup import backup_file
+
+        with self.assertRaises(FileNotFoundError):
+            backup_file("/nonexistent/file.txt", backup_dir=str(self.backup_dir))
+
+
 if __name__ == "__main__":
     unittest.main()
