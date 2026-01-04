@@ -1,0 +1,35 @@
+# <type>[optional scope]: <description>
+# 
+# [optional body]
+# 
+# [optional footer(s)]
+# 
+# Types:
+#   feat:     New feature (Minor version bump)
+#   fix:      Bug fix (Patch version bump)
+#   perf:     Performance improvement (Patch version bump)
+#   feat!:    Breaking change (Major version bump)
+#   docs:     Documentation only (no release)
+#   style:    Code style/formatting (no release)
+#   refactor: Code restructuring (no release)
+#   test:     Adding tests (no release)
+#   ci:       CI/CD changes (no release)
+#   chore:    Maintenance tasks (no release)
+# 
+# Examples:
+#   feat: add user authentication
+#   fix(backup): handle missing directories
+#   feat!: remove deprecated API endpoints
+#   
+#   BREAKING CHANGE: API endpoint /old removed
+# 
+# Scope (optional): backup, filter, cli, config, docs, test, ci
+# 
+# Tips:
+#   - Use imperative mood: "add" not "added" or "adds"
+#   - Keep subject line ≤ 72 characters
+#   - Explain WHY in body, not WHAT (code shows what)
+#   - Reference issues: "fixes #123"
+# 
+# Remember: semantic-release handles versioning automatically!
+# See docs/commit-message-guide.md for full guide
