@@ -1,7 +1,8 @@
-# Backup Capability Specification
+# backup Specification
 
-## ADDED Requirements
-
+## Purpose
+TBD - created by archiving change add-backup-command. Update Purpose after archive.
+## Requirements
 ### Requirement: File Backup with Timestamps
 The system SHALL create timestamped copies of files with configurable timestamp formats.
 
@@ -29,6 +30,11 @@ The system SHALL correctly handle multi-part file extensions when creating backu
 - **WHEN** user runs `fx backup data.tar.bz2`
 - **THEN** a copy is created as `backups/data_YYYYMMDDHHMMSS.tar.bz2`
 
+#### Scenario: Backup .tar.xz file
+- **WHEN** user runs `fx backup archive.tar.xz`
+- **THEN** a copy is created as `backups/archive_YYYYMMDDHHMMSS.tar.xz`
+- **AND** to extension `.tar.xz` is preserved as a unit
+
 ### Requirement: Directory Backup (Uncompressed)
 The system SHALL create timestamped copies of directories without compression by default.
 
@@ -38,30 +44,16 @@ The system SHALL create timestamped copies of directories without compression by
 - **AND** all contents are preserved
 
 ### Requirement: Directory Backup (Compressed)
-The system SHALL create compressed .tar.gz archives when the --compress flag is used.
+The system SHALL create compressed .tar.xz archives when --compress flag is used.
 
 #### Scenario: Backup directory with compression
 - **WHEN** user runs `fx backup mydir/ --compress`
-- **THEN** a compressed archive is created as `backups/mydir_YYYYMMDDHHMMSS.tar.gz`
+- **THEN** a compressed archive is created as `backups/mydir_YYYYMMDDHHMMSS.tar.xz`
 
 #### Scenario: Verify compressed archive contents
 - **WHEN** a compressed backup is created
-- **THEN** the archive SHALL contain all directory contents
-- **AND** the archive SHALL be readable with standard tar tools
-
-### Requirement: Automatic Backup Cleanup
-The system SHALL automatically remove old backups when --max-backups is specified.
-
-#### Scenario: Cleanup old backups
-- **WHEN** user runs `fx backup myfile.txt --max-backups 3`
-- **AND** there are already 5 backups
-- **THEN** only the 3 most recent backups remain
-- **AND** the 2 oldest backups are deleted
-
-#### Scenario: No cleanup when under limit
-- **WHEN** user runs `fx backup myfile.txt --max-backups 5`
-- **AND** there are only 3 backups
-- **THEN** no backups are deleted
+- **THEN** to archive SHALL contain all directory contents
+- **AND** to archive SHALL be readable with standard tar tools
 
 ### Requirement: Error Handling
 The system SHALL handle backup errors gracefully with clear error messages.
@@ -88,3 +80,4 @@ The system SHALL work consistently across Windows, macOS, and Linux.
 - **WHEN** user runs `fx backup` on any supported platform
 - **THEN** backups are created with correct path separators
 - **AND** timestamps use platform-independent formats
+

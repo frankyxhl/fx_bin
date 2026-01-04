@@ -6,7 +6,6 @@ with explicit error handling and IO operations.
 
 from __future__ import annotations
 
-import math
 import os
 from dataclasses import dataclass
 from enum import Enum
@@ -19,6 +18,7 @@ from returns.io import IOResult, impure_safe
 from returns.context import RequiresContext
 
 from fx_bin.errors import FolderError, IOError as FxIOError
+from .common import convert_size
 
 
 class EntryType(Enum):
@@ -106,20 +106,6 @@ class SizeEntry:
 
         # Otherwise create the entry
         return stat_result.bind(create_entry_from_stat).map(Some)
-
-
-def convert_size(size: int) -> str:
-    """Convert size in bytes to human-readable format (pure function)."""
-    size_bytes = int(size)
-    if size_bytes == 0:
-        return "0B"
-    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
-    i = int(math.floor(math.log(size_bytes, 1024)))
-    # Clamp to valid index range
-    i = min(i, len(size_name) - 1)
-    p = math.pow(1024, i)
-    s = round(size_bytes / p, 2)
-    return f"{round(s)}{size_name[i]}"
 
 
 @dataclass(frozen=True)
