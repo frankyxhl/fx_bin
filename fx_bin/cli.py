@@ -3,7 +3,7 @@
 
 import click
 import sys
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 import importlib.metadata
 
 
@@ -25,6 +25,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("fff", "Find first file matching keyword (alias for ff --first)"),
     ("filter", "Filter files by extension"),
     ("replace", "Replace text in files"),
+    ("backup", "Create timestamped backups of files/dirs"),
     ("root", "Find Git project root directory"),
     ("realpath", "Get absolute path of a file or directory"),
     ("today", "Create/navigate to today's workspace directory"),
@@ -332,6 +333,58 @@ def replace(search_text, replace_text, filenames):
 
     # Call the replace_files function directly (not the Click-decorated main)
     return replace_module.replace_files(search_text, replace_text, filenames)
+
+
+@cli.command()
+@click.argument("path", type=click.Path(exists=True))
+@click.option(
+    "--backup-dir",
+    default="backups",
+    help="Directory to store backups (default: 'backups')",
+)
+@click.option(
+    "--compress",
+    is_flag=True,
+    default=False,
+    help="Compress directory backup as .tar.xz",
+)
+@click.option(
+    "--timestamp-format",
+    default=None,
+    help="Custom timestamp format (strftime)",
+)
+def backup(
+    path: str,
+    backup_dir: str,
+    compress: bool,
+    timestamp_format: Optional[str],
+) -> int:
+    """Create a timestamped backup of a file or directory.
+
+    Examples:
+        fx backup file.txt             # Backup file.txt to backups/
+        fx backup mydir/ --compress    # Backup directory as .tar.xz
+    """
+    from . import backup as backup_module
+    from pathlib import Path
+
+    try:
+        ts_format = timestamp_format or backup_module.DEFAULT_TIMESTAMP_FORMAT
+        path_obj = Path(path)
+
+        if path_obj.is_file():
+            result = backup_module.backup_file(path, backup_dir, ts_format)
+        else:
+            result = backup_module.backup_directory(
+                path, backup_dir, ts_format, compress
+            )
+
+        click.echo(f"Backup created: {result}")
+
+        return 0
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        return 1
 
 
 @cli.command()

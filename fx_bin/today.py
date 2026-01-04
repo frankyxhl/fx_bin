@@ -12,6 +12,8 @@ from datetime import datetime
 from typing import Optional
 import click
 
+from .common import generate_timestamp
+
 
 def get_today_path(base_dir: str = "~/Downloads", date_format: str = "%Y%m%d") -> Path:
     """Get the path for today's workspace directory.
@@ -32,7 +34,7 @@ def get_today_path(base_dir: str = "~/Downloads", date_format: str = "%Y%m%d") -
         base = Path.cwd() / base
 
     # Get today's date in the specified format
-    today_str = datetime.now().strftime(date_format)
+    today_str = generate_timestamp(date_format, now=datetime.now())
 
     return base / today_str
 
@@ -113,7 +115,7 @@ def validate_date_format(date_format: Optional[str]) -> bool:
 
     try:
         # Try to format current date with the given format
-        result = datetime.now().strftime(date_format)
+        result = generate_timestamp(date_format, now=datetime.now())
         # Make sure it produced something meaningful
         if not result or result == date_format:
             return False

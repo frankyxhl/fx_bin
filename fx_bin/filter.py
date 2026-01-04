@@ -13,8 +13,9 @@ Examples:
 import fnmatch
 import os
 import time
-from pathlib import Path
 from typing import List
+
+from .common import format_size_aligned, get_multi_ext
 
 
 def find_files_by_extension(
@@ -32,10 +33,6 @@ def find_files_by_extension(
 
     Raises:
         FileNotFoundError: If the path doesn't exist
-
-    Examples:
-        >>> find_files_by_extension('.', 'py')  # doctest: +SKIP
-        ['./script.py', './module.py']
     """
     path = os.path.abspath(path)  # Normalize path
     if not os.path.exists(path):
@@ -92,7 +89,7 @@ def _filter_files_by_extension(
     matching_files = []
     for file in files:
         file_path = os.path.join(directory, file)
-        file_ext = Path(file).suffix[1:].lower()  # Remove dot and convert to lowercase
+        file_ext = get_multi_ext(str(file)).lstrip(".").lower()
 
         # Check for matches
         match_found = False
@@ -129,11 +126,6 @@ def sort_files_by_time(
 
     Returns:
         Sorted list of file paths
-
-    Raises:
-        ValueError: If sort_by is not 'created' or 'modified'
-        FileNotFoundError: If any file in the list doesn't exist
-        OSError: If file stats cannot be accessed
     """
     if not files:
         return []
@@ -171,17 +163,6 @@ def format_output(
 
     Returns:
         Formatted string output
-
-    Raises:
-        ValueError: If format is not supported
-
-    Examples:
-        >>> format_output(['file1.txt', 'file2.py'], 'simple')  # Positional
-        'file1.txt\\nfile2.py'
-        >>> # Using keyword arguments:
-        >>> format_output(['f1.txt'], output_format='detailed', show_path=True)
-        ... # doctest: +SKIP
-        '2024-01-01 12:00:00       100 B  /path/to/f1.txt'
     """
     VALID_FORMATS = ["simple", "detailed"]
     if output_format not in VALID_FORMATS:
@@ -207,7 +188,7 @@ def format_output(
                 date_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(mtime))
 
                 # Convert size to aligned human-readable format
-                size_str = _format_file_size_aligned(size)
+                size_str = format_size_aligned(size)
 
                 # Choose filename display based on show_path flag
                 if show_path:
@@ -226,64 +207,15 @@ def format_output(
                 )
 
         return "\n".join(output_lines)
-
-
-def _format_file_size(size: int) -> str:
-    """Helper function to format file size in human-readable format.
-
-    Args:
-        size: File size in bytes
-
-    Returns:
-        Human-readable file size string
-
-    Examples:
-        >>> _format_file_size(512)
-        '512 bytes'
-        >>> _format_file_size(1536)  # doctest: +ELLIPSIS
-        '1.5 KB'
-        >>> _format_file_size(2097152)  # doctest: +ELLIPSIS
-        '2.0 MB'
-    """
-    if size < 1024:
-        return f"{size} bytes"
-    elif size < 1024 * 1024:
-        return f"{size / 1024:.1f} KB"
-    elif size < 1024 * 1024 * 1024:
-        return f"{size / (1024 * 1024):.1f} MB"
-    else:
-        return f"{size / (1024 * 1024 * 1024):.1f} GB"
+    return ""
 
 
 def _format_file_size_aligned(size: int) -> str:
     """Helper function to format file size with aligned columns.
 
-    Args:
-        size: File size in bytes
-
-    Returns:
-        Right-aligned size with unit (total width 9 chars)
-
-    Examples:
-        >>> _format_file_size_aligned(100)
-        '    100 B'
-        >>> _format_file_size_aligned(1536)
-        '   1.5 KB'
-        >>> _format_file_size_aligned(2097152)
-        '   2.0 MB'
+    Deprecated: Use fx_bin.common.format_size_aligned instead.
     """
-    if size < 1024:
-        formatted = f"{size} B"
-        return f"{formatted:>9}"
-    elif size < 1024 * 1024:
-        formatted = f"{size / 1024:.1f} KB"
-        return f"{formatted:>9}"
-    elif size < 1024 * 1024 * 1024:
-        formatted = f"{size / (1024 * 1024):.1f} MB"
-        return f"{formatted:>9}"
-    else:
-        formatted = f"{size / (1024 * 1024 * 1024):.1f} GB"
-        return f"{formatted:>9}"
+    return format_size_aligned(size)
 
 
 def parse_extensions(extension_string: str) -> List[str]:
@@ -294,16 +226,6 @@ def parse_extensions(extension_string: str) -> List[str]:
 
     Returns:
         List of extensions without leading dots
-
-    Examples:
-        >>> parse_extensions('py,txt,json')
-        ['py', 'txt', 'json']
-        >>> parse_extensions('.py, .txt , .json ')
-        ['py', 'txt', 'json']
-        >>> parse_extensions('')
-        []
-        >>> parse_extensions('*')
-        ['*']
     """
     if not extension_string or not extension_string.strip():
         return []
