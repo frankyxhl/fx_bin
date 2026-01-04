@@ -1,10 +1,10 @@
 name: TDD Test Suite
 
 on:
-  push:
-    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
+  push:
+    branches: [ develop ]
 
 jobs:
   security-tests:
