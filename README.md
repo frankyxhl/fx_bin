@@ -126,7 +126,7 @@ poetry run fx --help
 | `fx ff` | Find files by keyword | Multiple search modes, content search, regex support |
 | `fx filter` | Filter files by extension | Time-based sorting, multiple formats, recursive search |
 | `fx replace` | Replace text in files | Atomic file operations, safe text replacement |
-| `fx backup` | Create timestamped backups | File/dir backup, compression, auto-cleanup |
+| `fx backup` | Create timestamped backups | File/dir backup, compression |
 | `fx list` | List all available commands | Help and usage information |
 
 ### Detailed Command Documentation
@@ -289,7 +289,7 @@ fx replace SEARCH_TEXT REPLACE_TEXT FILES...
 
 #### 💾 fx backup - File Backup (NEW in v1.4.0!)
 
-Create timestamped backups of files or directories with optional compression and automatic cleanup.
+Create timestamped backups of files or directories with optional compression.
 
 ```bash
 # Backup a single file
@@ -298,8 +298,8 @@ fx backup data.json
 # Backup a directory with compression
 fx backup my_project --compress
 
-# Custom backup directory and keep only 5 latest backups
-fx backup config.yaml --backup-dir ./archive --max-backups 5
+# Custom backup directory
+fx backup config.yaml --backup-dir ./archive
 
 # Custom timestamp format
 fx backup important.txt --timestamp-format %Y-%m-%d_%H-%M
@@ -307,8 +307,7 @@ fx backup important.txt --timestamp-format %Y-%m-%d_%H-%M
 
 **Options:**
 - `--backup-dir`: Directory to store backups (default: 'backups')
-- `--compress`: Compress directory backup as .tar.gz
-- `--max-backups`: Maximum number of backups to keep (removes oldest)
+- `--compress`: Compress directory backup as .tar.xz
 - `--timestamp-format`: Custom strftime format for the backup timestamp
 
 #### 📅 fx today - Daily Workspace Manager

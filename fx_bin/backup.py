@@ -16,62 +16,33 @@ import tarfile
 from datetime import datetime
 from pathlib import Path
 
+from .common import (
+    generate_timestamp,
+    get_base_name as _get_base_name_common,
+    get_multi_ext as _get_multi_ext_common,
+)
+from .errors import FxBinError
 
-# Known multi-part extensions
-
-KNOWN_MULTI_EXTS = (".tar.gz", ".tar.bz2")
-
-# Default timestamp format (YYYYMMDDHHMMSS)
-DEFAULT_TIMESTAMP_FORMAT = "%Y%m%d%H%M%S"
+# Default timestamp format (YYYYMMDDHHMMSSffffff)
+DEFAULT_TIMESTAMP_FORMAT = "%Y%m%d%H%M%S%f"
 
 
 def get_multi_ext(filename: str) -> str:
     """Extract multi-part or single extension from filename.
 
-    Args:
-        filename: Name of the file
-
-    Returns:
-        Extension string (e.g., '.tar.gz', '.txt', or '')
-
-    Examples:
-        >>> get_multi_ext("archive.tar.gz")
-        '.tar.gz'
-        >>> get_multi_ext("document.txt")
-        '.txt'
-        >>> get_multi_ext("README")
-        ''
+    Deprecated: Use fx_bin.common.get_multi_ext instead.
+    This wrapper maintained for backward compatibility.
     """
-    for multi_ext in KNOWN_MULTI_EXTS:
-        if filename.endswith(multi_ext):
-            return multi_ext
-
-    if "." in filename:
-        return "." + filename.rsplit(".", 1)[1]
-    return ""
+    return _get_multi_ext_common(filename)
 
 
 def get_base_name(filename: str) -> str:
     """Extract base name from filename, handling multi-part extensions.
 
-    Args:
-        filename: Name of the file
-
-    Returns:
-        Base name without extension
-
-    Examples:
-        >>> get_base_name("archive.tar.gz")
-        'archive'
-        >>> get_base_name("document.txt")
-        'document'
-        >>> get_base_name("README")
-        'README'
+    Deprecated: Use fx_bin.common.get_base_name instead.
+    This wrapper maintained for backward compatibility.
     """
-    ext = get_multi_ext(filename)
-    if ext:
-        return filename[: -len(ext)]
-    return filename
+    return _get_base_name_common(filename)
 
 
 def backup_file(
@@ -104,13 +75,16 @@ def backup_file(
     base_name = get_base_name(filename)
     ext = get_multi_ext(filename)
 
-    timestamp = datetime.now().strftime(timestamp_format)
+    timestamp = generate_timestamp(timestamp_format, now=datetime.now())
     backup_filename = f"{base_name}_{timestamp}{ext}"
 
     backup_dir_path = Path(backup_dir)
     backup_dir_path.mkdir(parents=True, exist_ok=True)
 
     backup_path = backup_dir_path / backup_filename
+    if backup_path.exists():
+        raise FxBinError(f"Backup path already exists: {backup_path}")
+
     shutil.copy2(source_path, backup_path)
 
     return str(backup_path)
@@ -128,10 +102,14 @@ def backup_directory(
         source_path: Path to the directory to backup
         backup_dir: Directory to store the backup (default: 'backups')
         timestamp_format: Format string for timestamp (default: '%Y%m%d%H%M%S')
-        compress: Whether to compress as .tar.gz (default: False)
+        compress: Whether to compress as .tar.xz (default: False)
 
     Returns:
         Path to the created backup directory or archive
+
+    Note:
+        By default, symlinks within the source directory are preserved rather than
+        followed. This prevents pulling in external files unexpectedly.
 
     Raises:
         FileNotFoundError: If source directory doesn't exist
@@ -140,7 +118,7 @@ def backup_directory(
         >>> backup_directory("mydir/")  # doctest: +SKIP
         'backups/mydir_20250104120000/'
         >>> backup_directory("mydir/", compress=True)  # doctest: +SKIP
-        'backups/mydir_20250104120000.tar.gz'
+        'backups/mydir_20250104120000.tar.xz'
     """
     if not os.path.exists(source_path):
         raise FileNotFoundError(f"Source directory not found: {source_path}")
@@ -152,20 +130,26 @@ def backup_directory(
 
 
 def _backup_directory_uncompressed(
-    source_path: str, backup_dir: str, timestamp_format: str
+    source_path: str,
+    backup_dir: str,
+    timestamp_format: str,
 ) -> str:
     """Create uncompressed directory backup."""
     source_path_obj = Path(source_path)
     dir_name = source_path_obj.name
 
-    timestamp = datetime.now().strftime(timestamp_format)
+    timestamp = generate_timestamp(timestamp_format, now=datetime.now())
     backup_dirname = f"{dir_name}_{timestamp}"
 
     backup_dir_path = Path(backup_dir)
     backup_dir_path.mkdir(parents=True, exist_ok=True)
 
     backup_path = backup_dir_path / backup_dirname
-    shutil.copytree(source_path, backup_path)
+    if backup_path.exists():
+        raise FxBinError(f"Backup path already exists: {backup_path}")
+
+    # Preserve symlinks to avoid pulling in external files unexpectedly
+    shutil.copytree(source_path, backup_path, symlinks=True)
 
     return str(backup_path)
 
@@ -173,56 +157,21 @@ def _backup_directory_uncompressed(
 def _backup_directory_compressed(
     source_path: str, backup_dir: str, timestamp_format: str
 ) -> str:
-    """Create compressed directory backup as .tar.gz."""
+    """Create compressed directory backup as .tar.xz."""
     source_path_obj = Path(source_path)
     dir_name = source_path_obj.name
 
-    timestamp = datetime.now().strftime(timestamp_format)
-    backup_filename = f"{dir_name}_{timestamp}.tar.gz"
+    timestamp = generate_timestamp(timestamp_format, now=datetime.now())
+    backup_filename = f"{dir_name}_{timestamp}.tar.xz"
 
     backup_dir_path = Path(backup_dir)
     backup_dir_path.mkdir(parents=True, exist_ok=True)
 
     backup_path = backup_dir_path / backup_filename
+    if backup_path.exists():
+        raise FxBinError(f"Backup path already exists: {backup_path}")
 
-    with tarfile.open(backup_path, "w:gz") as tar:
+    with tarfile.open(backup_path, "w:xz") as tar:
         tar.add(source_path, arcname=dir_name)
 
     return str(backup_path)
-
-
-def cleanup_old_backups(backup_dir: str, base_name: str, max_backups: int) -> int:
-    """Remove old backups keeping only the most recent ones.
-
-    Args:
-        backup_dir: Directory containing backups
-        base_name: Base name of the file/directory to cleanup
-        max_backups: Maximum number of backups to keep
-
-    Returns:
-        Number of backups removed
-    """
-    if max_backups <= 0:
-        return 0
-
-    backup_path = Path(backup_dir)
-    if not backup_path.exists():
-        return 0
-
-    backups = list(backup_path.glob(f"{base_name}_*"))
-
-    if len(backups) <= max_backups:
-        return 0
-
-    backups.sort(key=lambda x: x.stat().st_mtime, reverse=True)
-
-    to_remove = backups[max_backups:]
-    removed_count = 0
-    for item in to_remove:
-        if item.is_dir():
-            shutil.rmtree(item)
-        else:
-            item.unlink()
-        removed_count += 1
-
-    return removed_count

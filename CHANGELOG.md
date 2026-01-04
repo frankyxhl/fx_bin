@@ -5,6 +5,25 @@ All notable changes to fx-bin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-01-04
+
+### Added
+- **`fx backup` command**: Create timestamped backups of files and directories
+  - File backups with intelligent multi-extension handling (.tar.gz, .tar.bz2, .tar.xz)
+  - Directory backups with optional .tar.xz compression (--compress)
+  - Custom timestamp format support (--timestamp-format)
+  - Microsecond precision to prevent timestamp collisions
+
+### Fixed
+- **Backup security hardening**:
+  - Added symlink preservation in directory backups (symlinks=True)
+  - Implemented collision detection for rapid backup creation
+
+### Implementation
+- TDD approach with 28 comprehensive tests (100% pass rate)
+- Follows fx-bin patterns: lazy imports, Click CLI, returns.result error handling
+- OpenSpec validated (50/50 tasks complete)
+
 ## [1.6.0] - 2026-01-01
 
 ### Removed

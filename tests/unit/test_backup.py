@@ -3,7 +3,6 @@
 These tests verify the backup functionality including:
 - Multi-part extension handling (.tar.gz, .tar.bz2)
 - File and directory backup with timestamps
-- Automatic cleanup of old backups
 - Error handling
 """
 
@@ -12,6 +11,8 @@ import tempfile
 import unittest
 from datetime import datetime
 from pathlib import Path
+
+from fx_bin.errors import FxBinError
 
 
 class TestBackupHelpers(unittest.TestCase):
@@ -208,14 +209,108 @@ class TestBackupDirectory(unittest.TestCase):
         )
 
         self.assertTrue(os.path.exists(result))
-        self.assertTrue(result.endswith(".tar.gz"))
+        self.assertTrue(result.endswith(".tar.xz"))
         self.assertIn("source_dir_", os.path.basename(result))
 
-        with tarfile.open(result, "r:gz") as tar:
+        with tarfile.open(result, "r:xz") as tar:
             members = tar.getnames()
             self.assertIn("source_dir/file1.txt", members)
             self.assertIn("source_dir/file2.txt", members)
             self.assertIn("source_dir/subdir/nested.txt", members)
+
+    def test_backup_directory_preserves_symlinks(self):
+        """Test backing up directory preserves symlinks (P1-1)."""
+        from fx_bin.backup import backup_directory
+
+        # Create a symlink in source directory
+        target = self.test_path / "target.txt"
+        target.write_text("target content")
+
+        link = self.source_dir / "link.txt"
+        link.symlink_to(target)
+
+        self.assertTrue(link.is_symlink())
+
+        result = backup_directory(
+            str(self.source_dir), backup_dir=str(self.backup_dir), compress=False
+        )
+
+        backup_link = Path(result) / "link.txt"
+        self.assertTrue(backup_link.is_symlink(), "Backup did not preserve symlink!")
+        self.assertEqual(os.readlink(backup_link), str(target))
+
+    def test_backup_file_collision_handling(self):
+        """Test backup raises FxBinError on timestamp collisions."""
+        from fx_bin.backup import backup_file
+        import unittest.mock as mock
+
+        source_file = self.test_path / "test.txt"
+        source_file.write_text("content")
+
+        # Mock datetime to always return the same time
+        fixed_now = datetime(2025, 1, 1, 12, 0, 0)
+        with mock.patch("fx_bin.backup.datetime") as mock_datetime:
+            mock_datetime.now.return_value = fixed_now
+            # Use a fixed format that doesn't include microseconds for the test to force collision
+            ts_format = "%Y%m%d"
+
+            # First backup
+            b1 = backup_file(
+                str(source_file),
+                backup_dir=str(self.backup_dir),
+                timestamp_format=ts_format,
+            )
+            self.assertTrue(os.path.exists(b1))
+            self.assertIn("test_20250101.txt", b1)
+
+            with self.assertRaises(FxBinError) as cm:
+                backup_file(
+                    str(source_file),
+                    backup_dir=str(self.backup_dir),
+                    timestamp_format=ts_format,
+                )
+            self.assertIn("Backup path already exists", str(cm.exception))
+
+    def test_backup_directory_collision_handling(self):
+        """Test backup directory raises FxBinError on timestamp collisions."""
+        from fx_bin.backup import backup_directory
+        import unittest.mock as mock
+
+        # Mock datetime to always return the same time
+        fixed_now = datetime(2025, 1, 1, 12, 0, 0)
+        with mock.patch("fx_bin.backup.datetime") as mock_datetime:
+            mock_datetime.now.return_value = fixed_now
+            ts_format = "%Y%m%d"
+
+            backup_directory(
+                str(self.source_dir),
+                backup_dir=str(self.backup_dir),
+                compress=False,
+                timestamp_format=ts_format,
+            )
+            with self.assertRaises(FxBinError) as cm:
+                backup_directory(
+                    str(self.source_dir),
+                    backup_dir=str(self.backup_dir),
+                    compress=False,
+                    timestamp_format=ts_format,
+                )
+            self.assertIn("Backup path already exists", str(cm.exception))
+
+            backup_directory(
+                str(self.source_dir),
+                backup_dir=str(self.backup_dir),
+                compress=True,
+                timestamp_format=ts_format,
+            )
+            with self.assertRaises(FxBinError) as cm:
+                backup_directory(
+                    str(self.source_dir),
+                    backup_dir=str(self.backup_dir),
+                    compress=True,
+                    timestamp_format=ts_format,
+                )
+            self.assertIn("Backup path already exists", str(cm.exception))
 
     def test_backup_directory_nonexistent(self):
         """Test backing up nonexistent directory raises FileNotFoundError."""
@@ -223,92 +318,6 @@ class TestBackupDirectory(unittest.TestCase):
 
         with self.assertRaises(FileNotFoundError):
             backup_directory("/nonexistent/dir", backup_dir=str(self.backup_dir))
-
-
-class TestBackupCleanup(unittest.TestCase):
-    """Test backup cleanup functionality."""
-
-    def setUp(self):
-        """Set up test fixtures."""
-        self.test_dir = tempfile.mkdtemp()
-        self.test_path = Path(self.test_dir)
-        self.backup_dir = self.test_path / "backups"
-        self.backup_dir.mkdir()
-
-    def tearDown(self):
-        """Clean up test fixtures."""
-        import shutil
-
-        shutil.rmtree(self.test_dir)
-
-    def test_cleanup_old_backups_keeps_newest(self):
-        """Test cleanup keeps only the N newest backups."""
-        from fx_bin.backup import cleanup_old_backups
-        import time
-
-        base = "test"
-        files = []
-        for i in range(5):
-            f = self.backup_dir / f"{base}_2025010100000{i}.txt"
-            f.write_text(str(i))
-            os.utime(f, (time.time() + i, time.time() + i))
-            files.append(f)
-
-        removed_count = cleanup_old_backups(
-            str(self.backup_dir), base_name=base, max_backups=3
-        )
-
-        self.assertEqual(removed_count, 2)
-        remaining = list(self.backup_dir.glob(f"{base}_*"))
-        self.assertEqual(len(remaining), 3)
-
-        remaining_names = [f.name for f in remaining]
-        self.assertIn(f"{base}_20250101000002.txt", remaining_names)
-        self.assertIn(f"{base}_20250101000003.txt", remaining_names)
-        self.assertIn(f"{base}_20250101000004.txt", remaining_names)
-
-    def test_cleanup_old_backups_under_limit(self):
-        """Test cleanup does nothing if count is under limit."""
-        from fx_bin.backup import cleanup_old_backups
-
-        base = "test"
-        for i in range(2):
-            f = self.backup_dir / f"{base}_2025010100000{i}.txt"
-            f.write_text(str(i))
-
-        removed_count = cleanup_old_backups(
-            str(self.backup_dir), base_name=base, max_backups=5
-        )
-
-        self.assertEqual(removed_count, 0)
-        self.assertEqual(len(list(self.backup_dir.glob(f"{base}_*"))), 2)
-
-    def test_cleanup_old_backups_mixed_types(self):
-        """Test cleanup handles both files and directories."""
-        from fx_bin.backup import cleanup_old_backups
-        import time
-
-        base = "app"
-        f1 = self.backup_dir / f"{base}_20250101000000.txt"
-        f1.write_text("v1")
-        os.utime(f1, (time.time() - 100, time.time() - 100))
-
-        d1 = self.backup_dir / f"{base}_20250101000001"
-        d1.mkdir()
-        os.utime(d1, (time.time() - 50, time.time() - 50))
-
-        f2 = self.backup_dir / f"{base}_20250101000002.tar.gz"
-        f2.write_text("v2")
-        os.utime(f2, (time.time(), time.time()))
-
-        removed_count = cleanup_old_backups(
-            str(self.backup_dir), base_name=base, max_backups=1
-        )
-
-        self.assertEqual(removed_count, 2)
-        remaining = list(self.backup_dir.glob(f"{base}_*"))
-        self.assertEqual(len(remaining), 1)
-        self.assertEqual(remaining[0].name, f"{base}_20250101000002.tar.gz")
 
 
 if __name__ == "__main__":

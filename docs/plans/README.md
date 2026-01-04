@@ -4,10 +4,17 @@ This directory contains implementation plans and design documents for fx-bin.
 
 ## Active Plans
 
-- **[Add Backup Command](./2026-01-03-add-backup-command.md)** (2026-01-03)  
-  Add `fx backup` command with timestamped backups, compression, and automatic cleanup.
+### 2026-01-05
+
+- **[Common Utilities Refactoring](./2026-01-05-timestamp-utility-refactoring.md)** (2026-01-05)  
+  Consolidate timestamps, multi-part extensions (e.g. `.tar.gz`), and size formatting into `fx_bin/common.py` to eliminate duplication and improve correctness.
 
 ## Completed Plans
+
+### 2026-01-03
+
+- **[Add Backup Command](./completed-2026-01-03-add-backup-command.md)** (2026-01-03)  
+  Add `fx backup` command with timestamped backups, compression, and automatic cleanup.
 
 ### 2026-01-01
 

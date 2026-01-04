@@ -67,30 +67,7 @@ class TestBackupCLI(unittest.TestCase):
 
         backups = list(self.backup_dir.glob("src_*"))
         self.assertEqual(len(backups), 1)
-        self.assertTrue(backups[0].name.endswith(".tar.gz"))
-
-    def test_backup_cli_max_backups_cleanup(self):
-        test_file = self.test_path / "test.txt"
-        test_file.write_text("hello")
-
-        import time
-
-        for i in range(3):
-            self.runner.invoke(
-                cli,
-                [
-                    "backup",
-                    str(test_file),
-                    "--backup-dir",
-                    str(self.backup_dir),
-                    "--max-backups",
-                    "2",
-                ],
-            )
-            time.sleep(1.1)
-
-        backups = list(self.backup_dir.glob("test_*"))
-        self.assertEqual(len(backups), 2)
+        self.assertTrue(backups[0].name.endswith(".tar.xz"))
 
     def test_backup_cli_nonexistent_path_error(self):
         result = self.runner.invoke(cli, ["backup", "/nonexistent/path"])

@@ -346,13 +346,7 @@ def replace(search_text, replace_text, filenames):
     "--compress",
     is_flag=True,
     default=False,
-    help="Compress directory backup as .tar.gz",
-)
-@click.option(
-    "--max-backups",
-    type=int,
-    default=None,
-    help="Maximum number of backups to keep",
+    help="Compress directory backup as .tar.xz",
 )
 @click.option(
     "--timestamp-format",
@@ -363,15 +357,13 @@ def backup(
     path: str,
     backup_dir: str,
     compress: bool,
-    max_backups: Optional[int],
     timestamp_format: Optional[str],
 ) -> int:
     """Create a timestamped backup of a file or directory.
 
     Examples:
         fx backup file.txt             # Backup file.txt to backups/
-        fx backup mydir/ --compress    # Backup directory as .tar.gz
-        fx backup data.db --max-backups 5  # Keep only 5 newest backups
+        fx backup mydir/ --compress    # Backup directory as .tar.xz
     """
     from . import backup as backup_module
     from pathlib import Path
@@ -379,7 +371,6 @@ def backup(
     try:
         ts_format = timestamp_format or backup_module.DEFAULT_TIMESTAMP_FORMAT
         path_obj = Path(path)
-        base_name = backup_module.get_base_name(path_obj.name)
 
         if path_obj.is_file():
             result = backup_module.backup_file(path, backup_dir, ts_format)
@@ -389,13 +380,6 @@ def backup(
             )
 
         click.echo(f"Backup created: {result}")
-
-        if max_backups is not None:
-            removed = backup_module.cleanup_old_backups(
-                backup_dir, base_name, max_backups
-            )
-            if removed > 0:
-                click.echo(f"Cleaned up {removed} old backup(s).")
 
         return 0
     except Exception as e:
