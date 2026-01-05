@@ -1,0 +1,94 @@
+name: CI Security
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [develop]
+
+# Prevent concurrent security scans on the same PR/branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  security:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Security Scan with Bandit
+        run: |
+          echo "🔍 Running security analysis..."
+          # Generate JSON report for artifacts (machine-readable)
+          poetry run bandit -r fx_bin/ -f json -o bandit-report.json
+          # Display results in console for quick review (human-readable)
+          poetry run bandit -r fx_bin/
+
+      - name: Dependency Security Check
+        run: |
+          echo "📋 Checking dependencies for known vulnerabilities..."
+          poetry run safety check --json --output safety-report.json || echo "::warning::Safety check found issues"
+          poetry run safety check || echo "::warning::Safety check found issues"
+
+      - name: Upload Security Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-reports-${{ matrix.python-version }}
+          path: |
+            bandit-report.json
+            safety-report.json
+
+  safety-tests:
+    name: 🛡️ Safety Tests
+    runs-on: ubuntu-latest
+    needs: security
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Run Safety Tests
+        run: |
+          echo "🛡️ Running safety tests..."
+          poetry run python -m pytest tests/security/ -v --tb=short --no-cov

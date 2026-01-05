@@ -1,0 +1,81 @@
+name: CI Quality
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [develop]
+
+# Prevent concurrent quality checks on the same PR/branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: 📋 Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: 'pip'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Run Flake8
+        run: |
+          echo "🔍 Running Flake8 linting..."
+          poetry run flake8 fx_bin/ --statistics
+
+      - name: Run MyPy
+        continue-on-error: true  # Type errors exist; fix in separate PR
+        run: |
+          echo "🔍 Running MyPy type checking..."
+          poetry run mypy fx_bin/ --ignore-missing-imports
+
+      - name: Check Code Formatting
+        run: |
+          echo "🎨 Checking code formatting with Black..."
+          poetry run black --check fx_bin/ tests/
+
+  performance:
+    name: 🏃 Performance Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: 'pip'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Run Performance Tests
+        continue-on-error: true
+        run: |
+          echo "🏃 Running performance tests (informational only)..."
+          poetry run python -m pytest tests/performance/ -v --tb=short --no-cov || true

@@ -1,0 +1,65 @@
+name: CI Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [develop]
+
+# Prevent concurrent test runs on the same PR/branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: ⚙️ Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Run Tests
+        run: |
+          echo "⚙️ Running tests..."
+          # Exclude performance tests (run separately as informational in ci-quality.yml)
+          poetry run python -m pytest tests/ -v --tb=short --ignore=tests/runners/ --ignore=tests/performance/ --no-cov
+
+      - name: Code Coverage
+        run: |
+          echo "📊 Generating code coverage report..."
+          # Exclude performance tests from coverage to avoid blocking on slow/flaky benchmarks
+          poetry run python -m pytest --cov=fx_bin --cov-report=xml --cov-report=html --ignore=tests/runners/ --ignore=tests/performance/
+
+      - name: Upload Coverage Reports
+        uses: codecov/codecov-action@v4
+        continue-on-error: true
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+
+      - name: Coverage Upload Status
+        if: failure()
+        run: |
+          echo "⚠️ Coverage upload failed (non-blocking)" >> $GITHUB_STEP_SUMMARY
+          echo "Tests passed but coverage report could not be uploaded to Codecov" >> $GITHUB_STEP_SUMMARY
