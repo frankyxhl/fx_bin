@@ -1,6 +1,35 @@
 # CHANGELOG
 
 
+## v2.2.1 (2026-01-05)
+
+### Bug Fixes
+
+- **ci**: Resolve permission denied error in release build step
+  ([`34561f3`](https://github.com/frankyxhl/fx_bin/commit/34561f3a12eb4c22e8582c66439ad0d15b994b19))
+
+Root Cause: - semantic-release was running 'poetry build' via build_command - Workflow was also
+  running 'poetry build' in a separate step - This caused permission conflicts when trying to
+  overwrite dist/ files - Error: [Errno 13] Permission denied: 'dist/fx_bin-2.2.0.tar.gz'
+
+Solution: 1. Disable semantic-release build_command (set to empty string) - semantic-release only
+  handles version bumping and GitHub Release creation - Workflow handles all building and deployment
+  separately 2. Add 'rm -rf dist/' before building as defensive measure - Ensures clean slate for
+  each build - Prevents any stale file conflicts
+
+Changes: - pyproject.toml: Set build_command = "" with explanatory comment - cd-release.yml: Add
+  dist/ cleanup before poetry build
+
+This ensures: - Clear separation of concerns (semantic-release = versioning, workflow = building) -
+  No file permission conflicts - Predictable build process
+
+Tested against failed run: https://github.com/frankyxhl/fx_bin/actions/runs/20716201263
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+
 ## v2.2.0 (2026-01-05)
 
 ### Bug Fixes
