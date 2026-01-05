@@ -356,8 +356,8 @@ def backup(
     """Create a timestamped backup of a file or directory.
 
     Examples:
-        fx backup file.txt             # Backup to file_YYYYMMDDHHMMSS.txt (same level)
-        fx backup mydir/ --compress    # Backup to mydir_YYYYMMDDHHMMSS.tar.xz (same level)
+        fx backup file.txt          # Backup to file_timestamp.txt (same level)
+        fx backup mydir/ --compress # Backup to mydir_timestamp.tar.xz
 
     Backups are created in the same directory as the source by default.
     """
