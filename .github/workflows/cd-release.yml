@@ -35,7 +35,7 @@ jobs:
       - name: Install Poetry
         run: pipx install poetry
 
-      - name: Semantic Release (Version + Tag + Changelog)
+      - name: Semantic Release (Version + Tag + Changelog + GitHub Release)
         id: semantic-release
         uses: python-semantic-release/python-semantic-release@v9
         with:
@@ -76,6 +76,27 @@ jobs:
           poetry install
           poetry build
 
+      - name: Upload build artifacts to GitHub Release
+        if: steps.pypi_check.outputs.version_exists == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_PAT }}
+        run: |
+          VERSION="${{ steps.version.outputs.current_version }}"
+          echo "📎 Uploading build artifacts to GitHub Release v$VERSION..."
+
+          # Get the release ID
+          RELEASE_ID=$(gh release view "v$VERSION" --json id -q .id)
+
+          # Upload all dist files
+          for file in dist/*; do
+            if [ -f "$file" ]; then
+              echo "  Uploading $(basename $file)..."
+              gh release upload "v$VERSION" "$file" --clobber
+            fi
+          done
+
+          echo "✅ Build artifacts uploaded to https://github.com/frankyxhl/fx_bin/releases/tag/v$VERSION"
+
       - name: Deploy to PyPI
         if: steps.pypi_check.outputs.version_exists == 'false'
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -86,5 +107,9 @@ jobs:
       - name: Deployment success
         if: steps.pypi_check.outputs.version_exists == 'false'
         run: |
-          echo "🚀 Successfully deployed fx-bin version ${{ steps.version.outputs.current_version }} to PyPI!"
-          echo "📦 Package URL: https://pypi.org/project/fx-bin/${{ steps.version.outputs.current_version }}/"
+          VERSION="${{ steps.version.outputs.current_version }}"
+          echo "🚀 Successfully deployed fx-bin version $VERSION!"
+          echo ""
+          echo "📦 PyPI: https://pypi.org/project/fx-bin/$VERSION/"
+          echo "📦 GitHub Release: https://github.com/frankyxhl/fx_bin/releases/tag/v$VERSION"
+          echo "📦 Installation: pip install fx-bin==$VERSION"
