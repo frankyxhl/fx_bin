@@ -158,7 +158,7 @@ version_variables = [
 ]
 branch = "main"
 upload_to_pypi = false  # We handle PyPI upload manually in workflow
-build_command = "pip install poetry && poetry build"
+build_command = ""  # We handle building manually in workflow to avoid permission conflicts
 commit_parser = "conventional"
 
 # GitHub Release Settings
