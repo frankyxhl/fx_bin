@@ -161,6 +161,13 @@ upload_to_pypi = false  # We handle PyPI upload manually in workflow
 build_command = "pip install poetry && poetry build"
 commit_parser = "conventional"
 
+# GitHub Release Settings
+changelog_environment = "github://name=github-actions[bot],email=41898282+github-actions[bot]@users.noreply.github.com"
+upload_to_repository = true
+repository_user = "frankyxhl"
+repository_name = "fx_bin"
+remove_dist = false
+
 [tool.semantic_release.commit_parser_options]
 minor_tags = ["feat"]
 patch_tags = ["fix", "perf"]
