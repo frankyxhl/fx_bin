@@ -15,6 +15,7 @@ import shutil
 import tarfile
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 from .common import (
     generate_timestamp,
@@ -47,14 +48,14 @@ def get_base_name(filename: str) -> str:
 
 def backup_file(
     source_path: str,
-    backup_dir: str = "backups",
+    backup_dir: Optional[str] = None,
     timestamp_format: str = DEFAULT_TIMESTAMP_FORMAT,
 ) -> str:
     """Create a timestamped backup of a file.
 
     Args:
         source_path: Path to the file to backup
-        backup_dir: Directory to store the backup (default: 'backups')
+        backup_dir: Directory to store the backup (default: None = same level as source)
         timestamp_format: Format string for timestamp (default: '%Y%m%d%H%M%S')
 
     Returns:
@@ -65,6 +66,8 @@ def backup_file(
 
     Examples:
         >>> backup_file("document.txt")  # doctest: +SKIP
+        'document_20250104120000.txt'
+        >>> backup_file("document.txt", backup_dir="backups")  # doctest: +SKIP
         'backups/document_20250104120000.txt'
     """
     if not os.path.exists(source_path):
@@ -78,8 +81,12 @@ def backup_file(
     timestamp = generate_timestamp(timestamp_format, now=datetime.now())
     backup_filename = f"{base_name}_{timestamp}{ext}"
 
-    backup_dir_path = Path(backup_dir)
-    backup_dir_path.mkdir(parents=True, exist_ok=True)
+    # NEW DEFAULT: Same level as source, unless explicit backup_dir provided
+    if backup_dir is None:
+        backup_dir_path = source_path_obj.parent  # Parent directory of source
+    else:
+        backup_dir_path = Path(backup_dir)
+        backup_dir_path.mkdir(parents=True, exist_ok=True)
 
     backup_path = backup_dir_path / backup_filename
     if backup_path.exists():
@@ -92,7 +99,7 @@ def backup_file(
 
 def backup_directory(
     source_path: str,
-    backup_dir: str = "backups",
+    backup_dir: Optional[str] = None,
     timestamp_format: str = DEFAULT_TIMESTAMP_FORMAT,
     compress: bool = False,
 ) -> str:
@@ -100,7 +107,7 @@ def backup_directory(
 
     Args:
         source_path: Path to the directory to backup
-        backup_dir: Directory to store the backup (default: 'backups')
+        backup_dir: Directory to store the backup (default: None = same level as source)
         timestamp_format: Format string for timestamp (default: '%Y%m%d%H%M%S')
         compress: Whether to compress as .tar.xz (default: False)
 
@@ -116,9 +123,11 @@ def backup_directory(
 
     Examples:
         >>> backup_directory("mydir/")  # doctest: +SKIP
-        'backups/mydir_20250104120000/'
+        'mydir_20250104120000/'
         >>> backup_directory("mydir/", compress=True)  # doctest: +SKIP
-        'backups/mydir_20250104120000.tar.xz'
+        'mydir_20250104120000.tar.xz'
+        >>> backup_directory("mydir/", backup_dir="backups")  # doctest: +SKIP
+        'backups/mydir_20250104120000/'
     """
     if not os.path.exists(source_path):
         raise FileNotFoundError(f"Source directory not found: {source_path}")
@@ -131,7 +140,7 @@ def backup_directory(
 
 def _backup_directory_uncompressed(
     source_path: str,
-    backup_dir: str,
+    backup_dir: Optional[str],
     timestamp_format: str,
 ) -> str:
     """Create uncompressed directory backup."""
@@ -141,8 +150,12 @@ def _backup_directory_uncompressed(
     timestamp = generate_timestamp(timestamp_format, now=datetime.now())
     backup_dirname = f"{dir_name}_{timestamp}"
 
-    backup_dir_path = Path(backup_dir)
-    backup_dir_path.mkdir(parents=True, exist_ok=True)
+    # NEW DEFAULT: Same level as source, unless explicit backup_dir provided
+    if backup_dir is None:
+        backup_dir_path = source_path_obj.parent  # Parent directory of source
+    else:
+        backup_dir_path = Path(backup_dir)
+        backup_dir_path.mkdir(parents=True, exist_ok=True)
 
     backup_path = backup_dir_path / backup_dirname
     if backup_path.exists():
@@ -155,7 +168,7 @@ def _backup_directory_uncompressed(
 
 
 def _backup_directory_compressed(
-    source_path: str, backup_dir: str, timestamp_format: str
+    source_path: str, backup_dir: Optional[str], timestamp_format: str
 ) -> str:
     """Create compressed directory backup as .tar.xz."""
     source_path_obj = Path(source_path)
@@ -164,8 +177,12 @@ def _backup_directory_compressed(
     timestamp = generate_timestamp(timestamp_format, now=datetime.now())
     backup_filename = f"{dir_name}_{timestamp}.tar.xz"
 
-    backup_dir_path = Path(backup_dir)
-    backup_dir_path.mkdir(parents=True, exist_ok=True)
+    # NEW DEFAULT: Same level as source, unless explicit backup_dir provided
+    if backup_dir is None:
+        backup_dir_path = source_path_obj.parent  # Parent directory of source
+    else:
+        backup_dir_path = Path(backup_dir)
+        backup_dir_path.mkdir(parents=True, exist_ok=True)
 
     backup_path = backup_dir_path / backup_filename
     if backup_path.exists():

@@ -320,5 +320,123 @@ class TestBackupDirectory(unittest.TestCase):
             backup_directory("/nonexistent/dir", backup_dir=str(self.backup_dir))
 
 
+class TestBackupFileSameLevel(unittest.TestCase):
+    """Test same-level backup behavior (NEW default).
+
+    TDD RED phase: These tests describe the NEW desired behavior.
+    They will FAIL against the current implementation.
+    """
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.test_dir = tempfile.mkdtemp()
+        self.test_path = Path(self.test_dir)
+
+    def tearDown(self):
+        """Clean up test fixtures."""
+        import shutil
+
+        shutil.rmtree(self.test_dir)
+
+    def test_backup_file_default_same_level_as_source(self):
+        """Test backup_file creates backup in same directory as source by default."""
+        from fx_bin.backup import backup_file
+
+        # Create source file in a subdirectory
+        subdir = self.test_path / "subdir"
+        subdir.mkdir()
+        source_file = subdir / "test.txt"
+        source_file.write_text("test content")
+
+        # Call backup_file WITHOUT explicit backup_dir (new default behavior)
+        result = backup_file(str(source_file))
+
+        # Verify backup is in same directory as source (NOT in backups/ subdirectory)
+        result_path = Path(result)
+        self.assertEqual(result_path.parent, subdir)
+        self.assertTrue(result_path.exists())
+        self.assertTrue(str(result_path).endswith(".txt"))
+        self.assertIn("test_", result_path.name)
+
+        # Verify NO backups subdirectory was created
+        backups_dir = subdir / "backups"
+        self.assertFalse(backups_dir.exists())
+
+    def test_backup_file_with_explicit_backup_dir_still_works(self):
+        """Test backup_file still accepts explicit backup_dir parameter (backward compatibility)."""
+        from fx_bin.backup import backup_file
+
+        source_file = self.test_path / "test.txt"
+        source_file.write_text("content")
+
+        custom_backup_dir = self.test_path / "custom_backups"
+        result = backup_file(str(source_file), backup_dir=str(custom_backup_dir))
+
+        # Verify backup is in custom directory
+        result_path = Path(result)
+        self.assertEqual(result_path.parent, custom_backup_dir)
+        self.assertTrue(custom_backup_dir.exists())
+
+    def test_backup_file_does_not_create_backups_subdir_by_default(self):
+        """Test that default behavior does NOT create 'backups' subdirectory."""
+        from fx_bin.backup import backup_file
+
+        source_file = self.test_path / "document.txt"
+        source_file.write_text("document content")
+
+        result = backup_file(str(source_file))
+
+        # Verify backup is at same level
+        result_path = Path(result)
+        self.assertEqual(result_path.parent, self.test_path)
+
+        # Verify no 'backups' directory was created anywhere
+        backups_dir = self.test_path / "backups"
+        self.assertFalse(backups_dir.exists())
+
+    def test_backup_directory_default_same_level_as_source(self):
+        """Test backup_directory creates backup in same directory as source."""
+        from fx_bin.backup import backup_directory
+
+        # Create source directory in a subdirectory
+        subdir = self.test_path / "subdir"
+        subdir.mkdir()
+        source_dir = subdir / "mydir"
+        source_dir.mkdir()
+        (source_dir / "file.txt").write_text("content")
+
+        # Call backup_directory WITHOUT explicit backup_dir
+        result = backup_directory(str(source_dir), compress=False)
+
+        # Verify backup is in same directory as source
+        result_path = Path(result)
+        self.assertEqual(result_path.parent, subdir)
+        self.assertTrue(result_path.exists())
+        self.assertTrue(result_path.is_dir())
+        self.assertIn("mydir_", result_path.name)
+
+        # Verify NO backups subdirectory was created
+        backups_dir = subdir / "backups"
+        self.assertFalse(backups_dir.exists())
+
+    def test_backup_directory_with_explicit_backup_dir_still_works(self):
+        """Test backup_directory still accepts explicit backup_dir parameter."""
+        from fx_bin.backup import backup_directory
+
+        source_dir = self.test_path / "sourcedir"
+        source_dir.mkdir()
+        (source_dir / "file.txt").write_text("content")
+
+        custom_backup_dir = self.test_path / "archive"
+        result = backup_directory(
+            str(source_dir), backup_dir=str(custom_backup_dir), compress=False
+        )
+
+        # Verify backup is in custom directory
+        result_path = Path(result)
+        self.assertEqual(result_path.parent, custom_backup_dir)
+        self.assertTrue(custom_backup_dir.exists())
+
+
 if __name__ == "__main__":
     unittest.main()
