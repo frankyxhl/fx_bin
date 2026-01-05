@@ -78,6 +78,8 @@ jobs:
         if: steps.pypi_check.outputs.version_exists == 'false'
         run: |
           echo "📦 Building package version ${{ steps.version.outputs.current_version }}..."
+          # Clean dist directory to avoid permission issues
+          rm -rf dist/
           poetry install
           poetry build
 
