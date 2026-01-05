@@ -1,0 +1,90 @@
+name: CD Release
+
+on:
+  push:
+    branches: [main]
+
+# Prevent concurrent releases
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    # Prevent recursion - CRITICAL for avoiding infinite loops
+    if: |
+      github.actor != 'github-actions[bot]' &&
+      !contains(github.event.head_commit.message, 'chore(release):')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write  # For trusted publishing
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.SEMANTIC_RELEASE_PAT }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      - name: Semantic Release (Version + Tag + Changelog)
+        id: semantic-release
+        uses: python-semantic-release/python-semantic-release@v9
+        with:
+          github_token: ${{ secrets.SEMANTIC_RELEASE_PAT }}
+          git_committer_name: "github-actions[bot]"
+          git_committer_email: "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Get new version
+        if: steps.semantic-release.outputs.version != ''
+        id: version
+        run: |
+          VERSION=${{ steps.semantic-release.outputs.version }}
+          echo "current_version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 New version: $VERSION"
+
+      - name: Check if version exists on PyPI
+        if: steps.semantic-release.outputs.version != ''
+        id: pypi_check
+        run: |
+          VERSION="${{ steps.version.outputs.current_version }}"
+          echo "Checking if version $VERSION exists on PyPI..."
+
+          # Check PyPI API for existing version
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://pypi.org/pypi/fx-bin/$VERSION/json")
+
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "version_exists=true" >> $GITHUB_OUTPUT
+            echo "❌ Version $VERSION already exists on PyPI - skipping deployment"
+          else
+            echo "version_exists=false" >> $GITHUB_OUTPUT
+            echo "✅ Version $VERSION does not exist on PyPI - OK to deploy"
+          fi
+
+      - name: Install dependencies and build
+        if: steps.pypi_check.outputs.version_exists == 'false'
+        run: |
+          echo "📦 Building package version ${{ steps.version.outputs.current_version }}..."
+          poetry install
+          poetry build
+
+      - name: Deploy to PyPI
+        if: steps.pypi_check.outputs.version_exists == 'false'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          skip-existing: true
+
+      - name: Deployment success
+        if: steps.pypi_check.outputs.version_exists == 'false'
+        run: |
+          echo "🚀 Successfully deployed fx-bin version ${{ steps.version.outputs.current_version }} to PyPI!"
+          echo "📦 Package URL: https://pypi.org/project/fx-bin/${{ steps.version.outputs.current_version }}/"
