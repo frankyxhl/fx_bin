@@ -1,6 +1,28 @@
 # CHANGELOG
 
 
+## Unreleased
+
+### Bug Fixes
+
+- **backup**: Remove microseconds from default timestamp format to match documentation
+
+  The `DEFAULT_TIMESTAMP_FORMAT` constant was incorrectly set to `"%Y%m%d%H%M%S%f"`
+  (including microseconds), while the docstrings and original design specification
+  documented it as `"%Y%m%d%H%M%S"` (without microseconds).
+
+  Changes:
+  - Updated `DEFAULT_TIMESTAMP_FORMAT` from `"%Y%m%d%H%M%S%f"` to `"%Y%m%d%H%M%S"`
+  - Updated inline comment to reflect correct format (YYYYMMDDHHMMSS)
+  - Aligns implementation with documented behavior
+
+  Impact:
+  - Backup timestamps now use 1-second granularity instead of microsecond granularity
+  - Existing collision detection remains functional
+  - No breaking changes to API (timestamp_format parameter still accepts any format)
+  - Backup filenames are now slightly shorter (14 characters vs 20 for timestamp)
+
+
 ## v2.2.1 (2026-01-05)
 
 ### Bug Fixes
