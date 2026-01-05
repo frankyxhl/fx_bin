@@ -1,3 +1,22 @@
+<!-- OPENSPEC:START -->
+# OpenSpec Instructions
+
+These instructions are for AI assistants working in this project.
+
+Always open `@/openspec/AGENTS.md` when the request:
+- Mentions planning or proposals (words like proposal, spec, change, plan)
+- Introduces new capabilities, breaking changes, architecture shifts, or big performance/security work
+- Sounds ambiguous and you need the authoritative spec before coding
+
+Use `@/openspec/AGENTS.md` to learn:
+- How to create and apply change proposals
+- Spec format and conventions
+- Project structure and guidelines
+
+Keep this managed block so 'openspec update' can refresh the instructions.
+
+<!-- OPENSPEC:END -->
+
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
@@ -62,6 +81,9 @@ poetry run pytest -m integration --no-cov
 # Run performance tests only
 poetry run pytest -m performance --no-cov
 
+# Run property-based tests (hypothesis)
+poetry run pytest -m hypothesis -v --no-cov
+
 # Alternative test runners (no Poetry required)
 python tests/runners/simple_test_runner.py
 python tests/runners/run_simple_tests.py
@@ -106,6 +128,59 @@ poetry run tox -e security
 
 # Run all security-related checks
 poetry run pytest tests/test_*security*.py -v && poetry run bandit -r fx_bin/ && poetry run safety check
+```
+
+### Property-Based Testing with Hypothesis
+
+The project uses [Hypothesis](https://hypothesis.readthedocs.io/) for property-based testing to automatically discover edge cases.
+
+**When to use property-based tests:**
+- Testing invariants that should hold for all inputs
+- Discovering edge cases automatically
+- Verifying mathematical properties (idempotency, commutativity, etc.)
+- Boundary condition testing
+
+**Example usage:**
+```python
+from hypothesis import given, strategies as st, settings, HealthCheck
+
+@pytest.mark.hypothesis
+@given(
+    search=st.text(min_size=1, max_size=50),
+    replace=st.text(max_size=50),
+    content=st.text(max_size=500)
+)
+@settings(
+    max_examples=100,
+    suppress_health_check=[HealthCheck.function_scoped_fixture]
+)
+def test_property_invariant(temp_test_dir, search, replace, content):
+    """Test that invariant holds for all generated inputs."""
+    # INVARIANT: After replacement, search shouldn't appear
+    # unless replace contains it
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text(content)
+    work(search, replace, str(test_file))
+    result = test_file.read_text()
+
+    if search not in replace:
+        assert result.count(search) <= content.count(search)
+```
+
+**Important notes:**
+- Mark tests with `@pytest.mark.hypothesis`
+- Use `suppress_health_check=[HealthCheck.function_scoped_fixture]` when using pytest fixtures with `@given`
+- Hypothesis generates many test cases (controlled by `max_examples`)
+- Failed tests are automatically shrunk to minimal failing example
+- Use `assume()` to filter out invalid inputs
+
+**Running hypothesis tests:**
+```bash
+# Run all hypothesis tests
+poetry run pytest -m hypothesis -v
+
+# Run with more examples for thorough testing
+poetry run pytest -m hypothesis --hypothesis-seed=random -v
 ```
 
 ## Architecture
