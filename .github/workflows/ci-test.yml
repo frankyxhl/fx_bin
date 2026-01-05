@@ -41,12 +41,14 @@ jobs:
       - name: Run Tests
         run: |
           echo "⚙️ Running tests..."
-          poetry run python -m pytest tests/ -v --tb=short --ignore=tests/runners/ --no-cov
+          # Exclude performance tests (run separately as informational in ci-quality.yml)
+          poetry run python -m pytest tests/ -v --tb=short --ignore=tests/runners/ --ignore=tests/performance/ --no-cov
 
       - name: Code Coverage
         run: |
           echo "📊 Generating code coverage report..."
-          poetry run python -m pytest --cov=fx_bin --cov-report=xml --cov-report=html
+          # Exclude performance tests from coverage to avoid blocking on slow/flaky benchmarks
+          poetry run python -m pytest --cov=fx_bin --cov-report=xml --cov-report=html --ignore=tests/runners/ --ignore=tests/performance/
 
       - name: Upload Coverage Reports
         uses: codecov/codecov-action@v4

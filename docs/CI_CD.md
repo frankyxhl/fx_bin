@@ -52,13 +52,14 @@ All CI workflows run on:
 
 **Jobs:**
 - **Unit & Integration Tests**
-  - Runs all tests in `tests/` directory
+  - Runs tests in `tests/` directory
   - Uses pytest with detailed output
-  - Excludes test runners
+  - **Excludes:** `tests/runners/`, `tests/performance/` (non-blocking)
 - **Code Coverage**
   - Generates coverage reports (XML + HTML)
   - Uploads to Codecov (non-blocking)
   - Tracks coverage trends
+  - Also excludes performance tests from coverage
 
 **Configuration:**
 ```yaml
@@ -118,8 +119,9 @@ concurrency:
 
 2. **Performance Tests**
    - Runs performance benchmarks
-   - Informational only (continue-on-error)
+   - **Informational only** (continue-on-error: true)
    - Located in `tests/performance/`
+   - **Does not block PRs** (failures are reported but don't fail the build)
 
 **Configuration:**
 ```yaml
@@ -131,6 +133,32 @@ concurrency:
 **Python Version:** 3.12
 
 **Note:** MyPy failures don't block PRs (marked for future improvement)
+
+---
+
+## Design Rationale: Non-Blocking Performance Tests
+
+Performance tests are intentionally separated and marked as **non-blocking** for several reasons:
+
+1. **Flaky by Nature:** Benchmark timing can vary based on:
+   - GitHub Actions runner load
+   - Network conditions
+   - System resource availability
+
+2. **Slow Execution:** Performance tests can take significantly longer than unit tests
+   - Would slow down PR feedback cycles
+   - Not suitable for rapid iteration
+
+3. **Informational Value:** Performance tests provide:
+   - Trend analysis over time
+   - Early warning for regressions
+   - But shouldn't block feature development
+
+4. **Separate from Correctness:**
+   - Functional correctness (unit/integration tests) → Blocking
+   - Performance characteristics (benchmarks) → Informational
+
+This architecture ensures fast PR feedback while still tracking performance trends.
 
 ---
 
