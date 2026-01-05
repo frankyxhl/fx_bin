@@ -1,6 +1,104 @@
 # CHANGELOG
 
 
+## v2.2.0 (2026-01-05)
+
+### Bug Fixes
+
+- **ci**: Add critical CI/CD improvements and comprehensive documentation
+  ([`c5e80ed`](https://github.com/frankyxhl/fx_bin/commit/c5e80ed7f067b50a61e6c78c9883aff139de405d))
+
+Critical Fixes: - Add retry logic for GitHub Release artifact uploads (prevents race conditions) -
+  Add concurrency controls to all CI workflows (prevents wasteful parallel runs) - Enhance error
+  handling with per-file upload validation - Fix semantic-release configuration in pyproject.toml
+
+Recommended Improvements: - Add GitHub Actions job summaries for deployment visibility - Add
+  coverage upload failure notifications - Add explanatory comments for Bandit dual execution -
+  Create comprehensive CI/CD documentation (docs/CI_CD.md)
+
+Changes: - .github/workflows/cd-release.yml: Retry logic, error handling, job summaries -
+  .github/workflows/ci-test.yml: Concurrency controls, coverage upload visibility -
+  .github/workflows/ci-security.yml: Concurrency controls, Bandit comments -
+  .github/workflows/ci-quality.yml: Concurrency controls - pyproject.toml: Remove invalid
+  changelog_environment, add clarifying comments - docs/CI_CD.md: New 399-line comprehensive
+  documentation
+
+Impact: - Reliability: Eliminates race conditions and silent failures - Performance: Saves CI
+  minutes by cancelling outdated runs - Developer Experience: Job summaries provide instant status
+  visibility - Maintainability: Clear documentation and inline comments
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+- **ci**: Exclude performance tests from blocking CI test job
+  ([`cc59c72`](https://github.com/frankyxhl/fx_bin/commit/cc59c728e731dd33440ddac2597f600d5872a453))
+
+Performance tests were running in both the blocking CI test job and the informational performance
+  job, causing inconsistent behavior. Performance benchmarks can be slow and flaky, and should not
+  block PRs.
+
+Changes: - Exclude tests/performance/ from main test run in ci-test.yml - Exclude tests/performance/
+  from coverage calculation - Add design rationale section to documentation explaining why - Update
+  CI_CD.md to clarify performance test architecture
+
+Rationale: - Performance tests are flaky by nature (runner load, network, etc.) - Slow execution
+  would delay PR feedback - Should provide informational value without blocking development -
+  Functional correctness (blocking) vs performance metrics (informational)
+
+This ensures: - Fast PR feedback cycles - Performance trends are still tracked (in ci-quality.yml) -
+  Failures are visible but non-blocking
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+### Chores
+
+- Reorganize CI/CD workflows with clearer naming
+  ([`2004d76`](https://github.com/frankyxhl/fx_bin/commit/2004d76c57830cb62bafe5f8fdf1a906981c67f9))
+
+## New Structure
+
+**CI (Continuous Integration):** - ci-test.yml → Unit tests + Integration tests - ci-security.yml →
+  Security scanning (Bandit + Safety) - ci-quality.yml → Code quality (Flake8 + MyPy + Black)
+
+**CD (Continuous Deployment):** - cd-release.yml → Version management + PyPI deployment
+
+## Changes
+
+- Rename semantic-release.yml → cd-release.yml (combined with PyPI deploy) - Split tdd-test.yml into
+  3 focused CI workflows - Remove main.yml (functionality merged into cd-release.yml) - Keep
+  codeql.yml and claude.yml unchanged
+
+## Benefits
+
+- Clear separation: CI vs CD - Parallel execution: CI workflows run independently -
+  Self-documenting: File names describe their purpose
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+### Features
+
+- Add GitHub Release with build artifacts
+  ([`04b39c7`](https://github.com/frankyxhl/fx_bin/commit/04b39c7257b8fa85312389c144b91278a4d864cc))
+
+Enable semantic-release to create GitHub Release pages with: - Auto-generated release notes from
+  commits - Build artifacts (.tar.gz, .whl) as downloads - Direct installation links
+
+Changes: - pyproject.toml: Add GitHub release settings - cd-release.yml: Upload dist/ files to
+  GitHub Release
+
+Result: Each release will have a dedicated GitHub page with: 📋 Release notes (auto-generated) 📦
+  Downloadable packages 🔗 Installation commands
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+
 ## v2.1.0 (2026-01-05)
 
 ### Bug Fixes
