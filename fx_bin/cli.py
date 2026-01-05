@@ -338,11 +338,6 @@ def replace(search_text, replace_text, filenames):
 @cli.command()
 @click.argument("path", type=click.Path(exists=True))
 @click.option(
-    "--backup-dir",
-    default="backups",
-    help="Directory to store backups (default: 'backups')",
-)
-@click.option(
     "--compress",
     is_flag=True,
     default=False,
@@ -355,15 +350,16 @@ def replace(search_text, replace_text, filenames):
 )
 def backup(
     path: str,
-    backup_dir: str,
     compress: bool,
     timestamp_format: Optional[str],
 ) -> int:
     """Create a timestamped backup of a file or directory.
 
     Examples:
-        fx backup file.txt             # Backup file.txt to backups/
-        fx backup mydir/ --compress    # Backup directory as .tar.xz
+        fx backup file.txt          # Backup to file_timestamp.txt (same level)
+        fx backup mydir/ --compress # Backup to mydir_timestamp.tar.xz
+
+    Backups are created in the same directory as the source by default.
     """
     from . import backup as backup_module
     from pathlib import Path
@@ -373,11 +369,9 @@ def backup(
         path_obj = Path(path)
 
         if path_obj.is_file():
-            result = backup_module.backup_file(path, backup_dir, ts_format)
+            result = backup_module.backup_file(path, None, ts_format)
         else:
-            result = backup_module.backup_directory(
-                path, backup_dir, ts_format, compress
-            )
+            result = backup_module.backup_directory(path, None, ts_format, compress)
 
         click.echo(f"Backup created: {result}")
 

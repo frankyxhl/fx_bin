@@ -1,6 +1,33 @@
 # CHANGELOG
 
 
+## v3.0.0 (2026-01-05)
+
+### BREAKING CHANGES
+
+- **`fx backup` default behavior changed**: Backups are now created in the same directory as the source file/directory by default, instead of a centralized `backups/` directory.
+  - **Before**: `fx backup file.txt` → `./backups/file_20250105120000.txt`
+  - **After**: `fx backup file.txt` → `./file_20250105120000.txt`
+  - The `--backup-dir` CLI option has been **removed**
+  - Python API: The `backup_dir` parameter now defaults to `None` instead of `"backups"`
+  - **Migration**: If you relied on the old `backups/` directory, please update your scripts or manually create backups in your preferred location
+
+### Features
+
+- Add `TestBackupFileSameLevel` test class with 5 new tests for same-level backup behavior
+- Improve backup location flexibility with `Optional[str]` parameter for programmatic usage
+
+### Bug Fixes
+
+- N/A
+
+### Tests
+
+- Add 5 new unit tests for same-level backup default behavior
+- Update 4 integration tests to verify new default behavior
+- All 405 tests passing
+
+
 ## v2.0.0 (2026-01-04)
 
 ### Bug Fixes
