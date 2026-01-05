@@ -157,7 +157,7 @@ version_variables = [
     "fx_bin/__init__.py:__version__",
 ]
 branch = "main"
-upload_to_pypi = false
+upload_to_pypi = false  # We handle PyPI upload manually in workflow
 build_command = "pip install poetry && poetry build"
 commit_parser = "conventional"
 
