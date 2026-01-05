@@ -1,31 +1,87 @@
 # CHANGELOG
 
 
-## v3.0.0 (2026-01-05)
-
-### BREAKING CHANGES
-
-- **`fx backup` default behavior changed**: Backups are now created in the same directory as the source file/directory by default, instead of a centralized `backups/` directory.
-  - **Before**: `fx backup file.txt` → `./backups/file_20250105120000.txt`
-  - **After**: `fx backup file.txt` → `./file_20250105120000.txt`
-  - The `--backup-dir` CLI option has been **removed**
-  - Python API: The `backup_dir` parameter now defaults to `None` instead of `"backups"`
-  - **Migration**: If you relied on the old `backups/` directory, please update your scripts or manually create backups in your preferred location
-
-### Features
-
-- Add `TestBackupFileSameLevel` test class with 5 new tests for same-level backup behavior
-- Improve backup location flexibility with `Optional[str]` parameter for programmatic usage
+## v2.1.0 (2026-01-05)
 
 ### Bug Fixes
 
-- N/A
+- Shorten docstring to satisfy flake8 line length limit
+  ([`eea5f89`](https://github.com/frankyxhl/fx_bin/commit/eea5f89ba1fcde7daa42ef5a780bbfa922326ca2))
 
-### Tests
+Shorten 'YYYYMMDDHHMMSS' to '*' in examples to meet 88 character limit.
 
-- Add 5 new unit tests for same-level backup default behavior
-- Update 4 integration tests to verify new default behavior
-- All 405 tests passing
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+### Code Style
+
+- Apply black formatting to fix code style checks
+  ([`95b084f`](https://github.com/frankyxhl/fx_bin/commit/95b084f3398e9747e1cc3be73471081167a08e36))
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+### Documentation
+
+- Add comprehensive commit message guide and template
+  ([`60f6043`](https://github.com/frankyxhl/fx_bin/commit/60f6043e1011d3f71ddb9c9a65509a479f5008a0))
+
+Add detailed documentation for conventional commits and semantic versioning: -
+  docs/commit-message-guide.md: Complete guide with examples - .gitmessage: Git commit template for
+  easy reference
+
+Guide includes: - Conventional commits format and rules - Semantic versioning automation explanation
+  - Detailed examples for each commit type - Best practices and troubleshooting - Quick reference
+  tables and decision tree
+
+The template can be configured with: git config commit.template .gitmessage
+
+This documentation helps contributors write proper commit messages that trigger correct semantic
+  version bumps automatically.
+
+### Features
+
+- Change fx backup default to same-level backup (BREAKING)
+  ([`c2841bc`](https://github.com/frankyxhl/fx_bin/commit/c2841bcd87b9c13bca3d832ed3f11ad9af821c21))
+
+## Changes
+
+- **backup.py**: - Change `backup_dir` parameter default from `"backups"` to `None` - When `None`,
+  backup is created in same directory as source - Add `Optional` type import
+
+- **cli.py**: - Remove `--backup-dir` option entirely - Update backup() function signature - Update
+  docstring with new behavior examples
+
+- **tests/unit/test_backup.py**: - Add `TestBackupFileSameLevel` class with 5 new tests - Verify
+  same-level backup is default behavior - Verify explicit `backup_dir` still works (backward
+  compatibility)
+
+- **tests/integration/test_backup_cli.py**: - Update all tests to remove `--backup-dir` flag -
+  Verify backups created at same level as source
+
+- **CHANGELOG.md**: Document breaking change for v3.0.0
+
+## Behavior Change
+
+Before: `fx backup file.txt` → `./backups/file_*.txt`
+
+After: `fx backup file.txt` → `./file_*.txt`
+
+## Version Management
+
+Version numbers (pyproject.toml and __init__.py) will be automatically updated by semantic-release
+  when this PR is merged to main.
+
+## Tests
+
+- All 28 backup-related tests passing - 72 core tests passing - Backward compatibility maintained
+  for programmatic usage
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
 
 
 ## v2.0.0 (2026-01-04)
