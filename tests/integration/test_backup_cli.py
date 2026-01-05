@@ -59,9 +59,7 @@ class TestBackupCLI(unittest.TestCase):
         source_dir = self.test_path / "src"
         source_dir.mkdir()
 
-        result = self.runner.invoke(
-            cli, ["backup", str(source_dir), "--compress"]
-        )
+        result = self.runner.invoke(cli, ["backup", str(source_dir), "--compress"])
 
         self.assertEqual(result.exit_code, 0)
         self.assertIn("Backup created:", result.output)

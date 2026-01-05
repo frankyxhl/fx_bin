@@ -371,9 +371,7 @@ def backup(
         if path_obj.is_file():
             result = backup_module.backup_file(path, None, ts_format)
         else:
-            result = backup_module.backup_directory(
-                path, None, ts_format, compress
-            )
+            result = backup_module.backup_directory(path, None, ts_format, compress)
 
         click.echo(f"Backup created: {result}")
 
