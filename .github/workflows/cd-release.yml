@@ -50,6 +50,8 @@ jobs:
           VERSION=${{ steps.semantic-release.outputs.version }}
           echo "current_version=$VERSION" >> $GITHUB_OUTPUT
           echo "📦 New version: $VERSION"
+          echo "## 🎉 New Version Released" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** $VERSION" >> $GITHUB_STEP_SUMMARY
 
       - name: Check if version exists on PyPI
         if: steps.semantic-release.outputs.version != ''
@@ -64,9 +66,12 @@ jobs:
           if [ "$HTTP_CODE" = "200" ]; then
             echo "version_exists=true" >> $GITHUB_OUTPUT
             echo "❌ Version $VERSION already exists on PyPI - skipping deployment"
+            echo "## ⏭️ Deployment Skipped" >> $GITHUB_STEP_SUMMARY
+            echo "Version **$VERSION** already exists on PyPI" >> $GITHUB_STEP_SUMMARY
           else
             echo "version_exists=false" >> $GITHUB_OUTPUT
             echo "✅ Version $VERSION does not exist on PyPI - OK to deploy"
+            echo "**Status:** Ready to deploy 🚀" >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Install dependencies and build
@@ -84,18 +89,43 @@ jobs:
           VERSION="${{ steps.version.outputs.current_version }}"
           echo "📎 Uploading build artifacts to GitHub Release v$VERSION..."
 
-          # Get the release ID
-          RELEASE_ID=$(gh release view "v$VERSION" --json id -q .id)
-
-          # Upload all dist files
-          for file in dist/*; do
-            if [ -f "$file" ]; then
-              echo "  Uploading $(basename $file)..."
-              gh release upload "v$VERSION" "$file" --clobber
+          # Wait for release to be available (with retry)
+          echo "Waiting for release to be available..."
+          for i in {1..10}; do
+            if gh release view "v$VERSION" &>/dev/null; then
+              echo "✅ Release v$VERSION is available"
+              break
+            fi
+            echo "⏳ Waiting for release (attempt $i/10)..."
+            sleep 3
+            if [ $i -eq 10 ]; then
+              echo "❌ Release not found after 30 seconds"
+              exit 1
             fi
           done
 
-          echo "✅ Build artifacts uploaded to https://github.com/frankyxhl/fx_bin/releases/tag/v$VERSION"
+          # Upload all dist files with error handling
+          UPLOAD_SUCCESS=true
+          for file in dist/*; do
+            if [ -f "$file" ]; then
+              FILENAME=$(basename "$file")
+              echo "📦 Uploading $FILENAME..."
+
+              if gh release upload "v$VERSION" "$file" --clobber; then
+                echo "  ✅ Successfully uploaded $FILENAME"
+              else
+                echo "  ❌ Failed to upload $FILENAME"
+                UPLOAD_SUCCESS=false
+              fi
+            fi
+          done
+
+          if [ "$UPLOAD_SUCCESS" = false ]; then
+            echo "❌ Some artifacts failed to upload"
+            exit 1
+          fi
+
+          echo "✅ All build artifacts uploaded to https://github.com/frankyxhl/fx_bin/releases/tag/v$VERSION"
 
       - name: Deploy to PyPI
         if: steps.pypi_check.outputs.version_exists == 'false'
@@ -113,3 +143,27 @@ jobs:
           echo "📦 PyPI: https://pypi.org/project/fx-bin/$VERSION/"
           echo "📦 GitHub Release: https://github.com/frankyxhl/fx_bin/releases/tag/v$VERSION"
           echo "📦 Installation: pip install fx-bin==$VERSION"
+
+          # Add to job summary
+          cat >> $GITHUB_STEP_SUMMARY << EOF
+          ## ✅ Deployment Successful
+
+          **Version:** $VERSION
+
+          ### 📦 Package Links
+          - **PyPI:** https://pypi.org/project/fx-bin/$VERSION/
+          - **GitHub Release:** https://github.com/frankyxhl/fx_bin/releases/tag/v$VERSION
+
+          ### 📥 Installation
+          \`\`\`bash
+          pip install fx-bin==$VERSION
+          \`\`\`
+          EOF
+
+      - name: Deployment status summary
+        if: always()
+        run: |
+          if [[ "${{ steps.semantic-release.outputs.version }}" == "" ]]; then
+            echo "## ℹ️ No Release" >> $GITHUB_STEP_SUMMARY
+            echo "No new version to release (no conventional commits since last release)" >> $GITHUB_STEP_SUMMARY
+          fi

@@ -6,6 +6,11 @@ on:
   push:
     branches: [develop]
 
+# Prevent concurrent security scans on the same PR/branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   security:
     name: 🔒 Security Scan
@@ -36,7 +41,9 @@ jobs:
       - name: Security Scan with Bandit
         run: |
           echo "🔍 Running security analysis..."
+          # Generate JSON report for artifacts (machine-readable)
           poetry run bandit -r fx_bin/ -f json -o bandit-report.json
+          # Display results in console for quick review (human-readable)
           poetry run bandit -r fx_bin/
 
       - name: Dependency Security Check

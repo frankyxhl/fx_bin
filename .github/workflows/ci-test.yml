@@ -6,6 +6,11 @@ on:
   push:
     branches: [develop]
 
+# Prevent concurrent test runs on the same PR/branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: ⚙️ Tests (Python ${{ matrix.python-version }})
@@ -45,8 +50,14 @@ jobs:
 
       - name: Upload Coverage Reports
         uses: codecov/codecov-action@v4
+        continue-on-error: true
         with:
           file: ./coverage.xml
           flags: unittests
           name: codecov-umbrella
-          fail_ci_if_error: false
+
+      - name: Coverage Upload Status
+        if: failure()
+        run: |
+          echo "⚠️ Coverage upload failed (non-blocking)" >> $GITHUB_STEP_SUMMARY
+          echo "Tests passed but coverage report could not be uploaded to Codecov" >> $GITHUB_STEP_SUMMARY

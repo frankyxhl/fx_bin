@@ -162,11 +162,11 @@ build_command = "pip install poetry && poetry build"
 commit_parser = "conventional"
 
 # GitHub Release Settings
-changelog_environment = "github://name=github-actions[bot],email=41898282+github-actions[bot]@users.noreply.github.com"
-upload_to_repository = true
+# Semantic-release creates GitHub Release with auto-generated changelog
+upload_to_repository = true  # Creates GitHub Release
 repository_user = "frankyxhl"
 repository_name = "fx_bin"
-remove_dist = false
+remove_dist = false  # Keep dist files for manual upload to release
 
 [tool.semantic_release.commit_parser_options]
 minor_tags = ["feat"]
