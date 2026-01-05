@@ -24,8 +24,8 @@ from .common import (
 )
 from .errors import FxBinError
 
-# Default timestamp format (YYYYMMDDHHMMSSffffff)
-DEFAULT_TIMESTAMP_FORMAT = "%Y%m%d%H%M%S%f"
+# Default timestamp format (YYYYMMDDHHMMSS)
+DEFAULT_TIMESTAMP_FORMAT = "%Y%m%d%H%M%S"
 
 
 def get_multi_ext(filename: str) -> str:
