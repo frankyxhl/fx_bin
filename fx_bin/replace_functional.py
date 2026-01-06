@@ -31,7 +31,7 @@ from fx_bin.backup_utils import (
     FileBackup,
     create_backup,
     restore_from_backup,
-    cleanup_backup
+    cleanup_backup,
 )
 from fx_bin.errors import ReplaceError, IOError as FxIOError, SecurityError
 
@@ -215,6 +215,7 @@ def _make_replacement_pipeline(
     Uses partial application to avoid lambda functions while maintaining
     access to the backup parameter in error/success handlers.
     """
+
     def execute_replacement(backup: FileBackup) -> IOResult[None, ReplaceError]:
         """Execute replacement with automatic error recovery and cleanup.
 
@@ -273,8 +274,8 @@ def work_functional(
     replacement_pipeline = _make_replacement_pipeline(context)
 
     return flow(
-        create_backup(real_path),       # IOResult[FileBackup, ReplaceError]
-        bind(replacement_pipeline),     # Success: cleanup, Failure: restore
+        create_backup(real_path),  # IOResult[FileBackup, ReplaceError]
+        bind(replacement_pipeline),  # Success: cleanup, Failure: restore
     )
 
 
