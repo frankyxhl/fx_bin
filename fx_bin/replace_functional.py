@@ -27,8 +27,13 @@ from returns.io import IOResult
 from returns.pipeline import flow
 from returns.pointfree import bind, lash
 
-from fx_bin.backup_utils import FileBackup, create_backup, restore_from_backup, cleanup_backup
-from fx_bin.errors import ReplaceError, IOError as FxIOError, FileOperationError, SecurityError
+from fx_bin.backup_utils import (
+    FileBackup,
+    create_backup,
+    restore_from_backup,
+    cleanup_backup
+)
+from fx_bin.errors import ReplaceError, IOError as FxIOError, SecurityError
 
 
 @dataclass(frozen=True)
@@ -192,15 +197,21 @@ def _make_replacement_pipeline(
     access to the backup parameter in error/success handlers.
     """
     def execute_replacement(backup: FileBackup) -> IOResult[None, ReplaceError]:
-        """Execute replacement with automatic error recovery and cleanup."""
+        """Execute replacement with automatic error recovery and cleanup.
+
+        Railway-Oriented Programming pattern:
+        - SUCCESS track: perform_replacement → handle_success → cleanup backup
+        - FAILURE track: perform_replacement → handle_failure → restore backup
+        """
         # Use partial to "bake in" the backup parameter
+        # This avoids lambdas: partial(func, arg1) is cleaner than lambda x: func(arg1, x)
         handle_failure = partial(_handle_replacement_failure, backup)
         handle_success = partial(_handle_replacement_success, backup)
 
         return flow(
-            perform_replacement(context, backup),
-            lash(handle_failure),  # No lambda - uses partial!
-            bind(handle_success),  # No lambda - uses partial!
+            perform_replacement(context, backup),  # Try replacement (IOResult)
+            lash(handle_failure),  # If failed, restore from backup
+            bind(handle_success),  # If succeeded, cleanup backup
         )
 
     return execute_replacement
@@ -214,21 +225,30 @@ def work_functional(
 
     This function performs atomic replacement with automatic backup/restore
     on failure, using functional pipeline composition.
+
+    Railway-Oriented Programming:
+    1. Pure validation first (fail fast before any IO)
+    2. IO pipeline: create_backup → replacement → cleanup/restore
+    3. Automatic error recovery (restore on failure)
     """
-    # Validate file access (pure)
+    # Step 1: Validate file access (pure function, no side effects)
+    # Returns Result[str, ReplaceError] - either valid path or error
     validation = validate_file_access(filename)
     if isinstance(validation, Failure):
+        # Short-circuit: return failure without doing any IO
         return IOResult.from_failure(validation.failure())
 
+    # Step 2: Extract validated path and create immutable context
     real_path = validation.unwrap()
     context = ReplaceContext(search_text, replace_text)
 
-    # Functional pipeline: create backup -> perform replacement with recovery
+    # Step 3: Functional pipeline with automatic error recovery
+    # Pipeline: create backup → perform replacement → cleanup (or restore on error)
     replacement_pipeline = _make_replacement_pipeline(context)
 
     return flow(
-        create_backup(real_path),
-        bind(replacement_pipeline),
+        create_backup(real_path),       # IOResult[FileBackup, ReplaceError]
+        bind(replacement_pipeline),     # On success: replace & cleanup, On failure: restore
     )
 
 

@@ -4,7 +4,6 @@ This module contains type definitions that are shared across multiple modules
 to avoid duplication and circular imports.
 """
 
-import os
 from dataclasses import dataclass
 from enum import Enum
 from typing import Set, Tuple

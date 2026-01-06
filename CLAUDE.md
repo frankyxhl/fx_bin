@@ -222,3 +222,293 @@ Each utility module follows this pattern:
 - Test files follow `test_*.py` naming convention
 - Virtual environment: `.venv/` (Python standard)
 - Comprehensive security and safety tests implemented
+
+### Functional Programming Patterns
+
+The project uses functional programming principles with the [returns](https://returns.readthedocs.io/) library for safer, more composable code.
+
+#### Railway-Oriented Programming (ROP)
+
+Railway-Oriented Programming treats success and failure as two parallel "tracks" that functions operate on. Functions return `Result[SuccessType, ErrorType]` or `IOResult[SuccessType, ErrorType]` instead of raising exceptions.
+
+**Core Concepts:**
+- `Result[T, E]`: Pure computation that can succeed (T) or fail (E)
+- `IOResult[T, E]`: IO operation that can succeed (T) or fail (E)
+- `flow()`: Pipeline composition for chaining operations
+- `bind()`: Continue on success track, short-circuit on failure
+- `lash()`: Error recovery - handle failures and potentially return to success track
+
+**Example from replace_functional.py:**
+```python
+from returns.pipeline import flow
+from returns.pointfree import bind, lash
+
+def work_functional(search_text: str, replace_text: str, filename: str) -> IOResult[None, ReplaceError]:
+    """Replace text with automatic backup/restore on failure."""
+    # Pure validation first
+    validation = validate_file_access(filename)
+    if isinstance(validation, Failure):
+        return IOResult.from_failure(validation.failure())
+
+    real_path = validation.unwrap()
+    context = ReplaceContext(search_text, replace_text)
+
+    # Functional pipeline: create backup -> perform replacement -> cleanup
+    replacement_pipeline = _make_replacement_pipeline(context)
+
+    return flow(
+        create_backup(real_path),          # Create backup (IOResult)
+        bind(replacement_pipeline),        # Replace on success, auto-restore on failure
+    )
+```
+
+**Benefits:**
+- Explicit error handling (no hidden exceptions)
+- Composable operations (chain with `flow`, `bind`, `lash`)
+- Type-safe (mypy verifies success/error types)
+- Self-documenting (function signatures show what can fail)
+
+#### Pure vs IO Functions Separation
+
+The codebase separates pure logic from IO operations for better testability and reasoning.
+
+**Pure Functions** (no side effects, deterministic):
+```python
+def should_process_directory(depth: int, context: FolderContext, dir_inode: Tuple[int, int] | None = None) -> bool:
+    """Pure function - same inputs always give same output."""
+    if depth > context.max_depth:
+        return False
+    if dir_inode is not None and dir_inode in context.visited_inodes:
+        return False
+    return True
+
+def calculate_entry_contribution(entry_info: object) -> int:
+    """Pure calculation - no IO, no mutations."""
+    if hasattr(entry_info, "is_file") and entry_info.is_file:
+        return getattr(entry_info, "size", 0)
+    return 0
+```
+
+**IO Functions** (interact with file system):
+```python
+@impure_safe
+def _sum_folder_recursive(path: str, context: FolderContext, depth: int) -> IOResult[int, FolderError]:
+    """IO function - reads from file system, can fail."""
+    try:
+        dir_stat = os.stat(path)
+        total = 0
+        for entry in os.scandir(path):
+            # ... file system operations
+        return IOResult.from_value(total)
+    except (OSError, PermissionError) as e:
+        return IOResult.from_failure(FolderError(f"Cannot access {path}: {e}"))
+```
+
+**Key Decorator: `@impure_safe`**
+- Wraps functions that perform IO operations
+- Automatically catches exceptions and returns `IOResult`
+- Signals to readers: "this function has side effects"
+
+#### Shared Types Module
+
+Common types are centralized in `fx_bin/shared_types.py` to eliminate duplication and prevent circular imports.
+
+**Shared Types:**
+```python
+from fx_bin.shared_types import EntryType, FileBackup, FolderContext
+
+# EntryType: Enum for FILE vs FOLDER
+# FileBackup: Immutable backup metadata (original_path, backup_path, original_mode)
+# FolderContext: Traversal state (visited_inodes, max_depth)
+```
+
+**Benefits:**
+- Single source of truth for type definitions
+- No circular import issues
+- Easy to update types across entire codebase
+- Better IDE autocomplete and type checking
+
+#### Type Annotations Best Practices
+
+The project uses precise type annotations for better static analysis:
+
+**Use `Sequence[T]` for function parameters** (instead of `Tuple[T, ...]`):
+```python
+# GOOD - accepts tuple, list, or any sequence
+def process_files(filenames: Sequence[str]) -> int:
+    for name in filenames:
+        process(name)
+
+# AVOID - too restrictive, only accepts tuples
+def process_files(filenames: Tuple[str, ...]) -> int:
+    pass
+```
+
+**Why `Sequence` is better:**
+- More abstract and flexible (covariant type)
+- Accepts any sequence type (tuple, list, etc.)
+- Recommended by mypy for read-only parameters
+- Signals intent: "I only need to iterate, not mutate"
+
+**Use `List[T]` for return values** (when you return a mutable list):
+```python
+def collect_results() -> List[Result[str, Error]]:
+    results = []
+    # ... populate results
+    return results
+```
+
+#### RequiresContext Pattern
+
+Functions that need shared context use `RequiresContext` to make dependencies explicit:
+
+```python
+from returns.context import RequiresContext
+
+def sum_folder_size_functional(path: str = ".") -> RequiresContext[IOResult[int, FolderError], FolderContext]:
+    """Function that requires FolderContext to execute."""
+    def _sum_folder(context: FolderContext) -> IOResult[int, FolderError]:
+        return _sum_folder_recursive(path, context, depth=0)
+    return RequiresContext(_sum_folder)
+
+# Usage:
+context = FolderContext(visited_inodes=set(), max_depth=100)
+result = sum_folder_size_functional("/path/to/folder")(context)  # Inject context
+```
+
+**Benefits:**
+- Explicit dependencies (function signature shows what context is needed)
+- Easy to test (inject different contexts for different scenarios)
+- Avoids global state
+- Composable (can map over context, chain operations)
+
+#### Mock Helpers for Testing
+
+Reusable context managers reduce test code duplication:
+
+```python
+from contextlib import contextmanager
+
+@contextmanager
+def mock_windows_file_ops():
+    """Context manager for mocking Windows file operations."""
+    with patch("os.remove") as mock_remove, \
+         patch("os.rename") as mock_rename, \
+         patch("os.unlink") as mock_unlink:
+
+        mock_remove.return_value = None
+        mock_rename.return_value = None
+        mock_unlink.return_value = None
+
+        yield {
+            'remove': mock_remove,
+            'rename': mock_rename,
+            'unlink': mock_unlink
+        }
+
+# Usage in tests:
+def test_windows_replacement(temp_test_dir):
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text("Hello World")
+
+    with mock_windows_file_ops() as mocks:
+        work("World", "Python", str(test_file))
+        assert mocks['remove'].call_count == 1
+        mocks['rename'].assert_called_once()
+```
+
+**Benefits:**
+- DRY (Don't Repeat Yourself) - write mock setup once
+- Clearer test intent - mock helper name explains what's being mocked
+- Easier to maintain - update mock logic in one place
+- Reduced boilerplate - 13 lines → 5 lines per test
+
+#### Immutable Data Classes
+
+All data classes use `frozen=True` for immutability:
+
+```python
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class ReplaceContext:
+    """Immutable context - prevents accidental mutations."""
+    search_text: str
+    replace_text: str
+    create_backup: bool = True
+    preserve_permissions: bool = True
+
+# This raises FrozenInstanceError:
+# context.search_text = "new value"  # ❌ Error!
+
+# Instead, create new instance:
+new_context = ReplaceContext(
+    search_text="new value",
+    replace_text=context.replace_text,
+    create_backup=context.create_backup
+)
+```
+
+**Benefits:**
+- Thread-safe (no mutations means no race conditions)
+- Easier to reason about (data never changes unexpectedly)
+- Hashable (can use as dict keys or set members)
+- Prevents bugs (compiler catches mutation attempts)
+
+#### Error Hierarchy
+
+Custom exceptions use inheritance for polymorphic error handling:
+
+```python
+from fx_bin.errors import FileOperationError, IOError, ReplaceError, SecurityError
+
+# Hierarchy:
+# FileOperationError (base for all file operations)
+# ├── ReplaceError (text replacement errors)
+# ├── IOError (file I/O errors)
+# └── SecurityError (security violations)
+
+# Polymorphic handling:
+try:
+    work_functional(search, replace, filename)
+except FileOperationError:
+    # Catches ReplaceError, IOError, SecurityError
+    handle_any_file_error()
+except ReplaceError:
+    # Catches only replacement-specific errors
+    handle_replace_error()
+```
+
+#### Partial Application for Avoiding Lambdas
+
+Use `functools.partial` to bind parameters without lambda functions:
+
+```python
+from functools import partial
+
+# GOOD - uses partial to bind backup parameter
+def _make_replacement_pipeline(context: ReplaceContext) -> Callable[[FileBackup], IOResult[None, ReplaceError]]:
+    def execute_replacement(backup: FileBackup) -> IOResult[None, ReplaceError]:
+        handle_failure = partial(_handle_replacement_failure, backup)
+        handle_success = partial(_handle_replacement_success, backup)
+
+        return flow(
+            perform_replacement(context, backup),
+            lash(handle_failure),  # No lambda needed!
+            bind(handle_success),  # Cleaner than lambda
+        )
+    return execute_replacement
+
+# AVOID - using lambdas
+return flow(
+    perform_replacement(context, backup),
+    lash(lambda error: _handle_replacement_failure(backup, error)),  # Verbose
+    bind(lambda _: _handle_replacement_success(backup, _)),  # Less clear
+)
+```
+
+**Benefits:**
+- More readable (no lambda syntax)
+- Easier to debug (named functions in stack traces)
+- Better type inference (mypy understands partial better)
+- Follows functional composition principles

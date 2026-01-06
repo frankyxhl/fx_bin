@@ -8,8 +8,11 @@ import click
 from loguru import logger as L
 from returns.result import Failure
 
-from fx_bin.backup_utils import create_backup, restore_from_backup, cleanup_backup
-from fx_bin.errors import IOError as FxIOError
+from fx_bin.backup_utils import (
+    create_backup,
+    restore_from_backup,
+    cleanup_backup
+)
 
 
 def _is_binary_file(file_path: str, sample_size: int = 8192) -> bool:

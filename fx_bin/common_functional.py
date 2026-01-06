@@ -18,14 +18,14 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from functools import total_ordering
-from typing import Set, Tuple
+from typing import Tuple
 
 from returns.maybe import Maybe, Nothing, Some
 from returns.result import Failure
 from returns.io import IOResult, impure_safe
 from returns.context import RequiresContext
 
-from fx_bin.errors import FolderError, IOError as FxIOError, FileOperationError
+from fx_bin.errors import FolderError, IOError as FxIOError
 from fx_bin.shared_types import EntryType, FolderContext
 from .common import convert_size
 
@@ -257,35 +257,52 @@ def sum_folder_size_functional(
 
     Returns a RequiresContext that when given a FolderContext,
     produces an IOResult with the total size or an error.
+
+    RequiresContext Pattern:
+    - Makes dependencies explicit (requires FolderContext to run)
+    - Allows dependency injection for testing
+    - Composable (can map, bind, etc.)
+
+    Usage:
+        context = FolderContext(visited_inodes=set(), max_depth=100)
+        result = sum_folder_size_functional("/path")(context)  # Inject context
     """
 
     def _sum_folder(context: FolderContext) -> IOResult[int, FolderError]:
+        # Delegate to recursive implementation with injected context
         return _sum_folder_recursive(path, context, depth=0)
 
     return RequiresContext(_sum_folder)
 
 
-@impure_safe
+@impure_safe  # Decorator marks this as an IO function that can fail
 def _sum_folder_recursive(
     path: str, context: FolderContext, depth: int
 ) -> IOResult[int, FolderError]:
-    """Recursive implementation of folder size calculation."""
+    """Recursive implementation of folder size calculation.
 
-    # Check depth limit
+    @impure_safe decorator:
+    - Automatically wraps exceptions in IOResult
+    - Signals: "this function has side effects (IO operations)"
+    - Returns IOResult[T, E] instead of raising exceptions
+    """
+
+    # Check depth limit (uses pure function should_process_directory)
     if depth > context.max_depth:
         return IOResult.from_value(0)
 
     try:
-        # Get directory's inode
+        # Get directory's inode for cycle detection
         dir_stat = os.stat(path)
         dir_inode = (dir_stat.st_dev, dir_stat.st_ino)
 
-        # Check for cycles
+        # Check for cycles (prevents infinite recursion on symlinks)
         if dir_inode in context.visited_inodes:
             return IOResult.from_value(0)
 
-        # Create new context with updated visited set
-        new_visited = context.visited_inodes | {dir_inode}
+        # Immutability: Create NEW context instead of mutating existing one
+        # This is thread-safe and easier to reason about
+        new_visited = context.visited_inodes | {dir_inode}  # Set union (not mutation)
         new_context = FolderContext(new_visited, context.max_depth)
 
         total = 0
