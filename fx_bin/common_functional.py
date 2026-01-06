@@ -1,4 +1,3 @@
-
 """Functional version of common.py utilities using returns library.
 
 This module provides functional implementations of common utilities
@@ -30,6 +29,7 @@ from fx_bin.errors import FolderError, IOError as FxIOError
 from fx_bin.shared_types import EntryType, FolderContext
 from .common import convert_size
 from .lib import unsafe_ioresult_value_or
+
 
 @dataclass(frozen=True)
 @total_ordering
@@ -110,10 +110,12 @@ class SizeEntry:
         # Otherwise create the entry
         return stat_result.bind(create_entry_from_stat).map(Some)  # type: ignore
 
+
 # ============================================================================
 # Pure Functions - No IO, Easy to Test
 
 # ============================================================================
+
 
 def should_process_directory(
     depth: int,
@@ -161,6 +163,7 @@ def should_process_directory(
 
     return True
 
+
 def calculate_entry_contribution(entry_info: object) -> int:
     """Calculate size contribution of a single entry (pure function).
 
@@ -201,6 +204,7 @@ def calculate_entry_contribution(entry_info: object) -> int:
         return getattr(entry_info, "size", 0)
     return 0
 
+
 def add_visited_inode(context: FolderContext, inode: Tuple[int, int]) -> FolderContext:
     """Create new context with additional visited inode (pure function).
 
@@ -239,9 +243,11 @@ def add_visited_inode(context: FolderContext, inode: Tuple[int, int]) -> FolderC
     new_visited = context.visited_inodes | {inode}
     return FolderContext(visited_inodes=new_visited, max_depth=context.max_depth)
 
+
 # ============================================================================
 # IO Functions - Uses Pure Functions Above
 # ============================================================================
+
 
 def sum_folder_size_functional(
     path: str = ".",
@@ -267,6 +273,7 @@ def sum_folder_size_functional(
         return _sum_folder_recursive(path, context, depth=0)
 
     return RequiresContext(_sum_folder)
+
 
 def _sum_folder_recursive(
     path: str, context: FolderContext, depth: int
@@ -319,6 +326,7 @@ def _sum_folder_recursive(
     except (OSError, PermissionError) as e:
         return IOResult.from_failure(FolderError(f"Cannot access {path}: {e}"))
 
+
 def sum_folder_files_count_functional(
     path: str = ".",
 ) -> RequiresContext[IOResult[int, FolderError], FolderContext]:
@@ -333,6 +341,7 @@ def sum_folder_files_count_functional(
         return _count_files_recursive(path, context, depth=0)
 
     return RequiresContext(_count_files)
+
 
 def _count_files_recursive(
     path: str, context: FolderContext, depth: int
@@ -380,22 +389,25 @@ def _count_files_recursive(
     except (OSError, PermissionError) as e:
         return IOResult.from_failure(FolderError(f"Cannot access {path}: {e}"))
 
+
 # Compatibility wrappers for existing code
+
 
 def sum_folder_size_legacy(
     path: str = ".",
     _visited_inodes: Optional[Set[Tuple[int, int]]] = None,
-    _depth: int = 0
+    _depth: int = 0,
 ) -> int:
     """Legacy interface for backward compatibility."""
     context = FolderContext(visited_inodes=_visited_inodes or set(), max_depth=100)
     result = sum_folder_size_functional(path)(context)
     return unsafe_ioresult_value_or(result, 0)
 
+
 def sum_folder_files_count_legacy(
     path: str = ".",
     _visited_inodes: Optional[Set[Tuple[int, int]]] = None,
-    _depth: int = 0
+    _depth: int = 0,
 ) -> int:
     """Legacy interface for backward compatibility."""
     context = FolderContext(visited_inodes=_visited_inodes or set(), max_depth=100)

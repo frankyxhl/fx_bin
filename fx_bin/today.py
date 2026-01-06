@@ -15,6 +15,7 @@ import click
 
 from .common import generate_timestamp
 
+
 def get_today_path(base_dir: str = "~/Downloads", date_format: str = "%Y%m%d") -> Path:
     """Get the path for today's workspace directory.
 
@@ -37,6 +38,7 @@ def get_today_path(base_dir: str = "~/Downloads", date_format: str = "%Y%m%d") -
     today_str = generate_timestamp(date_format, now=datetime.now())
 
     return base / today_str
+
 
 def ensure_directory_exists(path: Path) -> bool:
     """Ensure the directory exists, creating it if necessary.
@@ -63,6 +65,7 @@ def ensure_directory_exists(path: Path) -> bool:
     except Exception as e:
         click.echo(f"Error creating directory {path}: {e}", err=True)
         return False
+
 
 def validate_date_format(date_format: Optional[str]) -> bool:
     """Validate that the date format string is valid and safe.
@@ -159,6 +162,7 @@ def validate_date_format(date_format: Optional[str]) -> bool:
     except (ValueError, TypeError, Exception):
         return False
 
+
 def validate_base_path(base_path: str) -> bool:
     """Validate that the base path is safe (no path traversal).
 
@@ -196,6 +200,7 @@ def validate_base_path(base_path: str) -> bool:
             return False
 
     return True
+
 
 def detect_shell_executable() -> str:
     """Detect the user's preferred shell executable.
@@ -245,6 +250,7 @@ def detect_shell_executable() -> str:
 
         # Last resort
         return "/bin/sh"
+
 
 def main(
     output_for_cd: bool = False,

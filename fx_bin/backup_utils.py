@@ -19,6 +19,7 @@ from fx_bin.shared_types import FileBackup
 # Re-export for backward compatibility
 __all__ = ["FileBackup", "create_backup", "restore_from_backup", "cleanup_backup"]
 
+
 def create_backup(filename: str) -> IOResult[FileBackup, FxIOError]:
     """Create a backup of the file.
 
@@ -61,6 +62,7 @@ def create_backup(filename: str) -> IOResult[FileBackup, FxIOError]:
     except Exception as e:
         return IOResult.from_failure(FxIOError(f"Failed to create backup: {e}"))
 
+
 def restore_from_backup(backup: FileBackup) -> IOResult[None, FxIOError]:
     """Restore original file from backup on failure.
 
@@ -89,6 +91,7 @@ def restore_from_backup(backup: FileBackup) -> IOResult[None, FxIOError]:
         return IOResult.from_value(None)
     except Exception as e:
         return IOResult.from_failure(FxIOError(f"Failed to restore from backup: {e}"))
+
 
 def cleanup_backup(backup: FileBackup) -> IOResult[None, FxIOError]:
     """Remove backup file after successful operation.

@@ -6,6 +6,7 @@ and tilde expansion to absolute canonical paths.
 
 from pathlib import Path
 
+
 def resolve_path(path: str) -> Path:
     """Resolve a path to its absolute canonical form.
 

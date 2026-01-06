@@ -7,6 +7,7 @@ from typing import List, Tuple, Optional, Any
 
 import importlib.metadata
 
+
 def get_version_info() -> str:
     """Get version information."""
     try:
@@ -15,6 +16,7 @@ def get_version_info() -> str:
 Repository: https://github.com/frankyxhl/fx_bin"""
     except Exception:
         return "fx-bin (development version)"
+
 
 # Command metadata for the list command
 COMMANDS_INFO: List[Tuple[str, str]] = [
@@ -33,6 +35,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("version", "Show version and system information"),
 ]
 
+
 @click.group(
     invoke_without_command=True,
     context_settings={"help_option_names": ["-h", "--help"]},
@@ -40,7 +43,6 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
 @click.version_option(version=None, message=get_version_info())
 @click.pass_context
 def cli(ctx: click.Context) -> None:
-
     """FX - A collection of file and text utilities.
 
     Common commands:
@@ -56,10 +58,10 @@ def cli(ctx: click.Context) -> None:
         # If no subcommand is provided, show help
         click.echo(ctx.get_help())
 
+
 @cli.command()
 @click.argument("paths", nargs=-1, type=click.Path(exists=True))
 def files(paths: Tuple[str, ...]) -> int:
-
     """Count files in directories.
 
     Examples:
@@ -84,10 +86,10 @@ def files(paths: Tuple[str, ...]) -> int:
             click.echo(f"No files or directories found in {path}.")
     return 0
 
+
 @cli.command()
 @click.argument("paths", nargs=-1, type=click.Path(exists=True))
 def size(paths: Tuple[str, ...]) -> int:
-
     """Analyze file and directory sizes.
 
     Examples:
@@ -111,6 +113,7 @@ def size(paths: Tuple[str, ...]) -> int:
 
     return 0
 
+
 def _run_ff(
     keyword: str,
     include_ignored: bool,
@@ -131,6 +134,7 @@ def _run_ff(
         first=first,
     )
     return 0
+
 
 @cli.command()
 @click.argument("keyword")
@@ -158,7 +162,6 @@ def _run_ff(
 def ff(
     keyword: str, first: bool, include_ignored: bool, excludes: Tuple[str, ...]
 ) -> int:
-
     """Find files whose names contain KEYWORD.
 
     \b
@@ -190,10 +193,10 @@ def ff(
     """
     return _run_ff(keyword, include_ignored, excludes, first)
 
+
 @cli.command()
 @click.argument("keyword")
 def fff(keyword: str) -> int:
-
     """Find first file matching KEYWORD.
 
     Alias for `fx ff KEYWORD --first`. Returns only the first match
@@ -206,6 +209,7 @@ def fff(keyword: str) -> int:
       fx fff .py       # Find first Python file
     """
     return _run_ff(keyword, include_ignored=False, excludes=(), first=True)
+
 
 @cli.command()
 @click.argument("extension")
@@ -256,7 +260,6 @@ def filter(
     show_path: bool,
     limit: Optional[int],
 ) -> int:
-
     """Filter files by extension.
 
     \b
@@ -317,12 +320,12 @@ def filter(
         click.echo(f"Unexpected error: {e}", err=True)
         return 1
 
+
 @cli.command()
 @click.argument("search_text")
 @click.argument("replace_text")
 @click.argument("filenames", nargs=-1, required=True)
 def replace(search_text: str, replace_text: str, filenames: Tuple[str, ...]) -> int:
-
     """Replace text in files.
 
     Examples:
@@ -333,6 +336,7 @@ def replace(search_text: str, replace_text: str, filenames: Tuple[str, ...]) -> 
 
     # Call the replace_files function directly (not the Click-decorated main)
     return replace_module.replace_files(search_text, replace_text, filenames)
+
 
 @cli.command()
 @click.argument("path", type=click.Path(exists=True))
@@ -379,6 +383,7 @@ def backup(
         click.echo(f"Error: {e}", err=True)
         return 1
 
+
 @cli.command()
 @click.option(
     "--cd",
@@ -388,7 +393,6 @@ def backup(
     help="Output path suitable for cd command (no extra text)",
 )
 def root(output_for_cd: bool) -> int:
-
     """Find Git project root directory.
 
     Searches upward from current directory to find the first directory
@@ -436,6 +440,7 @@ def root(output_for_cd: bool) -> int:
         ctx = click.get_current_context()
         ctx.exit(1)
 
+
 @cli.command()
 @click.argument("path", default=".")
 def realpath(path: str) -> int:
@@ -467,6 +472,7 @@ def realpath(path: str) -> int:
         click.echo(f"Error: Cannot resolve path: {path} ({e})", err=True)
         ctx = click.get_current_context()
         ctx.exit(1)
+
 
 @cli.command()
 @click.option(
@@ -505,7 +511,6 @@ def today(
     dry_run: bool,
     no_exec: bool,
 ) -> None:
-
     """Create and navigate to today's workspace directory.
 
     Creates a date-organized directory (default: ~/Downloads/YYYYMMDD)
@@ -532,9 +537,9 @@ def today(
         ctx = click.get_current_context()
         ctx.exit(1)
 
+
 @cli.command(name="list")
 def list_commands() -> int:
-
     """List all available fx commands."""
     click.echo("\nAvailable fx commands:\n")
 
@@ -550,10 +555,10 @@ def list_commands() -> int:
     )
     return 0
 
+
 @cli.command()
 @click.pass_context
 def help(ctx: click.Context) -> int:
-
     """Show help information (same as fx -h).
 
     Examples:
@@ -569,9 +574,9 @@ def help(ctx: click.Context) -> int:
         list_commands()
     return 0
 
+
 @cli.command()
 def version() -> int:
-
     """Show version and system information.
 
     Examples:
@@ -581,14 +586,15 @@ def version() -> int:
     click.echo(get_version_info())
     return 0
 
-def main() -> Any:
 
+def main() -> Any:
     """Main entry point for the fx command."""
     try:
         return cli()
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

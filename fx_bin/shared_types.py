@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Set, Tuple
 
+
 class EntryType(Enum):
     """Type of filesystem entry.
 
@@ -17,6 +18,7 @@ class EntryType(Enum):
 
     FILE = 1
     FOLDER = 2
+
 
 @dataclass(frozen=True)
 class FileBackup:
@@ -34,6 +36,7 @@ class FileBackup:
     original_path: str
     backup_path: str
     original_mode: int
+
 
 @dataclass(frozen=True)
 class FolderContext:
