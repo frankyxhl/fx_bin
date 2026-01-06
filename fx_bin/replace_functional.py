@@ -14,7 +14,6 @@ specific error types for more precise error recovery.
 """
 
 import os
-import shutil
 import stat
 import tempfile
 from dataclasses import dataclass
@@ -24,11 +23,12 @@ from typing import List, Callable
 import click
 from loguru import logger as L
 from returns.result import Result, Success, Failure
-from returns.io import IOResult, impure_safe
+from returns.io import IOResult
 from returns.pipeline import flow
 from returns.pointfree import bind, lash
 
-from fx_bin.errors import ReplaceError, IOError as FxIOError, FileOperationError
+from fx_bin.backup_utils import FileBackup, create_backup, restore_from_backup, cleanup_backup
+from fx_bin.errors import ReplaceError, IOError as FxIOError, FileOperationError, SecurityError
 
 
 @dataclass(frozen=True)
@@ -41,60 +41,86 @@ class ReplaceContext:
     preserve_permissions: bool = True
 
 
-@dataclass(frozen=True)
-class FileBackup:
-    """Represents a file backup."""
+def validate_file_access(
+    filename: str, allowed_base: str | None = None
+) -> Result[str, ReplaceError | SecurityError]:
+    """Validate that we can access and modify the file.
 
-    original_path: str
-    backup_path: str
-    original_mode: int
+    Args:
+        filename: Path to the file to validate
+        allowed_base: Optional base directory to restrict file access.
+                     If provided, the file must be within this directory tree.
+                     This prevents path traversal attacks.
 
+    Returns:
+        Result containing:
+            - Success: Real path to the file (with symlinks resolved)
+            - Failure: ReplaceError for file access issues,
+                      SecurityError for path traversal attempts
 
-def validate_file_access(filename: str) -> Result[str, ReplaceError]:
-    """Validate that we can access and modify the file."""
+    Security:
+        When allowed_base is provided, this function prevents:
+        - Parent directory traversal (../../../etc/passwd)
+        - Absolute paths outside allowed base
+        - Symlinks pointing outside allowed base
+    """
     try:
-        # Check if file exists
-        if not os.path.exists(filename):
+        # Resolve to real path (normalize and prepare for security check)
+        # Always normalize first to handle '..' and '.' components
+        normalized = os.path.normpath(filename)
+
+        # Then resolve to absolute path
+        # For existing paths: realpath also follows symlinks
+        # For non-existent paths: abspath provides absolute form
+        if os.path.exists(normalized):
+            real_path = os.path.realpath(normalized)
+        else:
+            real_path = os.path.abspath(normalized)
+
+        # SECURITY: Path traversal check BEFORE file existence check
+        # This prevents attackers from probing which files exist outside allowed base
+        if allowed_base is not None:
+            real_base = os.path.realpath(allowed_base)
+
+            # Check if real_path is within allowed_base directory tree
+            try:
+                # os.path.commonpath raises ValueError if paths are on different drives
+                common = os.path.commonpath([real_base, real_path])
+
+                # File must be within base directory
+                if common != real_base:
+                    return Failure(
+                        SecurityError(
+                            f"Path traversal attempt: {filename} is outside "
+                            f"allowed directory {allowed_base}"
+                        )
+                    )
+            except ValueError:
+                # Different drives or no common path - definitely outside base
+                return Failure(
+                    SecurityError(
+                        f"Path traversal attempt: {filename} is outside "
+                        f"allowed directory {allowed_base}"
+                    )
+                )
+
+        # After security checks, verify file exists and is accessible
+        # Use normalized path for existence check (handles .. and .)
+        if not os.path.exists(normalized):
             return Failure(ReplaceError(f"File not found: {filename}"))
 
-        # Check if file is writable
-        if not os.access(filename, os.W_OK):
+        # Check if file is writable (use normalized path)
+        if not os.access(normalized, os.W_OK):
             return Failure(ReplaceError(f"File is not writable: {filename}"))
 
-        # Follow symlinks to get real path
-        real_path = os.path.realpath(filename) if os.path.islink(filename) else filename
+        # Re-resolve to real path for existing file (may differ from abspath)
+        real_path = os.path.realpath(normalized)
 
         return Success(real_path)
     except Exception as e:
         return Failure(ReplaceError(f"Error validating file access: {e}"))
 
 
-@impure_safe
-def create_backup(filename: str) -> IOResult[FileBackup, FxIOError]:
-    """Create a backup of the file."""
-    try:
-        # Get original file stats
-        original_stat = os.stat(filename)
-        original_mode = original_stat.st_mode
-
-        # Create backup path
-        backup_path = f"{filename}.backup"
-
-        # Copy file with metadata
-        shutil.copy2(filename, backup_path)
-
-        return IOResult.from_value(
-            FileBackup(
-                original_path=filename,
-                backup_path=backup_path,
-                original_mode=original_mode,
-            )
-        )
-    except Exception as e:
-        return IOResult.from_failure(FxIOError(f"Failed to create backup: {e}"))
-
-
-@impure_safe
 def perform_replacement(
     context: ReplaceContext, backup: FileBackup
 ) -> IOResult[str, FxIOError]:
@@ -136,33 +162,6 @@ def perform_replacement(
 
     except Exception as e:
         return IOResult.from_failure(FxIOError(f"Failed to perform replacement: {e}"))
-
-
-@impure_safe
-def cleanup_backup(backup: FileBackup) -> IOResult[None, FxIOError]:
-    """Remove backup file after successful operation."""
-    try:
-        if os.path.exists(backup.backup_path):
-            os.unlink(backup.backup_path)
-        return IOResult.from_value(None)
-    except Exception as e:
-        # Non-critical error - log but don't fail
-        L.warning(f"Could not remove backup {backup.backup_path}: {e}")
-        return IOResult.from_value(None)
-
-
-@impure_safe
-def restore_from_backup(backup: FileBackup) -> IOResult[None, FxIOError]:
-    """Restore original file from backup on failure."""
-    try:
-        if os.path.exists(backup.backup_path):
-            # Restore the backup
-            shutil.move(backup.backup_path, backup.original_path)
-            # Restore permissions
-            os.chmod(backup.original_path, stat.S_IMODE(backup.original_mode))
-        return IOResult.from_value(None)
-    except Exception as e:
-        return IOResult.from_failure(FxIOError(f"Failed to restore from backup: {e}"))
 
 
 def _handle_replacement_failure(

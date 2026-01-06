@@ -175,18 +175,22 @@ class TestReplaceErrorHandling(unittest.TestCase):
         """Test Windows-specific file removal path (line 51)."""
         self.test_file.write_text("Hello World")
 
-        with patch("os.remove") as mock_remove, patch("os.rename") as mock_rename:
+        with patch("os.remove") as mock_remove, patch(
+            "os.rename"
+        ) as mock_rename, patch("os.unlink") as mock_unlink:
             # Make rename succeed after remove
             mock_rename.return_value = None
             mock_remove.return_value = None
+            mock_unlink.return_value = None
 
             work("World", "Python", str(self.test_file))
 
-            # Verify Windows path was taken (remove is called twice: once for file, once for backup)
-            self.assertEqual(mock_remove.call_count, 2)
-            # First call should be the target file
-            mock_remove.assert_any_call(str(self.test_file))
+            # Verify Windows path was taken (remove called once for file)
+            self.assertEqual(mock_remove.call_count, 1)
+            mock_remove.assert_called_once_with(str(self.test_file))
             mock_rename.assert_called_once()
+            # Backup cleanup now uses os.unlink via cleanup_backup()
+            self.assertEqual(mock_unlink.call_count, 1)
 
     def test_atomic_replacement_general_exception(self):
         """Test general exception handling during atomic replacement (lines 66-70)."""

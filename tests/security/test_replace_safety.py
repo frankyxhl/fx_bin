@@ -295,11 +295,21 @@ class TestReplaceFileSafety(unittest.TestCase):
         test_file = self.test_path / "diskspace_test.txt"
         test_file.write_text("test content")
 
-        # Mock disk space error
-        with patch("builtins.open") as mock_open_func:
-            mock_file = mock_open_func.return_value.__enter__.return_value
-            mock_file.write.side_effect = OSError(28, "No space left on device")
+        # Mock disk space error during temp file write (not during backup)
+        original_fdopen = os.fdopen
 
+        def mock_fdopen(fd, *args, **kwargs):
+            file_obj = original_fdopen(fd, *args, **kwargs)
+            original_write = file_obj.write
+
+            def failing_write(data):
+                # Raise error on any write to simulate disk space issue
+                raise OSError(28, "No space left on device")
+
+            file_obj.write = failing_write
+            return file_obj
+
+        with patch("os.fdopen", side_effect=mock_fdopen):
             with self.assertRaises(OSError):
                 work("test", "modified", str(test_file))
 

@@ -6,6 +6,10 @@ from typing import Tuple
 
 import click
 from loguru import logger as L
+from returns.result import Failure
+
+from fx_bin.backup_utils import create_backup, restore_from_backup, cleanup_backup
+from fx_bin.errors import IOError as FxIOError
 
 
 def _is_binary_file(file_path: str, sample_size: int = 8192) -> bool:
@@ -44,13 +48,15 @@ def work(search_text: str, replace_text: str, filename: str) -> None:
     if os.path.islink(filename):
         filename = os.path.realpath(filename)
 
-    # Preserve original file permissions and metadata
-    original_stat = os.stat(filename)
-    original_mode = original_stat.st_mode
+    # Create backup using shared backup utilities
+    backup_result = create_backup(filename)
+    if isinstance(backup_result._inner_value, Failure):
+        error = backup_result._inner_value.failure()
+        raise Exception(str(error))
+    backup = backup_result._inner_value.unwrap()
 
-    # Create backup first
-    backup_path = filename + ".backup"
-    shutil.copy2(filename, backup_path)
+    # Get original mode for permission preservation
+    original_mode = backup.original_mode
 
     # Create temporary file in same directory for atomic move
     temp_dir = os.path.dirname(os.path.abspath(filename))
@@ -74,23 +80,21 @@ def work(search_text: str, replace_text: str, filename: str) -> None:
                 # Windows doesn't support atomic rename to existing file
                 os.remove(filename)
             os.rename(tmp_path, filename)
-            # Success - remove backup
-            os.remove(backup_path)
+            # Success - cleanup backup using shared utility
+            cleanup_backup(backup)
         except OSError as e:
             if e.errno == errno.EXDEV:  # Cross-device link error
                 # Fall back to copy+delete for cross-filesystem moves
                 shutil.move(tmp_path, filename)
-                # Success - remove backup
-                os.remove(backup_path)
+                # Success - cleanup backup using shared utility
+                cleanup_backup(backup)
             else:
-                # Restore from backup if replacement failed
-                if os.path.exists(backup_path):
-                    shutil.move(backup_path, filename)
+                # Restore from backup using shared utility
+                restore_from_backup(backup)
                 raise
         except Exception:
-            # Restore from backup if replacement failed
-            if os.path.exists(backup_path):
-                shutil.move(backup_path, filename)
+            # Restore from backup using shared utility
+            restore_from_backup(backup)
             raise
 
     except Exception:
@@ -101,12 +105,8 @@ def work(search_text: str, replace_text: str, filename: str) -> None:
             except OSError:
                 pass  # Best effort cleanup
 
-        # Restore from backup if it exists
-        if os.path.exists(backup_path):
-            try:
-                shutil.move(backup_path, filename)
-            except OSError:
-                pass  # Best effort restore
+        # Restore from backup using shared utility
+        restore_from_backup(backup)
         raise
 
 
@@ -129,7 +129,9 @@ def replace_files(
             L.error(f"File {f} is readonly")
             raise click.ClickException(f"File {f} is readonly")
 
-    # Phase 2: Create backups for all files
+    # Phase 2: Create transaction backups for all files
+    # Note: Transaction backups use ".transaction_backup" suffix to avoid
+    # conflicts with individual work() call backups (".backup" suffix)
     backups = {}
     try:
         for f in filenames:
@@ -142,7 +144,7 @@ def replace_files(
             L.debug(f"Replacing {search_text} with {replace_text} in {f}")
             work(search_text, replace_text, f)
 
-        # Phase 4: Success - remove all backups
+        # Phase 4: Success - remove all transaction backups
         for backup_path in backups.values():
             if os.path.exists(backup_path):
                 os.remove(backup_path)
@@ -150,7 +152,7 @@ def replace_files(
         return 0
 
     except Exception:
-        # Phase 5: Failure - restore all files from backups
+        # Phase 5: Failure - restore all files from transaction backups
         for original_file, backup_path in backups.items():
             if os.path.exists(backup_path):
                 try:
