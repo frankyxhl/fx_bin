@@ -10,6 +10,13 @@ from unittest.mock import patch, MagicMock
 import pytest
 from click.testing import CliRunner
 
+# Import mock helpers from conftest
+from tests.conftest import (
+    mock_windows_file_ops,
+    mock_file_operation_failure,
+    mock_backup_operations
+)
+
 # Silence loguru during tests
 from loguru import logger
 logger.remove()
@@ -201,22 +208,15 @@ def test_given_windows_when_replace_then_uses_windows_path(temp_test_dir):
     test_file.write_text("Hello World")
 
     # WHEN replacing with mocked Windows operations
-    with patch("os.remove") as mock_remove, \
-         patch("os.rename") as mock_rename, \
-         patch("os.unlink") as mock_unlink:
-        # Make rename succeed after remove
-        mock_rename.return_value = None
-        mock_remove.return_value = None
-        mock_unlink.return_value = None
-
+    with mock_windows_file_ops() as mocks:
         work("World", "Python", str(test_file))
 
         # THEN Windows path was taken (remove called once for file)
-        assert mock_remove.call_count == 1
-        mock_remove.assert_called_once_with(str(test_file))
-        mock_rename.assert_called_once()
+        assert mocks['remove'].call_count == 1
+        mocks['remove'].assert_called_once_with(str(test_file))
+        mocks['rename'].assert_called_once()
         # THEN backup cleanup uses os.unlink via cleanup_backup()
-        assert mock_unlink.call_count == 1
+        assert mocks['unlink'].call_count == 1
 
 
 def test_given_rename_fails_when_replace_then_restores_backup(temp_test_dir):
@@ -226,16 +226,15 @@ def test_given_rename_fails_when_replace_then_restores_backup(temp_test_dir):
     test_file.write_text("Hello World")
 
     # WHEN rename raises unexpected error
-    with patch("os.rename", side_effect=RuntimeError("Unexpected error")), \
-         patch("shutil.move") as mock_move, \
-         patch("os.path.exists", return_value=True):
+    with mock_file_operation_failure("os.rename", RuntimeError("Unexpected error")), \
+         mock_backup_operations() as backup_mocks:
 
         # THEN exception is raised
         with pytest.raises(RuntimeError):
             work("World", "Python", str(test_file))
 
         # THEN backup restoration was attempted
-        mock_move.assert_called()
+        backup_mocks['move'].assert_called()
 
 
 def test_given_temp_creation_fails_when_replace_then_cleans_up(temp_test_dir):
@@ -245,9 +244,8 @@ def test_given_temp_creation_fails_when_replace_then_cleans_up(temp_test_dir):
     test_file.write_text("Hello World")
 
     # WHEN temp creation fails and cleanup also fails
-    with patch("tempfile.mkstemp", side_effect=Exception("Temp creation failed")), \
-         patch("os.path.exists", return_value=True), \
-         patch("os.unlink", side_effect=OSError("Cleanup failed")):
+    with mock_file_operation_failure("tempfile.mkstemp", Exception("Temp creation failed")), \
+         mock_backup_operations(cleanup_fails=True):
 
         # THEN original exception is preserved
         with pytest.raises(Exception) as exc_info:
@@ -263,9 +261,8 @@ def test_given_backup_restore_fails_when_replace_then_preserves_original_error(t
     test_file.write_text("Hello World")
 
     # WHEN processing fails and restore also fails
-    with patch("tempfile.mkstemp", side_effect=Exception("Processing failed")), \
-         patch("os.path.exists", return_value=True), \
-         patch("shutil.move", side_effect=OSError("Restore failed")):
+    with mock_file_operation_failure("tempfile.mkstemp", Exception("Processing failed")), \
+         mock_backup_operations(restore_fails=True):
 
         # THEN original exception is preserved
         with pytest.raises(Exception) as exc_info:
@@ -284,9 +281,8 @@ def test_given_transaction_rollback_fails_when_batch_replace_then_handles_gracef
 
     # WHEN work fails and rollback also fails
     runner = CliRunner()
-    with patch("fx_bin.replace.work", side_effect=Exception("Work failed")), \
-         patch("os.path.exists", return_value=True), \
-         patch("shutil.move", side_effect=OSError("Rollback failed")):
+    with mock_file_operation_failure("fx_bin.replace.work", Exception("Work failed")), \
+         mock_backup_operations(restore_fails=True):
 
         # THEN command exits with error
         result = runner.invoke(main, ["search", "replace", str(test_file1), str(test_file2)])
@@ -301,9 +297,7 @@ def test_given_fdopen_fails_when_replace_then_attempts_all_cleanup(temp_test_dir
 
     # WHEN fdopen fails triggering exception cleanup
     with patch("tempfile.mkstemp") as mock_mkstemp, \
-         patch("os.path.exists", return_value=True), \
-         patch("os.unlink", side_effect=OSError("Cleanup unlink failed")) as mock_unlink, \
-         patch("shutil.move", side_effect=OSError("Backup move failed")) as mock_move:
+         mock_backup_operations(restore_fails=True, cleanup_fails=True) as backup_mocks:
 
         # Make mkstemp return fake fd and path
         mock_mkstemp.return_value = (999, "/fake/temp/path")
@@ -315,8 +309,8 @@ def test_given_fdopen_fails_when_replace_then_attempts_all_cleanup(temp_test_dir
                 work("World", "Python", str(test_file))
 
             # THEN both cleanup paths were attempted despite errors
-            mock_unlink.assert_called()  # Temp file cleanup OSError
-            mock_move.assert_called()  # Backup restore OSError
+            backup_mocks['unlink'].assert_called()  # Temp file cleanup OSError
+            backup_mocks['move'].assert_called()  # Backup restore OSError
 
             # THEN original exception is preserved
             assert "fdopen failed" in str(exc_info.value)
