@@ -3,7 +3,8 @@
 
 import click
 import sys
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Any
+
 import importlib.metadata
 
 
@@ -41,7 +42,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
 )
 @click.version_option(version=None, message=get_version_info())
 @click.pass_context
-def cli(ctx):
+def cli(ctx: click.Context) -> None:
     """FX - A collection of file and text utilities.
 
     Common commands:
@@ -60,7 +61,7 @@ def cli(ctx):
 
 @cli.command()
 @click.argument("paths", nargs=-1, type=click.Path(exists=True))
-def files(paths):
+def files(paths: Tuple[str, ...]) -> int:
     """Count files in directories.
 
     Examples:
@@ -88,7 +89,7 @@ def files(paths):
 
 @cli.command()
 @click.argument("paths", nargs=-1, type=click.Path(exists=True))
-def size(paths):
+def size(paths: Tuple[str, ...]) -> int:
     """Analyze file and directory sizes.
 
     Examples:
@@ -158,7 +159,9 @@ def _run_ff(
         "--exclude build --exclude '*.log'"
     ),
 )
-def ff(keyword, first, include_ignored, excludes):
+def ff(
+    keyword: str, first: bool, include_ignored: bool, excludes: Tuple[str, ...]
+) -> int:
     """Find files whose names contain KEYWORD.
 
     \b
@@ -193,7 +196,7 @@ def ff(keyword, first, include_ignored, excludes):
 
 @cli.command()
 @click.argument("keyword")
-def fff(keyword):
+def fff(keyword: str) -> int:
     """Find first file matching KEYWORD.
 
     Alias for `fx ff KEYWORD --first`. Returns only the first match
@@ -248,15 +251,15 @@ def fff(keyword):
     help="Limit the number of results returned",
 )
 def filter(
-    extension,
-    paths,
-    recursive,
-    sort_by,
-    reverse,
-    output_format,
-    show_path,
-    limit,
-):
+    extension: str,
+    paths: Tuple[str, ...],
+    recursive: bool,
+    sort_by: Optional[str],
+    reverse: bool,
+    output_format: str,
+    show_path: bool,
+    limit: Optional[int],
+) -> int:
     """Filter files by extension.
 
     \b
@@ -322,7 +325,7 @@ def filter(
 @click.argument("search_text")
 @click.argument("replace_text")
 @click.argument("filenames", nargs=-1, required=True)
-def replace(search_text, replace_text, filenames):
+def replace(search_text: str, replace_text: str, filenames: Tuple[str, ...]) -> int:
     """Replace text in files.
 
     Examples:
@@ -389,7 +392,7 @@ def backup(
     is_flag=True,
     help="Output path suitable for cd command (no extra text)",
 )
-def root(output_for_cd):
+def root(output_for_cd: bool) -> int:
     """Find Git project root directory.
 
     Searches upward from current directory to find the first directory
@@ -500,7 +503,14 @@ def realpath(path: str) -> int:
 @click.option(
     "--no-exec", is_flag=True, help="Don't start new shell, just create directory"
 )
-def today(output_for_cd, base_dir, date_format, verbose, dry_run, no_exec):
+def today(
+    output_for_cd: bool,
+    base_dir: str,
+    date_format: str,
+    verbose: bool,
+    dry_run: bool,
+    no_exec: bool,
+) -> None:
     """Create and navigate to today's workspace directory.
 
     Creates a date-organized directory (default: ~/Downloads/YYYYMMDD)
@@ -529,7 +539,7 @@ def today(output_for_cd, base_dir, date_format, verbose, dry_run, no_exec):
 
 
 @cli.command(name="list")
-def list_commands():
+def list_commands() -> int:
     """List all available fx commands."""
     click.echo("\nAvailable fx commands:\n")
 
@@ -548,7 +558,7 @@ def list_commands():
 
 @cli.command()
 @click.pass_context
-def help(ctx):
+def help(ctx: click.Context) -> int:
     """Show help information (same as fx -h).
 
     Examples:
@@ -566,7 +576,7 @@ def help(ctx):
 
 
 @cli.command()
-def version():
+def version() -> int:
     """Show version and system information.
 
     Examples:
@@ -577,7 +587,7 @@ def version():
     return 0
 
 
-def main():
+def main() -> Any:
     """Main entry point for the fx command."""
     try:
         return cli()

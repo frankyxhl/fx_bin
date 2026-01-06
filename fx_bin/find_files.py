@@ -5,7 +5,6 @@ from typing import Iterable, List, Optional
 
 import click
 
-
 DEFAULT_IGNORED_DIRS: List[str] = [".git", ".venv", "node_modules"]
 
 

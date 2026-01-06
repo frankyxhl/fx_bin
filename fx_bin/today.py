@@ -9,7 +9,8 @@ import os
 import re
 from pathlib import Path
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Sequence
+
 import click
 
 from .common import generate_timestamp
@@ -130,8 +131,9 @@ def validate_date_format(date_format: Optional[str]) -> bool:
         # For multi-level paths, ensure no traversal but allow valid structure
         if result != Path(result).name:
             # This is a multi-level path, check it's safe
-            path_parts = Path(result).parts
-            for part in path_parts:
+            path_parts_check = Path(result).parts
+            for part in path_parts_check:
+
                 if part == ".." or part == ".":
                     return False
                 if not part:  # Empty parts indicate // or similar
@@ -143,7 +145,10 @@ def validate_date_format(date_format: Optional[str]) -> bool:
 
         # For security, require at least one part to contain digits
         # This allows month names like "January" while still requiring date info
-        path_parts = Path(result).parts if result != Path(result).name else [result]
+        path_parts: Sequence[str] = (
+            Path(result).parts if result != Path(result).name else [result]
+        )
+
         has_digit = any(re.search(r"\d", part) for part in path_parts)
         if not has_digit:
             return False

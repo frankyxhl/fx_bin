@@ -32,14 +32,14 @@ def list_files_count(
     return result
 
 
-def main():
+def main() -> None:
     """Main entry point for fx_files command."""
     import click
 
     @click.command()
     @click.option("--path", "-p", default=".", help="Path to analyze")
     @click.option("--all", "-a", "show_all", is_flag=True, help="Show hidden files")
-    def cli(path, show_all):
+    def cli(path: str, show_all: bool) -> None:
         """Count and display files in directories."""
         lst = list_files_count(path, ignore_dot_file=not show_all)
 

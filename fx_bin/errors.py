@@ -13,8 +13,31 @@ class FxBinError(Exception):
     pass
 
 
-class IOError(FxBinError):
-    """IO operation errors (file read/write, network, etc)."""
+class FileOperationError(FxBinError):
+    """Base class for all file-related operation errors.
+
+    This error type covers all operations that involve file system
+    interactions including reading, writing, replacing, and backing up files.
+    It provides a common base for file-related errors to enable polymorphic
+    error handling.
+
+    Examples:
+        >>> try:
+        ...     # File operation that might fail
+        ...     pass
+        ... except FileOperationError as e:
+        ...     # Catches both IOError and ReplaceError
+        ...     print(f"File operation failed: {e}")
+    """
+
+    pass
+
+
+class IOError(FileOperationError):
+    """IO operation errors (file read/write, network, etc).
+
+    Inherits from FileOperationError since IO operations are file operations.
+    """
 
     pass
 
@@ -40,8 +63,11 @@ class PermissionError(FxBinError):
 # Module-specific errors
 
 
-class ReplaceError(FxBinError):
-    """Errors during text replacement operations."""
+class ReplaceError(FileOperationError):
+    """Errors during text replacement operations.
+
+    Inherits from FileOperationError since replacement involves file operations.
+    """
 
     pass
 
@@ -78,6 +104,7 @@ class FindError(FxBinError):
 
 # Union types for Result error parameters
 AppError = Union[
+    FileOperationError,  # Base for IOError, ReplaceError
     IOError,
     ValidationError,
     SecurityError,
@@ -91,6 +118,7 @@ AppError = Union[
 ]
 
 # Specific error union types for modules
-ReplaceErrors = Union[ReplaceError, IOError, PermissionError]
-CommonErrors = Union[FolderError, IOError, PermissionError]
+# Note: FileOperationError covers both ReplaceError and IOError
+ReplaceErrors = Union[ReplaceError, IOError, PermissionError, FileOperationError]
+CommonErrors = Union[FolderError, IOError, PermissionError, FileOperationError]
 UploadErrors = Union[UploadError, SecurityError, ValidationError]

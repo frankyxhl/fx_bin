@@ -32,6 +32,7 @@ bandit = "^1.7.5"
 safety = "^3.0.0"
 psutil = "^5.9.0"
 pytest-forked = "^1.6.0"
+hypothesis = "^6.100.0"
 
 [tool.poetry.scripts]
 # Unified CLI command
@@ -63,6 +64,7 @@ markers = [
     "security: marks tests as security-related",
     "integration: marks tests as integration tests",
     "performance: marks tests as performance tests",
+    "hypothesis: marks tests using property-based testing with hypothesis",
     "filter_command: Tests for the filter command",
     "smoke: Smoke tests",
     "critical: Critical tests",

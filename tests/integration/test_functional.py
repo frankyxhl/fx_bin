@@ -53,16 +53,14 @@ class TestCommonFunctional(unittest.TestCase):
             context = FolderContext(visited_inodes=set(), max_depth=100)
             io_result = sum_folder_size_functional(tmpdir)(context)
 
-            # Result is an IOResult containing another IOResult
+            # Result is an IOResult[int, FolderError]
             self.assertIsInstance(io_result, IOResult)
-            # Unwrap to get the inner IOResult
+            # Unwrap to get the Result
             inner = io_result._inner_value
             if isinstance(inner, Success):
-                # The success contains another IOResult
-                actual_result = inner.unwrap()._inner_value
-                if isinstance(actual_result, Success):
-                    size = actual_result.unwrap()
-                    self.assertGreater(size, 0)
+                # The success contains the int value
+                size = inner.unwrap()
+                self.assertGreater(size, 0)
 
     def test_size_entry_comparison(self):
         """Test SizeEntry comparison operations."""
