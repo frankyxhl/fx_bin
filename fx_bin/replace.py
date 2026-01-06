@@ -9,9 +9,10 @@ from loguru import logger as L
 from returns.result import Failure
 
 from fx_bin.backup_utils import create_backup, restore_from_backup, cleanup_backup
-
+from fx_bin.lib import unsafe_ioresult_to_result, unsafe_ioresult_unwrap
 
 def _is_binary_file(file_path: str, sample_size: int = 8192) -> bool:
+
     """Check if a file appears to be binary by looking for null bytes.
 
     Args:
@@ -28,7 +29,6 @@ def _is_binary_file(file_path: str, sample_size: int = 8192) -> bool:
             return b"\x00" in chunk
     except (OSError, IOError):
         return True  # Treat unreadable files as binary (skip them)
-
 
 def work(search_text: str, replace_text: str, filename: str) -> None:
     """Replace text in a file safely with atomic operations and backup."""
@@ -49,15 +49,16 @@ def work(search_text: str, replace_text: str, filename: str) -> None:
 
     # Create backup using shared backup utilities
     backup_result = create_backup(filename)
-    if isinstance(backup_result._inner_value, Failure):
-        error = backup_result._inner_value.failure()
+    if isinstance(unsafe_ioresult_to_result(backup_result), Failure):
+        error = unsafe_ioresult_to_result(backup_result).failure()
         raise Exception(str(error))
-    backup = backup_result._inner_value.unwrap()
+    backup = unsafe_ioresult_unwrap(backup_result)
 
     # Get original mode for permission preservation
     original_mode = backup.original_mode
 
     # Create temporary file in same directory for atomic move
+
     temp_dir = os.path.dirname(os.path.abspath(filename))
     fd, tmp_path = tempfile.mkstemp(dir=temp_dir, prefix=".tmp_replace_")
 
@@ -107,7 +108,6 @@ def work(search_text: str, replace_text: str, filename: str) -> None:
         # Restore from backup using shared utility
         restore_from_backup(backup)
         raise
-
 
 def replace_files(search_text: str, replace_text: str, filenames: Sequence[str]) -> int:
     """Replace text in multiple files with transaction-like behavior."""
@@ -160,7 +160,6 @@ def replace_files(search_text: str, replace_text: str, filenames: Sequence[str])
         # Re-raise the original exception
         raise
 
-
 @click.command()
 @click.argument("search_text", nargs=1)
 @click.argument("replace_text", nargs=1)
@@ -168,7 +167,6 @@ def replace_files(search_text: str, replace_text: str, filenames: Sequence[str])
 def main(search_text: str, replace_text: str, filenames: Sequence[str]) -> int:
     """CLI wrapper for replace_files."""
     return replace_files(search_text, replace_text, filenames)
-
 
 if __name__ == "__main__":
     sys.exit(main())

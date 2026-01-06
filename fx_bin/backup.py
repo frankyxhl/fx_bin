@@ -27,7 +27,6 @@ from .errors import FxBinError
 # Default timestamp format (YYYYMMDDHHMMSS)
 DEFAULT_TIMESTAMP_FORMAT = "%Y%m%d%H%M%S"
 
-
 def get_multi_ext(filename: str) -> str:
     """Extract multi-part or single extension from filename.
 
@@ -36,7 +35,6 @@ def get_multi_ext(filename: str) -> str:
     """
     return _get_multi_ext_common(filename)
 
-
 def get_base_name(filename: str) -> str:
     """Extract base name from filename, handling multi-part extensions.
 
@@ -44,7 +42,6 @@ def get_base_name(filename: str) -> str:
     This wrapper maintained for backward compatibility.
     """
     return _get_base_name_common(filename)
-
 
 def backup_file(
     source_path: str,
@@ -96,7 +93,6 @@ def backup_file(
 
     return str(backup_path)
 
-
 def backup_directory(
     source_path: str,
     backup_dir: Optional[str] = None,
@@ -137,7 +133,6 @@ def backup_directory(
     else:
         return _backup_directory_uncompressed(source_path, backup_dir, timestamp_format)
 
-
 def _backup_directory_uncompressed(
     source_path: str,
     backup_dir: Optional[str],
@@ -165,7 +160,6 @@ def _backup_directory_uncompressed(
     shutil.copytree(source_path, backup_path, symlinks=True)
 
     return str(backup_path)
-
 
 def _backup_directory_compressed(
     source_path: str, backup_dir: Optional[str], timestamp_format: str

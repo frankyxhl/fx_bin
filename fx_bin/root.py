@@ -10,7 +10,6 @@ from typing import Optional
 
 import click
 
-
 def find_git_root(start_path: Optional[Path] = None) -> Optional[Path]:
     """Find the root directory of a Git repository.
 
@@ -38,7 +37,6 @@ def find_git_root(start_path: Optional[Path] = None) -> Optional[Path]:
         current = parent
 
     return None
-
 
 @click.command()
 @click.option(
@@ -86,7 +84,6 @@ def main(output_for_cd: bool) -> None:
         if not output_for_cd:
             click.echo(f"Error: {e}", err=True)
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

@@ -7,7 +7,6 @@ from .common import SizeEntry
 
 __all__ = ["list_size"]
 
-
 def list_size(path: str = ".", ignore_dot_file: bool = True) -> List[SizeEntry]:
     """
     List sizes of files and directories in the given path.
@@ -29,22 +28,22 @@ def list_size(path: str = ".", ignore_dot_file: bool = True) -> List[SizeEntry]:
     result.sort()
     return result
 
+def main() -> None:
 
-def main():
     """Main entry point for fx_size command."""
     import click
 
     @click.command()
     @click.option("--path", "-p", default=".", help="Path to analyze")
     @click.option("--all", "-a", "show_all", is_flag=True, help="Show hidden files")
-    def cli(path, show_all):
+    def cli(path: str, show_all: bool) -> None:
+
         """Display file and directory sizes in human-readable format."""
         lst = list_size(path, ignore_dot_file=not show_all)
         for entry in lst:
             click.echo(entry)
 
     cli()
-
 
 if __name__ == "__main__":
     main()

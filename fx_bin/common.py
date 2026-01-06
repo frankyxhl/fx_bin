@@ -24,7 +24,6 @@ __all__ = [
     "sum_folder_files_count",
 ]
 
-
 def generate_timestamp(format_str: str, now: Optional[datetime] = None) -> str:
     """Generate current timestamp with specified format.
 
@@ -47,10 +46,8 @@ def generate_timestamp(format_str: str, now: Optional[datetime] = None) -> str:
         now_dt = now
     return now_dt.strftime(format_str)
 
-
 # Known multi-part extensions
 KNOWN_MULTI_EXTS = (".tar.gz", ".tar.bz2", ".tar.xz")
-
 
 def get_multi_ext(filename: str) -> str:
     """Extract multi-part or single extension from filename.
@@ -77,7 +74,6 @@ def get_multi_ext(filename: str) -> str:
         return "." + filename.rsplit(".", 1)[1]
     return ""
 
-
 def get_base_name(filename: str) -> str:
     """Extract base name from filename, handling multi-part extensions.
 
@@ -100,7 +96,6 @@ def get_base_name(filename: str) -> str:
         return filename[: -len(ext)]
     return filename
 
-
 def convert_size(size: int) -> str:
     """Convert size in bytes to human-readable format."""
     size_bytes = int(size)
@@ -113,7 +108,6 @@ def convert_size(size: int) -> str:
     p = math.pow(1024, i)
     s = round(size_bytes / p, 2)
     return f"{round(s)}{size_name[i]}"
-
 
 def format_size_aligned(size: int, width: int = 9) -> str:
     """Format file size with alignment and spacing for table output.
@@ -144,7 +138,6 @@ def format_size_aligned(size: int, width: int = 9) -> str:
     s = round(size_bytes / p, 1)
 
     return f"{s} {size_name[i]}".rjust(width)
-
 
 def sum_folder_size(
     path: str = ".",
@@ -194,7 +187,6 @@ def sum_folder_size(
     except (PermissionError, OSError, ValueError):
         pass  # Skip directories we can't access
     return total
-
 
 def sum_folder_files_count(
     path: str = ".",
@@ -247,7 +239,6 @@ def sum_folder_files_count(
         pass  # Skip directories we can't access
     return total
 
-
 @dataclass
 @total_ordering
 class SizeEntry:
@@ -286,7 +277,6 @@ class SizeEntry:
         except (PermissionError, OSError):
             return None
         return None
-
 
 @dataclass
 @total_ordering

@@ -6,12 +6,10 @@ for type-safe error handling with the returns library.
 
 from typing import Union
 
-
 class FxBinError(Exception):
     """Base error type for all fx_bin operations."""
 
     pass
-
 
 class FileOperationError(FxBinError):
     """Base class for all file-related operation errors.
@@ -32,7 +30,6 @@ class FileOperationError(FxBinError):
 
     pass
 
-
 class IOError(FileOperationError):
     """IO operation errors (file read/write, network, etc).
 
@@ -41,27 +38,22 @@ class IOError(FileOperationError):
 
     pass
 
-
 class ValidationError(FxBinError):
     """Input validation errors."""
 
     pass
-
 
 class SecurityError(FxBinError):
     """Security violation errors."""
 
     pass
 
-
 class PermissionError(FxBinError):
     """Permission denied errors."""
 
     pass
 
-
 # Module-specific errors
-
 
 class ReplaceError(FileOperationError):
     """Errors during text replacement operations.
@@ -71,36 +63,30 @@ class ReplaceError(FileOperationError):
 
     pass
 
-
 class FolderError(FxBinError):
     """Errors during folder traversal."""
 
     pass
-
 
 class UploadError(SecurityError):
     """Errors during file upload operations."""
 
     pass
 
-
 class SizeError(FxBinError):
     """Errors during size calculation."""
 
     pass
-
 
 class FilesError(FxBinError):
     """Errors during file counting."""
 
     pass
 
-
 class FindError(FxBinError):
     """Errors during file finding."""
 
     pass
-
 
 # Union types for Result error parameters
 AppError = Union[

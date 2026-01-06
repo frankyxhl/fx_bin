@@ -34,7 +34,7 @@ from fx_bin.backup_utils import (
     cleanup_backup,
 )
 from fx_bin.errors import ReplaceError, IOError as FxIOError, SecurityError
-
+from .lib import unsafe_ioresult_to_result, unsafe_ioresult_unwrap
 
 def _is_binary_file(file_path: str, sample_size: int = 8192) -> bool:
     """Check if a file appears to be binary by looking for null bytes.
@@ -54,7 +54,6 @@ def _is_binary_file(file_path: str, sample_size: int = 8192) -> bool:
     except (OSError, IOError):
         return True  # Treat unreadable files as binary (skip them)
 
-
 @dataclass(frozen=True)
 class ReplaceContext:
     """Context for replacement operations."""
@@ -63,7 +62,6 @@ class ReplaceContext:
     replace_text: str
     create_backup: bool = True
     preserve_permissions: bool = True
-
 
 def validate_file_access(
     filename: str, allowed_base: str | None = None
@@ -144,7 +142,6 @@ def validate_file_access(
     except Exception as e:
         return Failure(ReplaceError(f"Error validating file access: {e}"))
 
-
 def perform_replacement(
     context: ReplaceContext, backup: FileBackup
 ) -> IOResult[str, FxIOError]:
@@ -187,7 +184,6 @@ def perform_replacement(
     except Exception as e:
         return IOResult.from_failure(FxIOError(f"Failed to perform replacement: {e}"))
 
-
 def _handle_replacement_failure(
     backup: FileBackup, error: ReplaceError
 ) -> IOResult[None, ReplaceError]:
@@ -195,14 +191,12 @@ def _handle_replacement_failure(
     restore_from_backup(backup)
     return IOResult.from_failure(ReplaceError(f"Replacement failed: {error}"))
 
-
 def _handle_replacement_success(
     backup: FileBackup, _: None
 ) -> IOResult[None, ReplaceError]:
     """Cleanup backup when replacement succeeds."""
     cleanup_backup(backup)
     return IOResult.from_value(None)
-
 
 def _make_replacement_pipeline(
     context: ReplaceContext,
@@ -235,7 +229,6 @@ def _make_replacement_pipeline(
         )
 
     return execute_replacement
-
 
 def work_functional(
     search_text: str, replace_text: str, filename: str
@@ -278,7 +271,6 @@ def work_functional(
         bind(replacement_pipeline),  # Success: cleanup, Failure: restore
     )
 
-
 def work_batch_functional(
     search_text: str, replace_text: str, filenames: List[str]
 ) -> IOResult[List[Result[str, ReplaceError]], ReplaceError]:
@@ -308,11 +300,12 @@ def work_batch_functional(
             return IOResult.from_failure(validation.failure())
 
     # Phase 2: Create backups for all files
-    backups = []
+    backups: List[FileBackup] = []
     for filename in filenames:
+
         backup_result = create_backup(filename)
-        # Use _inner_value to check Result (IOResult wraps Result)
-        if isinstance(backup_result._inner_value, Failure):
+        # Use helper to unpack IOResult safely
+        if isinstance(unsafe_ioresult_to_result(backup_result), Failure):
             # Rollback: restore any backups already created
             for backup in backups:
                 restore_from_backup(backup)
@@ -320,25 +313,27 @@ def work_batch_functional(
                 ReplaceError(f"Failed to create backup for {filename}")
             )
         # Extract successful backup
-        backups.append(backup_result._inner_value.unwrap())
+        backups.append(unsafe_ioresult_unwrap(backup_result))
 
     # Phase 3: Perform replacements with result collection
     context = ReplaceContext(search_text, replace_text)
-    results = []
+    results: List[Result[str, ReplaceError]] = []
     failed = False
 
     for backup in backups:
         result = perform_replacement(context, backup)
         # Check if replacement succeeded
-        if isinstance(result._inner_value, Failure):
+        result_inner = unsafe_ioresult_to_result(result)
+        if isinstance(result_inner, Failure):
             failed = True
-            error = result._inner_value.failure()
+            error = result_inner.failure()
             results.append(Failure(ReplaceError(str(error))))
         else:
             results.append(Success(backup.original_path))
 
     # Phase 4: Commit or rollback based on results
     if failed:
+
         # Rollback: restore all files from backups
         for backup in backups:
             restore_from_backup(backup)
@@ -351,16 +346,16 @@ def work_batch_functional(
         cleanup_backup(backup)
     return IOResult.from_value(results)
 
-
 # Legacy compatibility wrapper
 def work(search_text: str, replace_text: str, filename: str) -> None:
     """Legacy interface for backward compatibility."""
-    result = work_functional(search_text, replace_text, filename).run()
+    result = unsafe_ioresult_to_result(
+        work_functional(search_text, replace_text, filename)
+    )
 
     if isinstance(result, Failure):
         error = result.failure()
         raise Exception(str(error))
-
 
 @click.command()
 @click.argument("search_text", nargs=1)
@@ -377,25 +372,31 @@ def main(search_text: str, replace_text: str, filenames: Sequence[str]) -> None:
 
     if len(filenames) == 1:
         # Single file replacement
-        result = work_functional(search_text, replace_text, filenames[0]).run()
+        single_result = unsafe_ioresult_to_result(
+            work_functional(search_text, replace_text, filenames[0])
+        )
 
-        if isinstance(result, Failure):
-            L.error(f"Replacement failed: {result.failure()}")
+        if isinstance(single_result, Failure):
+            L.error(f"Replacement failed: {single_result.failure()}")
             raise SystemExit(1)
         else:
             L.info(f"Successfully replaced in {filenames[0]}")
     else:
         # Batch replacement with transaction semantics
-        result = work_batch_functional(search_text, replace_text, list(filenames)).run()
+        batch_result = unsafe_ioresult_to_result(
+            work_batch_functional(search_text, replace_text, list(filenames))
+        )
 
-        if isinstance(result, Failure):
-            L.error(f"Batch replacement failed: {result.failure()}")
+        if isinstance(batch_result, Failure):
+
+            L.error(f"Batch replacement failed: {batch_result.failure()}")
             raise SystemExit(1)
         else:
-            success_count = sum(1 for r in result.unwrap() if isinstance(r, Success))
+            success_count = len([r for r in batch_result.unwrap() if isinstance(r, Success)])
             L.info(
                 f"Successfully replaced in {success_count}/" f"{len(filenames)} files"
             )
+
 
 
 if __name__ == "__main__":

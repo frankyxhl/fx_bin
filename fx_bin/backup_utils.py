@@ -19,7 +19,6 @@ from fx_bin.shared_types import FileBackup
 # Re-export for backward compatibility
 __all__ = ["FileBackup", "create_backup", "restore_from_backup", "cleanup_backup"]
 
-
 def create_backup(filename: str) -> IOResult[FileBackup, FxIOError]:
     """Create a backup of the file.
 
@@ -35,8 +34,9 @@ def create_backup(filename: str) -> IOResult[FileBackup, FxIOError]:
             - Failure: FxIOError if backup creation fails
 
     Example:
+        >>> from fx_bin.lib import unsafe_ioresult_unwrap
         >>> result = create_backup("/path/to/file.txt")
-        >>> backup = result._inner_value.unwrap()
+        >>> backup = unsafe_ioresult_unwrap(result)
         >>> print(backup.backup_path)
         /path/to/file.txt.backup
     """
@@ -60,7 +60,6 @@ def create_backup(filename: str) -> IOResult[FileBackup, FxIOError]:
         )
     except Exception as e:
         return IOResult.from_failure(FxIOError(f"Failed to create backup: {e}"))
-
 
 def restore_from_backup(backup: FileBackup) -> IOResult[None, FxIOError]:
     """Restore original file from backup on failure.
@@ -90,7 +89,6 @@ def restore_from_backup(backup: FileBackup) -> IOResult[None, FxIOError]:
         return IOResult.from_value(None)
     except Exception as e:
         return IOResult.from_failure(FxIOError(f"Failed to restore from backup: {e}"))
-
 
 def cleanup_backup(backup: FileBackup) -> IOResult[None, FxIOError]:
     """Remove backup file after successful operation.

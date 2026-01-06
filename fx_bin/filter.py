@@ -17,7 +17,6 @@ from typing import List
 
 from .common import format_size_aligned, get_multi_ext
 
-
 def find_files_by_extension(
     path: str, extension: str, recursive: bool = True
 ) -> List[str]:
@@ -72,7 +71,6 @@ def find_files_by_extension(
 
     return found_files
 
-
 def _filter_files_by_extension(
     directory: str, files: List[str], extensions_lower: List[str]
 ) -> List[str]:
@@ -113,7 +111,6 @@ def _filter_files_by_extension(
 
     return matching_files
 
-
 def sort_files_by_time(
     files: List[str], sort_by: str = "created", reverse: bool = False
 ) -> List[str]:
@@ -149,7 +146,6 @@ def sort_files_by_time(
         return sorted(files, key=get_time, reverse=reverse)
     except (FileNotFoundError, OSError):
         raise
-
 
 def format_output(
     files: List[str], output_format: str = "detailed", show_path: bool = False
@@ -209,14 +205,12 @@ def format_output(
         return "\n".join(output_lines)
     return ""
 
-
 def _format_file_size_aligned(size: int) -> str:
     """Helper function to format file size with aligned columns.
 
     Deprecated: Use fx_bin.common.format_size_aligned instead.
     """
     return format_size_aligned(size)
-
 
 def parse_extensions(extension_string: str) -> List[str]:
     """Parse extension string into list of extensions.

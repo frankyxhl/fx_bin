@@ -5,9 +5,7 @@ from typing import Iterable, List, Optional
 
 import click
 
-
 DEFAULT_IGNORED_DIRS: List[str] = [".git", ".venv", "node_modules"]
-
 
 def find_files(
     keyword: str,
@@ -44,7 +42,6 @@ def find_files(
                 if first:
                     return
 
-
 @click.command()
 @click.argument("keyword")
 @click.option(
@@ -69,7 +66,6 @@ def main(keyword: str, include_ignored: bool, excludes: Iterable[str]) -> int:
         return 1
     find_files(keyword, include_ignored=include_ignored, exclude=list(excludes))
     return 0
-
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -9,11 +9,11 @@ import os
 import re
 from pathlib import Path
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Sequence
+
 import click
 
 from .common import generate_timestamp
-
 
 def get_today_path(base_dir: str = "~/Downloads", date_format: str = "%Y%m%d") -> Path:
     """Get the path for today's workspace directory.
@@ -37,7 +37,6 @@ def get_today_path(base_dir: str = "~/Downloads", date_format: str = "%Y%m%d") -
     today_str = generate_timestamp(date_format, now=datetime.now())
 
     return base / today_str
-
 
 def ensure_directory_exists(path: Path) -> bool:
     """Ensure the directory exists, creating it if necessary.
@@ -64,7 +63,6 @@ def ensure_directory_exists(path: Path) -> bool:
     except Exception as e:
         click.echo(f"Error creating directory {path}: {e}", err=True)
         return False
-
 
 def validate_date_format(date_format: Optional[str]) -> bool:
     """Validate that the date format string is valid and safe.
@@ -130,8 +128,9 @@ def validate_date_format(date_format: Optional[str]) -> bool:
         # For multi-level paths, ensure no traversal but allow valid structure
         if result != Path(result).name:
             # This is a multi-level path, check it's safe
-            path_parts = Path(result).parts
-            for part in path_parts:
+            path_parts_check = Path(result).parts
+            for part in path_parts_check:
+
                 if part == ".." or part == ".":
                     return False
                 if not part:  # Empty parts indicate // or similar
@@ -143,7 +142,10 @@ def validate_date_format(date_format: Optional[str]) -> bool:
 
         # For security, require at least one part to contain digits
         # This allows month names like "January" while still requiring date info
-        path_parts = Path(result).parts if result != Path(result).name else [result]
+        path_parts: Sequence[str] = (
+            Path(result).parts if result != Path(result).name else [result]
+        )
+
         has_digit = any(re.search(r"\d", part) for part in path_parts)
         if not has_digit:
             return False
@@ -156,7 +158,6 @@ def validate_date_format(date_format: Optional[str]) -> bool:
         return True
     except (ValueError, TypeError, Exception):
         return False
-
 
 def validate_base_path(base_path: str) -> bool:
     """Validate that the base path is safe (no path traversal).
@@ -195,7 +196,6 @@ def validate_base_path(base_path: str) -> bool:
             return False
 
     return True
-
 
 def detect_shell_executable() -> str:
     """Detect the user's preferred shell executable.
@@ -245,7 +245,6 @@ def detect_shell_executable() -> str:
 
         # Last resort
         return "/bin/sh"
-
 
 def main(
     output_for_cd: bool = False,
