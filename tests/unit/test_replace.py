@@ -1,356 +1,384 @@
-"""Tests for fx_replace module."""
+"""Tests for fx_replace module using pytest.
+
+Migrated from unittest.TestCase to pytest style with Given-When-Then structure.
+Uses pytest fixtures for better test isolation and readability.
+"""
 
 import os
-import tempfile
-import unittest
 from pathlib import Path
-from click.testing import CliRunner
 from unittest.mock import patch, MagicMock
+import pytest
+from click.testing import CliRunner
 
 # Silence loguru during tests
 from loguru import logger
-
 logger.remove()
 
 from fx_bin.replace import work, main
 
 
-class TestReplaceWork(unittest.TestCase):
-    """Test the work function for text replacement."""
+# ============================================================================
+# Basic Replacement Tests (formerly TestReplaceWork)
+# ============================================================================
 
-    def setUp(self):
-        """Set up test fixtures."""
-        self.test_dir = tempfile.mkdtemp()
-        self.test_file = Path(self.test_dir) / "test.txt"
+def test_given_file_with_single_match_when_replace_then_content_updated(temp_test_dir):
+    """Test replacing a single occurrence."""
+    # GIVEN a file with single occurrence
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text("Hello World")
 
-    def tearDown(self):
-        """Clean up test fixtures."""
-        import shutil
+    # WHEN replacing text
+    work("World", "Python", str(test_file))
 
-        shutil.rmtree(self.test_dir)
+    # THEN content is updated
+    content = test_file.read_text()
+    assert content == "Hello Python"
 
-    def test_replace_single_occurrence(self):
-        """Test replacing a single occurrence."""
-        self.test_file.write_text("Hello World")
 
-        work("World", "Python", str(self.test_file))
+def test_given_file_with_multiple_matches_when_replace_then_all_updated(temp_test_dir):
+    """Test replacing multiple occurrences."""
+    # GIVEN a file with multiple occurrences
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text("test test test")
 
-        content = self.test_file.read_text()
-        self.assertEqual(content, "Hello Python")
+    # WHEN replacing text
+    work("test", "demo", str(test_file))
 
-    def test_replace_multiple_occurrences(self):
-        """Test replacing multiple occurrences."""
-        self.test_file.write_text("test test test")
+    # THEN all occurrences are updated
+    content = test_file.read_text()
+    assert content == "demo demo demo"
 
-        work("test", "demo", str(self.test_file))
 
-        content = self.test_file.read_text()
-        self.assertEqual(content, "demo demo demo")
+def test_given_file_without_match_when_replace_then_content_unchanged(temp_test_dir):
+    """Test when search text is not found."""
+    # GIVEN a file without matching text
+    test_file = temp_test_dir / "test.txt"
+    original = "Hello World"
+    test_file.write_text(original)
 
-    def test_replace_no_match(self):
-        """Test when search text is not found."""
-        original = "Hello World"
-        self.test_file.write_text(original)
+    # WHEN replacing non-existent text
+    work("Python", "Java", str(test_file))
 
-        work("Python", "Java", str(self.test_file))
+    # THEN content remains unchanged
+    content = test_file.read_text()
+    assert content == original
 
-        content = self.test_file.read_text()
-        self.assertEqual(content, original)
 
-    def test_replace_multiline(self):
-        """Test replacing in multiline text."""
-        self.test_file.write_text("line1\nline2\nline3")
+def test_given_multiline_file_when_replace_then_correct_line_updated(temp_test_dir):
+    """Test replacing in multiline text."""
+    # GIVEN a multiline file
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text("line1\nline2\nline3")
 
-        work("line2", "modified", str(self.test_file))
+    # WHEN replacing text in middle line
+    work("line2", "modified", str(test_file))
 
-        content = self.test_file.read_text()
-        self.assertEqual(content, "line1\nmodified\nline3")
+    # THEN only target line is updated
+    content = test_file.read_text()
+    assert content == "line1\nmodified\nline3"
 
-    def test_replace_special_characters(self):
-        """Test replacing special characters."""
-        self.test_file.write_text("foo.bar.baz")
 
-        work(".", "_", str(self.test_file))
+def test_given_file_with_special_chars_when_replace_then_chars_replaced(temp_test_dir):
+    """Test replacing special characters."""
+    # GIVEN a file with special characters
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text("foo.bar.baz")
 
-        content = self.test_file.read_text()
-        self.assertEqual(content, "foo_bar_baz")
+    # WHEN replacing special character
+    work(".", "_", str(test_file))
 
-    def test_replace_empty_file(self):
-        """Test replacing in an empty file."""
-        self.test_file.write_text("")
+    # THEN all special characters are replaced
+    content = test_file.read_text()
+    assert content == "foo_bar_baz"
 
-        work("test", "demo", str(self.test_file))
 
-        content = self.test_file.read_text()
-        self.assertEqual(content, "")
+def test_given_empty_file_when_replace_then_file_stays_empty(temp_test_dir):
+    """Test replacing in an empty file."""
+    # GIVEN an empty file
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text("")
 
+    # WHEN attempting replacement
+    work("test", "demo", str(test_file))
 
-class TestReplaceMain(unittest.TestCase):
-    """Test the main CLI function."""
+    # THEN file remains empty
+    content = test_file.read_text()
+    assert content == ""
 
-    def setUp(self):
-        """Set up test fixtures."""
-        self.runner = CliRunner()
-        self.test_dir = tempfile.mkdtemp()
 
-    def tearDown(self):
-        """Clean up test fixtures."""
-        import shutil
+# ============================================================================
+# CLI Tests (formerly TestReplaceMain)
+# ============================================================================
 
-        shutil.rmtree(self.test_dir)
+def test_given_single_file_when_main_invoked_then_replacement_succeeds(temp_test_dir):
+    """Test replacing in a single file via CLI."""
+    # GIVEN a file with content
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text("Hello World")
+
+    # WHEN invoking CLI with replacement
+    runner = CliRunner()
+    result = runner.invoke(main, ["World", "Python", str(test_file)])
+
+    # THEN command succeeds
+    assert result.exit_code == 0
+    # THEN content is updated
+    content = test_file.read_text()
+    assert content == "Hello Python"
+
+
+def test_given_multiple_files_when_main_invoked_then_all_replaced(temp_test_dir):
+    """Test replacing in multiple files."""
+    # GIVEN multiple files with content
+    file1 = temp_test_dir / "file1.txt"
+    file2 = temp_test_dir / "file2.txt"
+    file1.write_text("test content")
+    file2.write_text("test data")
+
+    # WHEN invoking CLI with multiple files
+    runner = CliRunner()
+    result = runner.invoke(main, ["test", "demo", str(file1), str(file2)])
+
+    # THEN command succeeds
+    assert result.exit_code == 0
+    # THEN all files are updated
+    assert file1.read_text() == "demo content"
+    assert file2.read_text() == "demo data"
+
+
+def test_given_nonexistent_file_when_main_invoked_then_error_returned(temp_test_dir):
+    """Test error handling for nonexistent file."""
+    # GIVEN a nonexistent file path
+    nonexistent = temp_test_dir / "nonexistent.txt"
+
+    # WHEN invoking CLI
+    runner = CliRunner()
+    result = runner.invoke(main, ["search", "replace", str(nonexistent)])
+
+    # THEN command fails
+    assert result.exit_code != 0
+    # THEN error message mentions file
+    assert "does not exist" in result.output
+
+
+def test_given_no_files_when_main_invoked_then_handles_gracefully(temp_test_dir):
+    """Test when no files are provided."""
+    # GIVEN no file arguments
+    # WHEN invoking CLI without files
+    runner = CliRunner()
+    result = runner.invoke(main, ["search", "replace"])
+
+    # THEN command handles gracefully
+    assert result.exit_code == 0
+
+
+def test_given_mixed_files_when_main_invoked_then_validates_early(temp_test_dir):
+    """Test with mix of existing and non-existing files."""
+    # GIVEN one existing and one nonexistent file
+    existing = temp_test_dir / "existing.txt"
+    existing.write_text("test content")
+    nonexistent = temp_test_dir / "nonexistent.txt"
+
+    # WHEN invoking CLI with mixed files
+    runner = CliRunner()
+    result = runner.invoke(main, ["test", "demo", str(existing), str(nonexistent)])
+
+    # THEN command fails due to validation
+    assert result.exit_code != 0
+    # THEN existing file is not modified (early exit)
+    assert existing.read_text() == "test content"
+
+
+# ============================================================================
+# Error Handling Tests (formerly TestReplaceErrorHandling)
+# ============================================================================
+
+@patch("os.name", "nt")
+def test_given_windows_when_replace_then_uses_windows_path(temp_test_dir):
+    """Test Windows-specific file removal path."""
+    # GIVEN a file on Windows
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text("Hello World")
+
+    # WHEN replacing with mocked Windows operations
+    with patch("os.remove") as mock_remove, \
+         patch("os.rename") as mock_rename, \
+         patch("os.unlink") as mock_unlink:
+        # Make rename succeed after remove
+        mock_rename.return_value = None
+        mock_remove.return_value = None
+        mock_unlink.return_value = None
+
+        work("World", "Python", str(test_file))
+
+        # THEN Windows path was taken (remove called once for file)
+        assert mock_remove.call_count == 1
+        mock_remove.assert_called_once_with(str(test_file))
+        mock_rename.assert_called_once()
+        # THEN backup cleanup uses os.unlink via cleanup_backup()
+        assert mock_unlink.call_count == 1
+
+
+def test_given_rename_fails_when_replace_then_restores_backup(temp_test_dir):
+    """Test general exception handling during atomic replacement."""
+    # GIVEN a file
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text("Hello World")
+
+    # WHEN rename raises unexpected error
+    with patch("os.rename", side_effect=RuntimeError("Unexpected error")), \
+         patch("shutil.move") as mock_move, \
+         patch("os.path.exists", return_value=True):
+
+        # THEN exception is raised
+        with pytest.raises(RuntimeError):
+            work("World", "Python", str(test_file))
+
+        # THEN backup restoration was attempted
+        mock_move.assert_called()
+
+
+def test_given_temp_creation_fails_when_replace_then_cleans_up(temp_test_dir):
+    """Test OSError during temp file cleanup."""
+    # GIVEN a file
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text("Hello World")
+
+    # WHEN temp creation fails and cleanup also fails
+    with patch("tempfile.mkstemp", side_effect=Exception("Temp creation failed")), \
+         patch("os.path.exists", return_value=True), \
+         patch("os.unlink", side_effect=OSError("Cleanup failed")):
+
+        # THEN original exception is preserved
+        with pytest.raises(Exception) as exc_info:
+            work("World", "Python", str(test_file))
 
-    def test_main_single_file(self):
-        """Test replacing in a single file via CLI."""
-        test_file = Path(self.test_dir) / "test.txt"
-        test_file.write_text("Hello World")
+        assert "Temp creation failed" in str(exc_info.value)
+
 
-        result = self.runner.invoke(main, ["World", "Python", str(test_file)])
+def test_given_backup_restore_fails_when_replace_then_preserves_original_error(temp_test_dir):
+    """Test OSError during backup restore."""
+    # GIVEN a file
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text("Hello World")
 
-        self.assertEqual(result.exit_code, 0)
-        content = test_file.read_text()
-        self.assertEqual(content, "Hello Python")
+    # WHEN processing fails and restore also fails
+    with patch("tempfile.mkstemp", side_effect=Exception("Processing failed")), \
+         patch("os.path.exists", return_value=True), \
+         patch("shutil.move", side_effect=OSError("Restore failed")):
 
-    def test_main_multiple_files(self):
-        """Test replacing in multiple files."""
-        file1 = Path(self.test_dir) / "file1.txt"
-        file2 = Path(self.test_dir) / "file2.txt"
-        file1.write_text("test content")
-        file2.write_text("test data")
-
-        result = self.runner.invoke(main, ["test", "demo", str(file1), str(file2)])
-
-        self.assertEqual(result.exit_code, 0)
-        self.assertEqual(file1.read_text(), "demo content")
-        self.assertEqual(file2.read_text(), "demo data")
-
-    def test_main_nonexistent_file(self):
-        """Test error handling for nonexistent file."""
-        nonexistent = Path(self.test_dir) / "nonexistent.txt"
-
-        result = self.runner.invoke(main, ["search", "replace", str(nonexistent)])
-
-        # Should return error code
-        self.assertNotEqual(result.exit_code, 0)
-        self.assertIn("does not exist", result.output)
-
-    def test_main_no_files(self):
-        """Test when no files are provided."""
-        result = self.runner.invoke(main, ["search", "replace"])
-
-        # Should handle gracefully (no files to process)
-        self.assertEqual(result.exit_code, 0)
-
-    def test_main_mixed_files(self):
-        """Test with mix of existing and non-existing files."""
-        existing = Path(self.test_dir) / "existing.txt"
-        existing.write_text("test content")
-        nonexistent = Path(self.test_dir) / "nonexistent.txt"
-
-        result = self.runner.invoke(
-            main, ["test", "demo", str(existing), str(nonexistent)]
-        )
-
-        # Should fail due to nonexistent file
-        self.assertNotEqual(result.exit_code, 0)
-        # Existing file should not be modified due to early exit
-        self.assertEqual(existing.read_text(), "test content")
-
-
-class TestReplaceErrorHandling(unittest.TestCase):
-    """Test error handling paths in replace functionality."""
-
-    def setUp(self):
-        """Set up test fixtures."""
-        self.test_dir = tempfile.mkdtemp()
-        self.test_file = Path(self.test_dir) / "test.txt"
-
-    def tearDown(self):
-        """Clean up test fixtures."""
-        import shutil
-
-        shutil.rmtree(self.test_dir, ignore_errors=True)
-
-    @patch("os.name", "nt")
-    def test_windows_file_removal_path(self):
-        """Test Windows-specific file removal path (line 51)."""
-        self.test_file.write_text("Hello World")
-
-        with patch("os.remove") as mock_remove, patch(
-            "os.rename"
-        ) as mock_rename, patch("os.unlink") as mock_unlink:
-            # Make rename succeed after remove
-            mock_rename.return_value = None
-            mock_remove.return_value = None
-            mock_unlink.return_value = None
-
-            work("World", "Python", str(self.test_file))
-
-            # Verify Windows path was taken (remove called once for file)
-            self.assertEqual(mock_remove.call_count, 1)
-            mock_remove.assert_called_once_with(str(self.test_file))
-            mock_rename.assert_called_once()
-            # Backup cleanup now uses os.unlink via cleanup_backup()
-            self.assertEqual(mock_unlink.call_count, 1)
-
-    def test_atomic_replacement_general_exception(self):
-        """Test general exception handling during atomic replacement (lines 66-70)."""
-        self.test_file.write_text("Hello World")
-
-        # Mock os.rename to raise a non-OSError exception
-        with (
-            patch("os.rename", side_effect=RuntimeError("Unexpected error")),
-            patch("shutil.move") as mock_move,
-            patch("os.path.exists", return_value=True),
-        ):
-
-            with self.assertRaises(RuntimeError):
-                work("World", "Python", str(self.test_file))
-
-            # Verify backup restoration was attempted
-            mock_move.assert_called()
-
-    def test_temp_file_cleanup_oserror(self):
-        """Test OSError during temp file cleanup (lines 77-78)."""
-        self.test_file.write_text("Hello World")
-
-        # Mock tempfile creation to raise an exception, then mock cleanup to fail
-        with (
-            patch("tempfile.mkstemp", side_effect=Exception("Temp creation failed")),
-            patch("os.path.exists", return_value=True),
-            patch("os.unlink", side_effect=OSError("Cleanup failed")),
-        ):
-
-            # Should not re-raise the cleanup error
-            with self.assertRaises(Exception) as cm:
-                work("World", "Python", str(self.test_file))
-
-            # Original exception should be preserved
-            self.assertIn("Temp creation failed", str(cm.exception))
-
-    def test_backup_restore_oserror(self):
-        """Test OSError during backup restore (lines 82-85)."""
-        self.test_file.write_text("Hello World")
-
-        # Mock file operations to trigger backup restore with OSError
-        with (
-            patch("tempfile.mkstemp", side_effect=Exception("Processing failed")),
-            patch("os.path.exists", return_value=True),
-            patch("shutil.move", side_effect=OSError("Restore failed")),
-        ):
-
-            # Should not re-raise the restore error
-            with self.assertRaises(Exception) as cm:
-                work("World", "Python", str(self.test_file))
+        # THEN original exception is preserved
+        with pytest.raises(Exception) as exc_info:
+            work("World", "Python", str(test_file))
 
-            # Original exception should be preserved
-            self.assertIn("Processing failed", str(cm.exception))
+        assert "Processing failed" in str(exc_info.value)
 
-    def test_transaction_rollback_oserror(self):
-        """Test OSError during transaction rollback (lines 136-137)."""
-        test_file1 = Path(self.test_dir) / "file1.txt"
-        test_file2 = Path(self.test_dir) / "file2.txt"
-        test_file1.write_text("content1")
-        test_file2.write_text("content2")
 
-        runner = CliRunner()
+def test_given_transaction_rollback_fails_when_batch_replace_then_handles_gracefully(temp_test_dir):
+    """Test OSError during transaction rollback."""
+    # GIVEN multiple files
+    test_file1 = temp_test_dir / "file1.txt"
+    test_file2 = temp_test_dir / "file2.txt"
+    test_file1.write_text("content1")
+    test_file2.write_text("content2")
 
-        # Mock work function to fail after creating backups
-        with (
-            patch("fx_bin.replace.work", side_effect=Exception("Work failed")),
-            patch("os.path.exists", return_value=True),
-            patch("shutil.move", side_effect=OSError("Rollback failed")),
-        ):
+    # WHEN work fails and rollback also fails
+    runner = CliRunner()
+    with patch("fx_bin.replace.work", side_effect=Exception("Work failed")), \
+         patch("os.path.exists", return_value=True), \
+         patch("shutil.move", side_effect=OSError("Rollback failed")):
 
-            # Should not re-raise rollback error
-            result = runner.invoke(
-                main, ["search", "replace", str(test_file1), str(test_file2)]
-            )
+        # THEN command exits with error
+        result = runner.invoke(main, ["search", "replace", str(test_file1), str(test_file2)])
+        assert result.exit_code != 0
 
-            # Should exit with error due to original exception
-            self.assertNotEqual(result.exit_code, 0)
 
-    def test_final_oserror_cleanup_paths(self):
-        """Test remaining OSError paths in cleanup (lines 77-78, 84-85)."""
-        self.test_file.write_text("Hello World")
+def test_given_fdopen_fails_when_replace_then_attempts_all_cleanup(temp_test_dir):
+    """Test remaining OSError paths in cleanup."""
+    # GIVEN a file
+    test_file = temp_test_dir / "test.txt"
+    test_file.write_text("Hello World")
 
-        # Create a scenario that will fail and trigger the cleanup paths
-        with (
-            patch("tempfile.mkstemp") as mock_mkstemp,
-            patch("os.path.exists", return_value=True),
-            patch(
-                "os.unlink", side_effect=OSError("Cleanup unlink failed")
-            ) as mock_unlink,
-            patch(
-                "shutil.move", side_effect=OSError("Backup move failed")
-            ) as mock_move,
-        ):
+    # WHEN fdopen fails triggering exception cleanup
+    with patch("tempfile.mkstemp") as mock_mkstemp, \
+         patch("os.path.exists", return_value=True), \
+         patch("os.unlink", side_effect=OSError("Cleanup unlink failed")) as mock_unlink, \
+         patch("shutil.move", side_effect=OSError("Backup move failed")) as mock_move:
 
-            # Make mkstemp return a fake fd and path, then fail during processing
-            mock_mkstemp.return_value = (999, "/fake/temp/path")
+        # Make mkstemp return fake fd and path
+        mock_mkstemp.return_value = (999, "/fake/temp/path")
 
-            # Mock os.fdopen to fail, triggering the exception cleanup
-            with patch("os.fdopen", side_effect=Exception("fdopen failed")):
+        # Mock os.fdopen to fail
+        with patch("os.fdopen", side_effect=Exception("fdopen failed")):
+            # THEN exception is raised
+            with pytest.raises(Exception) as exc_info:
+                work("World", "Python", str(test_file))
 
-                with self.assertRaises(Exception) as cm:
-                    work("World", "Python", str(self.test_file))
+            # THEN both cleanup paths were attempted despite errors
+            mock_unlink.assert_called()  # Temp file cleanup OSError
+            mock_move.assert_called()  # Backup restore OSError
 
-                # Both cleanup paths should have been attempted despite errors
-                mock_unlink.assert_called()  # Line 77-78: temp file cleanup OSError
-                mock_move.assert_called()  # Line 84-85: backup restore OSError
+            # THEN original exception is preserved
+            assert "fdopen failed" in str(exc_info.value)
 
-                # Original exception should be preserved
-                self.assertIn("fdopen failed", str(cm.exception))
 
+# ============================================================================
+# Binary File Detection Tests (formerly TestBinaryFileDetection)
+# ============================================================================
 
-class TestBinaryFileDetection(unittest.TestCase):
-    """Test binary file detection and skipping."""
+def test_given_binary_file_when_check_then_detected_as_binary(temp_test_dir):
+    """Test that binary files are detected."""
+    # GIVEN a binary file with null bytes
+    from fx_bin.replace import _is_binary_file
 
-    def setUp(self):
-        """Set up test fixtures."""
-        self.test_dir = tempfile.mkdtemp()
+    binary_file = temp_test_dir / "test.bin"
+    binary_file.write_bytes(b"\x00\x01\x02\x03hello\x00world")
 
-    def tearDown(self):
-        """Clean up test fixtures."""
-        import shutil
+    # WHEN checking if binary
+    is_binary = _is_binary_file(str(binary_file))
 
-        shutil.rmtree(self.test_dir, ignore_errors=True)
+    # THEN detected as binary
+    assert is_binary is True
 
-    def test_skip_binary_files(self):
-        """Test that binary files are skipped during replacement."""
-        from fx_bin.replace import _is_binary_file
 
-        binary_file = Path(self.test_dir) / "test.bin"
-        binary_file.write_bytes(b"\x00\x01\x02\x03hello\x00world")
+def test_given_text_file_when_check_then_not_detected_as_binary(temp_test_dir):
+    """Test that normal text files are not detected as binary."""
+    # GIVEN a plain text file
+    from fx_bin.replace import _is_binary_file
 
-        self.assertTrue(_is_binary_file(str(binary_file)))
+    text_file = temp_test_dir / "test.txt"
+    text_file.write_text("Hello World\nThis is a text file.")
 
-    def test_text_file_not_detected_as_binary(self):
-        """Test that normal text files are not detected as binary."""
-        from fx_bin.replace import _is_binary_file
+    # WHEN checking if binary
+    is_binary = _is_binary_file(str(text_file))
 
-        text_file = Path(self.test_dir) / "test.txt"
-        text_file.write_text("Hello World\nThis is a text file.")
+    # THEN not detected as binary
+    assert is_binary is False
 
-        self.assertFalse(_is_binary_file(str(text_file)))
 
-    def test_binary_file_skipped_in_work(self):
-        """Test that work() skips binary files without raising errors."""
-        binary_file = Path(self.test_dir) / "test.bin"
-        original_content = b"\x00\x01\x02\x03binary\x00data"
-        binary_file.write_bytes(original_content)
+def test_given_binary_file_when_work_called_then_file_skipped(temp_test_dir):
+    """Test that work() skips binary files without raising errors."""
+    # GIVEN a binary file
+    binary_file = temp_test_dir / "test.bin"
+    original_content = b"\x00\x01\x02\x03binary\x00data"
+    binary_file.write_bytes(original_content)
 
-        work("binary", "replaced", str(binary_file))
+    # WHEN calling work on binary file
+    work("binary", "replaced", str(binary_file))
 
-        self.assertEqual(binary_file.read_bytes(), original_content)
+    # THEN file content is unchanged (skipped)
+    assert binary_file.read_bytes() == original_content
 
-    def test_unreadable_file_treated_as_binary(self):
-        """Test that unreadable files are treated as binary."""
-        from fx_bin.replace import _is_binary_file
 
-        nonexistent = str(Path(self.test_dir) / "nonexistent.txt")
+def test_given_nonexistent_file_when_check_binary_then_treated_as_binary(temp_test_dir):
+    """Test that unreadable files are treated as binary."""
+    # GIVEN a nonexistent file path
+    from fx_bin.replace import _is_binary_file
 
-        self.assertTrue(_is_binary_file(nonexistent))
+    nonexistent = str(temp_test_dir / "nonexistent.txt")
 
+    # WHEN checking if binary
+    is_binary = _is_binary_file(nonexistent)
 
-if __name__ == "__main__":
-    unittest.main()
+    # THEN treated as binary (safe default for unreadable files)
+    assert is_binary is True
