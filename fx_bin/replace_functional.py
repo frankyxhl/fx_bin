@@ -2,6 +2,15 @@
 
 This module provides safe text replacement with atomic operations,
 backup/restore, and functional error handling.
+
+Error Hierarchy:
+    FileOperationError (base for all file operations)
+    ├── ReplaceError (text replacement errors)
+    └── IOError (file I/O errors)
+
+This hierarchy enables polymorphic error handling - you can catch
+FileOperationError to handle all file-related errors, or catch
+specific error types for more precise error recovery.
 """
 
 import os
@@ -9,14 +18,17 @@ import shutil
 import stat
 import tempfile
 from dataclasses import dataclass
-from typing import List
+from functools import partial
+from typing import List, Callable
 
 import click
 from loguru import logger as L
 from returns.result import Result, Success, Failure
 from returns.io import IOResult, impure_safe
+from returns.pipeline import flow
+from returns.pointfree import bind, lash
 
-from fx_bin.errors import ReplaceError, IOError as FxIOError
+from fx_bin.errors import ReplaceError, IOError as FxIOError, FileOperationError
 
 
 @dataclass(frozen=True)
@@ -153,6 +165,48 @@ def restore_from_backup(backup: FileBackup) -> IOResult[None, FxIOError]:
         return IOResult.from_failure(FxIOError(f"Failed to restore from backup: {e}"))
 
 
+def _handle_replacement_failure(
+    backup: FileBackup, error: ReplaceError
+) -> IOResult[None, ReplaceError]:
+    """Restore backup when replacement fails."""
+    restore_from_backup(backup)
+    return IOResult.from_failure(ReplaceError(f"Replacement failed: {error}"))
+
+
+def _handle_replacement_success(
+    backup: FileBackup, _: None
+) -> IOResult[None, ReplaceError]:
+    """Cleanup backup when replacement succeeds."""
+    cleanup_backup(backup)
+    return IOResult.from_value(None)
+
+
+def _make_replacement_pipeline(
+    context: ReplaceContext,
+) -> Callable[[FileBackup], IOResult[None, ReplaceError]]:
+    """Create a replacement pipeline for a given context.
+
+    This factory function returns a pipeline that takes a FileBackup
+    and performs the replacement with error recovery.
+
+    Uses partial application to avoid lambda functions while maintaining
+    access to the backup parameter in error/success handlers.
+    """
+    def execute_replacement(backup: FileBackup) -> IOResult[None, ReplaceError]:
+        """Execute replacement with automatic error recovery and cleanup."""
+        # Use partial to "bake in" the backup parameter
+        handle_failure = partial(_handle_replacement_failure, backup)
+        handle_success = partial(_handle_replacement_success, backup)
+
+        return flow(
+            perform_replacement(context, backup),
+            lash(handle_failure),  # No lambda - uses partial!
+            bind(handle_success),  # No lambda - uses partial!
+        )
+
+    return execute_replacement
+
+
 def work_functional(
     search_text: str, replace_text: str, filename: str
 ) -> IOResult[None, ReplaceError]:
@@ -160,7 +214,7 @@ def work_functional(
     Replace text in a file with functional error handling.
 
     This function performs atomic replacement with automatic backup/restore
-    on failure, using functional composition.
+    on failure, using functional pipeline composition.
     """
     # Validate file access (pure)
     validation = validate_file_access(filename)
@@ -170,88 +224,86 @@ def work_functional(
     real_path = validation.unwrap()
     context = ReplaceContext(search_text, replace_text)
 
-    # Create backup (IO)
-    backup_result = create_backup(real_path)
+    # Functional pipeline: create backup -> perform replacement with recovery
+    replacement_pipeline = _make_replacement_pipeline(context)
 
-    # Perform replacement with automatic restore on failure
-    def replace_with_restore(
-        backup: FileBackup,
-    ) -> IOResult[None, ReplaceError]:
-        replacement_result = perform_replacement(context, backup)
-
-        # Check the inner value without running
-        if isinstance(replacement_result._inner_value, Failure):
-            # Restore from backup on failure
-            restore_from_backup(backup)
-            # Return original error
-            return IOResult.from_failure(
-                ReplaceError(
-                    f"Replacement failed: "
-                    f"{replacement_result._inner_value.failure()}"
-                )
-            )
-
-        # Success - cleanup backup
-        cleanup_backup(backup)
-        return IOResult.from_value(None)
-
-    return backup_result.bind(replace_with_restore)
+    return flow(
+        create_backup(real_path),
+        bind(replacement_pipeline),
+    )
 
 
 def work_batch_functional(
     search_text: str, replace_text: str, filenames: List[str]
 ) -> IOResult[List[Result[str, ReplaceError]], ReplaceError]:
-    """
-    Replace text in multiple files with transaction-like behavior.
+    """Replace text in multiple files with transaction-like behavior.
 
     All files are processed, but if any fail, all are restored.
-    """
-    results = []
-    backups = []
+    Uses Railway-Oriented Programming principles with proper error handling.
 
-    # Phase 1: Validate all files
+    Args:
+        search_text: Text to search for in files
+        replace_text: Text to replace search_text with
+        filenames: List of file paths to process
+
+    Returns:
+        IOResult containing:
+            - Success: List of Results for each file (path or error)
+            - Failure: ReplaceError if validation or backup fails
+
+    Note:
+        Transaction semantics: Either all files succeed or all are rolled back.
+        Individual file failures are collected, but trigger rollback.
+    """
+    # Phase 1: Validate all files (fail fast)
     for filename in filenames:
         validation = validate_file_access(filename)
         if isinstance(validation, Failure):
             return IOResult.from_failure(validation.failure())
 
     # Phase 2: Create backups for all files
+    backups = []
     for filename in filenames:
         backup_result = create_backup(filename)
-        if isinstance(backup_result.run(), Failure):
-            # Restore any backups already created
+        # Use _inner_value to check Result (IOResult wraps Result)
+        if isinstance(backup_result._inner_value, Failure):
+            # Rollback: restore any backups already created
             for backup in backups:
                 restore_from_backup(backup)
             return IOResult.from_failure(
                 ReplaceError(f"Failed to create backup for {filename}")
             )
-        backups.append(backup_result.run().unwrap())
+        # Extract successful backup
+        backups.append(backup_result._inner_value.unwrap())
 
-    # Phase 3: Perform replacements
+    # Phase 3: Perform replacements with result collection
     context = ReplaceContext(search_text, replace_text)
+    results = []
     failed = False
 
     for backup in backups:
         result = perform_replacement(context, backup)
-        if isinstance(result.run(), Failure):
+        # Check if replacement succeeded
+        if isinstance(result._inner_value, Failure):
             failed = True
-            results.append(Failure(ReplaceError(str(result.run().failure()))))
+            error = result._inner_value.failure()
+            results.append(Failure(ReplaceError(str(error))))
         else:
             results.append(Success(backup.original_path))
 
-    # Phase 4: Commit or rollback
+    # Phase 4: Commit or rollback based on results
     if failed:
-        # Rollback all changes
+        # Rollback: restore all files from backups
         for backup in backups:
             restore_from_backup(backup)
         return IOResult.from_failure(
             ReplaceError("Batch replacement failed - all changes rolled back")
         )
-    else:
-        # Cleanup all backups
-        for backup in backups:
-            cleanup_backup(backup)
-        return IOResult.from_value(results)
+
+    # Commit: cleanup all backups
+    for backup in backups:
+        cleanup_backup(backup)
+    return IOResult.from_value(results)
 
 
 # Legacy compatibility wrapper

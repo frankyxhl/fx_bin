@@ -2,6 +2,15 @@
 
 This module provides functional implementations of common utilities
 with explicit error handling and IO operations.
+
+Error Hierarchy:
+    FileOperationError (base for all file operations)
+    └── IOError (file I/O errors)
+
+    FolderError (folder traversal errors)
+
+IOError inherits from FileOperationError, enabling polymorphic
+error handling for all file-related operations.
 """
 
 from __future__ import annotations
@@ -17,7 +26,7 @@ from returns.result import Failure
 from returns.io import IOResult, impure_safe
 from returns.context import RequiresContext
 
-from fx_bin.errors import FolderError, IOError as FxIOError
+from fx_bin.errors import FolderError, IOError as FxIOError, FileOperationError
 from .common import convert_size
 
 
@@ -114,6 +123,145 @@ class FolderContext:
 
     visited_inodes: Set[Tuple[int, int]]
     max_depth: int = 100
+
+
+# ============================================================================
+# Pure Functions - No IO, Easy to Test
+# ============================================================================
+
+
+def should_process_directory(
+    depth: int,
+    context: FolderContext,
+    dir_inode: Tuple[int, int] | None = None,
+) -> bool:
+    """Check if directory should be processed (pure function).
+
+    This pure function determines whether a directory should be traversed
+    based on recursion depth limits and cycle detection. Being pure (no side
+    effects, deterministic output), it's easily testable and composable.
+
+    Args:
+        depth: Current recursion depth (0-based, where 0 is the starting directory)
+        context: Folder traversal context containing:
+            - visited_inodes: Set of (device, inode) tuples already processed
+            - max_depth: Maximum allowed recursion depth
+        dir_inode: Optional (device, inode) tuple for cycle detection.
+                  If provided and already in visited set, returns False.
+
+    Returns:
+        bool: True if directory should be processed, False if it should be
+              skipped due to depth limit or cycle detection.
+
+    Examples:
+        >>> context = FolderContext(visited_inodes=set(), max_depth=10)
+        >>> should_process_directory(5, context)
+        True
+        >>> should_process_directory(11, context)
+        False
+        >>> should_process_directory(5, context, dir_inode=(1, 2))
+        True
+
+    Note:
+        This is a pure function with no side effects - perfect for unit testing.
+        Given the same inputs, it always produces the same output.
+    """
+    # Check depth limit
+    if depth > context.max_depth:
+        return False
+
+    # Check for cycles if inode provided
+    if dir_inode is not None and dir_inode in context.visited_inodes:
+        return False
+
+    return True
+
+
+def calculate_entry_contribution(entry_info: object) -> int:
+    """Calculate size contribution of a single entry (pure function).
+
+    This pure function determines what size a filesystem entry contributes
+    to the total size calculation. Files contribute their actual size, while
+    directories contribute 0 (their total size comes from recursive traversal).
+
+    Args:
+        entry_info: Object representing a filesystem entry with attributes:
+            - is_file: bool indicating if this is a file
+            - is_dir: bool indicating if this is a directory
+            - size: int representing the entry's size in bytes
+
+    Returns:
+        int: Size contribution in bytes. Returns the file size for files,
+             0 for directories (since directory sizes are calculated through
+             recursive traversal of their contents).
+
+    Examples:
+        >>> from dataclasses import dataclass
+        >>> @dataclass
+        ... class FileEntry:
+        ...     is_file: bool
+        ...     is_dir: bool
+        ...     size: int
+        >>> file_entry = FileEntry(is_file=True, is_dir=False, size=1024)
+        >>> calculate_entry_contribution(file_entry)
+        1024
+        >>> dir_entry = FileEntry(is_file=False, is_dir=True, size=0)
+        >>> calculate_entry_contribution(dir_entry)
+        0
+
+    Note:
+        This is a pure function - given the same input, always returns same output.
+        No side effects, no IO operations, perfect for unit testing.
+    """
+    if hasattr(entry_info, "is_file") and entry_info.is_file:
+        return getattr(entry_info, "size", 0)
+    return 0
+
+
+def add_visited_inode(
+    context: FolderContext, inode: Tuple[int, int]
+) -> FolderContext:
+    """Create new context with additional visited inode (pure function).
+
+    This pure, immutable function creates a new FolderContext with an additional
+    inode marked as visited, without modifying the original context. This follows
+    functional programming principles of immutability and referential transparency.
+
+    Args:
+        context: Original folder traversal context containing:
+            - visited_inodes: Set of (device, inode) tuples already processed
+            - max_depth: Maximum allowed recursion depth
+        inode: (device, inode) tuple to add to the visited set.
+               Represents a unique filesystem entry identifier.
+
+    Returns:
+        FolderContext: New context instance with the inode added to visited_inodes.
+                      The original context remains unchanged (immutability).
+                      Preserves max_depth from original context.
+
+    Examples:
+        >>> context = FolderContext(visited_inodes={(1, 2), (3, 4)}, max_depth=100)
+        >>> new_inode = (5, 6)
+        >>> new_context = add_visited_inode(context, new_inode)
+        >>> new_inode in new_context.visited_inodes
+        True
+        >>> new_inode in context.visited_inodes  # Original unchanged
+        False
+        >>> new_context.max_depth == context.max_depth
+        True
+
+    Note:
+        This is a pure, immutable function - original context is never modified.
+        Given the same inputs, always produces the same output. No side effects.
+        Perfect for functional composition and testing.
+    """
+    new_visited = context.visited_inodes | {inode}
+    return FolderContext(visited_inodes=new_visited, max_depth=context.max_depth)
+
+
+# ============================================================================
+# IO Functions - Uses Pure Functions Above
+# ============================================================================
 
 
 def sum_folder_size_functional(
