@@ -4,16 +4,16 @@ import math
 import os
 from dataclasses import dataclass
 from datetime import datetime
-from enum import Enum
 from functools import total_ordering
 from typing import Any, Optional, Set, Tuple
 
+# Import shared types to avoid duplication
+from fx_bin.shared_types import EntryType
 
-class EntryType(Enum):
-    """Type of filesystem entry."""
-
-    FILE = 1
-    FOLDER = 2
+# Re-export for backward compatibility
+__all__ = ["EntryType", "SizeEntry", "FileCountEntry", "convert_size",
+           "format_size_aligned", "generate_timestamp", "get_multi_ext",
+           "get_base_name", "sum_folder_size", "sum_folder_files_count"]
 
 
 def generate_timestamp(format_str: str, now: Optional[datetime] = None) -> str:

@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
-from enum import Enum
 from functools import total_ordering
 from typing import Set, Tuple
 
@@ -27,14 +26,8 @@ from returns.io import IOResult, impure_safe
 from returns.context import RequiresContext
 
 from fx_bin.errors import FolderError, IOError as FxIOError, FileOperationError
+from fx_bin.shared_types import EntryType, FolderContext
 from .common import convert_size
-
-
-class EntryType(Enum):
-    """Type of filesystem entry."""
-
-    FILE = 1
-    FOLDER = 2
 
 
 @dataclass(frozen=True)
@@ -115,14 +108,6 @@ class SizeEntry:
 
         # Otherwise create the entry
         return stat_result.bind(create_entry_from_stat).map(Some)
-
-
-@dataclass(frozen=True)
-class FolderContext:
-    """Context for folder traversal operations."""
-
-    visited_inodes: Set[Tuple[int, int]]
-    max_depth: int = 100
 
 
 # ============================================================================

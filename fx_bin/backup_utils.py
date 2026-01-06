@@ -9,30 +9,15 @@ Functions follow functional patterns with IOResult for error handling.
 import os
 import shutil
 import stat
-from dataclasses import dataclass
 
 from loguru import logger as L
 from returns.io import IOResult
 
 from fx_bin.errors import IOError as FxIOError
+from fx_bin.shared_types import FileBackup
 
-
-@dataclass(frozen=True)
-class FileBackup:
-    """Represents a file backup with metadata.
-
-    Immutable dataclass containing backup information needed for
-    restore and cleanup operations.
-
-    Attributes:
-        original_path: Path to the original file
-        backup_path: Path to the backup file
-        original_mode: Original file permissions (stat mode)
-    """
-
-    original_path: str
-    backup_path: str
-    original_mode: int
+# Re-export for backward compatibility
+__all__ = ["FileBackup", "create_backup", "restore_from_backup", "cleanup_backup"]
 
 
 def create_backup(filename: str) -> IOResult[FileBackup, FxIOError]:
