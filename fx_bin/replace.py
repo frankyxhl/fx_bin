@@ -8,11 +8,7 @@ import click
 from loguru import logger as L
 from returns.result import Failure
 
-from fx_bin.backup_utils import (
-    create_backup,
-    restore_from_backup,
-    cleanup_backup
-)
+from fx_bin.backup_utils import create_backup, restore_from_backup, cleanup_backup
 
 
 def _is_binary_file(file_path: str, sample_size: int = 8192) -> bool:
@@ -113,9 +109,7 @@ def work(search_text: str, replace_text: str, filename: str) -> None:
         raise
 
 
-def replace_files(
-    search_text: str, replace_text: str, filenames: Sequence[str]
-) -> int:
+def replace_files(search_text: str, replace_text: str, filenames: Sequence[str]) -> int:
     """Replace text in multiple files with transaction-like behavior."""
     import shutil
 

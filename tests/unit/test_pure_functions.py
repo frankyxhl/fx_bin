@@ -15,6 +15,7 @@ from fx_bin.common_functional import FolderContext
 @dataclass(frozen=True)
 class EntryInfo:
     """Pure data representing a directory entry without IO."""
+
     name: str
     is_file: bool
     is_dir: bool
@@ -47,11 +48,7 @@ def test_given_inode_already_visited_when_should_process_then_returns_false():
     # GIVEN: inode already in visited set
     # WHEN: checking if should process
     # THEN: should return False
-    assert should_process_directory(
-        depth=0,
-        context=context,
-        dir_inode=inode
-    ) is False
+    assert should_process_directory(depth=0, context=context, dir_inode=inode) is False
 
 
 def test_given_file_entry_when_calculate_contribution_then_returns_file_size():
@@ -63,11 +60,7 @@ def test_given_file_entry_when_calculate_contribution_then_returns_file_size():
 
     # GIVEN: a file entry with known size
     file_entry = EntryInfo(
-        name="test.txt",
-        is_file=True,
-        is_dir=False,
-        size=1024,
-        inode=(1, 2)
+        name="test.txt", is_file=True, is_dir=False, size=1024, inode=(1, 2)
     )
 
     # WHEN: calculating contribution
@@ -89,7 +82,7 @@ def test_given_directory_entry_when_calculate_contribution_then_returns_zero():
         is_file=False,
         is_dir=True,
         size=0,  # Directories don't have meaningful size
-        inode=(1, 3)
+        inode=(1, 3),
     )
 
     # WHEN: calculating contribution
@@ -106,10 +99,7 @@ def test_given_context_when_add_inode_then_returns_new_context_with_inode():
     from fx_bin.common_functional import add_visited_inode
 
     # GIVEN: original context
-    original_context = FolderContext(
-        visited_inodes={(1, 2), (3, 4)},
-        max_depth=100
-    )
+    original_context = FolderContext(visited_inodes={(1, 2), (3, 4)}, max_depth=100)
 
     new_inode = (5, 6)
 

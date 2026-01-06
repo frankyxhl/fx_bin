@@ -38,7 +38,7 @@ def test_given_file_when_create_backup_then_backup_created(temp_test_dir):
     assert os.path.exists(backup.backup_path)
 
     # THEN: backup should have same content
-    with open(backup.backup_path, 'r') as f:
+    with open(backup.backup_path, "r") as f:
         assert f.read() == test_content
 
     # THEN: FileBackup should contain correct metadata
@@ -116,7 +116,7 @@ def test_given_no_backup_file_when_restore_then_success(temp_test_dir):
     backup = FileBackup(
         original_path=str(test_file),
         backup_path=str(temp_test_dir / "nonexistent.backup"),
-        original_mode=os.stat(test_file).st_mode
+        original_mode=os.stat(test_file).st_mode,
     )
 
     # WHEN: attempting to restore
@@ -164,7 +164,7 @@ def test_given_no_backup_when_cleanup_then_success(temp_test_dir):
     backup = FileBackup(
         original_path=str(test_file),
         backup_path=str(temp_test_dir / "nonexistent.backup"),
-        original_mode=os.stat(test_file).st_mode
+        original_mode=os.stat(test_file).st_mode,
     )
 
     # WHEN: attempting to cleanup
@@ -226,7 +226,7 @@ def test_given_filebackup_when_checking_attributes_then_immutable(temp_test_dir)
     backup = FileBackup(
         original_path=str(test_file),
         backup_path=f"{test_file}.backup",
-        original_mode=0o644
+        original_mode=0o644,
     )
 
     # WHEN: attempting to modify attributes

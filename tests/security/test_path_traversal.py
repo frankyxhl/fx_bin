@@ -40,7 +40,9 @@ def test_given_parent_directory_traversal_when_validate_then_blocked():
         assert isinstance(result, Failure)
         error = result.failure()
         assert isinstance(error, (ReplaceError, SecurityError))
-        assert "outside allowed" in str(error).lower() or "traversal" in str(error).lower()
+        assert (
+            "outside allowed" in str(error).lower() or "traversal" in str(error).lower()
+        )
 
 
 def test_given_absolute_path_outside_base_when_validate_then_blocked():
@@ -65,7 +67,10 @@ def test_given_absolute_path_outside_base_when_validate_then_blocked():
         # THEN: should be blocked
         assert isinstance(result, Failure)
         error = result.failure()
-        assert "outside allowed" in str(error).lower() or "not in allowed" in str(error).lower()
+        assert (
+            "outside allowed" in str(error).lower()
+            or "not in allowed" in str(error).lower()
+        )
 
 
 def test_given_symlink_to_outside_when_validate_then_blocked():
@@ -94,7 +99,9 @@ def test_given_symlink_to_outside_when_validate_then_blocked():
         # THEN: should be blocked (symlink target is outside base)
         assert isinstance(result, Failure)
         error = result.failure()
-        assert "outside allowed" in str(error).lower() or "symlink" in str(error).lower()
+        assert (
+            "outside allowed" in str(error).lower() or "symlink" in str(error).lower()
+        )
 
 
 def test_given_file_in_allowed_dir_when_validate_then_success():
@@ -114,7 +121,9 @@ def test_given_file_in_allowed_dir_when_validate_then_success():
         legitimate_file.write_text("legitimate content")
 
         # WHEN: validating file within allowed base
-        result = validate_file_access(str(legitimate_file), allowed_base=str(allowed_dir))
+        result = validate_file_access(
+            str(legitimate_file), allowed_base=str(allowed_dir)
+        )
 
         # THEN: should succeed
         assert isinstance(result, Success)

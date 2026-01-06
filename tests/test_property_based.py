@@ -17,10 +17,12 @@ from fx_bin.common import convert_size
 @given(
     search=st.text(min_size=1, max_size=50),
     replace=st.text(max_size=50),
-    content=st.text(max_size=500)
+    content=st.text(max_size=500),
 )
 @settings(max_examples=100, suppress_health_check=[HealthCheck.function_scoped_fixture])
-def test_property_replace_invariant_search_not_in_result(temp_test_dir, search, replace, content):
+def test_property_replace_invariant_search_not_in_result(
+    temp_test_dir, search, replace, content
+):
     """Property: After replacement, search text should not appear unless replace contains it.
 
     This is a fundamental invariant of text replacement:
@@ -28,9 +30,9 @@ def test_property_replace_invariant_search_not_in_result(temp_test_dir, search, 
     then X should not appear in the final result.
     """
     # Skip if search contains null bytes (binary data)
-    assume('\x00' not in search)
-    assume('\x00' not in replace)
-    assume('\x00' not in content)
+    assume("\x00" not in search)
+    assume("\x00" not in replace)
+    assume("\x00" not in content)
 
     # Create test file
     test_file = temp_test_dir / "test.txt"
@@ -50,15 +52,16 @@ def test_property_replace_invariant_search_not_in_result(temp_test_dir, search, 
         count_after = result.count(search)
 
         # After replacement, there should be fewer (or equal if nothing was replaced)
-        assert count_after <= count_before, \
-            f"Replacement failed: search '{search[:20]}...' appears more after replacement"
+        assert (
+            count_after <= count_before
+        ), f"Replacement failed: search '{search[:20]}...' appears more after replacement"
 
 
 @pytest.mark.hypothesis
 @given(
     search=st.text(min_size=1, max_size=20),
     replace=st.text(max_size=20),
-    content=st.text(min_size=0, max_size=200)
+    content=st.text(min_size=0, max_size=200),
 )
 @settings(max_examples=50, suppress_health_check=[HealthCheck.function_scoped_fixture])
 def test_property_replace_idempotent(temp_test_dir, search, replace, content):
@@ -67,7 +70,7 @@ def test_property_replace_idempotent(temp_test_dir, search, replace, content):
     This tests idempotency: replace(replace(text)) == replace(text)
     """
     # Skip binary content
-    assume('\x00' not in search and '\x00' not in replace and '\x00' not in content)
+    assume("\x00" not in search and "\x00" not in replace and "\x00" not in content)
 
     # Create test file
     test_file = temp_test_dir / "test.txt"
@@ -83,21 +86,20 @@ def test_property_replace_idempotent(temp_test_dir, search, replace, content):
     result_twice = test_file.read_text()
 
     # INVARIANT: Second replacement should not change anything
-    assert result_once == result_twice, \
-        "Replacement is not idempotent: second application changed the result"
+    assert (
+        result_once == result_twice
+    ), "Replacement is not idempotent: second application changed the result"
 
 
 @pytest.mark.hypothesis
-@given(
-    content=st.text(max_size=100)
-)
+@given(content=st.text(max_size=100))
 @settings(max_examples=50, suppress_health_check=[HealthCheck.function_scoped_fixture])
 def test_property_replace_empty_search_preserves_content(temp_test_dir, content):
     """Property: Replacing empty string should preserve original content.
 
     This is a boundary case: replacing nothing should do nothing.
     """
-    assume('\x00' not in content)
+    assume("\x00" not in content)
 
     # Create test file
     test_file = temp_test_dir / "test.txt"
@@ -118,7 +120,7 @@ def test_property_replace_empty_search_preserves_content(temp_test_dir, content)
 
 
 @pytest.mark.hypothesis
-@given(size_bytes=st.integers(min_value=0, max_value=1024*1024*10))  # Up to 10MB
+@given(size_bytes=st.integers(min_value=0, max_value=1024 * 1024 * 10))  # Up to 10MB
 def test_property_convert_size_always_positive_string(size_bytes):
     """Property: convert_size should always return a non-empty string for non-negative input."""
     result = convert_size(size_bytes)
@@ -136,7 +138,7 @@ def test_property_convert_size_always_positive_string(size_bytes):
 
 
 @pytest.mark.hypothesis
-@given(size_bytes=st.integers(min_value=1, max_value=1024*1024*100))
+@given(size_bytes=st.integers(min_value=1, max_value=1024 * 1024 * 100))
 def test_property_convert_size_monotonic(size_bytes):
     """Property: Larger byte counts should not result in 'smaller' unit representations.
 
@@ -158,12 +160,24 @@ def test_property_convert_size_monotonic(size_bytes):
 
 @pytest.mark.hypothesis
 @given(
-    search=st.text(min_size=1, max_size=20).filter(lambda s: '\n' not in s and '\r' not in s and '\x00' not in s),
-    replace=st.text(max_size=20).filter(lambda s: '\n' not in s and '\r' not in s and '\x00' not in s),
-    content=st.text(max_size=200).filter(lambda s: '\r' not in s and '\x00' not in s)
+    search=st.text(min_size=1, max_size=20).filter(
+        lambda s: "\n" not in s and "\r" not in s and "\x00" not in s
+    ),
+    replace=st.text(max_size=20).filter(
+        lambda s: "\n" not in s and "\r" not in s and "\x00" not in s
+    ),
+    content=st.text(max_size=200).filter(lambda s: "\r" not in s and "\x00" not in s),
 )
-@settings(max_examples=50, suppress_health_check=[HealthCheck.function_scoped_fixture, HealthCheck.filter_too_much])
-def test_property_replace_length_preserved_when_same_length(temp_test_dir, search, replace, content):
+@settings(
+    max_examples=50,
+    suppress_health_check=[
+        HealthCheck.function_scoped_fixture,
+        HealthCheck.filter_too_much,
+    ],
+)
+def test_property_replace_length_preserved_when_same_length(
+    temp_test_dir, search, replace, content
+):
     """Property: When search and replace have same length, total file length stays same.
 
     This tests that replacement doesn't add or remove characters unexpectedly.
@@ -184,17 +198,28 @@ def test_property_replace_length_preserved_when_same_length(temp_test_dir, searc
     result = test_file.read_text()
 
     # INVARIANT: When replacing equal-length strings, total length unchanged
-    assert len(result) == original_length, \
-        f"Length changed from {original_length} to {len(result)} despite equal-length replacement"
+    assert (
+        len(result) == original_length
+    ), f"Length changed from {original_length} to {len(result)} despite equal-length replacement"
 
 
 @pytest.mark.hypothesis
 @given(
-    search=st.text(min_size=1, max_size=20).filter(lambda s: '\n' not in s and '\r' not in s and '\x00' not in s),
-    replace=st.text(max_size=20).filter(lambda s: '\n' not in s and '\r' not in s and '\x00' not in s),
-    content=st.text(max_size=200).filter(lambda s: '\r' not in s and '\x00' not in s)
+    search=st.text(min_size=1, max_size=20).filter(
+        lambda s: "\n" not in s and "\r" not in s and "\x00" not in s
+    ),
+    replace=st.text(max_size=20).filter(
+        lambda s: "\n" not in s and "\r" not in s and "\x00" not in s
+    ),
+    content=st.text(max_size=200).filter(lambda s: "\r" not in s and "\x00" not in s),
 )
-@settings(max_examples=50, suppress_health_check=[HealthCheck.function_scoped_fixture, HealthCheck.filter_too_much])
+@settings(
+    max_examples=50,
+    suppress_health_check=[
+        HealthCheck.function_scoped_fixture,
+        HealthCheck.filter_too_much,
+    ],
+)
 def test_property_replace_line_count_preserved(temp_test_dir, search, replace, content):
     """Property: When search/replace don't contain newlines, line count stays same.
 
@@ -204,7 +229,7 @@ def test_property_replace_line_count_preserved(temp_test_dir, search, replace, c
     # Create test file
     test_file = temp_test_dir / "test.txt"
     test_file.write_text(content)
-    original_lines = content.count('\n')
+    original_lines = content.count("\n")
 
     # Perform replacement
     work(search, replace, str(test_file))
@@ -213,14 +238,19 @@ def test_property_replace_line_count_preserved(temp_test_dir, search, replace, c
     result = test_file.read_text()
 
     # INVARIANT: Line count should be preserved
-    assert result.count('\n') == original_lines, \
-        "Line count changed despite no newlines in search/replace"
+    assert (
+        result.count("\n") == original_lines
+    ), "Line count changed despite no newlines in search/replace"
 
 
 @pytest.mark.hypothesis
 @given(
-    search=st.text(alphabet=st.characters(blacklist_characters='\r\n\x00'), min_size=1, max_size=10),
-    content=st.text(alphabet=st.characters(blacklist_characters='\r\x00'), min_size=10, max_size=100)
+    search=st.text(
+        alphabet=st.characters(blacklist_characters="\r\n\x00"), min_size=1, max_size=10
+    ),
+    content=st.text(
+        alphabet=st.characters(blacklist_characters="\r\x00"), min_size=10, max_size=100
+    ),
 )
 @settings(max_examples=50, suppress_health_check=[HealthCheck.function_scoped_fixture])
 def test_property_replace_removes_all_occurrences(temp_test_dir, search, content):
@@ -249,12 +279,15 @@ def test_property_replace_removes_all_occurrences(temp_test_dir, search, content
     if count_before > 0:
         # If search was present, it should be reduced (unless replacement contains search)
         if search not in replacement:
-            assert count_after == 0, \
-                f"Expected all {count_before} occurrences of '{search[:10]}...' removed, but {count_after} remain"
+            assert (
+                count_after == 0
+            ), f"Expected all {count_before} occurrences of '{search[:10]}...' removed, but {count_after} remain"
 
 
 @pytest.mark.hypothesis
-@given(size_bytes=st.integers(min_value=0, max_value=1024*1024*1024*10))  # Up to 10GB
+@given(
+    size_bytes=st.integers(min_value=0, max_value=1024 * 1024 * 1024 * 10)
+)  # Up to 10GB
 def test_property_convert_size_units_correct(size_bytes):
     """Property: convert_size should use appropriate units for the size.
 
@@ -264,19 +297,19 @@ def test_property_convert_size_units_correct(size_bytes):
 
     # Check that units make sense for the size
     if size_bytes < 1024:
-        assert 'B' in result or result == '0'
+        assert "B" in result or result == "0"
     elif size_bytes < 1024 * 1024:
-        assert 'KB' in result or 'B' in result
+        assert "KB" in result or "B" in result
     elif size_bytes < 1024 * 1024 * 1024:
-        assert 'MB' in result or 'KB' in result
+        assert "MB" in result or "KB" in result
     else:
-        assert 'GB' in result or 'MB' in result or 'TB' in result
+        assert "GB" in result or "MB" in result or "TB" in result
 
 
 @pytest.mark.hypothesis
 @given(
-    size1=st.integers(min_value=0, max_value=1024*1024*10),
-    size2=st.integers(min_value=0, max_value=1024*1024*10)
+    size1=st.integers(min_value=0, max_value=1024 * 1024 * 10),
+    size2=st.integers(min_value=0, max_value=1024 * 1024 * 10),
 )
 def test_property_convert_size_ordering(size1, size2):
     """Property: If size1 < size2, the string representations should reflect that.

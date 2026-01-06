@@ -55,6 +55,7 @@ def test_demonstrate_correct_lash_usage_for_error_recovery():
 
     This test shows the pattern we want to use in replace_functional.py.
     """
+
     # Example: An IOResult that might fail
     def operation_that_fails() -> IOResult[int, str]:
         return IOResult.from_failure("operation failed")
@@ -76,6 +77,7 @@ def test_demonstrate_correct_bind_usage_for_railway_composition():
 
     This shows how to chain operations without manually checking _inner_value.
     """
+
     def step1(x: int) -> IOResult[int, str]:
         if x > 0:
             return IOResult.from_value(x * 2)
@@ -107,8 +109,9 @@ def test_given_current_implementation_when_checking_result_then_no_private_acces
     source = inspect.getsource(replace_functional.work_functional)
 
     # SHOULD NOT contain _inner_value access
-    assert "_inner_value" not in source, \
-        "Code should not access private _inner_value attribute"
+    assert (
+        "_inner_value" not in source
+    ), "Code should not access private _inner_value attribute"
 
 
 def test_demonstrate_flow_composition_without_lambdas():
@@ -117,6 +120,7 @@ def test_demonstrate_flow_composition_without_lambdas():
     This shows the Haskell-style pipeline composition we want to achieve.
     Using named functions instead of lambdas for clarity.
     """
+
     # Step 1: Define clear, named functions
     def double(x: int) -> IOResult[int, str]:
         """Double the input value."""
@@ -136,8 +140,8 @@ def test_demonstrate_flow_composition_without_lambdas():
     # This is closer to Haskell's >>> or function composition
     result = flow(
         IOResult.from_value(5),
-        bind(double),           # Named function - clear intent
-        bind(add_ten),          # No lambda needed!
+        bind(double),  # Named function - clear intent
+        bind(add_ten),  # No lambda needed!
         bind(validate_positive),
     )
 
@@ -148,9 +152,9 @@ def test_demonstrate_flow_composition_without_lambdas():
     # Test with failure case
     failed_result = flow(
         IOResult.from_value(-5),
-        bind(double),           # -10
-        bind(add_ten),          # 0
-        bind(validate_positive), # Fails: not positive
+        bind(double),  # -10
+        bind(add_ten),  # 0
+        bind(validate_positive),  # Fails: not positive
     )
 
     assert isinstance(failed_result._inner_value, Failure)

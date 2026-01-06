@@ -89,20 +89,18 @@ def mock_windows_file_ops():
             work("search", "replace", "file.txt")
             assert mocks['remove'].call_count == 1
     """
-    with patch("os.remove") as mock_remove, \
-         patch("os.rename") as mock_rename, \
-         patch("os.unlink") as mock_unlink:
+    with (
+        patch("os.remove") as mock_remove,
+        patch("os.rename") as mock_rename,
+        patch("os.unlink") as mock_unlink,
+    ):
 
         # Configure mocks to succeed
         mock_remove.return_value = None
         mock_rename.return_value = None
         mock_unlink.return_value = None
 
-        yield {
-            'remove': mock_remove,
-            'rename': mock_rename,
-            'unlink': mock_unlink
-        }
+        yield {"remove": mock_remove, "rename": mock_rename, "unlink": mock_unlink}
 
 
 @contextmanager
@@ -141,17 +139,15 @@ def mock_backup_operations(restore_fails=False, cleanup_fails=False):
             # Backup restoration will fail
             mocks['move'].assert_called()
     """
-    with patch("shutil.move") as mock_move, \
-         patch("os.path.exists", return_value=True) as mock_exists, \
-         patch("os.unlink") as mock_unlink:
+    with (
+        patch("shutil.move") as mock_move,
+        patch("os.path.exists", return_value=True) as mock_exists,
+        patch("os.unlink") as mock_unlink,
+    ):
 
         if restore_fails:
             mock_move.side_effect = OSError("Restore failed")
         if cleanup_fails:
             mock_unlink.side_effect = OSError("Cleanup failed")
 
-        yield {
-            'move': mock_move,
-            'exists': mock_exists,
-            'unlink': mock_unlink
-        }
+        yield {"move": mock_move, "exists": mock_exists, "unlink": mock_unlink}

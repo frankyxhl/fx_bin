@@ -203,9 +203,7 @@ def calculate_entry_contribution(entry_info: object) -> int:
     return 0
 
 
-def add_visited_inode(
-    context: FolderContext, inode: Tuple[int, int]
-) -> FolderContext:
+def add_visited_inode(context: FolderContext, inode: Tuple[int, int]) -> FolderContext:
     """Create new context with additional visited inode (pure function).
 
     This pure, immutable function creates a new FolderContext with an additional
