@@ -18,7 +18,7 @@ import stat
 import tempfile
 from dataclasses import dataclass
 from functools import partial
-from typing import List, Callable
+from typing import List, Callable, Sequence
 
 import click
 from loguru import logger as L
@@ -319,7 +319,7 @@ def work(search_text: str, replace_text: str, filename: str) -> None:
 @click.argument("search_text", nargs=1)
 @click.argument("replace_text", nargs=1)
 @click.argument("filenames", nargs=-1, required=True)
-def main(search_text: str, replace_text: str, filenames: tuple) -> None:
+def main(search_text: str, replace_text: str, filenames: Sequence[str]) -> None:
     """
     Replace text in files with functional error handling.
 

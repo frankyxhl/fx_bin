@@ -2,7 +2,7 @@ import errno
 import os
 import sys
 import tempfile
-from typing import Tuple
+from typing import Sequence
 
 import click
 from loguru import logger as L
@@ -111,7 +111,7 @@ def work(search_text: str, replace_text: str, filename: str) -> None:
 
 
 def replace_files(
-    search_text: str, replace_text: str, filenames: Tuple[str, ...]
+    search_text: str, replace_text: str, filenames: Sequence[str]
 ) -> int:
     """Replace text in multiple files with transaction-like behavior."""
     import shutil
@@ -168,7 +168,7 @@ def replace_files(
 @click.argument("search_text", nargs=1)
 @click.argument("replace_text", nargs=1)
 @click.argument("filenames", nargs=-1)
-def main(search_text: str, replace_text: str, filenames: Tuple[str, ...]) -> int:
+def main(search_text: str, replace_text: str, filenames: Sequence[str]) -> int:
     """CLI wrapper for replace_files."""
     return replace_files(search_text, replace_text, filenames)
 
