@@ -1,6 +1,383 @@
 # CHANGELOG
 
 
+## v2.3.0 (2026-01-06)
+
+### Bug Fixes
+
+- Address Codex review feedback and flake8 line length issues
+  ([`0b02731`](https://github.com/frankyxhl/fx_bin/commit/0b02731abc4c5468779900c0f137d89994292ea6))
+
+## Fixes
+
+### 1. Flake8 E501 - Line too long (2 errors fixed) - Line 207: Shortened comment from 90 to 79
+  characters - Line 251: Shortened comment from 92 to 64 characters
+
+### 2. Codex Review - Binary file skip behavior missing - Added `_is_binary_file()` function to
+  detect binary files (null byte check) - Added binary file check in `work_functional()` before
+  replacement - Binary files are now skipped silently (returns Success) - Prevents
+  UnicodeDecodeError on binary files - Matches behavior of imperative `replace.work()`
+
+## Testing - ✅ All existing tests pass (10/10 ReplaceFunctional tests) - ✅ Manual verification:
+  binary files skipped, text files replaced - ✅ Flake8: 0 errors
+
+## Changes - `fx_bin/replace_functional.py`: - Added `_is_binary_file()` function (19 lines) -
+  Updated `work_functional()` to skip binary files - Fixed 2 line-too-long comments - Updated
+  docstring with 4-step ROP process
+
+Addresses feedback from: - chatgpt-codex-connector review - CI Quality check failure
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+- Resolve Priority 1 & 2 code review issues
+  ([`05fce5f`](https://github.com/frankyxhl/fx_bin/commit/05fce5f1ce8565e6a9bfb1f560c9e27efc636475))
+
+Addresses code review feedback on PR #31:
+
+**Priority 1: Type Safety (39 → 0 mypy errors)** - Add type annotations to CLI functions (size.py,
+  files.py) - Add type annotations to legacy wrapper functions (common_functional.py) - Remove
+  @impure_safe decorator causing double IOResult wrapping - Fix type inference conflicts in
+  replace_functional.py - Remove redundant type casts
+
+**Priority 2: Private API Access** - Implement Solution D: Encapsulate private access in helper
+  functions - Add 3 helper functions in lib.py: - unsafe_ioresult_unwrap() - Extract value from
+  IOResult - unsafe_ioresult_value_or() - Extract value with default - unsafe_ioresult_to_result() -
+  Get inner Result object - Update all code to use helper functions instead of direct _inner_value
+  access - Add comprehensive documentation explaining IOResult API limitation
+
+**Testing** - All 66 tests passing - Mypy: Success - no issues found in 19 source files - Fixed test
+  expectations after removing @impure_safe decorator
+
+**Technical Notes** IOResult in the returns library has no public API to extract unwrapped values.
+  Helper functions centralize this necessary private access for future maintainability.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+### Code Style
+
+- Apply Black formatting to all modified files
+  ([`2694d38`](https://github.com/frankyxhl/fx_bin/commit/2694d380c77559b3a0d44d832c105f33f52f97cf))
+
+Format all files modified during Stages 5-7 of the functional refactoring:
+
+**Core modules** (3 files): - fx_bin/common.py - fx_bin/common_functional.py - fx_bin/replace.py
+
+**Test files** (7 files): - tests/conftest.py (mock helpers) - tests/test_property_based.py
+  (Hypothesis tests) - tests/unit/test_backup_utils.py - tests/unit/test_functional_patterns.py -
+  tests/unit/test_pure_functions.py - tests/unit/test_replace.py -
+  tests/security/test_path_traversal.py
+
+Changes include: - Trailing commas in imports/lists - Blank line spacing adjustments - Comment
+  alignment - Line wrapping consistency
+
+**No functional changes** - only formatting per Black 24.x standards.
+
+All 45 tests passing after formatting (35 functional + 10 property-based).
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+- Apply Black formatting to replace_functional.py
+  ([`1d64ac9`](https://github.com/frankyxhl/fx_bin/commit/1d64ac924ebcbc5280a2530ad3ffbb8799d70d54))
+
+Fix Black formatting issues: - Add trailing comma to import statement - Add blank line in function
+  definition - Align inline comments consistently
+
+No functional changes, only formatting.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+- Fix flake8 code formatting issues
+  ([`b4c931f`](https://github.com/frankyxhl/fx_bin/commit/b4c931ff01e23262f0e43753f91c7012fb2abc31))
+
+Auto-format code with Black to resolve CI failures: - Fixed 104 E302 errors (missing blank lines
+  before function definitions) - Fixed 12 E305 errors (missing blank lines after function
+  definitions) - Fixed 1 E501 error (line too long) - Fixed 1 E303 error (too many blank lines)
+
+All flake8 checks now passing (0 errors) All 66 tests still passing
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+### Documentation
+
+- Stage 7 - Final verification and comprehensive documentation
+  ([`3ad3905`](https://github.com/frankyxhl/fx_bin/commit/3ad39050a7f5de5b13bd660f1738f10f8be98c8c))
+
+Complete the final stage of functional refactoring with verification and documentation:
+
+## Verification Results (Stage 7.1) - ✅ pytest: 450/450 tests passing (including 6 new
+  property-based tests) - ✅ Coverage: 78% (excellent coverage across codebase) - ✅ mypy: 0 new type
+  errors from our changes - ✅ flake8: 0 errors (all code style issues fixed) - ✅ bandit: 0 security
+  issues (2358 lines scanned)
+
+## Documentation Updates (Stage 7.2) ### CLAUDE.md - 370+ lines of functional programming patterns:
+  - Railway-Oriented Programming (ROP) with Result/IOResult - Pure vs IO function separation with
+  @impure_safe - Shared types module architecture - Type annotation best practices (Sequence vs
+  Tuple) - RequiresContext pattern for dependency injection - Mock helpers for testing - Immutable
+  data classes with frozen=True - Error hierarchy for polymorphic handling - Partial application to
+  avoid lambdas
+
+### Inline Comments Added: - replace_functional.py: ROP pipeline composition, partial application -
+  common_functional.py: RequiresContext pattern, @impure_safe decorator, immutability
+
+## Code Quality Fixes - Removed unused imports (flake8 F401) - Split long import lines (flake8 E501)
+  - Re-added necessary Tuple import for function signatures - Cleaned up shared_types.py (removed
+  unused os import)
+
+All changes maintain backward compatibility with legacy wrapper functions.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+### Features
+
+- Stage 4 - shared backup utilities and path traversal security
+  ([`e9512ad`](https://github.com/frankyxhl/fx_bin/commit/e9512adfe2d544f2afb2a9ea89ddab2ff94f5f7c))
+
+This commit implements Stage 4 of the functional refactoring plan, focusing on eliminating code
+  duplication and adding security features.
+
+## Stage 4.1: Shared Backup Utilities
+
+Created `backup_utils.py` module to eliminate code duplication between `replace.py` and
+  `replace_functional.py`:
+
+- **FileBackup dataclass**: Immutable backup metadata (path, mode) - **create_backup()**: Creates
+  backup with permission preservation - **restore_from_backup()**: Restores original file on failure
+  - **cleanup_backup()**: Removes backup after successful operation
+
+Refactored both `replace.py` and `replace_functional.py` to use shared backup utilities, reducing
+  duplication and improving maintainability.
+
+Note: `replace_files()` maintains separate transaction backup logic using `.transaction_backup`
+  suffix to avoid conflicts with individual work() call backups.
+
+Tests: Created `test_backup_utils.py` with 9 comprehensive tests. All 54 existing tests continue to
+  pass.
+
+## Stage 4.2: Path Traversal Security
+
+Added optional `allowed_base` parameter to `validate_file_access()` to prevent path traversal
+  attacks:
+
+- **Security checks before existence checks**: Prevents information leakage - **Path
+  normalization**: Handles `..`, `.`, and symlinks correctly - **Boundary validation**: Uses
+  `os.path.commonpath()` for safety - **Backward compatible**: Optional parameter (defaults to None)
+
+Security features prevent: - Parent directory traversal (../../../etc/passwd) - Absolute paths
+  outside allowed base - Symlinks pointing outside allowed base - Unicode/encoding path attacks
+
+Tests: Created `test_path_traversal.py` with 7 security tests. All 43 security tests passing.
+
+## Files Changed
+
+New files: - fx_bin/backup_utils.py (shared backup utilities) - tests/unit/test_backup_utils.py
+  (backup utility tests) - tests/security/test_path_traversal.py (path traversal security tests)
+
+Modified files: - fx_bin/replace.py (use shared backup utilities) - fx_bin/replace_functional.py
+  (use shared backups + path security) - tests/unit/test_replace.py (updated for shared backup
+  behavior) - tests/security/test_replace_safety.py (fixed disk space test mocking)
+
+## Test Results
+
+- All 54 unit tests passing - All 35 integration tests passing - All 43 security tests passing -
+  Backward compatibility maintained
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+- Stage 5 - Test Code Modernization (test_replace.py)
+  ([`b330fd0`](https://github.com/frankyxhl/fx_bin/commit/b330fd002728c8de4e7b6eee0153a202fd3598fa))
+
+Migrated test_replace.py from unittest.TestCase to pytest style following TDD best practices and
+  Given-When-Then structure.
+
+## Changes
+
+### Migrated test_replace.py to pytest style: - Removed unittest.TestCase inheritance - Replaced
+  setUp/tearDown with pytest fixtures (temp_test_dir) - Applied Given-When-Then structure to all 21
+  tests - Improved test names for better readability - Used plain assertions instead of
+  self.assertEqual/assertTrue
+
+### Test organization: - Basic Replacement Tests (7 tests) - formerly TestReplaceWork - CLI Tests (5
+  tests) - formerly TestReplaceMain - Error Handling Tests (6 tests) - formerly
+  TestReplaceErrorHandling - Binary File Detection Tests (4 tests) - formerly
+  TestBinaryFileDetection
+
+### Consolidated duplicate tests: - Deleted test_replace_refactored.py (6 duplicate tests) - All
+  tests from test_replace_refactored.py now in test_replace.py - Reduced test count from 236 to 230
+  (eliminated duplicates)
+
+## Test Results
+
+- All 21 replace tests passing ✅ - All 230 unit tests passing ✅ - All 403 total tests passing ✅ -
+  Zero breaking changes
+
+## Benefits
+
+- More readable test names (Given-When-Then) - Better test isolation with pytest fixtures -
+  Eliminated duplicate test code - Consistent pytest style across codebase - Easier to maintain and
+  extend
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+- Stage 5.3-5.4 - Property-based tests and mock simplification
+  ([`7a5ba1a`](https://github.com/frankyxhl/fx_bin/commit/7a5ba1ab08f161c5a0d2b30e5295dcf60037906b))
+
+Stage 5.3: Add Property-Based Tests - Added 6 new hypothesis property tests for text replacement
+  invariants - Test length preservation when search/replace have same length - Test line count
+  preservation when no newlines in search/replace - Test complete removal of search text occurrences
+  - Added 3 new hypothesis tests for size calculation invariants - Test unit correctness (B, KB, MB,
+  GB, TB) - Test size ordering properties - Fixed text mode normalization issues by filtering \r
+  characters
+
+Stage 5.4: Simplify Mock Setups - Created 3 reusable mock helper functions in conftest.py: *
+  mock_windows_file_ops(): Windows file operation mocking * mock_file_operation_failure(): Generic
+  operation failure mocker * mock_backup_operations(): Backup restore/cleanup mocker - Refactored 5
+  error handling tests in test_replace.py - Reduced code duplication and improved test readability -
+  All 21 unit tests and 10 hypothesis tests passing
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+- Stage 6 - Type annotation improvements
+  ([`3150a95`](https://github.com/frankyxhl/fx_bin/commit/3150a958d3d0e87f8b4d2d3e489edc068089d4a0))
+
+Changed type annotations from Tuple[str, ...] to Sequence[str]: - Updated fx_bin/replace.py
+  (replace_files and main functions) - Updated fx_bin/replace_functional.py (main function)
+
+Benefits of Sequence[str]: - More abstract and flexible (accepts tuple, list, or any sequence) -
+  Covariant type (better for function parameters) - Recommended by mypy for function parameters -
+  Improves API compatibility
+
+All tests pass: - 21 unit tests in test_replace.py ✓ - 7 security tests in test_path_traversal.py ✓
+  - No new mypy type errors introduced
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+- **functional**: Implement Railway-Oriented Programming and Error Hierarchy (Stages 2-3)
+  ([`e85e443`](https://github.com/frankyxhl/fx_bin/commit/e85e44394d000cce5840991ba644537597fbc38b))
+
+This commit combines Stage 2 and Stage 3 refactoring work following TDD methodology:
+
+**Stage 2: Railway-Oriented Programming** - Implement Railway-Oriented Programming patterns using
+  returns library - Add flow() composition for Haskell-style functional pipelines - Use bind() and
+  lash() for error handling instead of manual checks - Extract pure functions from IO operations for
+  better testability - Add comprehensive tests for functional patterns and pure functions
+
+Changes: - Add tests/unit/test_functional_patterns.py (6 tests for ROP patterns) - Add
+  tests/unit/test_pure_functions.py (5 tests for pure functions) - Refactor
+  fx_bin/replace_functional.py: - Use flow() from returns.pipeline for composition - Use bind() for
+  success continuation, lash() for error recovery - Use functools.partial instead of lambda
+  functions - Add _make_replacement_pipeline() factory function - Refactor
+  fx_bin/common_functional.py: - Extract pure functions: should_process_directory(),
+  calculate_entry_contribution(), add_visited_inode() - Separate pure logic from IO operations - Add
+  comprehensive docstrings with examples
+
+**Stage 3: Error Type Hierarchy** - Add FileOperationError base class for all file-related errors -
+  Update ReplaceError and IOError to inherit from FileOperationError - Enable polymorphic error
+  handling for file operations - Update module documentation to explain error hierarchy
+
+Changes: - Add tests/unit/test_error_hierarchy.py (6 tests for hierarchy) - Update fx_bin/errors.py:
+  - Add FileOperationError base class - Update inheritance: IOError, ReplaceError →
+  FileOperationError - Update Union types to include FileOperationError - Update
+  fx_bin/replace_functional.py and fx_bin/common_functional.py: - Import FileOperationError - Add
+  error hierarchy documentation to module docstrings
+
+Test Results: - All 227 unit tests passing - All 36 security tests passing - Total: 233 tests
+  passing
+
+TDD Cycle: ✅ RED → ✅ GREEN → ✅ REFACTOR for all stages
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+- **testing**: Add pytest fixtures and hypothesis property-based tests
+  ([`fa7d5b1`](https://github.com/frankyxhl/fx_bin/commit/fa7d5b1df6266a46e7a93a2d85eebb7c0c52e8dd))
+
+Phase 1.1 & 1.2 of TDD refactor - Testing Infrastructure
+
+## Changes
+
+### Testing Infrastructure (Phase 1.1) - Add shared pytest fixtures in tests/conftest.py -
+  temp_test_dir: Temporary directory with auto cleanup - temp_file: Pre-populated temporary file -
+  silence_logger: Auto-silence loguru in tests - Create test_replace_refactored.py with 6 tests
+  using fixtures - Demonstrate given_when_then naming convention
+
+### Property-Based Testing (Phase 1.2) - Add hypothesis ^6.100.0 to dev dependencies - Add
+  hypothesis marker to pytest configuration - Create test_property_based.py with 5 property tests:
+  1. Text replacement invariant (search not in result) 2. Idempotency (replace twice = replace once)
+  3. Empty search boundary case 4. convert_size always positive 5. convert_size monotonicity -
+  Document hypothesis usage in CLAUDE.md
+
+### Documentation - Update openspec/project.md with fx_bin context - Add hypothesis section to
+  CLAUDE.md with examples - Include best practices for property-based testing
+
+## Test Results ✅ All new tests passing (11 new tests added) ✅ Hypothesis generates 100-300 test
+  cases per property ✅ No breaking changes to existing tests
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+### Refactoring
+
+- Stage 6.5 - Consolidate shared types to eliminate duplication
+  ([`0e42d74`](https://github.com/frankyxhl/fx_bin/commit/0e42d742366c25d8c300a871a9d4fe49255d4797))
+
+Created shared_types.py to eliminate duplicate type definitions across common.py,
+  common_functional.py, and backup_utils.py.
+
+## Changes
+
+**Created fx_bin/shared_types.py:** - EntryType (enum) - shared by common.py and
+  common_functional.py - FileBackup (dataclass) - moved from backup_utils.py - FolderContext
+  (dataclass) - moved from common_functional.py
+
+**Refactored fx_bin/common.py:** - Imports EntryType from shared_types - Re-exports for backward
+  compatibility - Added __all__ for explicit exports - Removed duplicate EntryType definition
+
+**Refactored fx_bin/common_functional.py:** - Imports EntryType and FolderContext from shared_types
+  - Removed duplicate definitions - Maintains SizeEntry (differs from common.py version)
+
+**Refactored fx_bin/backup_utils.py:** - Imports FileBackup from shared_types - Re-exports for
+  backward compatibility - Added __all__ for explicit exports - Removed duplicate FileBackup
+  definition
+
+## Benefits
+
+- Eliminates duplicate type definitions - Single source of truth for shared types - Prevents future
+  inconsistencies - Maintains backward compatibility - All 77 tests passing (35 unit + 42
+  integration/security)
+
+## Note on SizeEntry
+
+SizeEntry intentionally kept separate in both files because they have different field names and
+  immutability: - common.py: mutable, uses 'tpe: EntryType' - common_functional.py: frozen, uses
+  'entry_type: EntryType' + 'path'
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+
 ## v2.2.2 (2026-01-05)
 
 ### Bug Fixes
