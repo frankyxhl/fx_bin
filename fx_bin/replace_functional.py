@@ -36,6 +36,25 @@ from fx_bin.backup_utils import (
 from fx_bin.errors import ReplaceError, IOError as FxIOError, SecurityError
 
 
+def _is_binary_file(file_path: str, sample_size: int = 8192) -> bool:
+    """Check if a file appears to be binary by looking for null bytes.
+
+    Args:
+        file_path: Path to the file to check.
+        sample_size: Number of bytes to read for detection (default: 8192).
+
+    Returns:
+        True if the file appears to be binary, False otherwise.
+        Unreadable files are treated as binary (skipped).
+    """
+    try:
+        with open(file_path, "rb") as f:
+            chunk = f.read(sample_size)
+            return b"\x00" in chunk
+    except (OSError, IOError):
+        return True  # Treat unreadable files as binary (skip them)
+
+
 @dataclass(frozen=True)
 class ReplaceContext:
     """Context for replacement operations."""
@@ -204,7 +223,7 @@ def _make_replacement_pipeline(
         - FAILURE track: perform_replacement → handle_failure → restore backup
         """
         # Use partial to "bake in" the backup parameter
-        # This avoids lambdas: partial(func, arg1) is cleaner than lambda x: func(arg1, x)
+        # Avoids lambdas: partial(func, arg1) vs lambda x: func(arg1, x)
         handle_failure = partial(_handle_replacement_failure, backup)
         handle_success = partial(_handle_replacement_success, backup)
 
@@ -228,8 +247,9 @@ def work_functional(
 
     Railway-Oriented Programming:
     1. Pure validation first (fail fast before any IO)
-    2. IO pipeline: create_backup → replacement → cleanup/restore
-    3. Automatic error recovery (restore on failure)
+    2. Skip binary files (prevents UnicodeDecodeError)
+    3. IO pipeline: create_backup → replacement → cleanup/restore
+    4. Automatic error recovery (restore on failure)
     """
     # Step 1: Validate file access (pure function, no side effects)
     # Returns Result[str, ReplaceError] - either valid path or error
@@ -238,17 +258,23 @@ def work_functional(
         # Short-circuit: return failure without doing any IO
         return IOResult.from_failure(validation.failure())
 
-    # Step 2: Extract validated path and create immutable context
     real_path = validation.unwrap()
+
+    # Step 2: Skip binary files (same behavior as imperative version)
+    # Binary files would cause UnicodeDecodeError - skip them silently
+    if _is_binary_file(real_path):
+        return IOResult.from_value(None)  # Success: skipped binary file
+
+    # Step 3: Create immutable context
     context = ReplaceContext(search_text, replace_text)
 
-    # Step 3: Functional pipeline with automatic error recovery
+    # Step 4: Functional pipeline with automatic error recovery
     # Pipeline: create backup → perform replacement → cleanup (or restore on error)
     replacement_pipeline = _make_replacement_pipeline(context)
 
     return flow(
         create_backup(real_path),       # IOResult[FileBackup, ReplaceError]
-        bind(replacement_pipeline),     # On success: replace & cleanup, On failure: restore
+        bind(replacement_pipeline),     # Success: cleanup, Failure: restore
     )
 
 
