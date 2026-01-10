@@ -98,6 +98,7 @@ class OrganizeSummary:
         skipped: Number of files skipped (conflicts, filters, etc.)
         errors: Number of errors encountered
         dry_run: Whether this was a dry-run (preview only)
+        directories_created: Number of directories created (0 in dry-run)
     """
 
     total_files: int
@@ -105,6 +106,7 @@ class OrganizeSummary:
     skipped: int
     errors: int
     dry_run: bool
+    directories_created: int = 0
 
 
 def get_target_path(

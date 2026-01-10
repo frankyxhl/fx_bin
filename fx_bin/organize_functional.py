@@ -276,7 +276,7 @@ def move_file_safe(
     target: str,
     source_root: str,
     output_root: str,
-) -> IOResult[None, MoveError]:
+) -> IOResult[Tuple[None, bool], MoveError]:
     """Safely move a file from source to target with boundary checks.
 
     Creates parent directories if needed. Handles cross-filesystem moves.
@@ -290,7 +290,8 @@ def move_file_safe(
         output_root: Root directory that target must be within
 
     Returns:
-        IOResult with None or MoveError
+        IOResult with Tuple[None, dir_created] or MoveError
+        dir_created is True if a new directory was created
     """
     try:
         # Resolve real paths for boundary checking
@@ -335,19 +336,24 @@ def move_file_safe(
                 )
             )
 
-        # Create parent directories if they don't exist
-        target_dir = os.path.dirname(target)
-        if target_dir:
-            os.makedirs(target_dir, exist_ok=True)
-
         # Check if source and target are the same (no-op)
         if real_source == real_target:
-            return IOResult.from_value(None)
+            return IOResult.from_value((None, False))
+
+        # Create parent directories if they don't exist
+        # Track if we create a new directory
+        dir_created = False
+        target_dir = os.path.dirname(target)
+        if target_dir:
+            # Check if directory exists before creating
+            if not os.path.exists(target_dir):
+                dir_created = True
+            os.makedirs(target_dir, exist_ok=True)
 
         # Perform the move
         shutil.move(source, target)
 
-        return IOResult.from_value(None)
+        return IOResult.from_value((None, dir_created))
 
     except (OSError, PermissionError) as e:
         return IOResult.from_failure(
@@ -479,6 +485,7 @@ def execute_organize(
     processed = 0
     skipped = 0
     errors = 0
+    directories_created = 0
 
     for item in plan:
         if item.action == "moved":
@@ -491,7 +498,9 @@ def execute_organize(
                     context.output_dir,  # output_root
                 )
                 try:
-                    unsafe_ioresult_unwrap(move_result)
+                    _, dir_created = unsafe_ioresult_unwrap(move_result)
+                    if dir_created:
+                        directories_created += 1
                 except Exception:
                     processed -= 1
                     errors += 1
@@ -506,6 +515,7 @@ def execute_organize(
         skipped=skipped,
         errors=errors,
         dry_run=context.dry_run,
+        directories_created=directories_created,
     )
 
     return IOResult.from_value(summary)

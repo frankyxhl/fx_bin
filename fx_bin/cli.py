@@ -752,6 +752,8 @@ def organize(
             f"{summary.processed} processed, "
             f"{summary.skipped} skipped"
         )
+        if summary.directories_created > 0:
+            click.echo(f"  {summary.directories_created} directories created")
         if summary.errors > 0:
             click.echo(f"  {summary.errors} errors")
 
