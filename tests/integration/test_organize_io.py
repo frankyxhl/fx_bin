@@ -1539,6 +1539,169 @@ class TestResolveDiskConflictRename(unittest.TestCase):
             self.assertEqual(resolved_path, str(nonexistent))
 
 
+class TestOverwriteModeAtomicReplace(unittest.TestCase):
+    """Test cases for OVERWRITE mode atomic replace (Phase 3.1)."""
+
+    def test_given_existing_target_and_overwrite_mode_when_moving_file_then_uses_os_replace_for_atomic_operation(
+        self,
+    ):
+        """Test that OVERWRITE mode uses os.replace() for atomic overwrite operation."""
+        import errno
+        from unittest.mock import patch, MagicMock
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "source.txt"
+            source.write_text("new content")
+
+            # Create output root and PRE-EXISTING target file
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+            target = output_root / "source.txt"
+            target.write_text("old content")
+
+            # Mock os.replace to verify it's called
+            with patch("os.replace") as mock_replace:
+                # Configure mock to actually perform the replace
+                def side_effect(src, dst):
+                    # Actually remove the target and rename source to target
+                    if Path(dst).exists():
+                        Path(dst).unlink()
+                    Path(src).rename(dst)
+
+                mock_replace.side_effect = side_effect
+
+                # With OVERWRITE mode, should use os.replace()
+                result = move_file_safe(
+                    str(source),
+                    str(target),
+                    str(source_root),
+                    str(output_root),
+                    ConflictMode.OVERWRITE,
+                )
+
+                inner_result = unsafe_ioresult_to_result(result)
+                self.assertTrue(inner_result)
+
+                # Verify os.replace was called (atomic operation)
+                mock_replace.assert_called_once()
+
+                # Source should be gone
+                self.assertFalse(source.exists())
+                # Target should have new content (atomically replaced)
+                self.assertTrue(target.exists())
+                self.assertEqual(target.read_text(), "new content")
+
+    def test_given_cross_device_overwrite_and_overwrite_mode_when_moving_file_then_handles_exdev_error(
+        self,
+    ):
+        """Test that OVERWRITE mode handles EXDEV (cross-device) error with copy-to-temp pattern."""
+        import errno
+        import os as os_module
+        import shutil as shutil_module
+        from unittest.mock import patch, call
+        import tempfile as tf
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "source.txt"
+            source.write_text("new content")
+
+            # Create output root and PRE-EXISTING target file
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+            target = output_root / "source.txt"
+            target.write_text("old content")
+
+            # Track the sequence of operations
+            operations = []
+
+            # Mock os.replace to raise EXDEV on first call, succeed on second
+            original_replace = os_module.replace
+            replace_call_count = [0]
+
+            def mock_replace_exdev(src, dst):
+                replace_call_count[0] += 1
+                operations.append(("replace", src, dst))
+
+                # First call (source -> target): simulate EXDEV
+                if replace_call_count[0] == 1:
+                    exdev_error = OSError(f"Invalid cross-device link: '{src}' -> '{dst}'")
+                    exdev_error.errno = errno.EXDEV
+                    raise exdev_error
+
+                # Second call (temp -> target): succeed
+                # Actually perform the replace
+                if Path(dst).exists():
+                    Path(dst).unlink()
+                Path(src).rename(dst)
+
+            # Mock tempfile.mkstemp to create a temp file in output directory
+            original_mkstemp = tf.mkstemp
+
+            def mock_mkstemp(*args, **kwargs):
+                fd, path = original_mkstemp(*args, **kwargs)
+                operations.append(("mkstemp", path))
+                return fd, path
+
+            # Mock shutil.copy2 to perform the copy
+            original_copy2 = shutil_module.copy2
+
+            def mock_copy2(src, dst):
+                operations.append(("copy2", src, dst))
+                return original_copy2(src, dst)
+
+            # Mock os.unlink to track source deletion
+            original_unlink = os_module.unlink
+
+            def mock_unlink(path):
+                operations.append(("unlink", path))
+                return original_unlink(path)
+
+            with patch("os.replace", side_effect=mock_replace_exdev), \
+                 patch("tempfile.mkstemp", side_effect=mock_mkstemp), \
+                 patch("shutil.copy2", side_effect=mock_copy2), \
+                 patch("os.unlink", side_effect=mock_unlink):
+
+                # With OVERWRITE mode, should handle EXDEV
+                result = move_file_safe(
+                    str(source),
+                    str(target),
+                    str(source_root),
+                    str(output_root),
+                    ConflictMode.OVERWRITE,
+                )
+
+                inner_result = unsafe_ioresult_to_result(result)
+                self.assertTrue(inner_result)
+
+                # Verify the EXDEV handling pattern:
+                # 1. First os.replace() call raised EXDEV
+                # 2. tempfile.mkstemp() was called to create temp file
+                # 3. shutil.copy2() copied source to temp
+                # 4. Second os.replace() call atomically replaced target with temp
+                # 5. os.unlink() deleted the source file
+
+                # Check that we got at least the replace, mkstemp, copy2 operations
+                operation_types = [op[0] for op in operations]
+                self.assertIn("replace", operation_types)
+                self.assertIn("mkstemp", operation_types)
+                self.assertIn("copy2", operation_types)
+
+                # Verify the end result
+                self.assertFalse(source.exists())
+                self.assertTrue(target.exists())
+                self.assertEqual(target.read_text(), "new content")
+
+
 class TestRenameModeDiskConflictIntegration(unittest.TestCase):
     """Integration tests for RENAME mode disk conflict handling (Phase 1.2)."""
 

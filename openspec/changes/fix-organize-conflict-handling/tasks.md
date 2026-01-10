@@ -75,13 +75,13 @@ Each task follows RED-GREEN-REFACTOR:
 - EXDEV 错误时：copy 到临时文件 → os.replace() → 删除源文件
 
 ### 3.1 Implement Atomic Overwrite
-- [ ] 3.1.1 **RED**: Write test that OVERWRITE uses os.replace() for atomic operation
-- [ ] 3.1.2 **RED**: Write test that OVERWRITE handles EXDEV (cross-device) error
-- [ ] 3.1.3 **GREEN**: Implement OVERWRITE branch with os.replace()
-- [ ] 3.1.4 **GREEN**: Handle EXDEV with copy-to-temp then replace pattern
-- [ ] 3.1.5 **GREEN**: Update existing test docstrings and assertions to use correct modes
-- [ ] 3.1.6 **REFACTOR**: Ensure atomic semantics are preserved
-- [ ] 3.1.7 Commit: "Phase 3: Implement atomic OVERWRITE with EXDEV handling"
+- [x] 3.1.1 **RED**: Write test that OVERWRITE uses os.replace() for atomic operation
+- [x] 3.1.2 **RED**: Write test that OVERWRITE handles EXDEV (cross-device) error
+- [x] 3.1.3 **GREEN**: Implement OVERWRITE branch with os.replace()
+- [x] 3.1.4 **GREEN**: Handle EXDEV with copy-to-temp then replace pattern
+- [x] 3.1.5 **GREEN**: Update existing test docstrings and assertions to use correct modes
+- [x] 3.1.6 **REFACTOR**: Ensure atomic semantics are preserved
+- [x] 3.1.7 Commit: "Phase 3: Implement atomic OVERWRITE with EXDEV handling"
 
 ---
 

@@ -395,8 +395,36 @@ def move_file_safe(
                 # Skip: return success but don't move (source remains)
                 return IOResult.from_value((None, False))
             elif conflict_mode == ConflictMode.OVERWRITE:
-                # Overwrite: use atomic replace (will be done below)
-                pass
+                # Overwrite: use atomic replace with EXDEV handling
+                import errno
+                import tempfile
+
+                # Try atomic replace first
+                try:
+                    os.replace(real_source, real_target)
+                    return IOResult.from_value((None, False))
+                except OSError as e:
+                    if e.errno == errno.EXDEV:
+                        # Cross-device link: copy to temp, then atomic replace
+                        # This preserves atomic semantics even across filesystems
+                        target_dir = os.path.dirname(real_target) or "."
+                        fd, temp_path = tempfile.mkstemp(dir=target_dir)
+                        try:
+                            # Copy source to temp file (preserves metadata)
+                            shutil.copy2(real_source, temp_path)
+                            # Atomic replace: temp -> target
+                            os.replace(temp_path, real_target)
+                            # Remove source file (now safely copied)
+                            os.unlink(real_source)
+                            return IOResult.from_value((None, False))
+                        except Exception:
+                            # Cleanup temp file on any error
+                            try:
+                                os.unlink(temp_path)
+                            except OSError:
+                                pass
+                            raise
+                    raise
             elif conflict_mode == ConflictMode.ASK:
                 # Ask: prompt user (not implemented in this function,
                 # handled at CLI level)
@@ -417,8 +445,41 @@ def move_file_safe(
                 dir_created = True
             os.makedirs(target_dir, exist_ok=True)
 
-        # Perform the move (shutil.move handles overwrites)
-        shutil.move(source, real_target)
+        # Perform the move
+        # For OVERWRITE mode, use os.replace() for atomic operation
+        # For other modes, use shutil.move() which handles cross-filesystem moves
+        if conflict_mode == ConflictMode.OVERWRITE:
+            import errno
+            import tempfile
+
+            # OVERWRITE always uses atomic replace (even when target doesn't exist)
+            try:
+                os.replace(source, real_target)
+                return IOResult.from_value((None, dir_created))
+            except OSError as e:
+                if e.errno == errno.EXDEV:
+                    # Cross-device link: copy to temp, then atomic replace
+                    target_parent = os.path.dirname(real_target) or "."
+                    fd, temp_path = tempfile.mkstemp(dir=target_parent)
+                    try:
+                        # Copy source to temp file (preserves metadata)
+                        shutil.copy2(source, temp_path)
+                        # Atomic replace: temp -> target
+                        os.replace(temp_path, real_target)
+                        # Remove source file (now safely copied)
+                        os.unlink(source)
+                        return IOResult.from_value((None, dir_created))
+                    except Exception:
+                        # Cleanup temp file on any error
+                        try:
+                            os.unlink(temp_path)
+                        except OSError:
+                            pass
+                        raise
+                raise
+        else:
+            # For non-OVERWRITE modes, use shutil.move
+            shutil.move(source, real_target)
 
         return IOResult.from_value((None, dir_created))
 
