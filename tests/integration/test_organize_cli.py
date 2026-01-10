@@ -1,12 +1,17 @@
 """Integration tests for organize CLI command."""
 
+import os
 import unittest
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
 from click.testing import CliRunner
 
 from fx_bin.cli import cli
+
+
+FIXED_MODIFIED_TS = datetime(2026, 1, 10, 12, 0, 0).timestamp()
 
 
 class TestOrganizeCLI(unittest.TestCase):
@@ -108,24 +113,20 @@ class TestAskModeInCLI(unittest.TestCase):
     def test_given_ask_mode_and_tty_when_disk_conflict_then_prompts_user(self):
         """Test that ASK mode prompts user for disk conflicts when stdin is TTY."""
         with self.runner.isolated_filesystem():
-            # Create source directory with files
             source_dir = Path("source")
             source_dir.mkdir()
-            (source_dir / "photo.jpg").write_text("source photo")
+            source_file = source_dir / "photo.jpg"
+            source_file.write_text("source photo")
+            os.utime(source_file, (FIXED_MODIFIED_TS, FIXED_MODIFIED_TS))
 
-            # Create output directory with CONFLICTING file (disk conflict!)
             output_dir = Path("output")
             output_dir.mkdir()
-            (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
-            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
-                "existing photo"
-            )
+            conflict_dir = output_dir / "2026" / "202601" / "20260110"
+            conflict_dir.mkdir(parents=True)
+            (conflict_dir / "photo.jpg").write_text("existing photo")
 
-            # Mock sys.stdin.isatty() to return True to simulate TTY
             with patch("fx_bin.cli.sys") as mock_sys:
                 mock_sys.stdin.isatty.return_value = True
-
-                # Run organize with ASK mode
                 result = self.runner.invoke(
                     cli,
                     [
@@ -133,46 +134,38 @@ class TestAskModeInCLI(unittest.TestCase):
                         str(source_dir),
                         "--output",
                         str(output_dir),
+                        "--date-source",
+                        "modified",
                         "--on-conflict",
                         "ask",
                         "--yes",  # Skip initial confirmation
                     ],
-                    # Simulate user answering "n" (no) to skip the conflict
                     input="n\n",
                 )
 
-            # Should succeed
+            self.assertIn("Found 1 disk conflict(s):", result.output)
             self.assertEqual(result.exit_code, 0)
-
-            # Verify source file still exists (user chose to skip)
-            self.assertTrue((source_dir / "photo.jpg").exists())
-
-            # Verify existing file is unchanged
-            existing = output_dir / "2026" / "202601" / "20260110" / "photo.jpg"
-            self.assertTrue(existing.exists())
-            self.assertEqual(existing.read_text(), "existing photo")
+            self.assertTrue(source_file.exists())
+            self.assertEqual((conflict_dir / "photo.jpg").read_text(), "existing photo")
 
     def test_given_ask_mode_and_tty_when_user_confirms_then_moves_file(self):
-        """Test that ASK mode moves file when user confirms the prompt."""
+        """Test that ASK mode overwrites when user confirms the prompt."""
         with self.runner.isolated_filesystem():
-            # Create source directory with files
             source_dir = Path("source")
             source_dir.mkdir()
-            (source_dir / "photo.jpg").write_text("source photo")
+            source_file = source_dir / "photo.jpg"
+            source_file.write_text("source photo")
+            os.utime(source_file, (FIXED_MODIFIED_TS, FIXED_MODIFIED_TS))
 
-            # Create output directory with CONFLICTING file (disk conflict!)
             output_dir = Path("output")
             output_dir.mkdir()
-            (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
-            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
-                "existing photo"
-            )
+            conflict_dir = output_dir / "2026" / "202601" / "20260110"
+            conflict_dir.mkdir(parents=True)
+            target_file = conflict_dir / "photo.jpg"
+            target_file.write_text("existing photo")
 
-            # Mock sys.stdin.isatty() to return True to simulate TTY
             with patch("fx_bin.cli.sys") as mock_sys:
                 mock_sys.stdin.isatty.return_value = True
-
-                # User answers "y" (yes) to overwrite - this should use OVERWRITE behavior
                 result = self.runner.invoke(
                     cli,
                     [
@@ -180,44 +173,37 @@ class TestAskModeInCLI(unittest.TestCase):
                         str(source_dir),
                         "--output",
                         str(output_dir),
+                        "--date-source",
+                        "modified",
                         "--on-conflict",
                         "ask",
                         "--yes",  # Skip initial confirmation
                     ],
-                    # Simulate user answering "y" (yes) to overwrite
                     input="y\n",
                 )
 
-            # Should succeed
+            self.assertIn("Found 1 disk conflict(s):", result.output)
             self.assertEqual(result.exit_code, 0)
-
-            # Verify source file is gone (moved and overwrote target)
-            self.assertFalse((source_dir / "photo.jpg").exists())
-
-            # Verify existing file was overwritten
-            existing = output_dir / "2026" / "202601" / "20260110" / "photo.jpg"
-            self.assertTrue(existing.exists())
-            self.assertEqual(existing.read_text(), "source photo")
+            self.assertFalse(source_file.exists())
+            self.assertEqual(target_file.read_text(), "source photo")
 
     def test_given_ask_mode_and_non_tty_when_disk_conflict_then_falls_back_to_skip(
         self,
     ):
         """Test that ASK mode falls back to SKIP when stdin is not a TTY."""
         with self.runner.isolated_filesystem():
-            # Create source directory with files
             source_dir = Path("source")
             source_dir.mkdir()
-            (source_dir / "photo.jpg").write_text("source photo")
+            source_file = source_dir / "photo.jpg"
+            source_file.write_text("source photo")
+            os.utime(source_file, (FIXED_MODIFIED_TS, FIXED_MODIFIED_TS))
 
-            # Create output directory with CONFLICTING file (disk conflict!)
             output_dir = Path("output")
             output_dir.mkdir()
-            (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
-            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
-                "existing photo"
-            )
+            conflict_dir = output_dir / "2026" / "202601" / "20260110"
+            conflict_dir.mkdir(parents=True)
+            (conflict_dir / "photo.jpg").write_text("existing photo")
 
-            # Mock stdin.isatty() to return False (non-TTY, like piped input)
             with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
                 result = self.runner.invoke(
                     cli,
@@ -226,22 +212,17 @@ class TestAskModeInCLI(unittest.TestCase):
                         str(source_dir),
                         "--output",
                         str(output_dir),
+                        "--date-source",
+                        "modified",
                         "--on-conflict",
                         "ask",
                         "--yes",  # Skip initial confirmation
                     ],
                 )
 
-            # Should succeed (fallback to SKIP)
             self.assertEqual(result.exit_code, 0)
-
-            # Verify source file still exists (skipped due to non-TTY)
-            self.assertTrue((source_dir / "photo.jpg").exists())
-
-            # Verify existing file is unchanged
-            existing = output_dir / "2026" / "202601" / "20260110" / "photo.jpg"
-            self.assertTrue(existing.exists())
-            self.assertEqual(existing.read_text(), "existing photo")
+            self.assertTrue(source_file.exists())
+            self.assertEqual((conflict_dir / "photo.jpg").read_text(), "existing photo")
 
 
 class TestQuietMode(unittest.TestCase):
