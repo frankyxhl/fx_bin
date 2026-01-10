@@ -103,6 +103,135 @@ class TestOrganizeCLI(unittest.TestCase):
             self.assertEqual(len(output_files), 1)
 
 
+class TestConfirmationPromptBehavior(unittest.TestCase):
+    """Tests for the initial confirmation prompt when running organize command."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.runner = CliRunner()
+
+    def test_given_tty_when_user_confirms_then_proceeds(self):
+        """TTY mode: user confirms 'y' -> organization proceeds."""
+        with self.runner.isolated_filesystem():
+            # Create source directory with files
+            source_dir = Path("source")
+            source_dir.mkdir()
+            (source_dir / "photo1.jpg").write_text("photo1")
+            (source_dir / "photo2.jpg").write_text("photo2")
+
+            # Create output directory
+            output_dir = Path("output")
+            output_dir.mkdir()
+
+            # Mock TTY and provide 'y' input
+            with patch("fx_bin.cli.sys") as mock_sys:
+                mock_sys.stdin.isatty.return_value = True
+                result = self.runner.invoke(
+                    cli,
+                    ["organize", str(source_dir), "--output", str(output_dir)],
+                    input="y\n",
+                )
+
+            self.assertEqual(result.exit_code, 0)
+            # Verify "Proceed?" prompt appeared
+            self.assertIn("Proceed?", result.output)
+            # Verify files were organized
+            self.assertFalse((source_dir / "photo1.jpg").exists())
+            self.assertFalse((source_dir / "photo2.jpg").exists())
+            # Verify files are in output
+            output_files = list(output_dir.rglob("*.jpg"))
+            self.assertEqual(len(output_files), 2)
+
+    def test_given_tty_when_user_cancels_then_exits_without_changes(self):
+        """TTY mode: user cancels 'n' -> exits without changes."""
+        with self.runner.isolated_filesystem():
+            # Create source directory with files
+            source_dir = Path("source")
+            source_dir.mkdir()
+            (source_dir / "photo.jpg").write_text("content")
+
+            # Create output directory
+            output_dir = Path("output")
+            output_dir.mkdir()
+
+            # Mock TTY and provide 'n' input
+            with patch("fx_bin.cli.sys") as mock_sys:
+                mock_sys.stdin.isatty.return_value = True
+                result = self.runner.invoke(
+                    cli,
+                    ["organize", str(source_dir), "--output", str(output_dir)],
+                    input="n\n",
+                )
+
+            self.assertEqual(result.exit_code, 0)
+            # Verify "Cancelled." message
+            self.assertIn("Cancelled.", result.output)
+            # Verify NO files moved - source still exists
+            self.assertTrue((source_dir / "photo.jpg").exists())
+            # Verify output directory is empty
+            output_files = list(output_dir.rglob("*.jpg"))
+            self.assertEqual(len(output_files), 0)
+
+    def test_given_non_tty_when_organizing_then_auto_proceeds(self):
+        """Non-TTY mode: auto-proceeds without prompt."""
+        with self.runner.isolated_filesystem():
+            # Create source directory with files
+            source_dir = Path("source")
+            source_dir.mkdir()
+            (source_dir / "photo.jpg").write_text("content")
+
+            # Create output directory
+            output_dir = Path("output")
+            output_dir.mkdir()
+
+            # Mock non-TTY (stdin not a tty)
+            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
+                result = self.runner.invoke(
+                    cli,
+                    ["organize", str(source_dir), "--output", str(output_dir)],
+                )
+
+            self.assertEqual(result.exit_code, 0)
+            # Verify NO "Proceed?" prompt
+            self.assertNotIn("Proceed?", result.output)
+            # Verify files were organized
+            self.assertFalse((source_dir / "photo.jpg").exists())
+            output_files = list(output_dir.rglob("*.jpg"))
+            self.assertEqual(len(output_files), 1)
+
+    def test_given_yes_flag_when_organizing_then_skips_confirmation(self):
+        """--yes flag: skips confirmation entirely."""
+        with self.runner.isolated_filesystem():
+            # Create source directory with files
+            source_dir = Path("source")
+            source_dir.mkdir()
+            (source_dir / "photo.jpg").write_text("content")
+
+            # Create output directory
+            output_dir = Path("output")
+            output_dir.mkdir()
+
+            # Use --yes flag
+            result = self.runner.invoke(
+                cli,
+                [
+                    "organize",
+                    str(source_dir),
+                    "--output",
+                    str(output_dir),
+                    "--yes",
+                ],
+            )
+
+            self.assertEqual(result.exit_code, 0)
+            # Verify NO "Proceed?" prompt
+            self.assertNotIn("Proceed?", result.output)
+            # Verify files were organized
+            self.assertFalse((source_dir / "photo.jpg").exists())
+            output_files = list(output_dir.rglob("*.jpg"))
+            self.assertEqual(len(output_files), 1)
+
+
 class TestAskModeInCLI(unittest.TestCase):
     """Test cases for ASK mode in CLI layer (Phase 2)."""
 

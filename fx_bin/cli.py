@@ -738,6 +738,18 @@ def organize(
         hidden=hidden,
     )
 
+    def _confirm_with_user() -> bool:
+        """Ask user to confirm proceeding with organization.
+
+        Returns:
+            True if user confirms or not in TTY mode, False if user cancels.
+        """
+        if sys.stdin.isatty():
+            if not click.confirm("\nProceed?", default=False):
+                click.echo("Cancelled.")
+                return False
+        return True
+
     # Show what we're doing
     if not quiet:
         if dry_run:
@@ -782,18 +794,14 @@ def organize(
             click.echo(f"Output directory: {context.output_dir}")
 
             # Check for TTY and prompt
-            if sys.stdin.isatty():
-                if not click.confirm("\nProceed?", default=False):
-                    click.echo("Cancelled.")
-                    return 0
+            if not _confirm_with_user():
+                return 0
         except Exception:
             # If preview fails, still ask for confirmation
             click.echo(f"\nOrganizing files from {source}")
             click.echo(f"Output directory: {context.output_dir}")
-            if sys.stdin.isatty():
-                if not click.confirm("\nProceed?", default=False):
-                    click.echo("Cancelled.")
-                    return 0
+            if not _confirm_with_user():
+                return 0
     elif not dry_run and yes:
         # --yes flag: auto-confirm
         if not quiet:
