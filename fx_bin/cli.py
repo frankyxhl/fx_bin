@@ -3,6 +3,7 @@
 
 import click
 import sys
+from pathlib import Path
 from typing import List, Tuple, Optional, Any
 
 import importlib.metadata
@@ -30,6 +31,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("root", "Find Git project root directory"),
     ("realpath", "Get absolute path of a file or directory"),
     ("today", "Create/navigate to today's workspace directory"),
+    ("organize", "Organize files into date-based directories"),
     ("list", "List all available commands"),
     ("help", "Show help information (same as fx -h)"),
     ("version", "Show version and system information"),
@@ -553,6 +555,186 @@ def list_commands() -> int:
     click.echo(
         "\nUse 'fx COMMAND --help' for more information on a " "specific command."
     )
+    return 0
+
+
+@cli.command()
+@click.argument(
+    "source",
+    type=click.Path(exists=True, file_okay=False, dir_okay=True),
+)
+@click.option(
+    "--output",
+    "-o",
+    type=click.Path(file_okay=False, dir_okay=True),
+    help="Output directory for organized files (default: ./organized)",
+)
+@click.option(
+    "--date-source",
+    type=click.Choice(["created", "modified"], case_sensitive=False),
+    default="created",
+    help="Which file date to use for organization (default: created)",
+)
+@click.option(
+    "--depth",
+    type=click.IntRange(1, 3),
+    default=3,
+    help="Directory depth: 1=day, 2=year/day, 3=year/month/day (default: 3)",
+)
+@click.option(
+    "--on-conflict",
+    type=click.Choice(["rename", "skip", "overwrite", "ask"], case_sensitive=False),
+    default="rename",
+    help="How to handle filename conflicts (default: rename)",
+)
+@click.option(
+    "--include",
+    "-i",
+    multiple=True,
+    help="Include only files matching these glob patterns (repeatable)",
+)
+@click.option(
+    "--exclude",
+    "-e",
+    multiple=True,
+    help="Exclude files matching these glob patterns (repeatable)",
+)
+@click.option(
+    "--dry-run",
+    "-n",
+    is_flag=True,
+    help="Preview changes without actually moving files",
+)
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    help="Skip confirmation prompt",
+)
+@click.option(
+    "--verbose",
+    "-v",
+    is_flag=True,
+    help="Show detailed progress information",
+)
+@click.option(
+    "--quiet",
+    "-q",
+    is_flag=True,
+    help="Suppress progress output (errors and summary only)",
+)
+def organize(
+    source: str,
+    output: Optional[str],
+    date_source: str,
+    depth: int,
+    on_conflict: str,
+    include: Tuple[str, ...],
+    exclude: Tuple[str, ...],
+    dry_run: bool,
+    yes: bool,
+    verbose: bool,
+    quiet: bool,
+) -> int:
+    """Organize files into date-based directories.
+
+    Organizes files from SOURCE directory into OUTPUT directory using
+    date-based folder structure (e.g., 2026/202601/20260110/).
+
+    \b
+    Examples:
+      fx organize ~/Photos                    # Organize photos by date
+      fx organize ~/Downloads -o ~/Sorted     # Custom output directory
+      fx organize . --depth 2                 # Use year/day structure
+      fx organize . --dry-run                 # Preview without changes
+      fx organize . -i "*.jpg" -i "*.png"     # Only images
+      fx organize . -e ".*"                   # Skip hidden files
+
+    \b
+    Date Sources:
+      --date-source created    Use file creation time (default)
+      --date-source modified   Use file modification time
+
+    \b
+    Directory Depth:
+      --depth 1    output/20260110/
+      --depth 2    output/2026/20260110/
+      --depth 3    output/2026/202601/20260110/ (default)
+
+    \b
+    Conflict Modes:
+      --on-conflict rename     Auto-rename with _1, _2 suffix (default)
+      --on-conflict skip       Skip conflicting files
+      --on-conflict overwrite  Overwrite existing files
+      --on-conflict ask        Prompt for conflicts (uses rename for intra-run)
+    """
+    from .organize_functional import execute_organize
+    from .organize import (
+        DateSource,
+        ConflictMode,
+        OrganizeContext,
+    )
+    from .lib import unsafe_ioresult_unwrap, unsafe_ioresult_to_result
+
+    # Set default output directory
+    if output is None:
+        output = str(Path(source) / "organized")
+
+    # Map string options to enums
+    date_source_enum = (
+        DateSource.CREATED if date_source == "created" else DateSource.MODIFIED
+    )
+
+    conflict_mode_map = {
+        "rename": ConflictMode.RENAME,
+        "skip": ConflictMode.SKIP,
+        "overwrite": ConflictMode.OVERWRITE,
+        "ask": ConflictMode.ASK,
+    }
+    conflict_mode_enum = conflict_mode_map[on_conflict.lower()]
+
+    # Create context
+    context = OrganizeContext(
+        date_source=date_source_enum,
+        depth=depth,
+        conflict_mode=conflict_mode_enum,
+        output_dir=output,
+        dry_run=dry_run,
+    )
+
+    # Show what we're doing
+    if not quiet:
+        if dry_run:
+            click.echo(f"DRY RUN: Previewing organization of {source}")
+        else:
+            click.echo(f"Organizing files from {source}")
+
+    # Execute organization
+    result = execute_organize(source, context)
+
+    # Check for errors
+    try:
+        summary = unsafe_ioresult_unwrap(result)
+    except Exception:
+        # It's a failure
+        inner_result = unsafe_ioresult_to_result(result)
+        error = inner_result.failure()
+        click.echo(f"Error: {error}", err=True)
+        return 1
+
+    # Show summary
+    if not quiet or summary.errors > 0:
+        click.echo(
+            f"\nSummary: {summary.total_files} files, "
+            f"{summary.processed} processed, "
+            f"{summary.skipped} skipped"
+        )
+        if summary.errors > 0:
+            click.echo(f"  {summary.errors} errors")
+
+    if dry_run and not quiet:
+        click.echo("\nDry-run complete. No files were moved.")
+
     return 0
 
 
