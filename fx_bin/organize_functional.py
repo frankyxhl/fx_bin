@@ -542,4 +542,9 @@ def execute_organize(
         directories_created=directories_created,
     )
 
+    # Clean up empty directories if requested (only in non-dry-run mode)
+    if context.clean_empty and not context.dry_run:
+        remove_empty_dirs(source_dir, source_dir)
+        # Cleanup failures are non-fatal, ignore and continue
+
     return IOResult.from_value((summary, plan))

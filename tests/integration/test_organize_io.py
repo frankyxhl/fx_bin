@@ -1056,5 +1056,78 @@ class TestDiskConflictDetection(unittest.TestCase):
             self.assertEqual(target.read_text(), "existing content")
 
 
+class TestCleanEmptyDirectories(unittest.TestCase):
+    """Test cases for --clean-empty functionality (Phase 12.1)."""
+
+    def test_clean_empty_removes_empty_directories(self):
+        """Test that --clean-empty removes empty source directories."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source with nested structure
+            source_dir = tmpdir_path / "source"
+            source_dir.mkdir()
+            nested_dir = source_dir / "nested"
+            nested_dir.mkdir()
+            (nested_dir / "file.txt").write_text("content")
+
+            # Create output directory
+            output_dir = tmpdir_path / "output"
+            output_dir.mkdir()
+
+            # Create context with clean_empty=True and recursive=True
+            context = OrganizeContext(
+                date_source=DateSource.CREATED,
+                depth=3,
+                conflict_mode=ConflictMode.RENAME,
+                output_dir=str(output_dir),
+                dry_run=False,
+                clean_empty=True,  # Enable cleanup
+                recursive=True,  # Need recursive to process nested files
+            )
+
+            # Execute - file should be moved
+            result = execute_organize(str(source_dir), context)
+            summary, _ = unsafe_ioresult_unwrap(result)
+
+            # Verify file was moved
+            self.assertFalse((nested_dir / "file.txt").exists())
+            # Verify empty directory was removed
+            self.assertFalse(nested_dir.exists())
+
+    def test_clean_empty_skips_dry_run(self):
+        """Test that --clean-empty doesn't remove directories in dry-run mode."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source with nested structure
+            source_dir = tmpdir_path / "source"
+            source_dir.mkdir()
+            nested_dir = source_dir / "nested"
+            nested_dir.mkdir()
+            (nested_dir / "file.txt").write_text("content")
+
+            # Create output directory
+            output_dir = tmpdir_path / "output"
+            output_dir.mkdir()
+
+            # Create context with clean_empty=True but dry_run=True
+            context = OrganizeContext(
+                date_source=DateSource.CREATED,
+                depth=3,
+                conflict_mode=ConflictMode.RENAME,
+                output_dir=str(output_dir),
+                dry_run=True,  # DRY RUN - cleanup should not run
+                clean_empty=True,
+            )
+
+            # Execute in dry-run mode
+            result = execute_organize(str(source_dir), context)
+            summary, _ = unsafe_ioresult_unwrap(result)
+
+            # In dry-run, directory should still exist
+            self.assertTrue(nested_dir.exists())
+
+
 if __name__ == "__main__":
     unittest.main()
