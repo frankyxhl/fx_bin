@@ -1963,6 +1963,74 @@ class TestCrossDeviceOutputDir(unittest.TestCase):
             self.assertEqual(len(files), 1)
 
 
+class TestDirectoryCreationWithRealTarget(unittest.TestCase):
+    """Test cases for directory creation using real_target (Phase 4.1)."""
+
+    def test_given_target_with_dotdot_when_moving_file_then_creates_directory_at_real_target_location(
+        self,
+    ):
+        """Test that directory creation uses real_target instead of target.
+
+        When target contains .. (like output/subdir/../file.txt), the directory
+        should be created at the resolved real_target location (output/), not
+        at the target location (output/subdir/).
+
+        This test verifies the fix for organize_functional.py:454 where
+        os.path.dirname(target) should be os.path.dirname(real_target).
+
+        RED phase: Current code uses target (wrong), creates output/subdir/
+        GREEN phase: After fix, uses real_target (correct), creates output/
+        """
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "source.txt"
+            source.write_text("content")
+
+            # Create output root
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+
+            # Target with .. in path (resolves to output/file.txt)
+            # This is safe (within output_root) but contains relative path component
+            target = output_root / "subdir" / ".." / "file.txt"
+
+            # Move the file
+            result = move_file_safe(
+                str(source),
+                str(target),
+                str(source_root),
+                str(output_root),
+                ConflictMode.RENAME,
+            )
+
+            inner_result = unsafe_ioresult_to_result(result)
+            self.assertTrue(inner_result)
+
+            # Verify source file is gone
+            self.assertFalse(source.exists())
+
+            # Verify target file exists at real_target location
+            # os.path.realpath resolves ".." to actual path
+            import os
+            real_target_path = os.path.realpath(str(target))
+            self.assertTrue(Path(real_target_path).exists())
+            self.assertEqual(Path(real_target_path).read_text(), "content")
+
+            # KEY ASSERTION: Only output/ directory should exist, NOT output/subdir/
+            # Because real_target is output/file.txt (subdir/.. is resolved)
+            # So we should create output/ NOT output/subdir/
+            subdir_path = output_root / "subdir"
+            self.assertFalse(
+                subdir_path.exists(),
+                f"Directory {subdir_path} should NOT exist. "
+                f"real_target resolves to {real_target_path}, so only output/ should be created."
+            )
+
+
 class TestRenameModeDiskConflictIntegration(unittest.TestCase):
     """Integration tests for RENAME mode disk conflict handling (Phase 1.2)."""
 

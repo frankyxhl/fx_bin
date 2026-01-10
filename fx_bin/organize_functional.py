@@ -451,7 +451,7 @@ def move_file_safe(
         # Create parent directories if they don't exist
         # Track if we create a new directory
         dir_created = False
-        target_dir = os.path.dirname(target)
+        target_dir = os.path.dirname(real_target)
         if target_dir:
             # Check if directory exists before creating
             if not os.path.exists(target_dir):
