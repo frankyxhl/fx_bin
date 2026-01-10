@@ -783,7 +783,8 @@ def organize(
                     return 0
     elif not dry_run and yes:
         # --yes flag: auto-confirm
-        click.echo(f"Organizing files from {source} to {context.output_dir}...")
+        if not quiet:
+            click.echo(f"Organizing files from {source} to {context.output_dir}...")
     elif not sys.stdin.isatty():
         # Non-TTY stdin: auto-confirm (piped input)
         pass

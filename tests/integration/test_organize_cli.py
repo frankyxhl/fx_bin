@@ -320,5 +320,62 @@ class TestQuietMode(unittest.TestCase):
             self.assertIn("Summary:", result.output)
 
 
+class TestQuietYesMode(unittest.TestCase):
+    """Test cases for --yes + --quiet interaction (Phase 2.1)."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.runner = CliRunner()
+
+    def test_given_yes_and_quiet_when_organizing_then_suppresses_organizing_message(
+        self,
+    ):
+        """Test that --yes + --quiet suppresses "Organizing files..." message.
+
+        RED phase: This test will FAIL before the fix because --yes branch
+        prints "Organizing files..." even when --quiet is set.
+
+        GREEN phase: After adding `and not quiet` condition, the test will pass.
+
+        Per --quiet semantics ("errors and summary only"), the "Organizing files..."
+        progress message should be suppressed. Only the final summary should be shown.
+        """
+        with self.runner.isolated_filesystem():
+            # Create source directory with files
+            source_dir = Path("source")
+            source_dir.mkdir()
+            (source_dir / "photo.jpg").write_text("content")
+
+            # Create output directory
+            output_dir = Path("output")
+            output_dir.mkdir()
+
+            # Run organize with both --yes and --quiet flags
+            result = self.runner.invoke(
+                cli,
+                [
+                    "organize",
+                    str(source_dir),
+                    "--output",
+                    str(output_dir),
+                    "--yes",
+                    "--quiet",
+                ],
+            )
+
+            self.assertEqual(result.exit_code, 0)
+
+            # CRITICAL: "Organizing files..." message should NOT appear in quiet mode
+            self.assertNotIn(
+                "Organizing files",
+                result.output,
+                "--quiet should suppress 'Organizing files...' message from --yes branch",
+            )
+
+            # Summary should still be shown (per --quiet semantics)
+            self.assertIn("Summary:", result.output)
+            self.assertIn("files", result.output.lower())
+
+
 if __name__ == "__main__":
     unittest.main()
