@@ -448,7 +448,7 @@ class TestAskRuntimeConflicts(unittest.TestCase):
                     f"conflicts. Got: {repr(stderr_output)}",
                 )
                 self.assertIn(
-                    "Runtime conflict detected",
+                    "Runtime conflict:",
                     stderr_output,
                     "Should log specific runtime conflict message",
                 )

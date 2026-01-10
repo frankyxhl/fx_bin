@@ -10,8 +10,10 @@ Error Hierarchy:
         └── MoveError (file move errors)
 """
 
+import errno
 import os
 import shutil
+import tempfile
 from datetime import datetime
 from typing import List, Set, Tuple
 
@@ -331,6 +333,42 @@ def _scan_non_recursive(
     return files
 
 
+def _handle_cross_device_move(
+    source: str, target: str, dir_created: bool
+) -> IOResult[Tuple[None, bool], MoveError]:
+    """Handle cross-device move using temp file for atomicity.
+
+    When os.replace() fails with EXDEV (cross-device link), copy to temp
+    file first, then atomic replace to target. This preserves atomic
+    semantics even across filesystems.
+
+    Args:
+        source: Source file path
+        target: Target file path
+        dir_created: Whether parent directory was created
+
+    Returns:
+        IOResult with Tuple[None, dir_created] or MoveError
+    """
+    target_dir = os.path.dirname(target) or "."
+    fd, temp_path = tempfile.mkstemp(dir=target_dir)
+    os.close(fd)  # Close fd - we only need the unique filename
+
+    try:
+        shutil.copy2(source, temp_path)
+        os.replace(temp_path, target)
+        os.unlink(source)
+        return IOResult.from_value((None, dir_created))
+    except Exception:
+        try:
+            os.unlink(temp_path)
+        except OSError:
+            pass
+        return IOResult.from_failure(
+            MoveError(f"Cannot move {source} to {target}: cross-device link failed")
+        )
+
+
 def move_file_safe(
     source: str,
     target: str,
@@ -408,43 +446,18 @@ def move_file_safe(
                 return IOResult.from_value((None, False))
             elif conflict_mode == ConflictMode.OVERWRITE:
                 # Overwrite: use atomic replace with EXDEV handling
-                import errno
-                import tempfile
-
-                # Try atomic replace first
                 try:
                     os.replace(real_source, real_target)
                     return IOResult.from_value((None, False))
                 except OSError as e:
                     if e.errno == errno.EXDEV:
-                        # Cross-device link: copy to temp, then atomic replace
-                        # This preserves atomic semantics even across filesystems
-                        target_dir = os.path.dirname(real_target) or "."
-                        fd, temp_path = tempfile.mkstemp(dir=target_dir)
-                        os.close(fd)  # Close fd - we only need the unique filename
-                        try:
-                            # Copy source to temp file (preserves metadata)
-                            shutil.copy2(real_source, temp_path)
-                            # Atomic replace: temp -> target
-                            os.replace(temp_path, real_target)
-                            # Remove source file (now safely copied)
-                            os.unlink(real_source)
-                            return IOResult.from_value((None, False))
-                        except Exception:
-                            # Cleanup temp file on any error
-                            try:
-                                os.unlink(temp_path)
-                            except OSError:
-                                pass
-                            raise
+                        return _handle_cross_device_move(real_source, real_target, False)
                     raise
             elif conflict_mode == ConflictMode.ASK:
-                # Ask: runtime conflict (TOCTOU - time-of-check-time-of-use)
-                # This occurs when a conflict appears between scan and execution phases
-                # Per Decision 3: Document ASK only handles scan-time conflicts,
-                # runtime conflicts skip with warning log
+                # Runtime conflict: conflict appeared between scan and execution
+                # ASK mode only handles scan-time conflicts, so skip with warning
                 L.warning(
-                    f"Runtime conflict detected: {real_target} already exists. "
+                    f"Runtime conflict: {real_target} exists. "
                     "Skipping (ASK mode only handles scan-time conflicts)."
                 )
                 return IOResult.from_value((None, False))
@@ -453,48 +466,22 @@ def move_file_safe(
                 # Call disk-specific conflict resolution helper
                 real_target = resolve_disk_conflict_rename(real_target)
 
-        # Create parent directories if they don't exist
-        # Track if we create a new directory
+        # Create parent directories if needed and track if new
         dir_created = False
         target_dir = os.path.dirname(real_target)
-        if target_dir:
-            # Check if directory exists before creating
-            if not os.path.exists(target_dir):
-                dir_created = True
+        if target_dir and not os.path.exists(target_dir):
             os.makedirs(target_dir, exist_ok=True)
+            dir_created = True
 
         # Perform the move
-        # For OVERWRITE mode, use os.replace() for atomic operation
-        # For other modes, use shutil.move() which handles cross-filesystem moves
         if conflict_mode == ConflictMode.OVERWRITE:
-            import errno
-            import tempfile
-
-            # OVERWRITE always uses atomic replace (even when target doesn't exist)
+            # OVERWRITE always uses atomic replace
             try:
                 os.replace(source, real_target)
                 return IOResult.from_value((None, dir_created))
             except OSError as e:
                 if e.errno == errno.EXDEV:
-                    # Cross-device link: copy to temp, then atomic replace
-                    target_parent = os.path.dirname(real_target) or "."
-                    fd, temp_path = tempfile.mkstemp(dir=target_parent)
-                    os.close(fd)  # Close fd - we only need the unique filename
-                    try:
-                        # Copy source to temp file (preserves metadata)
-                        shutil.copy2(source, temp_path)
-                        # Atomic replace: temp -> target
-                        os.replace(temp_path, real_target)
-                        # Remove source file (now safely copied)
-                        os.unlink(source)
-                        return IOResult.from_value((None, dir_created))
-                    except Exception:
-                        # Cleanup temp file on any error
-                        try:
-                            os.unlink(temp_path)
-                        except OSError:
-                            pass
-                        raise
+                    return _handle_cross_device_move(source, real_target, dir_created)
                 raise
         else:
             # For non-OVERWRITE modes, use shutil.move

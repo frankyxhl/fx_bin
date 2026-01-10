@@ -706,17 +706,13 @@ def organize(
 
     # Configure loguru based on quiet/verbose flags (Decision 2.5)
     # This ensures logger.warning() respects --quiet and --verbose
+    loguru_logger.remove()
+
     if quiet:
-        # Quiet mode: only ERROR and above
-        loguru_logger.remove()
         loguru_logger.add(sys.stderr, level="ERROR")
     elif verbose:
-        # Verbose mode: show everything (DEBUG and above)
-        loguru_logger.remove()
         loguru_logger.add(sys.stderr, level="DEBUG")
     else:
-        # Default mode: INFO and above (shows WARNING)
-        loguru_logger.remove()
         loguru_logger.add(sys.stderr, level="INFO")
 
     # Set default output directory
