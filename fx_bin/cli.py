@@ -4,7 +4,7 @@
 import click
 import sys
 from pathlib import Path
-from typing import List, Tuple, Optional, Any
+from typing import List, Tuple, Optional, Any, Sequence
 
 import importlib.metadata
 
@@ -651,8 +651,8 @@ def organize(
     date_source: str,
     depth: int,
     on_conflict: str,
-    include: Tuple[str, ...],
-    exclude: Tuple[str, ...],
+    include: Sequence[str],
+    exclude: Sequence[str],
     hidden: bool,
     recursive: bool,
     clean_empty: bool,
