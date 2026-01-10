@@ -791,7 +791,7 @@ def organize(
 
     # Check for errors
     try:
-        summary = unsafe_ioresult_unwrap(result)
+        summary, plan = unsafe_ioresult_unwrap(result)
     except Exception:
         # It's a failure
         inner_result = unsafe_ioresult_to_result(result)
@@ -799,7 +799,18 @@ def organize(
         click.echo(f"Error: {error}", err=True)
         return 1
 
-    # Show summary
+    # Show per-file details in verbose mode
+    if verbose:
+        click.echo("\nFile details:")
+        for item in plan:
+            if item.action == "moved":
+                click.echo(f"  {item.source} -> {item.target}")
+            elif item.action == "skipped":
+                click.echo(f"  {item.source} (skipped)")
+            elif item.action == "error":
+                click.echo(f"  {item.source} (error)")
+
+    # Show summary (always show in quiet mode if errors exist)
     if not quiet or summary.errors > 0:
         click.echo(
             f"\nSummary: {summary.total_files} files, "

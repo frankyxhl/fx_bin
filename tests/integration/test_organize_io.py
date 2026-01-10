@@ -500,7 +500,7 @@ class TestExecuteOrganize(unittest.TestCase):
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
 
-            summary = unsafe_ioresult_unwrap(result)
+            summary, _ = unsafe_ioresult_unwrap(result)
 
             # Verify summary indicates dry-run
             self.assertTrue(summary.dry_run)
@@ -544,7 +544,7 @@ class TestExecuteOrganize(unittest.TestCase):
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
 
-            summary = unsafe_ioresult_unwrap(result)
+            summary, _ = unsafe_ioresult_unwrap(result)
 
             # Verify files were moved
             self.assertFalse(source_file.exists())
@@ -589,7 +589,7 @@ class TestExecuteOrganize(unittest.TestCase):
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
 
-            summary = unsafe_ioresult_unwrap(result)
+            summary, _ = unsafe_ioresult_unwrap(result)
 
             # Verify summary fields
             self.assertIsInstance(summary, OrganizeSummary)
@@ -630,7 +630,7 @@ class TestHiddenFileHandling(unittest.TestCase):
 
             # Execute
             result = execute_organize(str(source_dir), context)
-            summary = unsafe_ioresult_unwrap(result)
+            summary, _ = unsafe_ioresult_unwrap(result)
 
             # Both files are scanned (total_files=2), but hidden is skipped
             self.assertEqual(summary.total_files, 2)  # Both files scanned
@@ -664,7 +664,7 @@ class TestHiddenFileHandling(unittest.TestCase):
 
             # Execute
             result = execute_organize(str(source_dir), context)
-            summary = unsafe_ioresult_unwrap(result)
+            summary, _ = unsafe_ioresult_unwrap(result)
 
             # Both files should be processed
             self.assertEqual(summary.total_files, 2)  # Both files counted
@@ -703,7 +703,7 @@ class TestRecursiveBehavior(unittest.TestCase):
 
             # Execute
             result = execute_organize(str(source_dir), context)
-            summary = unsafe_ioresult_unwrap(result)
+            summary, _ = unsafe_ioresult_unwrap(result)
 
             # Only root file should be scanned, not nested
             self.assertEqual(summary.total_files, 1)  # Only root file
@@ -739,7 +739,7 @@ class TestRecursiveBehavior(unittest.TestCase):
 
             # Execute
             result = execute_organize(str(source_dir), context)
-            summary = unsafe_ioresult_unwrap(result)
+            summary, _ = unsafe_ioresult_unwrap(result)
 
             # Both files should be scanned
             self.assertEqual(summary.total_files, 2)  # Both files
@@ -864,7 +864,7 @@ class TestDirectoriesCreated(unittest.TestCase):
 
             # Execute in dry-run mode
             result = execute_organize(str(source_dir), context)
-            summary = unsafe_ioresult_unwrap(result)
+            summary, _ = unsafe_ioresult_unwrap(result)
 
             # Verify no directories were created in dry-run
             self.assertEqual(summary.directories_created, 0)
@@ -894,7 +894,7 @@ class TestDirectoriesCreated(unittest.TestCase):
 
             # Execute - this will create date directories
             result = execute_organize(str(source_dir), context)
-            summary = unsafe_ioresult_unwrap(result)
+            summary, _ = unsafe_ioresult_unwrap(result)
 
             # At least 1 directory should be created (year/month/day structure)
             self.assertGreater(summary.directories_created, 0)
@@ -934,7 +934,7 @@ class TestDirectoriesCreated(unittest.TestCase):
 
             # Execute - directories already exist
             result = execute_organize(str(source_dir), context)
-            summary = unsafe_ioresult_unwrap(result)
+            summary, _ = unsafe_ioresult_unwrap(result)
 
             # No new directories should be created
             self.assertEqual(summary.directories_created, 0)

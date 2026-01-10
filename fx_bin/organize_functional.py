@@ -22,6 +22,7 @@ from fx_bin.errors import DateReadError, MoveError, OrganizeError
 from fx_bin.lib import unsafe_ioresult_unwrap
 from fx_bin.organize import (
     DateSource,
+    FileOrganizeResult,
     OrganizeContext,
     OrganizeSummary,
     generate_organize_plan,
@@ -429,7 +430,7 @@ def remove_empty_dirs(
 
 def execute_organize(
     source_dir: str, context: OrganizeContext
-) -> IOResult[OrganizeSummary, OrganizeError]:
+) -> IOResult[Tuple[OrganizeSummary, List[FileOrganizeResult]], OrganizeError]:
     """Execute file organization operation.
 
     Main orchestration function that:
@@ -437,14 +438,14 @@ def execute_organize(
     2. Reads file dates
     3. Generates organization plan
     4. Executes moves (unless dry-run)
-    5. Returns summary statistics
+    5. Returns summary statistics and plan
 
     Args:
         source_dir: Source directory to organize
         context: Organization configuration context
 
     Returns:
-        IOResult with OrganizeSummary or OrganizeError
+        IOResult with Tuple[OrganizeSummary, plan] or OrganizeError
     """
     # Scan for files
     scan_result = scan_files(
@@ -518,4 +519,4 @@ def execute_organize(
         directories_created=directories_created,
     )
 
-    return IOResult.from_value(summary)
+    return IOResult.from_value((summary, plan))
