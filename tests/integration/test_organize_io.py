@@ -836,5 +836,109 @@ class TestBoundaryCheck(unittest.TestCase):
             self.assertTrue(Path(target).exists())
 
 
+class TestDirectoriesCreated(unittest.TestCase):
+    """Test cases for directories_created tracking (Phase 9.7)."""
+
+    def test_directories_created_zero_in_dry_run(self):
+        """Test that directories_created is 0 in dry-run mode."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source file
+            source_dir = tmpdir_path / "source"
+            source_dir.mkdir()
+            (source_dir / "photo.jpg").write_text("content")
+
+            # Create output directory
+            output_dir = tmpdir_path / "output"
+            output_dir.mkdir()
+
+            # Create context for dry-run
+            context = OrganizeContext(
+                date_source=DateSource.CREATED,
+                depth=3,
+                conflict_mode=ConflictMode.RENAME,
+                output_dir=str(output_dir),
+                dry_run=True,  # DRY RUN
+            )
+
+            # Execute in dry-run mode
+            result = execute_organize(str(source_dir), context)
+            summary = unsafe_ioresult_unwrap(result)
+
+            # Verify no directories were created in dry-run
+            self.assertEqual(summary.directories_created, 0)
+
+    def test_directories_created_counts_newly_created(self):
+        """Test that directories_created counts only newly created directories."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source file
+            source_dir = tmpdir_path / "source"
+            source_dir.mkdir()
+            (source_dir / "photo.jpg").write_text("content")
+
+            # Create output directory (but NOT the date subdirectories)
+            output_dir = tmpdir_path / "output"
+            output_dir.mkdir()
+
+            # Create context for actual execution
+            context = OrganizeContext(
+                date_source=DateSource.CREATED,
+                depth=3,
+                conflict_mode=ConflictMode.RENAME,
+                output_dir=str(output_dir),
+                dry_run=False,  # Actual execution
+            )
+
+            # Execute - this will create date directories
+            result = execute_organize(str(source_dir), context)
+            summary = unsafe_ioresult_unwrap(result)
+
+            # At least 1 directory should be created (year/month/day structure)
+            self.assertGreater(summary.directories_created, 0)
+            # Verify the file was actually moved
+            self.assertFalse((source_dir / "photo.jpg").exists())
+
+    def test_directories_created_zero_when_preexisting(self):
+        """Test that directories_created is 0 when directories already exist."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source file
+            source_dir = tmpdir_path / "source"
+            source_dir.mkdir()
+            (source_dir / "photo.jpg").write_text("content")
+
+            # Create output directory AND pre-create the date structure
+            output_dir = tmpdir_path / "output"
+            output_dir.mkdir()
+
+            # Pre-create the expected date structure (based on current date)
+            from datetime import datetime
+            now = datetime.now()
+            year_dir = output_dir / str(now.year)
+            month_dir = year_dir / now.strftime("%Y%m")
+            day_dir = month_dir / now.strftime("%Y%m%d")
+            day_dir.mkdir(parents=True)
+
+            # Create context for actual execution
+            context = OrganizeContext(
+                date_source=DateSource.CREATED,
+                depth=3,
+                conflict_mode=ConflictMode.RENAME,
+                output_dir=str(output_dir),
+                dry_run=False,  # Actual execution
+            )
+
+            # Execute - directories already exist
+            result = execute_organize(str(source_dir), context)
+            summary = unsafe_ioresult_unwrap(result)
+
+            # No new directories should be created
+            self.assertEqual(summary.directories_created, 0)
+
+
 if __name__ == "__main__":
     unittest.main()
