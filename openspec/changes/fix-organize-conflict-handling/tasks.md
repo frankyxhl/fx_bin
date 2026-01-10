@@ -98,7 +98,7 @@ Each task follows RED-GREEN-REFACTOR:
 - [x] 4.1.1 **RED**: Write test that --quiet outputs summary even with no errors
 - [x] 4.1.2 **GREEN**: Fix CLI output logic (remove `or summary.errors > 0` condition)
 - [x] 4.1.3 **GREEN**: Verify test passes
-- [ ] 4.1.4 Commit: "Phase 4: Fix --quiet to always show summary"
+- [x] 4.1.4 Commit: "Phase 4: Fix --quiet to always show summary"
 
 ---
 

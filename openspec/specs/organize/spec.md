@@ -65,17 +65,43 @@ The system SHALL NOT create, modify, or delete any files or directories in dry-r
 - **THEN** source and target paths are shown for each file
 - **AND** filesystem remains completely unchanged
 
-### Requirement: File Conflict Resolution with Intra-Run Handling
-The system SHALL handle filename conflicts with configurable strategies. Intra-run conflicts (multiple source files mapping to same target) are always resolved deterministically at plan time using rename or skip, regardless of --on-conflict mode.
+### Requirement: File Conflict Resolution with Correct Disk Semantics
+The system SHALL handle filename conflicts with configurable strategies. Intra-run conflicts are resolved at plan time. Disk conflicts (target exists on disk) use the configured --on-conflict mode.
 
-#### Scenario: Rename on conflict with existing file (default)
-- **WHEN** target file already exists on disk
-- **AND** conflict mode is rename (default)
-- **THEN** file is renamed with numeric suffix (e.g., `photo_1.jpg`, `photo_2.jpg`)
+#### Scenario: RENAME adds suffix on disk conflict (FIXED)
+- **WHEN** user runs `fx organize --on-conflict rename`
+- **AND** target file already exists on disk
+- **THEN** system calls `resolve_disk_conflict_rename()` to generate unique path
+- **AND** target path is modified with numeric suffix (e.g., `photo_1.jpg`, `photo_2.jpg`)
+- **AND** file is moved to the renamed path WITHOUT overwriting existing file
+
+#### Scenario: OVERWRITE uses atomic replace (FIXED)
+- **WHEN** user runs `fx organize --on-conflict overwrite`
+- **AND** target file already exists on disk
+- **THEN** target file is atomically replaced using `os.replace()`
+- **AND** operation is guaranteed to either succeed completely or fail without corruption
+- **AND** on EXDEV (cross-filesystem) error: copy to temp, then atomic replace
+
+#### Scenario: ASK prompts user or falls back to skip (FIXED)
+- **WHEN** user runs `fx organize --on-conflict ask`
+- **AND** target file already exists on disk
+- **AND** stdin is a TTY
+- **THEN** user is prompted with click.confirm() for each conflict
+- **WHEN** user declines the prompt
+- **THEN** file is skipped
+- **WHEN** stdin is not a TTY (non-interactive)
+- **THEN** ASK mode falls back to SKIP behavior (no prompt)
+
+#### Scenario: Skip on conflict with existing file
+- **WHEN** user runs `fx organize --on-conflict skip`
+- **AND** target file already exists on disk
+- **THEN** file is skipped
+- **AND** skip is recorded in statistics
 
 #### Scenario: Intra-run collision with rename mode
 - **WHEN** two source files `a/photo.jpg` and `b/photo.jpg` have the same date
 - **AND** both would be organized to the same target path
+- **AND** conflict mode is rename
 - **THEN** conflicts are resolved at plan generation time
 - **AND** second file is renamed to `photo_1.jpg` before execution begins
 
@@ -91,22 +117,14 @@ The system SHALL handle filename conflicts with configurable strategies. Intra-r
 - **THEN** intra-run conflict is still resolved at plan time using rename strategy
 - **AND** ask/overwrite mode only applies to conflicts with files already on disk
 
-#### Scenario: Skip on conflict with existing file
-- **WHEN** user runs `fx organize --on-conflict skip`
-- **AND** target file already exists on disk
-- **THEN** file is skipped
-- **AND** skip is recorded in statistics
+### Requirement: Quiet Mode Always Shows Summary
+The system SHALL display errors and summary in quiet mode, regardless of whether errors occurred.
 
-#### Scenario: Overwrite on conflict with atomic semantics
-- **WHEN** user runs `fx organize --on-conflict overwrite`
-- **AND** target file already exists on disk
-- **THEN** target file is atomically replaced using os.replace()
-- **AND** on cross-filesystem: temp copy then atomic replace
-
-#### Scenario: Ask on conflict with existing disk file
-- **WHEN** user runs `fx organize --on-conflict ask`
-- **AND** target file already exists on disk
-- **THEN** user is prompted to choose action for that specific conflict
+#### Scenario: Quiet mode shows summary even with no errors (FIXED)
+- **WHEN** user runs `fx organize --quiet`
+- **AND** organization completes successfully with no errors
+- **THEN** summary is still displayed showing files moved, skipped, directories created
+- **AND** per-file progress details are suppressed
 
 ### Requirement: Symlink and Security Safety
 The system SHALL skip symlinks and enforce path boundaries to prevent security vulnerabilities.
@@ -149,6 +167,12 @@ The system SHALL exclude output directory from scanning when it is inside source
 - **WHEN** source is `/a/b` and output is `/a/b2`
 - **THEN** `/a/b2` is NOT incorrectly treated as inside `/a/b`
 - **AND** output directory exclusion is NOT triggered for `/a/b2`
+
+#### Scenario: Cross-device output directory doesn't crash (FIXED)
+- **WHEN** user runs `fx organize --output D:\output` (while source is on C:\)
+- **THEN** `_should_skip_entry()` catches ValueError from `os.path.commonpath()`
+- **AND** returns False (don't skip the entry)
+- **AND** processing continues without crash
 
 ### Requirement: No-op Handling
 The system SHALL skip files that are already in their correct target location.
