@@ -40,7 +40,9 @@ class TestConflictMode(unittest.TestCase):
 class TestOrganizeContext(unittest.TestCase):
     """Test cases for OrganizeContext frozen dataclass."""
 
-    def test_given_organizecontext_when_created_then_is_frozen_dataclass_with_all_fields(self):
+    def test_given_organizecontext_when_created_then_is_frozen_dataclass_with_all_fields(
+        self,
+    ):
         """Test that OrganizeContext is a frozen dataclass with all fields."""
         from fx_bin.organize import OrganizeContext
         from dataclasses import is_dataclass
@@ -64,7 +66,9 @@ class TestOrganizeContext(unittest.TestCase):
         self.assertEqual(context.output_dir, "/output")
         self.assertFalse(context.dry_run)
 
-    def test_given_organizecontext_when_modification_attempted_then_raises_frozen_instance_error(self):
+    def test_given_organizecontext_when_modification_attempted_then_raises_frozen_instance_error(
+        self,
+    ):
         """Test that OrganizeContext is frozen (immutable)."""
         from fx_bin.organize import OrganizeContext
         from dataclasses import FrozenInstanceError
@@ -127,7 +131,9 @@ class TestFileOrganizeResult(unittest.TestCase):
         self.assertEqual(result.target, "/target/2026/202601/20260110/file.txt")
         self.assertEqual(result.action, "moved")
 
-    def test_given_fileorganizeresult_when_modification_attempted_then_raises_frozen_instance_error(self):
+    def test_given_fileorganizeresult_when_modification_attempted_then_raises_frozen_instance_error(
+        self,
+    ):
         """Test that FileOrganizeResult is frozen."""
         from fx_bin.organize import FileOrganizeResult
         from dataclasses import FrozenInstanceError
@@ -168,7 +174,9 @@ class TestOrganizeSummary(unittest.TestCase):
         self.assertEqual(summary.errors, 0)
         self.assertTrue(summary.dry_run)
 
-    def test_given_organizesummary_when_modification_attempted_then_raises_frozen_instance_error(self):
+    def test_given_organizesummary_when_modification_attempted_then_raises_frozen_instance_error(
+        self,
+    ):
         """Test that OrganizeSummary is frozen."""
         from fx_bin.organize import OrganizeSummary
         from dataclasses import FrozenInstanceError
@@ -188,7 +196,9 @@ class TestOrganizeSummary(unittest.TestCase):
 class TestGetTargetPath(unittest.TestCase):
     """Test cases for get_target_path() function."""
 
-    def test_given_date_and_depth_3_when_calculating_target_then_returns_correct_path(self):
+    def test_given_date_and_depth_3_when_calculating_target_then_returns_correct_path(
+        self,
+    ):
         """Test get_target_path with depth=3 (year/month/day)."""
         from fx_bin.organize import get_target_path
         from datetime import datetime
@@ -201,7 +211,9 @@ class TestGetTargetPath(unittest.TestCase):
         expected = "/output/2026/202601/20260110/photo.jpg"
         self.assertEqual(result, expected)
 
-    def test_given_date_and_depth_2_when_calculating_target_then_returns_correct_path(self):
+    def test_given_date_and_depth_2_when_calculating_target_then_returns_correct_path(
+        self,
+    ):
         """Test get_target_path with depth=2 (year/day)."""
         from fx_bin.organize import get_target_path
         from datetime import datetime
@@ -213,7 +225,9 @@ class TestGetTargetPath(unittest.TestCase):
         expected = "/output/2026/20260110/photo.jpg"
         self.assertEqual(result, expected)
 
-    def test_given_date_and_depth_1_when_calculating_target_then_returns_correct_path(self):
+    def test_given_date_and_depth_1_when_calculating_target_then_returns_correct_path(
+        self,
+    ):
         """Test get_target_path with depth=1 (day only)."""
         from fx_bin.organize import get_target_path
         from datetime import datetime
@@ -225,7 +239,9 @@ class TestGetTargetPath(unittest.TestCase):
         expected = "/output/20260110/photo.jpg"
         self.assertEqual(result, expected)
 
-    def test_given_date_near_midnight_when_calculating_target_then_uses_local_timezone(self):
+    def test_given_date_near_midnight_when_calculating_target_then_uses_local_timezone(
+        self,
+    ):
         """Test that get_target_path uses local timezone."""
         from fx_bin.organize import get_target_path
         from datetime import datetime
@@ -237,7 +253,9 @@ class TestGetTargetPath(unittest.TestCase):
         # Should be in the 20260110 directory
         self.assertIn("20260110", result)
 
-    def test_given_filename_with_multi_part_extension_when_calculating_target_then_preserves_full_filename(self):
+    def test_given_filename_with_multi_part_extension_when_calculating_target_then_preserves_full_filename(
+        self,
+    ):
         """Test that filename with multi-part extension is preserved."""
         from fx_bin.organize import get_target_path
         from datetime import datetime
@@ -253,7 +271,9 @@ class TestGetTargetPath(unittest.TestCase):
 class TestIsHiddenFile(unittest.TestCase):
     """Test cases for is_hidden_file() function."""
 
-    def test_given_filename_with_dot_prefix_when_checking_hidden_then_returns_true(self):
+    def test_given_filename_with_dot_prefix_when_checking_hidden_then_returns_true(
+        self,
+    ):
         """Test that files starting with . are detected as hidden."""
         from fx_bin.organize import is_hidden_file
 
@@ -262,7 +282,9 @@ class TestIsHiddenFile(unittest.TestCase):
         self.assertTrue(is_hidden_file(".DS_Store"))
         self.assertTrue(is_hidden_file(".hidden_file.txt"))
 
-    def test_given_filename_without_dot_prefix_when_checking_hidden_then_returns_false(self):
+    def test_given_filename_without_dot_prefix_when_checking_hidden_then_returns_false(
+        self,
+    ):
         """Test that normal files are not detected as hidden."""
         from fx_bin.organize import is_hidden_file
 
@@ -272,7 +294,9 @@ class TestIsHiddenFile(unittest.TestCase):
         self.assertFalse(is_hidden_file("archive.tar.gz"))
         self.assertFalse(is_hidden_file("README"))
 
-    def test_given_filename_with_dot_in_middle_when_checking_hidden_then_returns_false(self):
+    def test_given_filename_with_dot_in_middle_when_checking_hidden_then_returns_false(
+        self,
+    ):
         """Test that files with dots in the middle are not hidden."""
         from fx_bin.organize import is_hidden_file
 
@@ -285,7 +309,9 @@ class TestIsHiddenFile(unittest.TestCase):
 class TestMatchesGlobPattern(unittest.TestCase):
     """Test cases for matches_glob_pattern() function."""
 
-    def test_given_filename_and_pattern_when_matching_basic_patterns_then_returns_correct_result(self):
+    def test_given_filename_and_pattern_when_matching_basic_patterns_then_returns_correct_result(
+        self,
+    ):
         """Test basic glob pattern matching."""
         from fx_bin.organize import matches_glob_pattern
 
@@ -294,7 +320,9 @@ class TestMatchesGlobPattern(unittest.TestCase):
         self.assertTrue(matches_glob_pattern("document.pdf", "*.pdf"))
         self.assertFalse(matches_glob_pattern("photo.jpg", "*.pdf"))
 
-    def test_given_filename_and_pattern_when_matching_case_sensitive_then_respects_case(self):
+    def test_given_filename_and_pattern_when_matching_case_sensitive_then_respects_case(
+        self,
+    ):
         """Test that matching is case-sensitive (fnmatchcase)."""
         from fx_bin.organize import matches_glob_pattern
 
@@ -304,7 +332,9 @@ class TestMatchesGlobPattern(unittest.TestCase):
         self.assertTrue(matches_glob_pattern("beach.JPG", "*.JPG"))
         self.assertTrue(matches_glob_pattern("beach.jpg", "*.jpg"))
 
-    def test_given_filename_with_path_and_pattern_when_matching_then_matches_basename_only(self):
+    def test_given_filename_with_path_and_pattern_when_matching_then_matches_basename_only(
+        self,
+    ):
         """Test that pattern matches basename only, not full path."""
         from fx_bin.organize import matches_glob_pattern
 
@@ -313,7 +343,9 @@ class TestMatchesGlobPattern(unittest.TestCase):
         self.assertTrue(matches_glob_pattern("/path/to/photo.jpg", "*.jpg"))
         self.assertTrue(matches_glob_pattern("./photo.jpg", "*.jpg"))
 
-    def test_given_filename_and_wildcard_pattern_when_matching_then_handles_various_wildcards(self):
+    def test_given_filename_and_wildcard_pattern_when_matching_then_handles_various_wildcards(
+        self,
+    ):
         """Test various wildcard patterns."""
         from fx_bin.organize import matches_glob_pattern
 
@@ -328,16 +360,22 @@ class TestMatchesGlobPattern(unittest.TestCase):
 class TestShouldProcessFile(unittest.TestCase):
     """Test cases for should_process_file() function."""
 
-    def test_given_non_hidden_file_and_no_filters_when_checking_should_process_then_returns_true(self):
+    def test_given_non_hidden_file_and_no_filters_when_checking_should_process_then_returns_true(
+        self,
+    ):
         """Test that non-hidden files are processed when no filters specified (hidden=False default)."""
         from fx_bin.organize import should_process_file
 
         # No filters, hidden=False (default) = process non-hidden files
         self.assertTrue(should_process_file("photo.jpg", (), ()))
-        self.assertFalse(should_process_file(".gitignore", (), ()))  # Hidden files excluded by default
+        self.assertFalse(
+            should_process_file(".gitignore", (), ())
+        )  # Hidden files excluded by default
         self.assertTrue(should_process_file("document.pdf", (), ()))
 
-    def test_given_hidden_file_and_hidden_flag_when_checking_should_process_then_returns_true(self):
+    def test_given_hidden_file_and_hidden_flag_when_checking_should_process_then_returns_true(
+        self,
+    ):
         """Test that hidden=True includes hidden files."""
         from fx_bin.organize import should_process_file
 
@@ -345,7 +383,9 @@ class TestShouldProcessFile(unittest.TestCase):
         self.assertTrue(should_process_file(".gitignore", (), (), hidden=True))
         self.assertTrue(should_process_file("photo.jpg", (), (), hidden=True))
 
-    def test_given_file_and_include_patterns_when_checking_should_process_then_filters_correctly(self):
+    def test_given_file_and_include_patterns_when_checking_should_process_then_filters_correctly(
+        self,
+    ):
         """Test include pattern filtering (tuple)."""
         from fx_bin.organize import should_process_file
 
@@ -354,7 +394,9 @@ class TestShouldProcessFile(unittest.TestCase):
         self.assertTrue(should_process_file("image.png", ("*.jpg", "*.png"), ()))
         self.assertFalse(should_process_file("document.pdf", ("*.jpg", "*.png"), ()))
 
-    def test_given_file_and_exclude_patterns_when_checking_should_process_then_filters_correctly(self):
+    def test_given_file_and_exclude_patterns_when_checking_should_process_then_filters_correctly(
+        self,
+    ):
         """Test exclude pattern filtering (tuple)."""
         from fx_bin.organize import should_process_file
 
@@ -363,7 +405,9 @@ class TestShouldProcessFile(unittest.TestCase):
         self.assertFalse(should_process_file("temp.tmp", (), (".*", "*.tmp")))
         self.assertTrue(should_process_file("photo.jpg", (), (".*", "*.tmp")))
 
-    def test_given_file_and_include_exclude_patterns_when_checking_should_process_then_applies_both(self):
+    def test_given_file_and_include_exclude_patterns_when_checking_should_process_then_applies_both(
+        self,
+    ):
         """Test combined include and exclude (include first, then exclude)."""
         from fx_bin.organize import should_process_file
 
@@ -372,7 +416,9 @@ class TestShouldProcessFile(unittest.TestCase):
         self.assertFalse(should_process_file(".hidden.jpg", ("*.jpg", "*.png"), (".*")))
         self.assertFalse(should_process_file("document.pdf", ("*.jpg", "*.png"), ()))
 
-    def test_given_hidden_file_and_include_exclude_when_checking_should_process_then_exclude_takes_precedence(self):
+    def test_given_hidden_file_and_include_exclude_when_checking_should_process_then_exclude_takes_precedence(
+        self,
+    ):
         """Test that exclude patterns filter after include."""
         from fx_bin.organize import should_process_file
 
@@ -384,7 +430,9 @@ class TestShouldProcessFile(unittest.TestCase):
 class TestResolveConflictRename(unittest.TestCase):
     """Test cases for resolve_conflict_rename() function."""
 
-    def test_given_non_conflicting_path_when_resolving_conflict_then_returns_path_unchanged(self):
+    def test_given_non_conflicting_path_when_resolving_conflict_then_returns_path_unchanged(
+        self,
+    ):
         """Test that non-conflicting path is returned unchanged."""
         from fx_bin.organize import resolve_conflict_rename
 
@@ -400,7 +448,9 @@ class TestResolveConflictRename(unittest.TestCase):
         result = resolve_conflict_rename("/output/photo.jpg", allocated)
         self.assertEqual(result, "/output/photo_1.jpg")
 
-    def test_given_conflicting_path_with_existing_suffixes_when_resolving_conflict_then_increments_suffix(self):
+    def test_given_conflicting_path_with_existing_suffixes_when_resolving_conflict_then_increments_suffix(
+        self,
+    ):
         """Test incrementing suffix for multiple conflicts."""
         from fx_bin.organize import resolve_conflict_rename
 
@@ -408,7 +458,9 @@ class TestResolveConflictRename(unittest.TestCase):
         result = resolve_conflict_rename("/output/photo.jpg", allocated)
         self.assertEqual(result, "/output/photo_3.jpg")
 
-    def test_given_multi_part_extension_when_resolving_conflict_then_inserts_suffix_correctly(self):
+    def test_given_multi_part_extension_when_resolving_conflict_then_inserts_suffix_correctly(
+        self,
+    ):
         """Test conflict resolution with multi-part extension (.tar.gz)."""
         from fx_bin.organize import resolve_conflict_rename
 
@@ -441,7 +493,9 @@ class TestGenerateOrganizePlan(unittest.TestCase):
         self.assertEqual(plan[0].action, "moved")
         self.assertIn("20260110", plan[0].target)
 
-    def test_given_unsorted_files_when_generating_plan_then_processes_in_deterministic_order(self):
+    def test_given_unsorted_files_when_generating_plan_then_processes_in_deterministic_order(
+        self,
+    ):
         """Test that files are processed in sorted order."""
         from fx_bin.organize import generate_organize_plan
         from datetime import datetime
@@ -467,7 +521,9 @@ class TestGenerateOrganizePlan(unittest.TestCase):
         self.assertIn("beta", plan[1].source)
         self.assertIn("zebra", plan[2].source)
 
-    def test_given_same_name_files_and_rename_mode_when_generating_plan_then_resolves_intra_run_conflicts(self):
+    def test_given_same_name_files_and_rename_mode_when_generating_plan_then_resolves_intra_run_conflicts(
+        self,
+    ):
         """Test intra-run conflict resolution with rename mode."""
         from fx_bin.organize import generate_organize_plan
         from datetime import datetime
@@ -493,7 +549,9 @@ class TestGenerateOrganizePlan(unittest.TestCase):
         # Second file should have _1 suffix
         self.assertTrue(plan[1].target.endswith("photo_1.jpg"))
 
-    def test_given_same_name_files_and_skip_mode_when_generating_plan_then_skips_conflicts(self):
+    def test_given_same_name_files_and_skip_mode_when_generating_plan_then_skips_conflicts(
+        self,
+    ):
         """Test intra-run conflict with skip mode."""
         from fx_bin.organize import generate_organize_plan
         from datetime import datetime

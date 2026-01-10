@@ -736,6 +736,7 @@ def organize(
     if not dry_run and not yes:
         # First, scan to get file count for confirmation
         from .organize_functional import scan_files
+
         scan_result = scan_files(
             source,
             recursive=context.recursive,
@@ -746,7 +747,6 @@ def organize(
 
         try:
             files = unsafe_ioresult_unwrap(scan_result)
-            file_count = len(files)
 
             # Apply filters to get actual count
             from .organize import generate_organize_plan
@@ -757,7 +757,7 @@ def organize(
                 date_result = get_file_date(f, context.date_source)
                 try:
                     dates[f] = unsafe_ioresult_unwrap(date_result)
-                except Exception:
+                except Exception:  # nosec B110 - Intentionally skip files with date errors
                     pass
 
             plan = generate_organize_plan(files, dates, context)

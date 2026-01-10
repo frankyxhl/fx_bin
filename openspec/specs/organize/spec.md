@@ -1,5 +1,8 @@
-## ADDED Requirements
+# organize Specification
 
+## Purpose
+TBD - created by archiving change add-organize-command. Update Purpose after archive.
+## Requirements
 ### Requirement: Date-Based File Organization
 The system SHALL organize files into hierarchical date-based directories based on file timestamps using local timezone.
 
@@ -294,3 +297,4 @@ The system SHALL display progress and provide completion statistics.
 #### Scenario: Deterministic output order
 - **WHEN** processing multiple files
 - **THEN** output is sorted by source path for reproducible results
+
