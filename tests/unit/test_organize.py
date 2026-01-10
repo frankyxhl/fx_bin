@@ -81,6 +81,29 @@ class TestOrganizeContext(unittest.TestCase):
         with self.assertRaises(FrozenInstanceError):
             context.depth = 2
 
+    def test_organizecontext_phase9_fields(self):
+        """Test that OrganizeContext has Phase 9 fields (recursive, clean_empty, fail_fast, hidden)."""
+        from fx_bin.organize import OrganizeContext
+
+        # Test all Phase 9 fields exist and work correctly
+        context = OrganizeContext(
+            date_source=DateSource.CREATED,
+            depth=3,
+            conflict_mode=ConflictMode.RENAME,
+            output_dir="/output",
+            dry_run=False,
+            recursive=False,
+            clean_empty=False,
+            fail_fast=False,
+            hidden=False,
+        )
+
+        # Test Phase 9 field values
+        self.assertFalse(context.recursive)
+        self.assertFalse(context.clean_empty)
+        self.assertFalse(context.fail_fast)
+        self.assertFalse(context.hidden)
+
 
 class TestFileOrganizeResult(unittest.TestCase):
     """Test cases for FileOrganizeResult frozen dataclass."""
@@ -306,13 +329,21 @@ class TestShouldProcessFile(unittest.TestCase):
     """Test cases for should_process_file() function."""
 
     def test_should_process_file_no_filters(self):
-        """Test that all files are processed when no filters specified."""
+        """Test that non-hidden files are processed when no filters specified (hidden=False default)."""
         from fx_bin.organize import should_process_file
 
-        # No filters = process all
+        # No filters, hidden=False (default) = process non-hidden files
         self.assertTrue(should_process_file("photo.jpg", (), ()))
-        self.assertTrue(should_process_file(".gitignore", (), ()))
+        self.assertFalse(should_process_file(".gitignore", (), ()))  # Hidden files excluded by default
         self.assertTrue(should_process_file("document.pdf", (), ()))
+
+    def test_should_process_file_hidden_flag(self):
+        """Test that hidden=True includes hidden files."""
+        from fx_bin.organize import should_process_file
+
+        # With hidden=True, hidden files are included
+        self.assertTrue(should_process_file(".gitignore", (), (), hidden=True))
+        self.assertTrue(should_process_file("photo.jpg", (), (), hidden=True))
 
     def test_should_process_file_include_only(self):
         """Test include pattern filtering (tuple)."""

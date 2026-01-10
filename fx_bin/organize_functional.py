@@ -271,27 +271,77 @@ def _scan_non_recursive(
     return files
 
 
-def move_file_safe(source: str, target: str) -> IOResult[None, MoveError]:
-    """Safely move a file from source to target.
+def move_file_safe(
+    source: str,
+    target: str,
+    source_root: str,
+    output_root: str,
+) -> IOResult[None, MoveError]:
+    """Safely move a file from source to target with boundary checks.
 
     Creates parent directories if needed. Handles cross-filesystem moves.
     Uses atomic overwrite to avoid data corruption.
+    Enforces path boundaries to prevent path traversal attacks.
 
     Args:
         source: Source file path
         target: Target file path
+        source_root: Root directory that source must be within
+        output_root: Root directory that target must be within
 
     Returns:
         IOResult with None or MoveError
     """
     try:
+        # Resolve real paths for boundary checking
+        real_source = os.path.realpath(source)
+        real_target = os.path.realpath(target)
+        real_source_root = os.path.realpath(source_root)
+        real_output_root = os.path.realpath(output_root)
+
+        # Boundary check: source must be within source_root
+        try:
+            source_common = os.path.commonpath([real_source, real_source_root])
+            if source_common != real_source_root:
+                return IOResult.from_failure(
+                    MoveError(
+                        f"Source file {source} is outside source root {source_root}"
+                    )
+                )
+        except ValueError:
+            # Different drives on Windows - cannot determine common path
+            return IOResult.from_failure(
+                MoveError(
+                    f"Cannot move {source}: cross-device path from {source_root}"
+                )
+            )
+
+        # Boundary check: target must be within output_root
+        # Get parent directory of target since target may not exist yet
+        target_parent = os.path.dirname(real_target) or real_target
+        try:
+            target_common = os.path.commonpath([target_parent, real_output_root])
+            if target_common != real_output_root:
+                return IOResult.from_failure(
+                    MoveError(
+                        f"Target path {target} is outside output root {output_root}"
+                    )
+                )
+        except ValueError:
+            # Different drives on Windows
+            return IOResult.from_failure(
+                MoveError(
+                    f"Cannot move to {target}: cross-device path to {output_root}"
+                )
+            )
+
         # Create parent directories if they don't exist
         target_dir = os.path.dirname(target)
         if target_dir:
             os.makedirs(target_dir, exist_ok=True)
 
         # Check if source and target are the same (no-op)
-        if os.path.realpath(source) == os.path.realpath(target):
+        if real_source == real_target:
             return IOResult.from_value(None)
 
         # Perform the move
@@ -393,9 +443,9 @@ def execute_organize(
     # Scan for files
     scan_result = scan_files(
         source_dir,
-        recursive=True,
+        recursive=context.recursive,
         follow_symlinks=False,
-        max_depth=context.depth,
+        max_depth=100,  # Max scan depth is always 100, independent of context.depth
         output_dir=context.output_dir,
     )
 
@@ -434,7 +484,12 @@ def execute_organize(
         if item.action == "moved":
             processed += 1
             if not context.dry_run:
-                move_result = move_file_safe(item.source, item.target)
+                move_result = move_file_safe(
+                    item.source,
+                    item.target,
+                    source_dir,  # source_root
+                    context.output_dir,  # output_root
+                )
                 try:
                     unsafe_ioresult_unwrap(move_result)
                 except Exception:

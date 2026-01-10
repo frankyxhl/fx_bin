@@ -237,17 +237,19 @@ class TestMoveFileSafe(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
 
-            # Create source file
-            source = tmpdir_path / "source.txt"
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "source.txt"
             source.write_text("Hello World")
 
-            # Create target directory
-            target_dir = tmpdir_path / "target"
-            target_dir.mkdir()
-            target = target_dir / "source.txt"
+            # Create output root and target directory
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+            target = output_root / "source.txt"
 
             # Move the file
-            result = move_file_safe(str(source), str(target))
+            result = move_file_safe(str(source), str(target), str(source_root), str(output_root))
 
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
@@ -264,15 +266,21 @@ class TestMoveFileSafe(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
 
-            # Create source file
-            source = tmpdir_path / "source.txt"
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "source.txt"
             source.write_text("content")
 
+            # Create output root
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+
             # Target with non-existent parent directories
-            target = tmpdir_path / "a" / "b" / "c" / "target.txt"
+            target = output_root / "a" / "b" / "c" / "target.txt"
 
             # Move should create parent dirs
-            result = move_file_safe(str(source), str(target))
+            result = move_file_safe(str(source), str(target), str(source_root), str(output_root))
 
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
@@ -289,14 +297,16 @@ class TestMoveFileSafe(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
 
-            source = tmpdir_path / "source.txt"
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "source.txt"
             source.write_text("content")
 
-            # Use a target path that will fail
-            # On most systems, trying to write to /root/ will fail
-            # but we use a more portable approach by making source read-only
-            # then trying to overwrite it with itself (should fail)
-            result = move_file_safe(str(source), str(source))
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+
+            # Moving to same location is a no-op, should succeed
+            result = move_file_safe(str(source), str(source), str(source_root), str(output_root))
 
             # Moving to same location is a no-op, should succeed
             inner_result = unsafe_ioresult_to_result(result)
@@ -307,18 +317,20 @@ class TestMoveFileSafe(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
 
-            # Create source file
-            source = tmpdir_path / "source.txt"
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "source.txt"
             source.write_text("new content")
 
-            # Create existing target file
-            target_dir = tmpdir_path / "target"
-            target_dir.mkdir()
-            target = target_dir / "source.txt"
+            # Create output root and existing target file
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+            target = output_root / "source.txt"
             target.write_text("old content")
 
             # Move should atomically replace the target
-            result = move_file_safe(str(source), str(target))
+            result = move_file_safe(str(source), str(target), str(source_root), str(output_root))
 
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
@@ -333,11 +345,16 @@ class TestMoveFileSafe(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
 
-            source = tmpdir_path / "file.txt"
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "file.txt"
             source.write_text("content")
 
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+
             # Moving to same location should succeed without doing anything
-            result = move_file_safe(str(source), str(source))
+            result = move_file_safe(str(source), str(source), str(source_root), str(output_root))
 
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
@@ -581,6 +598,242 @@ class TestExecuteOrganize(unittest.TestCase):
             self.assertEqual(summary.skipped, 0)
             self.assertEqual(summary.errors, 0)
             self.assertFalse(summary.dry_run)
+
+
+class TestHiddenFileHandling(unittest.TestCase):
+    """Test cases for hidden file handling (Phase 9.3)."""
+
+    def test_hidden_files_excluded_by_default(self):
+        """Test that hidden files are excluded by default (hidden=False)."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source files
+            source_dir = tmpdir_path / "source"
+            source_dir.mkdir()
+            (source_dir / "regular.jpg").write_text("regular")
+            (source_dir / ".hidden.jpg").write_text("hidden")
+
+            # Create output directory
+            output_dir = tmpdir_path / "output"
+            output_dir.mkdir()
+
+            # Create context with hidden=False (default)
+            context = OrganizeContext(
+                date_source=DateSource.CREATED,
+                depth=3,
+                conflict_mode=ConflictMode.RENAME,
+                output_dir=str(output_dir),
+                dry_run=True,  # Use dry-run to check plan
+                hidden=False,  # Default - exclude hidden files
+            )
+
+            # Execute
+            result = execute_organize(str(source_dir), context)
+            summary = unsafe_ioresult_unwrap(result)
+
+            # Both files are scanned (total_files=2), but hidden is skipped
+            self.assertEqual(summary.total_files, 2)  # Both files scanned
+            self.assertEqual(summary.skipped, 1)  # Hidden file is skipped
+            self.assertEqual(summary.processed, 1)  # Regular file processed
+
+    def test_hidden_files_included_with_flag(self):
+        """Test that --hidden includes hidden files."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source files
+            source_dir = tmpdir_path / "source"
+            source_dir.mkdir()
+            (source_dir / "regular.jpg").write_text("regular")
+            (source_dir / ".hidden.jpg").write_text("hidden")
+
+            # Create output directory
+            output_dir = tmpdir_path / "output"
+            output_dir.mkdir()
+
+            # Create context with hidden=True
+            context = OrganizeContext(
+                date_source=DateSource.CREATED,
+                depth=3,
+                conflict_mode=ConflictMode.RENAME,
+                output_dir=str(output_dir),
+                dry_run=True,
+                hidden=True,  # Include hidden files
+            )
+
+            # Execute
+            result = execute_organize(str(source_dir), context)
+            summary = unsafe_ioresult_unwrap(result)
+
+            # Both files should be processed
+            self.assertEqual(summary.total_files, 2)  # Both files counted
+
+
+class TestRecursiveBehavior(unittest.TestCase):
+    """Test cases for recursive behavior (Phase 9.4)."""
+
+    def test_non_recursive_by_default(self):
+        """Test that default behavior is non-recursive (recursive=False)."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source files in nested structure
+            source_dir = tmpdir_path / "source"
+            source_dir.mkdir()
+            (source_dir / "root.jpg").write_text("root")
+
+            sub_dir = source_dir / "subdir"
+            sub_dir.mkdir()
+            (sub_dir / "nested.jpg").write_text("nested")
+
+            # Create output directory
+            output_dir = tmpdir_path / "output"
+            output_dir.mkdir()
+
+            # Create context with recursive=False (default)
+            context = OrganizeContext(
+                date_source=DateSource.CREATED,
+                depth=3,
+                conflict_mode=ConflictMode.RENAME,
+                output_dir=str(output_dir),
+                dry_run=True,
+                recursive=False,  # Default - non-recursive
+            )
+
+            # Execute
+            result = execute_organize(str(source_dir), context)
+            summary = unsafe_ioresult_unwrap(result)
+
+            # Only root file should be scanned, not nested
+            self.assertEqual(summary.total_files, 1)  # Only root file
+            self.assertEqual(summary.processed, 1)
+
+    def test_recursive_enabled_scans_subdirectories(self):
+        """Test that --recursive enables subdirectory scanning."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source files in nested structure
+            source_dir = tmpdir_path / "source"
+            source_dir.mkdir()
+            (source_dir / "root.jpg").write_text("root")
+
+            sub_dir = source_dir / "subdir"
+            sub_dir.mkdir()
+            (sub_dir / "nested.jpg").write_text("nested")
+
+            # Create output directory
+            output_dir = tmpdir_path / "output"
+            output_dir.mkdir()
+
+            # Create context with recursive=True
+            context = OrganizeContext(
+                date_source=DateSource.CREATED,
+                depth=3,
+                conflict_mode=ConflictMode.RENAME,
+                output_dir=str(output_dir),
+                dry_run=True,
+                recursive=True,  # Enable recursive
+            )
+
+            # Execute
+            result = execute_organize(str(source_dir), context)
+            summary = unsafe_ioresult_unwrap(result)
+
+            # Both files should be scanned
+            self.assertEqual(summary.total_files, 2)  # Both files
+
+
+class TestBoundaryCheck(unittest.TestCase):
+    """Test cases for boundary check (Phase 9.6) - path traversal protection."""
+
+    def test_source_outside_source_root_blocked(self):
+        """Test that source file outside source_root is blocked."""
+        from fx_bin.organize_functional import move_file_safe
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Source file is outside source_root
+            outside_file = tmpdir_path / "outside.txt"
+            outside_file.write_text("content")
+
+            source_root = str(tmpdir_path / "source")
+            Path(source_root).mkdir()
+
+            # Target is valid (inside output_root)
+            output_root = str(tmpdir_path / "output")
+            Path(output_root).mkdir()
+            target = str(Path(output_root) / "target.txt")
+
+            # Attempt to move file from outside source_root
+            result = move_file_safe(
+                str(outside_file), target, source_root, output_root
+            )
+
+            inner_result = unsafe_ioresult_to_result(result)
+            self.assertTrue(inner_result.failure())
+            # Source file should still exist
+            self.assertTrue(outside_file.exists())
+
+    def test_target_outside_output_root_blocked(self):
+        """Test that target outside output_root is blocked."""
+        from fx_bin.organize_functional import move_file_safe
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Source file is valid (inside source_root)
+            source_root = str(tmpdir_path / "source")
+            Path(source_root).mkdir()
+            source_file = Path(source_root) / "source.txt"
+            source_file.write_text("content")
+
+            output_root = str(tmpdir_path / "output")
+            Path(output_root).mkdir()
+
+            # Target is outside output_root (path traversal attempt)
+            target = str(tmpdir_path / "outside" / "target.txt")
+
+            # Attempt to move to outside output_root
+            result = move_file_safe(
+                str(source_file), target, source_root, output_root
+            )
+
+            inner_result = unsafe_ioresult_to_result(result)
+            self.assertTrue(inner_result.failure())
+            # Source file should still exist
+            self.assertTrue(source_file.exists())
+
+    def test_custom_output_outside_source_allowed(self):
+        """Test that custom output directory outside source is allowed (spec-supported)."""
+        from fx_bin.organize_functional import move_file_safe
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Source file is valid
+            source_root = str(tmpdir_path / "source")
+            Path(source_root).mkdir()
+            source_file = Path(source_root) / "source.txt"
+            source_file.write_text("content")
+
+            # Output is completely separate from source (spec allows this)
+            output_root = str(tmpdir_path / "separate_output")
+            Path(output_root).mkdir()
+            target = str(Path(output_root) / "target.txt")
+
+            # This should succeed
+            result = move_file_safe(
+                str(source_file), target, source_root, output_root
+            )
+
+            inner_result = unsafe_ioresult_to_result(result)
+            self.assertTrue(inner_result)
+            # File should be moved
+            self.assertFalse(source_file.exists())
+            self.assertTrue(Path(target).exists())
 
 
 if __name__ == "__main__":

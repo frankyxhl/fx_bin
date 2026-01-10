@@ -600,6 +600,28 @@ def list_commands() -> int:
     help="Exclude files matching these glob patterns (repeatable)",
 )
 @click.option(
+    "--hidden",
+    "-H",
+    is_flag=True,
+    help="Include hidden files (files starting with .)",
+)
+@click.option(
+    "--recursive",
+    "-r",
+    is_flag=True,
+    help="Process files in subdirectories recursively",
+)
+@click.option(
+    "--clean-empty",
+    is_flag=True,
+    help="Remove empty directories after organization",
+)
+@click.option(
+    "--fail-fast",
+    is_flag=True,
+    help="Stop on first error instead of continuing",
+)
+@click.option(
     "--dry-run",
     "-n",
     is_flag=True,
@@ -631,6 +653,10 @@ def organize(
     on_conflict: str,
     include: Tuple[str, ...],
     exclude: Tuple[str, ...],
+    hidden: bool,
+    recursive: bool,
+    clean_empty: bool,
+    fail_fast: bool,
     dry_run: bool,
     yes: bool,
     verbose: bool,
@@ -693,6 +719,10 @@ def organize(
         dry_run=dry_run,
         include_patterns=include,
         exclude_patterns=exclude,
+        recursive=recursive,
+        clean_empty=clean_empty,
+        fail_fast=fail_fast,
+        hidden=hidden,
     )
 
     # Show what we're doing

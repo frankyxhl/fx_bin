@@ -26,6 +26,11 @@ class TestOrganizeCLI(unittest.TestCase):
         self.assertIn("--date-source", result.output)
         self.assertIn("--depth", result.output)
         self.assertIn("--on-conflict", result.output)
+        # Check for Phase 9 required options
+        self.assertIn("--hidden", result.output)
+        self.assertIn("--recursive", result.output)
+        self.assertIn("--clean-empty", result.output)
+        self.assertIn("--fail-fast", result.output)
 
     def test_organize_requires_source_argument(self):
         """Test that organize command requires a source directory argument."""

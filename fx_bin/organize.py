@@ -49,6 +49,10 @@ class OrganizeContext:
         dry_run: If True, preview changes without executing
         include_patterns: Glob patterns for files to include (empty = all)
         exclude_patterns: Glob patterns for files to exclude (empty = none)
+        recursive: If True, process subdirectories recursively
+        clean_empty: If True, remove empty directories after organization
+        fail_fast: If True, stop on first error instead of continuing
+        hidden: If True, include hidden files (files starting with .)
     """
 
     date_source: DateSource
@@ -58,6 +62,10 @@ class OrganizeContext:
     dry_run: bool = False
     include_patterns: Sequence[str] = ()
     exclude_patterns: Sequence[str] = ()
+    recursive: bool = False
+    clean_empty: bool = False
+    fail_fast: bool = False
+    hidden: bool = False
 
 
 @dataclass(frozen=True)
@@ -195,19 +203,22 @@ def should_process_file(
     filename: str,
     include_patterns: Sequence[str] = (),
     exclude_patterns: Sequence[str] = (),
+    hidden: bool = False,
 ) -> bool:
     """Determine if a file should be processed based on filter patterns.
 
     Pure function that applies include and exclude glob patterns.
     Evaluation order:
-    1. If include_patterns specified, file must match at least one
-    2. If exclude_patterns specified, file must not match any
-    3. If no patterns specified, all files are processed
+    1. If hidden=False (default), exclude hidden files (starting with .)
+    2. If include_patterns specified, file must match at least one
+    3. If exclude_patterns specified, file must not match any
+    4. If no patterns specified, all non-hidden files are processed
 
     Args:
         filename: Name of the file
         include_patterns: Tuple of glob patterns to include (empty = all)
         exclude_patterns: Tuple of glob patterns to exclude (empty = none)
+        hidden: If True, include hidden files (files starting with .)
 
     Returns:
         True if file should be processed, False otherwise
@@ -221,8 +232,16 @@ def should_process_file(
         False
         >>> should_process_file("photo.jpg", (), ())
         True
+        >>> should_process_file(".hidden", (), ())
+        False  # Hidden file excluded by default
+        >>> should_process_file(".hidden", (), (), hidden=True)
+        True  # Hidden file included with hidden=True
     """
     basename = os.path.basename(filename)
+
+    # Check hidden files first (before pattern matching)
+    if not hidden and is_hidden_file(basename):
+        return False
 
     # Handle edge case where a single string is passed instead of a tuple
     # In Python, ("pattern") is just a string, not a tuple - needs ("pattern",)
@@ -357,6 +376,7 @@ def generate_organize_plan(
             filename,
             context.include_patterns,
             context.exclude_patterns,
+            context.hidden,
         ):
             plan.append(FileOrganizeResult(source_file, "", "skipped"))
             continue
