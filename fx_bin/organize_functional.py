@@ -80,6 +80,52 @@ def get_file_date(
         )
 
 
+def resolve_disk_conflict_rename(target_path: str) -> str:
+    """Resolve disk conflict by adding incrementing suffix.
+
+    Checks filesystem for existing files and returns unique path.
+    Uses get_base_name() and get_multi_ext() from common.py to handle
+    multi-part extensions correctly (.tar.gz, etc.), matching the
+    behavior of resolve_conflict_rename() for intra-run conflicts.
+
+    Args:
+        target_path: The target path that may conflict with existing files
+
+    Returns:
+        A unique path with incrementing suffix (_1, _2, etc.) if conflict exists,
+        or the original path if no conflict
+
+    Examples:
+        >>> # When /output/photo.jpg already exists:
+        >>> resolve_disk_conflict_rename("/output/photo.jpg")
+        '/output/photo_1.jpg'
+        >>> # When both .tar and .tar.gz exist:
+        >>> resolve_disk_conflict_rename("/output/archive.tar.gz")
+        '/output/archive_1.tar.gz'
+    """
+    from fx_bin.common import get_base_name, get_multi_ext
+
+    # If no conflict, return original path
+    if not os.path.exists(target_path):
+        return target_path
+
+    # Extract directory, base name, and extension
+    dirname = os.path.dirname(target_path)
+    filename = os.path.basename(target_path)
+
+    base = get_base_name(filename)
+    ext = get_multi_ext(filename)
+
+    # Find the next available suffix by checking filesystem
+    counter = 1
+    while True:
+        new_filename = f"{base}_{counter}{ext}"
+        new_path = os.path.join(dirname, new_filename)
+        if not os.path.exists(new_path):
+            return new_path
+        counter += 1
+
+
 def _should_skip_entry(entry_path: str, output_dir: str) -> bool:
     """Check if entry should be skipped (output directory)."""
     return (
@@ -358,9 +404,8 @@ def move_file_safe(
                 return IOResult.from_value((None, False))
             else:  # RENAME
                 # Rename: add suffix to avoid conflict
-                # This should be handled by the caller (generate_organize_plan)
-                # If we get here with RENAME and target exists, it's a bug
-                pass
+                # Call disk-specific conflict resolution helper
+                real_target = resolve_disk_conflict_rename(real_target)
 
         # Create parent directories if they don't exist
         # Track if we create a new directory
@@ -373,7 +418,7 @@ def move_file_safe(
             os.makedirs(target_dir, exist_ok=True)
 
         # Perform the move (shutil.move handles overwrites)
-        shutil.move(source, target)
+        shutil.move(source, real_target)
 
         return IOResult.from_value((None, dir_created))
 

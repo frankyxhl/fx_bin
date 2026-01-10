@@ -419,10 +419,10 @@ class TestMoveFileSafe(unittest.TestCase):
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
 
-    def test_given_existing_target_when_moving_file_then_performs_atomic_overwrite(
+    def test_given_existing_target_and_overwrite_mode_when_moving_file_then_replaces_target(
         self,
     ):
-        """Test move_file_safe() atomic overwrite with os.replace()."""
+        """Test move_file_safe() with OVERWRITE mode replaces existing target."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
 
@@ -438,19 +438,19 @@ class TestMoveFileSafe(unittest.TestCase):
             target = output_root / "source.txt"
             target.write_text("old content")
 
-            # Move should atomically replace the target
+            # With OVERWRITE mode, should replace existing target
             result = move_file_safe(
                 str(source),
                 str(target),
                 str(source_root),
                 str(output_root),
-                ConflictMode.RENAME,
+                ConflictMode.OVERWRITE,  # Use OVERWRITE mode, not RENAME
             )
 
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
 
-            # Verify target has new content
+            # Verify target has new content (was overwritten)
             self.assertEqual(target.read_text(), "new content")
             # Verify source is gone
             self.assertFalse(source.exists())
@@ -1461,6 +1461,220 @@ class TestFailFastBehavior(unittest.TestCase):
 
             # No errors in dry-run
             self.assertEqual(summary.errors, 0)
+
+
+class TestResolveDiskConflictRename(unittest.TestCase):
+    """Test cases for resolve_disk_conflict_rename() helper (Phase 1.1)."""
+
+    def test_given_existing_file_when_resolving_disk_conflict_then_adds_1_suffix(self):
+        """Test that resolve_disk_conflict_rename adds _1 suffix when file exists on disk."""
+        from fx_bin.organize_functional import resolve_disk_conflict_rename
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create an existing file
+            existing_file = tmpdir_path / "photo.jpg"
+            existing_file.write_text("existing")
+
+            # Resolve conflict for the same path
+            resolved_path = resolve_disk_conflict_rename(str(existing_file))
+
+            # Should return path with _1 suffix
+            self.assertEqual(resolved_path, str(tmpdir_path / "photo_1.jpg"))
+
+    def test_given_multiple_existing_files_when_resolving_disk_conflict_then_increments_suffix(
+        self,
+    ):
+        """Test that resolve_disk_conflict_rename increments suffix for multiple existing files."""
+        from fx_bin.organize_functional import resolve_disk_conflict_rename
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create existing files with incrementing suffixes
+            base_name = "document.txt"
+            (tmpdir_path / base_name).write_text("original")
+            (tmpdir_path / "document_1.txt").write_text("first duplicate")
+            (tmpdir_path / "document_2.txt").write_text("second duplicate")
+
+            # Resolve conflict - should skip to _3
+            resolved_path = resolve_disk_conflict_rename(str(tmpdir_path / base_name))
+
+            self.assertEqual(resolved_path, str(tmpdir_path / "document_3.txt"))
+
+    def test_given_multi_part_extension_when_resolving_disk_conflict_then_handles_correctly(
+        self,
+    ):
+        """Test that resolve_disk_conflict_rename correctly handles multi-part extensions (.tar.gz)."""
+        from fx_bin.organize_functional import resolve_disk_conflict_rename
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create existing file with multi-part extension
+            archive = tmpdir_path / "archive.tar.gz"
+            archive.write_text("archive content")
+
+            # Resolve conflict - should insert suffix BEFORE extension
+            resolved_path = resolve_disk_conflict_rename(str(archive))
+
+            # Should be archive_1.tar.gz, NOT archive.tar_1.gz
+            self.assertEqual(resolved_path, str(tmpdir_path / "archive_1.tar.gz"))
+
+    def test_given_nonexistent_file_when_resolving_disk_conflict_then_returns_original_path(
+        self,
+    ):
+        """Test that resolve_disk_conflict_rename returns original path when file doesn't exist."""
+        from fx_bin.organize_functional import resolve_disk_conflict_rename
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # File doesn't exist
+            nonexistent = tmpdir_path / "nonexistent.jpg"
+            resolved_path = resolve_disk_conflict_rename(str(nonexistent))
+
+            # Should return original path unchanged
+            self.assertEqual(resolved_path, str(nonexistent))
+
+
+class TestRenameModeDiskConflictIntegration(unittest.TestCase):
+    """Integration tests for RENAME mode disk conflict handling (Phase 1.2)."""
+
+    def test_given_existing_target_and_rename_mode_when_moving_file_then_adds_suffix_instead_of_overwriting(
+        self,
+    ):
+        """Test that RENAME mode calls resolve_disk_conflict_rename() and doesn't overwrite existing files."""
+        from fx_bin.organize_functional import move_file_safe
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "photo.jpg"
+            source.write_text("new photo")
+
+            # Create output root and PRE-EXISTING target file (disk conflict!)
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+            target = output_root / "photo.jpg"
+            target.write_text("existing photo")  # Target already exists on disk!
+
+            # Move with RENAME mode - should NOT overwrite
+            # Instead should call resolve_disk_conflict_rename() and create photo_1.jpg
+            result = move_file_safe(
+                str(source),
+                str(target),
+                str(source_root),
+                str(output_root),
+                ConflictMode.RENAME,
+            )
+
+            inner_result = unsafe_ioresult_to_result(result)
+            self.assertTrue(inner_result)
+
+            # Source should be gone (file was moved)
+            self.assertFalse(source.exists())
+
+            # Original target should STILL exist with its original content (NOT overwritten!)
+            self.assertTrue(target.exists())
+            self.assertEqual(target.read_text(), "existing photo")
+
+            # A NEW file with _1 suffix should be created
+            renamed_target = output_root / "photo_1.jpg"
+            self.assertTrue(renamed_target.exists())
+            self.assertEqual(renamed_target.read_text(), "new photo")
+
+    def test_given_multiple_existing_files_and_rename_mode_when_moving_file_then_increments_suffix(
+        self,
+    ):
+        """Test that RENAME mode increments suffix when multiple conflicts exist."""
+        from fx_bin.organize_functional import move_file_safe
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "document.txt"
+            source.write_text("new document")
+
+            # Create output root with MULTIPLE pre-existing files (disk conflicts!)
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+            (output_root / "document.txt").write_text("original")
+            (output_root / "document_1.txt").write_text("first copy")
+            (output_root / "document_2.txt").write_text("second copy")
+
+            # Move with RENAME mode - should skip to _3
+            result = move_file_safe(
+                str(source),
+                str(output_root / "document.txt"),
+                str(source_root),
+                str(output_root),
+                ConflictMode.RENAME,
+            )
+
+            inner_result = unsafe_ioresult_to_result(result)
+            self.assertTrue(inner_result)
+
+            # All existing files should be unchanged
+            self.assertTrue((output_root / "document.txt").exists())
+            self.assertEqual((output_root / "document.txt").read_text(), "original")
+            self.assertTrue((output_root / "document_1.txt").exists())
+            self.assertEqual((output_root / "document_1.txt").read_text(), "first copy")
+            self.assertTrue((output_root / "document_2.txt").exists())
+            self.assertEqual((output_root / "document_2.txt").read_text(), "second copy")
+
+            # A NEW file with _3 suffix should be created
+            renamed_target = output_root / "document_3.txt"
+            self.assertTrue(renamed_target.exists())
+            self.assertEqual(renamed_target.read_text(), "new document")
+
+    def test_given_multi_part_extension_and_rename_mode_when_moving_file_then_handles_extension_correctly(
+        self,
+    ):
+        """Test that RENAME mode correctly handles multi-part extensions like .tar.gz."""
+        from fx_bin.organize_functional import move_file_safe
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source root and source file with multi-part extension
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "archive.tar.gz"
+            source.write_text("new archive")
+
+            # Create output root with pre-existing file
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+            (output_root / "archive.tar.gz").write_text("existing archive")
+
+            # Move with RENAME mode - should create archive_1.tar.gz, NOT archive.tar_1.gz
+            result = move_file_safe(
+                str(source),
+                str(output_root / "archive.tar.gz"),
+                str(source_root),
+                str(output_root),
+                ConflictMode.RENAME,
+            )
+
+            inner_result = unsafe_ioresult_to_result(result)
+            self.assertTrue(inner_result)
+
+            # Original should be unchanged
+            self.assertTrue((output_root / "archive.tar.gz").exists())
+            self.assertEqual((output_root / "archive.tar.gz").read_text(), "existing archive")
+
+            # NEW file should be archive_1.tar.gz (correct multi-part extension handling)
+            renamed_target = output_root / "archive_1.tar.gz"
+            self.assertTrue(renamed_target.exists())
+            self.assertEqual(renamed_target.read_text(), "new archive")
 
 
 if __name__ == "__main__":
