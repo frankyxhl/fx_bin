@@ -846,10 +846,10 @@ def organize(
             plan = generate_organize_plan(files, dates, context)
 
             # Find disk conflicts (target files that already exist)
-            disk_conflicts = []
-            for item in plan:
-                if item.action == "moved" and os_module.path.exists(item.target):
-                    disk_conflicts.append(item)
+            disk_conflicts = [
+                item for item in plan
+                if item.action == "moved" and os_module.path.exists(item.target)
+            ]
 
             # Handle each conflict
             if disk_conflicts:
