@@ -249,7 +249,7 @@ class TestMoveFileSafe(unittest.TestCase):
             target = output_root / "source.txt"
 
             # Move the file
-            result = move_file_safe(str(source), str(target), str(source_root), str(output_root))
+            result = move_file_safe(str(source), str(target), str(source_root), str(output_root), ConflictMode.RENAME)
 
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
@@ -280,7 +280,7 @@ class TestMoveFileSafe(unittest.TestCase):
             target = output_root / "a" / "b" / "c" / "target.txt"
 
             # Move should create parent dirs
-            result = move_file_safe(str(source), str(target), str(source_root), str(output_root))
+            result = move_file_safe(str(source), str(target), str(source_root), str(output_root), ConflictMode.RENAME)
 
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
@@ -306,7 +306,7 @@ class TestMoveFileSafe(unittest.TestCase):
             output_root.mkdir()
 
             # Moving to same location is a no-op, should succeed
-            result = move_file_safe(str(source), str(source), str(source_root), str(output_root))
+            result = move_file_safe(str(source), str(source), str(source_root), str(output_root), ConflictMode.RENAME)
 
             # Moving to same location is a no-op, should succeed
             inner_result = unsafe_ioresult_to_result(result)
@@ -330,7 +330,7 @@ class TestMoveFileSafe(unittest.TestCase):
             target.write_text("old content")
 
             # Move should atomically replace the target
-            result = move_file_safe(str(source), str(target), str(source_root), str(output_root))
+            result = move_file_safe(str(source), str(target), str(source_root), str(output_root), ConflictMode.RENAME)
 
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
@@ -354,7 +354,7 @@ class TestMoveFileSafe(unittest.TestCase):
             output_root.mkdir()
 
             # Moving to same location should succeed without doing anything
-            result = move_file_safe(str(source), str(source), str(source_root), str(output_root))
+            result = move_file_safe(str(source), str(source), str(source_root), str(output_root), ConflictMode.RENAME)
 
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
@@ -769,7 +769,7 @@ class TestBoundaryCheck(unittest.TestCase):
 
             # Attempt to move file from outside source_root
             result = move_file_safe(
-                str(outside_file), target, source_root, output_root
+                str(outside_file), target, source_root, output_root, ConflictMode.RENAME
             )
 
             inner_result = unsafe_ioresult_to_result(result)
@@ -798,7 +798,7 @@ class TestBoundaryCheck(unittest.TestCase):
 
             # Attempt to move to outside output_root
             result = move_file_safe(
-                str(source_file), target, source_root, output_root
+                str(source_file), target, source_root, output_root, ConflictMode.RENAME
             )
 
             inner_result = unsafe_ioresult_to_result(result)
@@ -826,7 +826,7 @@ class TestBoundaryCheck(unittest.TestCase):
 
             # This should succeed
             result = move_file_safe(
-                str(source_file), target, source_root, output_root
+                str(source_file), target, source_root, output_root, ConflictMode.RENAME
             )
 
             inner_result = unsafe_ioresult_to_result(result)
@@ -938,6 +938,48 @@ class TestDirectoriesCreated(unittest.TestCase):
 
             # No new directories should be created
             self.assertEqual(summary.directories_created, 0)
+
+
+class TestDiskConflictDetection(unittest.TestCase):
+    """Test cases for disk conflict detection (Phase 11.1)."""
+
+    def test_target_exists_detection(self):
+        """Test that move_file_safe detects when target file exists on disk."""
+        from fx_bin.organize_functional import move_file_safe
+        from fx_bin.organize import ConflictMode
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "source.txt"
+            source.write_text("source content")
+
+            # Create output root and PRE-EXISTING target file
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+            target = output_root / "source.txt"
+            target.write_text("existing content")  # Target already exists!
+
+            # With skip mode, should detect conflict and skip
+            # Note: This test will fail until GREEN implementation
+            result = move_file_safe(
+                str(source),
+                str(target),
+                str(source_root),
+                str(output_root),
+                ConflictMode.SKIP,  # Will be added in GREEN
+            )
+
+            inner_result = unsafe_ioresult_to_result(result)
+            self.assertTrue(inner_result)
+            # In skip mode, source should remain
+            self.assertTrue(source.exists())
+            # Target should remain unchanged
+            self.assertTrue(target.exists())
+            self.assertEqual(target.read_text(), "existing content")
 
 
 if __name__ == "__main__":

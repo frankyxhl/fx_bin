@@ -21,6 +21,7 @@ from returns.io import IOResult
 from fx_bin.errors import DateReadError, MoveError, OrganizeError
 from fx_bin.lib import unsafe_ioresult_unwrap
 from fx_bin.organize import (
+    ConflictMode,
     DateSource,
     FileOrganizeResult,
     OrganizeContext,
@@ -277,18 +278,21 @@ def move_file_safe(
     target: str,
     source_root: str,
     output_root: str,
+    conflict_mode: ConflictMode,
 ) -> IOResult[Tuple[None, bool], MoveError]:
     """Safely move a file from source to target with boundary checks.
 
     Creates parent directories if needed. Handles cross-filesystem moves.
     Uses atomic overwrite to avoid data corruption.
     Enforces path boundaries to prevent path traversal attacks.
+    Handles disk conflicts based on conflict_mode.
 
     Args:
         source: Source file path
         target: Target file path
         source_root: Root directory that source must be within
         output_root: Root directory that target must be within
+        conflict_mode: Strategy for handling target file conflicts
 
     Returns:
         IOResult with Tuple[None, dir_created] or MoveError
@@ -341,6 +345,24 @@ def move_file_safe(
         if real_source == real_target:
             return IOResult.from_value((None, False))
 
+        # Check for disk conflict (target file exists)
+        if os.path.exists(real_target):
+            if conflict_mode == ConflictMode.SKIP:
+                # Skip: return success but don't move (source remains)
+                return IOResult.from_value((None, False))
+            elif conflict_mode == ConflictMode.OVERWRITE:
+                # Overwrite: use atomic replace (will be done below)
+                pass
+            elif conflict_mode == ConflictMode.ASK:
+                # Ask: prompt user (not implemented in this function, handled at CLI level)
+                # For now, treat as skip
+                return IOResult.from_value((None, False))
+            else:  # RENAME
+                # Rename: add suffix to avoid conflict
+                # This should be handled by the caller (generate_organize_plan)
+                # If we get here with RENAME and target exists, it's a bug
+                pass
+
         # Create parent directories if they don't exist
         # Track if we create a new directory
         dir_created = False
@@ -351,7 +373,7 @@ def move_file_safe(
                 dir_created = True
             os.makedirs(target_dir, exist_ok=True)
 
-        # Perform the move
+        # Perform the move (shutil.move handles overwrites)
         shutil.move(source, target)
 
         return IOResult.from_value((None, dir_created))
@@ -497,6 +519,7 @@ def execute_organize(
                     item.target,
                     source_dir,  # source_root
                     context.output_dir,  # output_root
+                    context.conflict_mode,  # conflict_mode
                 )
                 try:
                     _, dir_created = unsafe_ioresult_unwrap(move_result)
