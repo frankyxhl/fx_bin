@@ -1,0 +1,452 @@
+"""Functional IO operations for file organization using returns library.
+
+This module provides safe file organization operations with functional
+error handling using the returns library.
+
+Error Hierarchy:
+    FileOperationError (base for all file operations)
+    ├── OrganizeError (organization-specific errors)
+        ├── DateReadError (file date reading errors)
+        └── MoveError (file move errors)
+"""
+
+import os
+import shutil
+from datetime import datetime
+from typing import List, Set, Tuple
+
+from loguru import logger as L
+from returns.io import IOResult
+
+from fx_bin.errors import DateReadError, MoveError, OrganizeError
+from fx_bin.lib import (
+    unsafe_ioresult_to_result,
+    unsafe_ioresult_unwrap,
+)
+from fx_bin.organize import (
+    DateSource,
+    OrganizeContext,
+    OrganizeSummary,
+    generate_organize_plan,
+)
+from fx_bin.shared_types import FolderContext
+
+
+def get_file_date(
+    file_path: str, date_source: DateSource
+) -> IOResult[datetime, DateReadError]:
+    """Get file date based on date_source setting.
+
+    Uses st_birthtime with st_mtime fallback. NEVER uses st_ctime.
+    Returns IOResult for functional error handling.
+
+    Args:
+        file_path: Path to the file
+        date_source: Which timestamp to use (CREATED or MODIFIED)
+
+    Returns:
+        IOResult with datetime or DateReadError
+
+    Examples:
+        >>> result = get_file_date("/path/to/file.jpg", DateSource.CREATED)
+        >>> isinstance(result, IOResult)
+        True
+    """
+    try:
+        stat_info = os.stat(file_path)
+
+        if date_source == DateSource.MODIFIED:
+            # Use mtime directly for modified mode
+            return IOResult.from_value(datetime.fromtimestamp(stat_info.st_mtime))
+
+        # CREATED mode: try birthtime first, fallback to mtime
+        if hasattr(stat_info, "st_birthtime"):
+            birthtime = stat_info.st_birthtime
+            if birthtime > 0:  # Valid birthtime
+                return IOResult.from_value(datetime.fromtimestamp(birthtime))
+            else:
+                # birthtime is 0 (invalid), fall back to mtime
+                L.warning(f"File {file_path} has invalid birthtime (0), using mtime")
+                return IOResult.from_value(datetime.fromtimestamp(stat_info.st_mtime))
+        else:
+            # Platform doesn't support birthtime, use mtime
+            L.debug(
+                f"Platform doesn't support st_birthtime for {file_path}, using mtime"
+            )
+            return IOResult.from_value(datetime.fromtimestamp(stat_info.st_mtime))
+
+    except (OSError, PermissionError) as e:
+        return IOResult.from_failure(
+            DateReadError(f"Cannot read file date for {file_path}: {e}")
+        )
+
+
+def scan_files(
+    start_dir: str,
+    recursive: bool = True,
+    follow_symlinks: bool = False,
+    max_depth: int = 100,
+    output_dir: str = "",
+    context: FolderContext = FolderContext(visited_inodes=set(), max_depth=100),
+) -> IOResult[List[str], OrganizeError]:
+    """Scan directory for files to organize.
+
+    Pure scanning logic with symlink handling and cycle detection.
+    Returns IOResult for functional error handling.
+
+    Args:
+        start_dir: Directory to scan
+        recursive: Whether to scan recursively
+        follow_symlinks: Whether to follow symbolic links
+        max_depth: Maximum recursion depth (default 100)
+        output_dir: Output directory to exclude from scanning
+        context: FolderContext for cycle detection
+
+    Returns:
+        IOResult with list of file paths or OrganizeError
+    """
+    try:
+        files: List[str] = []
+        start_dir_real = os.path.realpath(start_dir)
+        output_dir_real = os.path.realpath(output_dir) if output_dir else ""
+
+        if recursive:
+            files.extend(
+                _scan_recursive(
+                    start_dir_real,
+                    0,
+                    max_depth,
+                    output_dir_real,
+                    context.visited_inodes,
+                    follow_symlinks,
+                )
+            )
+        else:
+            files.extend(
+                _scan_non_recursive(
+                    start_dir_real,
+                    output_dir_real,
+                    follow_symlinks,
+                )
+            )
+
+        return IOResult.from_value(files)
+
+    except (OSError, PermissionError) as e:
+        return IOResult.from_failure(
+            OrganizeError(f"Cannot scan directory {start_dir}: {e}")
+        )
+
+
+def _scan_recursive(
+    dir_path: str,
+    depth: int,
+    max_depth: int,
+    output_dir: str,
+    visited_inodes: Set[Tuple[int, int]],
+    follow_symlinks: bool,
+) -> List[str]:
+    """Helper for recursive directory scanning."""
+    if depth > max_depth:
+        return []
+
+    files: List[str] = []
+
+    try:
+        dir_stat = os.stat(dir_path)
+        dir_inode = (dir_stat.st_dev, dir_stat.st_ino)
+
+        # Cycle detection
+        if dir_inode in visited_inodes:
+            L.debug(f"Skipping already visited directory: {dir_path}")
+            return files
+
+        visited_inodes.add(dir_inode)
+
+        with os.scandir(dir_path) as entries:
+            for entry in entries:
+                try:
+                    entry_path = os.path.join(dir_path, entry.name)
+
+                    # Skip output directory
+                    if (
+                        output_dir
+                        and os.path.commonpath([entry_path, output_dir]) == output_dir
+                    ):
+                        L.debug(f"Skipping output directory: {entry_path}")
+                        continue
+
+                    if entry.is_symlink():
+                        if follow_symlinks:
+                            target = os.path.realpath(entry_path)
+                            # Check if target is directory
+                            if os.path.isdir(target):
+                                files.extend(
+                                    _scan_recursive(
+                                        target,
+                                        depth + 1,
+                                        max_depth,
+                                        output_dir,
+                                        visited_inodes,
+                                        follow_symlinks,
+                                    )
+                                )
+                            else:
+                                files.append(entry_path)
+                        continue
+
+                    if entry.is_file():
+                        files.append(entry_path)
+                    elif entry.is_dir() and not entry.is_symlink():
+                        files.extend(
+                            _scan_recursive(
+                                entry_path,
+                                depth + 1,
+                                max_depth,
+                                output_dir,
+                                visited_inodes,
+                                follow_symlinks,
+                            )
+                        )
+
+                except (OSError, PermissionError):
+                    # Skip files we can't access
+                    continue
+
+    except (OSError, PermissionError):
+        # Skip directories we can't access
+        pass
+
+    return files
+
+
+def _scan_non_recursive(
+    dir_path: str,
+    output_dir: str,
+    follow_symlinks: bool,
+) -> List[str]:
+    """Helper for non-recursive directory scanning."""
+    files: List[str] = []
+
+    try:
+        with os.scandir(dir_path) as entries:
+            for entry in entries:
+                try:
+                    entry_path = os.path.join(dir_path, entry.name)
+
+                    # Skip output directory
+                    if (
+                        output_dir
+                        and os.path.commonpath([entry_path, output_dir]) == output_dir
+                    ):
+                        continue
+
+                    if entry.is_symlink():
+                        if follow_symlinks:
+                            target = os.path.realpath(entry_path)
+                            if os.path.isfile(target):
+                                files.append(entry_path)
+                        continue
+
+                    if entry.is_file():
+                        files.append(entry_path)
+
+                except (OSError, PermissionError):
+                    continue
+
+    except (OSError, PermissionError):
+        pass
+
+    return files
+
+
+def move_file_safe(source: str, target: str) -> IOResult[None, MoveError]:
+    """Safely move a file from source to target.
+
+    Creates parent directories if needed. Handles cross-filesystem moves.
+    Uses atomic overwrite to avoid data corruption.
+
+    Args:
+        source: Source file path
+        target: Target file path
+
+    Returns:
+        IOResult with None or MoveError
+    """
+    try:
+        # Create parent directories if they don't exist
+        target_dir = os.path.dirname(target)
+        if target_dir:
+            os.makedirs(target_dir, exist_ok=True)
+
+        # Check if source and target are the same (no-op)
+        if os.path.realpath(source) == os.path.realpath(target):
+            return IOResult.from_value(None)
+
+        # Perform the move
+        shutil.move(source, target)
+
+        return IOResult.from_value(None)
+
+    except (OSError, PermissionError) as e:
+        return IOResult.from_failure(
+            MoveError(f"Cannot move {source} to {target}: {e}")
+        )
+
+
+def remove_empty_dirs(
+    start_dir: str, source_root: str
+) -> IOResult[None, OrganizeError]:
+    """Remove empty directories starting from start_dir.
+
+    Performs bottom-up recursive removal, only removing directories that
+    are empty. Only removes directories within source_root boundary.
+
+    Args:
+        start_dir: Directory to start cleanup from
+        source_root: Root directory boundary (don't remove above this)
+
+    Returns:
+        IOResult with None or OrganizeError
+    """
+    try:
+        start_dir_real = os.path.realpath(start_dir)
+        source_root_real = os.path.realpath(source_root)
+
+        # Walk bottom-up (leaves first)
+        # We need to repeatedly walk until no more empty dirs are found
+        # because removing a dir can make its parent empty
+        max_iterations = 100  # Prevent infinite loops
+        for _ in range(max_iterations):
+            empty_dirs_found = False
+
+            for dirpath, dirnames, filenames in os.walk(start_dir_real, topdown=False):
+                # Skip if outside source root
+                try:
+                    if (
+                        os.path.commonpath([dirpath, source_root_real])
+                        != source_root_real
+                    ):
+                        continue
+                except ValueError:
+                    # Paths on different drives, skip
+                    continue
+
+                # Check if directory is currently empty
+                # We need to check the actual filesystem state, not os.walk cache
+                try:
+                    contents = list(os.scandir(dirpath))
+                    is_empty = len(contents) == 0
+                except (OSError, PermissionError):
+                    is_empty = False
+
+                if is_empty:
+                    try:
+                        os.rmdir(dirpath)
+                        empty_dirs_found = True
+                    except (OSError, PermissionError):
+                        # Directory might have been removed or became non-empty
+                        pass
+
+            if not empty_dirs_found:
+                # No more empty dirs to remove
+                break
+
+        return IOResult.from_value(None)
+
+    except (OSError, PermissionError) as e:
+        return IOResult.from_failure(
+            OrganizeError(f"Cannot cleanup directories {start_dir}: {e}")
+        )
+
+
+def execute_organize(
+    source_dir: str, context: OrganizeContext
+) -> IOResult[OrganizeSummary, OrganizeError]:
+    """Execute file organization operation.
+
+    Main orchestration function that:
+    1. Scans source directory for files
+    2. Reads file dates
+    3. Generates organization plan
+    4. Executes moves (unless dry-run)
+    5. Returns summary statistics
+
+    Args:
+        source_dir: Source directory to organize
+        context: Organization configuration context
+
+    Returns:
+        IOResult with OrganizeSummary or OrganizeError
+    """
+    # Scan for files
+    scan_result = scan_files(
+        source_dir,
+        recursive=True,
+        follow_symlinks=False,
+        max_depth=context.depth,
+        output_dir=context.output_dir,
+    )
+
+    # Try to unwrap - if it fails, convert and return error
+    try:
+        files = unsafe_ioresult_unwrap(scan_result)
+    except Exception:
+        # Extract error from scan_result and return as OrganizeError
+        scan_inner = unsafe_ioresult_to_result(scan_result)
+        scan_error = scan_inner.failure()
+        return IOResult.from_failure(
+            OrganizeError(f"Cannot scan source directory: {scan_error}")
+        )
+
+    # Read file dates
+    dates: "dict[str, datetime]" = {}
+    date_errors = 0
+
+    for file_path in files:
+        date_result = get_file_date(file_path, context.date_source)
+        try:
+            dates[file_path] = unsafe_ioresult_unwrap(date_result)
+        except Exception:
+            date_errors += 1
+
+    # Generate plan
+    plan = generate_organize_plan(files, dates, context)
+
+    # Execute plan (unless dry-run)
+    processed = 0
+    skipped = 0
+    errors = 0
+
+    if not context.dry_run:
+        for item in plan:
+            if item.action == "moved":
+                move_result = move_file_safe(item.source, item.target)
+                try:
+                    unsafe_ioresult_unwrap(move_result)
+                    processed += 1
+                except Exception:
+                    errors += 1
+            elif item.action == "skipped":
+                skipped += 1
+            elif item.action == "error":
+                errors += 1
+    else:
+        # In dry-run mode, just count what would happen
+        for item in plan:
+            if item.action == "moved":
+                processed += 1
+            elif item.action == "skipped":
+                skipped += 1
+            elif item.action == "error":
+                errors += 1
+
+    summary = OrganizeSummary(
+        total_files=len(files),
+        processed=processed,
+        skipped=skipped,
+        errors=errors,
+        dry_run=context.dry_run,
+    )
+
+    return IOResult.from_value(summary)
