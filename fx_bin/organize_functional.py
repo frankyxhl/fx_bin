@@ -317,9 +317,7 @@ def move_file_safe(
         except ValueError:
             # Different drives on Windows - cannot determine common path
             return IOResult.from_failure(
-                MoveError(
-                    f"Cannot move {source}: cross-device path from {source_root}"
-                )
+                MoveError(f"Cannot move {source}: cross-device path from {source_root}")
             )
 
         # Boundary check: target must be within output_root
@@ -354,7 +352,8 @@ def move_file_safe(
                 # Overwrite: use atomic replace (will be done below)
                 pass
             elif conflict_mode == ConflictMode.ASK:
-                # Ask: prompt user (not implemented in this function, handled at CLI level)
+                # Ask: prompt user (not implemented in this function,
+                # handled at CLI level)
                 # For now, treat as skip
                 return IOResult.from_value((None, False))
             else:  # RENAME
@@ -498,8 +497,13 @@ def execute_organize(
         date_result = get_file_date(file_path, context.date_source)
         try:
             dates[file_path] = unsafe_ioresult_unwrap(date_result)
-        except Exception:
+        except Exception as e:
             date_errors += 1
+            if context.fail_fast:
+                # Stop immediately on first error when fail_fast is enabled
+                return IOResult.from_failure(
+                    OrganizeError(f"Failed to read date for {file_path}: {e}")
+                )
 
     # Generate plan
     plan = generate_organize_plan(files, dates, context)
@@ -525,13 +529,24 @@ def execute_organize(
                     _, dir_created = unsafe_ioresult_unwrap(move_result)
                     if dir_created:
                         directories_created += 1
-                except Exception:
+                except Exception as e:
                     processed -= 1
                     errors += 1
+                    if context.fail_fast:
+                        # Stop immediately on first error when fail_fast is enabled
+                        # Completed moves are preserved (not rolled back)
+                        return IOResult.from_failure(
+                            OrganizeError(f"Failed to move {item.source} to {item.target}: {e}")
+                        )
         elif item.action == "skipped":
             skipped += 1
         elif item.action == "error":
             errors += 1
+            if context.fail_fast:
+                # Stop immediately on first error when fail_fast is enabled
+                return IOResult.from_failure(
+                    OrganizeError(f"Planning error for {item.source}: cannot organize file")
+                )
 
     summary = OrganizeSummary(
         total_files=len(files),
