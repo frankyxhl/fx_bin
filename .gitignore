@@ -147,3 +147,4 @@ test_results_*.json
 # OpenSpec - only track final specs, not change process
 openspec/changes/
 openspec/.opencode/
+task_plan.md
