@@ -959,23 +959,18 @@ def organize(
         directories_created = 0
 
         for item in plan:
-            if item.action == "moved":
-                # Check if user made a choice for this file
-                if item.source in ask_user_choices:
-                    choice = ask_user_choices[item.source]
-                    if choice == "skip":
-                        # User chose to skip
-                        skipped += 1
-                        continue
-                    elif choice == "overwrite":
-                        # User chose to overwrite - use OVERWRITE mode
+            match item.action:
+                case "moved":
+                    # Check if user made a choice for this file
+                    if item.source not in ask_user_choices:
+                        # No conflict, proceed with normal move
                         if not context.dry_run:
                             move_result = move_file_safe(
                                 item.source,
                                 item.target,
                                 source,  # source_root
                                 context.output_dir,  # output_root
-                                ConflictMode.OVERWRITE,  # Use OVERWRITE
+                                ConflictMode.RENAME,  # Use RENAME for non-conflicting files
                             )
                             try:
                                 _, dir_created = unsafe_ioresult_unwrap(move_result)
@@ -990,36 +985,46 @@ def organize(
                                         err=True,
                                     )
                                     return 1
-                else:
-                    # No conflict, proceed with normal move
-                    if not context.dry_run:
-                        move_result = move_file_safe(
-                            item.source,
-                            item.target,
-                            source,  # source_root
-                            context.output_dir,  # output_root
-                            ConflictMode.RENAME,  # Use RENAME for non-conflicting files
-                        )
-                        try:
-                            _, dir_created = unsafe_ioresult_unwrap(move_result)
-                            if dir_created:
-                                directories_created += 1
-                            processed += 1
-                        except Exception as e:
-                            errors += 1
-                            if context.fail_fast:
-                                click.echo(
-                                    f"Error: Failed to move {item.source}: {e}",
-                                    err=True,
+                        continue
+
+                    choice = ask_user_choices[item.source]
+                    match choice:
+                        case "skip":
+                            skipped += 1
+                            continue
+                        case "overwrite":
+                            if not context.dry_run:
+                                move_result = move_file_safe(
+                                    item.source,
+                                    item.target,
+                                    source,  # source_root
+                                    context.output_dir,  # output_root
+                                    ConflictMode.OVERWRITE,  # Use OVERWRITE
                                 )
-                                return 1
-            elif item.action == "skipped":
-                skipped += 1
-            elif item.action == "error":
-                errors += 1
-                if context.fail_fast:
-                    click.echo(f"Error: Planning error for {item.source}", err=True)
-                    return 1
+                                try:
+                                    _, dir_created = unsafe_ioresult_unwrap(move_result)
+                                    if dir_created:
+                                        directories_created += 1
+                                    processed += 1
+                                except Exception as e:
+                                    errors += 1
+                                    if context.fail_fast:
+                                        click.echo(
+                                            f"Error: Failed to move {item.source}: {e}",
+                                            err=True,
+                                        )
+                                        return 1
+                        case _:
+                            # Unknown choice - treat as skip
+                            skipped += 1
+
+                case "skipped":
+                    skipped += 1
+                case "error":
+                    errors += 1
+                    if context.fail_fast:
+                        click.echo(f"Error: Planning error for {item.source}", err=True)
+                        return 1
 
         # Build summary
         from .organize import OrganizeSummary
@@ -1043,17 +1048,25 @@ def organize(
             for item in plan:
                 if item.source in ask_user_choices:
                     choice = ask_user_choices[item.source]
-                    if choice == "skip":
-                        click.echo(f"  {item.source} (skipped - user choice)")
-                    elif choice == "overwrite":
-                        click.echo(
-                            f"  {item.source} -> {item.target} "
-                            "(overwritten - user choice)"
-                        )
-                elif item.action == "moved":
-                    click.echo(f"  {item.source} -> {item.target}")
-                elif item.action == "skipped":
-                    click.echo(f"  {item.source} (skipped)")
+                    match choice:
+                        case "skip":
+                            click.echo(f"  {item.source} (skipped - user choice)")
+                        case "overwrite":
+                            click.echo(
+                                f"  {item.source} -> {item.target} "
+                                "(overwritten - user choice)"
+                            )
+                        case _:
+                            pass  # Unknown choice, skip
+                    continue
+
+                match item.action:
+                    case "moved":
+                        click.echo(f"  {item.source} -> {item.target}")
+                    case "skipped":
+                        click.echo(f"  {item.source} (skipped)")
+                    case _:
+                        pass  # error or other action types
 
         # Show summary (always show, per help text "errors and summary only")
         click.echo(
