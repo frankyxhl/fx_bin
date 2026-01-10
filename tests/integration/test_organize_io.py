@@ -981,6 +981,80 @@ class TestDiskConflictDetection(unittest.TestCase):
             self.assertTrue(target.exists())
             self.assertEqual(target.read_text(), "existing content")
 
+    def test_overwrite_mode_replaces_existing_file(self):
+        """Test that OVERWRITE mode replaces existing files atomically."""
+        from fx_bin.organize_functional import move_file_safe
+        from fx_bin.organize import ConflictMode
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "source.txt"
+            source.write_text("new content")
+
+            # Create output root and PRE-EXISTING target file
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+            target = output_root / "source.txt"
+            target.write_text("old content")  # Target already exists!
+
+            # With OVERWRITE mode, should replace existing file
+            result = move_file_safe(
+                str(source),
+                str(target),
+                str(source_root),
+                str(output_root),
+                ConflictMode.OVERWRITE,
+            )
+
+            inner_result = unsafe_ioresult_to_result(result)
+            self.assertTrue(inner_result)
+            # Source should be gone
+            self.assertFalse(source.exists())
+            # Target should have new content
+            self.assertTrue(target.exists())
+            self.assertEqual(target.read_text(), "new content")
+
+    def test_ask_mode_skips_existing_files(self):
+        """Test that ASK mode skips existing files (handled at CLI level)."""
+        from fx_bin.organize_functional import move_file_safe
+        from fx_bin.organize import ConflictMode
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "source.txt"
+            source.write_text("source content")
+
+            # Create output root and PRE-EXISTING target file
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+            target = output_root / "source.txt"
+            target.write_text("existing content")
+
+            # With ASK mode, should skip (prompting handled at CLI level)
+            result = move_file_safe(
+                str(source),
+                str(target),
+                str(source_root),
+                str(output_root),
+                ConflictMode.ASK,
+            )
+
+            inner_result = unsafe_ioresult_to_result(result)
+            self.assertTrue(inner_result)
+            # In ASK mode, source should remain (prompting is CLI responsibility)
+            self.assertTrue(source.exists())
+            # Target should remain unchanged
+            self.assertTrue(target.exists())
+            self.assertEqual(target.read_text(), "existing content")
+
 
 if __name__ == "__main__":
     unittest.main()
