@@ -19,10 +19,7 @@ from loguru import logger as L
 from returns.io import IOResult
 
 from fx_bin.errors import DateReadError, MoveError, OrganizeError
-from fx_bin.lib import (
-    unsafe_ioresult_to_result,
-    unsafe_ioresult_unwrap,
-)
+from fx_bin.lib import unsafe_ioresult_unwrap
 from fx_bin.organize import (
     DateSource,
     OrganizeContext,
@@ -81,13 +78,46 @@ def get_file_date(
         )
 
 
+def _should_skip_entry(entry_path: str, output_dir: str) -> bool:
+    """Check if entry should be skipped (output directory)."""
+    return (
+        bool(output_dir) and os.path.commonpath([entry_path, output_dir]) == output_dir
+    )
+
+
+def _process_entry(
+    entry: os.DirEntry, dir_path: str, output_dir: str, follow_symlinks: bool
+) -> List[str]:
+    """Process a single scandir entry for file collection.
+
+    Returns list of file paths (empty for directories, which are handled separately).
+    """
+    files: List[str] = []
+    entry_path = os.path.join(dir_path, entry.name)
+
+    if _should_skip_entry(entry_path, output_dir):
+        return files
+
+    if entry.is_symlink():
+        if follow_symlinks:
+            target = os.path.realpath(entry_path)
+            if os.path.isfile(target):
+                files.append(entry_path)
+        return files
+
+    if entry.is_file():
+        files.append(entry_path)
+
+    return files
+
+
 def scan_files(
     start_dir: str,
     recursive: bool = True,
     follow_symlinks: bool = False,
     max_depth: int = 100,
     output_dir: str = "",
-    context: FolderContext = FolderContext(visited_inodes=set(), max_depth=100),
+    context: FolderContext | None = None,
 ) -> IOResult[List[str], OrganizeError]:
     """Scan directory for files to organize.
 
@@ -100,11 +130,14 @@ def scan_files(
         follow_symlinks: Whether to follow symbolic links
         max_depth: Maximum recursion depth (default 100)
         output_dir: Output directory to exclude from scanning
-        context: FolderContext for cycle detection
+        context: FolderContext for cycle detection (created if None)
 
     Returns:
         IOResult with list of file paths or OrganizeError
     """
+    if context is None:
+        context = FolderContext(visited_inodes=set(), max_depth=max_depth)
+
     try:
         files: List[str] = []
         start_dir_real = os.path.realpath(start_dir)
@@ -169,17 +202,13 @@ def _scan_recursive(
                     entry_path = os.path.join(dir_path, entry.name)
 
                     # Skip output directory
-                    if (
-                        output_dir
-                        and os.path.commonpath([entry_path, output_dir]) == output_dir
-                    ):
+                    if _should_skip_entry(entry_path, output_dir):
                         L.debug(f"Skipping output directory: {entry_path}")
                         continue
 
                     if entry.is_symlink():
                         if follow_symlinks:
                             target = os.path.realpath(entry_path)
-                            # Check if target is directory
                             if os.path.isdir(target):
                                 files.extend(
                                     _scan_recursive(
@@ -210,11 +239,9 @@ def _scan_recursive(
                         )
 
                 except (OSError, PermissionError):
-                    # Skip files we can't access
                     continue
 
     except (OSError, PermissionError):
-        # Skip directories we can't access
         pass
 
     return files
@@ -232,25 +259,9 @@ def _scan_non_recursive(
         with os.scandir(dir_path) as entries:
             for entry in entries:
                 try:
-                    entry_path = os.path.join(dir_path, entry.name)
-
-                    # Skip output directory
-                    if (
-                        output_dir
-                        and os.path.commonpath([entry_path, output_dir]) == output_dir
-                    ):
-                        continue
-
-                    if entry.is_symlink():
-                        if follow_symlinks:
-                            target = os.path.realpath(entry_path)
-                            if os.path.isfile(target):
-                                files.append(entry_path)
-                        continue
-
-                    if entry.is_file():
-                        files.append(entry_path)
-
+                    files.extend(
+                        _process_entry(entry, dir_path, output_dir, follow_symlinks)
+                    )
                 except (OSError, PermissionError):
                     continue
 
@@ -389,15 +400,16 @@ def execute_organize(
     )
 
     # Try to unwrap - if it fails, convert and return error
+    from .lib import unwrap_or_convert_error
+
     try:
-        files = unsafe_ioresult_unwrap(scan_result)
-    except Exception:
-        # Extract error from scan_result and return as OrganizeError
-        scan_inner = unsafe_ioresult_to_result(scan_result)
-        scan_error = scan_inner.failure()
-        return IOResult.from_failure(
-            OrganizeError(f"Cannot scan source directory: {scan_error}")
+        files = unwrap_or_convert_error(
+            scan_result,
+            OrganizeError,
+            "Cannot scan source directory",
         )
+    except OrganizeError as e:
+        return IOResult.from_failure(e)
 
     # Read file dates
     dates: "dict[str, datetime]" = {}
@@ -413,33 +425,25 @@ def execute_organize(
     # Generate plan
     plan = generate_organize_plan(files, dates, context)
 
-    # Execute plan (unless dry-run)
+    # Execute plan and count results
     processed = 0
     skipped = 0
     errors = 0
 
-    if not context.dry_run:
-        for item in plan:
-            if item.action == "moved":
+    for item in plan:
+        if item.action == "moved":
+            processed += 1
+            if not context.dry_run:
                 move_result = move_file_safe(item.source, item.target)
                 try:
                     unsafe_ioresult_unwrap(move_result)
-                    processed += 1
                 except Exception:
+                    processed -= 1
                     errors += 1
-            elif item.action == "skipped":
-                skipped += 1
-            elif item.action == "error":
-                errors += 1
-    else:
-        # In dry-run mode, just count what would happen
-        for item in plan:
-            if item.action == "moved":
-                processed += 1
-            elif item.action == "skipped":
-                skipped += 1
-            elif item.action == "error":
-                errors += 1
+        elif item.action == "skipped":
+            skipped += 1
+        elif item.action == "error":
+            errors += 1
 
     summary = OrganizeSummary(
         total_files=len(files),

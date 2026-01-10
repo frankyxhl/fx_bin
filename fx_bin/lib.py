@@ -1,5 +1,5 @@
 import os
-from typing import TypeVar, Any
+from typing import TypeVar, Any, Callable
 
 from returns.io import IOResult
 from returns.result import Result
@@ -48,6 +48,7 @@ def is_windows() -> bool:
 
 _ValueType = TypeVar("_ValueType")
 _ErrorType = TypeVar("_ErrorType")
+_NewErrorType = TypeVar("_NewErrorType", bound=Exception)
 
 
 def unsafe_ioresult_unwrap(result: IOResult[_ValueType, _ErrorType]) -> _ValueType:
@@ -78,3 +79,40 @@ def unsafe_ioresult_to_result(
     This allows accessing the success/failure state directly.
     """
     return result._inner_value
+
+
+def unwrap_or_convert_error(
+    result: IOResult[_ValueType, _ErrorType],
+    error_factory: Callable[[str], _NewErrorType],
+    error_message: str,
+) -> _ValueType:
+    """Unwrap IOResult value or raise converted error.
+
+    This helper reduces boilerplate when handling IOResult errors.
+    If the result is success, returns the unwrapped value.
+    If the result is failure, raises a new error with the original error message.
+
+    Args:
+        result: The IOResult to unwrap
+        error_factory: Function to create new error from string message
+        error_message: Prefix for error messages
+
+    Returns:
+        The unwrapped value if successful
+
+    Raises:
+        _NewErrorType: If the result is a failure
+
+    Example:
+        files = unwrap_or_convert_error(
+            scan_result,
+            OrganizeError,
+            "Cannot scan source directory"
+        )
+    """
+    try:
+        return unsafe_ioresult_unwrap(result)
+    except Exception:
+        inner_result = unsafe_ioresult_to_result(result)
+        error = inner_result.failure()
+        raise error_factory(f"{error_message}: {error}")

@@ -47,6 +47,8 @@ class OrganizeContext:
         conflict_mode: Strategy for handling filename conflicts
         output_dir: Root output directory for organized files
         dry_run: If True, preview changes without executing
+        include_patterns: Glob patterns for files to include (empty = all)
+        exclude_patterns: Glob patterns for files to exclude (empty = none)
     """
 
     date_source: DateSource
@@ -54,6 +56,8 @@ class OrganizeContext:
     conflict_mode: ConflictMode
     output_dir: str
     dry_run: bool = False
+    include_patterns: Sequence[str] = ()
+    exclude_patterns: Sequence[str] = ()
 
 
 @dataclass(frozen=True)
@@ -228,17 +232,17 @@ def should_process_file(
     if isinstance(exclude_patterns, str):
         exclude_patterns = (exclude_patterns,)
 
-    # Check include patterns
-    if include_patterns:
-        included = any(matches_glob_pattern(basename, p) for p in include_patterns)
-        if not included:
-            return False
+    # Must match include patterns if specified
+    if include_patterns and not any(
+        matches_glob_pattern(basename, p) for p in include_patterns
+    ):
+        return False
 
-    # Check exclude patterns (filtered from included set, or all if no include)
-    if exclude_patterns:
-        excluded = any(matches_glob_pattern(basename, p) for p in exclude_patterns)
-        if excluded:
-            return False
+    # Must not match exclude patterns if specified
+    if exclude_patterns and any(
+        matches_glob_pattern(basename, p) for p in exclude_patterns
+    ):
+        return False
 
     return True
 
@@ -284,7 +288,7 @@ def resolve_conflict_rename(target_path: str, allocated_paths: Set[str]) -> str:
 
 
 def generate_organize_plan(
-    files: List[str],
+    files: Sequence[str],
     dates: Dict[str, datetime],
     context: OrganizeContext,
 ) -> List[FileOrganizeResult]:
@@ -294,7 +298,7 @@ def generate_organize_plan(
     Handles intra-run collisions at plan time based on conflict mode.
 
     Args:
-        files: List of source file paths
+        files: Sequence of source file paths (list, tuple, or any sequence)
         dates: Dictionary mapping file paths to their dates
         context: Organization configuration context
 
@@ -351,8 +355,8 @@ def generate_organize_plan(
         # Apply filters
         if not should_process_file(
             filename,
-            (),  # TODO: Add include patterns from context if needed
-            (),  # TODO: Add exclude patterns from context if needed
+            context.include_patterns,
+            context.exclude_patterns,
         ):
             plan.append(FileOrganizeResult(source_file, "", "skipped"))
             continue

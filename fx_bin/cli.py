@@ -680,26 +680,19 @@ def organize(
     if output is None:
         output = str(Path(source) / "organized")
 
-    # Map string options to enums
-    date_source_enum = (
-        DateSource.CREATED if date_source == "created" else DateSource.MODIFIED
-    )
+    # Map string options to enums using Enum[name] pattern
+    date_source_enum = DateSource[date_source.upper()]
+    conflict_mode_enum = ConflictMode[on_conflict.upper()]
 
-    conflict_mode_map = {
-        "rename": ConflictMode.RENAME,
-        "skip": ConflictMode.SKIP,
-        "overwrite": ConflictMode.OVERWRITE,
-        "ask": ConflictMode.ASK,
-    }
-    conflict_mode_enum = conflict_mode_map[on_conflict.lower()]
-
-    # Create context
+    # Create context with all options
     context = OrganizeContext(
         date_source=date_source_enum,
         depth=depth,
         conflict_mode=conflict_mode_enum,
         output_dir=output,
         dry_run=dry_run,
+        include_patterns=include,
+        exclude_patterns=exclude,
     )
 
     # Show what we're doing
