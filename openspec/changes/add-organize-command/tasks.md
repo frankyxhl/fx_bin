@@ -419,20 +419,20 @@ tests/
 - [x] 9.6.12 **GREEN**: Run tests: `poetry run pytest tests/integration/test_organize_io.py -v --no-cov`
 
 ### 9.7 Track Directories Created in Summary
-- [ ] 9.7.1 **RED**: Write test that directories_created is 0 in dry-run mode
-- [ ] 9.7.2 **RED**: Write test that directories_created counts only newly created directories (not pre-existing)
-- [ ] 9.7.3 **RED**: Write test that parent chain counts as 1 directory (not each level)
-- [ ] 9.7.4 **GREEN**: Add `directories_created: int` to OrganizeSummary
-- [ ] 9.7.5 **GREEN**: Modify move_file_safe() to return `IOResult[Tuple[None, bool], ...]` (success, dir_created)
-- [ ] 9.7.6 **GREEN**: In move_file_safe(), before makedirs(), check if directory exists
-- [ ] 9.7.7 **GREEN**: Return dir_created=True only when os.makedirs(exist_ok=False) creates new directory
-- [ ] 9.7.8 **GREEN**: Update execute_organize() to accumulate dir_created flags from move results
-- [ ] 9.7.9 **GREEN**: Skip counting in dry-run mode (no actual directories created)
-- [ ] 9.7.10 **GREEN**: Display directories_created in CLI summary output
+- [x] 9.7.1 **RED**: Write test that directories_created is 0 in dry-run mode
+- [x] 9.7.2 **RED**: Write test that directories_created counts only newly created directories (not pre-existing)
+- [x] 9.7.3 **RED**: Write test that parent chain counts as 1 directory (not each level)
+- [x] 9.7.4 **GREEN**: Add `directories_created: int` to OrganizeSummary
+- [x] 9.7.5 **GREEN**: Modify move_file_safe() to return `IOResult[Tuple[None, bool], ...]` (success, dir_created)
+- [x] 9.7.6 **GREEN**: In move_file_safe(), before makedirs(), check if directory exists
+- [x] 9.7.7 **GREEN**: Return dir_created=True only when os.makedirs(exist_ok=False) creates new directory
+- [x] 9.7.8 **GREEN**: Update execute_organize() to accumulate dir_created flags from move results
+- [x] 9.7.9 **GREEN**: Skip counting in dry-run mode (no actual directories created)
+- [x] 9.7.10 **GREEN**: Display directories_created in CLI summary output
 
 ### 9.8 Fix Tuple vs Sequence Types
-- [ ] 9.8.1 **RED**: Run mypy to verify type annotation
-- [ ] 9.8.2 **GREEN**: Change CLI parameters from `Tuple[str, ...]` to `Sequence[str]`
+- [x] 9.8.1 **RED**: Run mypy to verify type annotation
+- [x] 9.8.2 **GREEN**: Change CLI parameters from `Tuple[str, ...]` to `Sequence[str]`
 
 ### 9.9 Commit
 - [x] 9.9.1 Commit: "Phase 9: Add missing CLI options and fix critical bugs"
@@ -444,31 +444,31 @@ tests/
 **Goal:** Implement confirmation prompt and detailed output per spec
 
 ### 10.1 Confirmation Prompt
-- [ ] 10.1.1 **RED**: Write test that execution prompts for confirmation (TTY)
-- [ ] 10.1.2 **RED**: Write test that --yes skips confirmation
-- [ ] 10.1.3 **RED**: Write test that non-TTY stdin auto-confirms
-- [ ] 10.1.4 **GREEN**: Add `sys.stdin.isatty()` check in CLI
-- [ ] 10.1.5 **GREEN**: Add `click.confirm()` prompt before execute_organize()
-- [ ] 10.1.6 **GREEN**: Display summary before confirmation (file count, source, output)
+- [x] 10.1.1 **RED**: Write test that execution prompts for confirmation (TTY)
+- [x] 10.1.2 **RED**: Write test that --yes skips confirmation
+- [x] 10.1.3 **RED**: Write test that non-TTY stdin auto-confirms
+- [x] 10.1.4 **GREEN**: Add `sys.stdin.isatty()` check in CLI
+- [x] 10.1.5 **GREEN**: Add `click.confirm()` prompt before execute_organize()
+- [x] 10.1.6 **GREEN**: Display summary before confirmation (file count, source, output)
 
 ### 10.2 Verbose Output
-- [ ] 10.2.1 **RED**: Write test that --verbose shows source/target/status
-- [ ] 10.2.2 **GREEN**: Modify execute_organize() to return per-file results
-- [ ] 10.2.3 **GREEN**: Loop through results and print each file when verbose=True
-- [ ] 10.2.4 **GREEN**: Ensure deterministic output order (sorted by source)
+- [x] 10.2.1 **RED**: Write test that --verbose shows source/target/status
+- [x] 10.2.2 **GREEN**: Modify execute_organize() to return per-file results
+- [x] 10.2.3 **GREEN**: Loop through results and print each file when verbose=True
+- [x] 10.2.4 **GREEN**: Ensure deterministic output order (sorted by source)
 
 ### 10.3 Quiet Output
-- [ ] 10.3.1 **RED**: Write test that --quiet only shows errors and summary
-- [ ] 10.3.2 **GREEN**: Suppress progress output when quiet=True
-- [ ] 10.3.3 **GREEN**: Always show errors in quiet mode
-- [ ] 10.3.4 **GREEN**: Always show summary in quiet mode
+- [x] 10.3.1 **RED**: Write test that --quiet only shows errors and summary
+- [x] 10.3.2 **GREEN**: Suppress progress output when quiet=True
+- [x] 10.3.3 **GREEN**: Always show errors in quiet mode
+- [x] 10.3.4 **GREEN**: Always show summary in quiet mode
 
 ### 10.4 Progress Output (Default)
-- [ ] 10.4.1 **RED**: Write test that default mode shows current file
-- [ ] 10.4.2 **GREEN**: Print current file being processed in default mode
+- [x] 10.4.1 **RED**: Write test that default mode shows current file
+- [x] 10.4.2 **GREEN**: Print current file being processed in default mode
 
 ### 10.5 Commit
-- [ ] 10.5.1 Commit: "Phase 10: Confirmation prompt and output handling"
+- [x] 10.5.1 Commit: "Phase 10: Confirmation prompt and output handling"
 
 ---
 
@@ -477,39 +477,39 @@ tests/
 **Goal:** Implement full conflict resolution strategies per spec
 
 ### 11.1 Disk Conflict Detection
-- [ ] 11.1.1 **RED**: Write test for disk conflict detection (target exists)
-- [ ] 11.1.2 **GREEN**: Modify move_file_safe() to check if target exists (PRESERVE Phase 9.6/9.7 changes)
-- [ ] 11.1.3 **GREEN**: Add conflict_mode parameter to move_file_safe()
-- [ ] 11.1.4 **GREEN**: Verify final signature: `move_file_safe(source, target, source_root, output_root, conflict_mode) -> IOResult[Tuple[None, bool], MoveError]`
-- [ ] 11.1.5 **GREEN**: Confirm source_root/output_root from Phase 9.6 are preserved
-- [ ] 11.1.6 **GREEN**: Confirm return type Tuple[None, bool] from Phase 9.7 is preserved
-- [ ] 11.1.7 **GREEN**: Update all test calls in test_organize_io.py to pass conflict_mode parameter
-- [ ] 11.1.8 **GREEN**: Update execute_organize() call to pass context.conflict_mode to move_file_safe()
-- [ ] 11.1.9 **GREEN**: Run tests: `poetry run pytest tests/integration/test_organize_io.py -v --no-cov`
+- [x] 11.1.1 **RED**: Write test for disk conflict detection (target exists)
+- [x] 11.1.2 **GREEN**: Modify move_file_safe() to check if target exists (PRESERVE Phase 9.6/9.7 changes)
+- [x] 11.1.3 **GREEN**: Add conflict_mode parameter to move_file_safe()
+- [x] 11.1.4 **GREEN**: Verify final signature: `move_file_safe(source, target, source_root, output_root, conflict_mode) -> IOResult[Tuple[None, bool], MoveError]`
+- [x] 11.1.5 **GREEN**: Confirm source_root/output_root from Phase 9.6 are preserved
+- [x] 11.1.6 **GREEN**: Confirm return type Tuple[None, bool] from Phase 9.7 is preserved
+- [x] 11.1.7 **GREEN**: Update all test calls in test_organize_io.py to pass conflict_mode parameter
+- [x] 11.1.8 **GREEN**: Update execute_organize() call to pass context.conflict_mode to move_file_safe()
+- [x] 11.1.9 **GREEN**: Run tests: `poetry run pytest tests/integration/test_organize_io.py -v --no-cov`
 
 ### 11.2 Skip Mode
-- [ ] 11.2.1 **RED**: Write test that skip mode doesn't move existing files
-- [ ] 11.2.2 **GREEN**: Implement skip branch in move_file_safe() (using final signature from 11.1.4)
-- [ ] 11.2.3 **GREEN**: Verify file is skipped and counted in summary
+- [x] 11.2.1 **RED**: Write test that skip mode doesn't move existing files
+- [x] 11.2.2 **GREEN**: Implement skip branch in move_file_safe() (using final signature from 11.1.4)
+- [x] 11.2.3 **GREEN**: Verify file is skipped and counted in summary
 
 ### 11.3 Overwrite Mode
-- [ ] 11.3.1 **RED**: Write test that overwrite uses atomic replace
-- [ ] 11.3.2 **GREEN**: Implement overwrite branch using os.replace() (using final signature from 11.1.4)
-- [ ] 11.3.3 **GREEN**: Verify atomic overwrite semantics
+- [x] 11.3.1 **RED**: Write test that overwrite uses atomic replace
+- [x] 11.3.2 **GREEN**: Implement overwrite branch using os.replace() (using final signature from 11.1.4)
+- [x] 11.3.3 **GREEN**: Verify atomic overwrite semantics
 
 ### 11.4 Ask Mode
-- [ ] 11.4.1 **RED**: Write test that ask mode prompts for disk conflicts
-- [ ] 11.4.2 **GREEN**: Implement ask branch with click.prompt() (using final signature from 11.1.4)
-- [ ] 11.4.3 **GREEN**: Verify ask only applies to disk conflicts (not intra-run)
+- [x] 11.4.1 **RED**: Write test that ask mode prompts for disk conflicts
+- [x] 11.4.2 **GREEN**: Implement ask branch with click.prompt() (using final signature from 11.1.4)
+- [x] 11.4.3 **GREEN**: Verify ask only applies to disk conflicts (not intra-run)
 
 ### 11.5 EXDEV Cross-FS Handling
-- [ ] 11.5.1 **RED**: Write test for EXDEV (cross-filesystem) error
-- [ ] 11.5.2 **GREEN**: Catch OSError with EXDEV in move_file_safe() (using final signature from 11.1.4)
-- [ ] 11.5.3 **GREEN**: Implement copy-to-temp then atomic replace pattern
-- [ ] 11.5.4 **GREEN**: Delete source only after successful copy
+- [x] 11.5.1 **RED**: Write test for EXDEV (cross-filesystem) error
+- [x] 11.5.2 **GREEN**: Catch OSError with EXDEV in move_file_safe() (using final signature from 11.1.4)
+- [x] 11.5.3 **GREEN**: Implement copy-to-temp then atomic replace pattern
+- [x] 11.5.4 **GREEN**: Delete source only after successful copy
 
 ### 11.6 Commit
-- [ ] 11.6.1 Commit: "Phase 11: Conflict resolution strategies"
+- [x] 11.6.1 Commit: "Phase 11: Conflict resolution strategies"
 
 ---
 
@@ -518,21 +518,21 @@ tests/
 **Goal:** Implement empty directory cleanup and fail-fast
 
 ### 12.1 Empty Directory Cleanup
-- [ ] 12.1.1 **RED**: Write test that --clean-empty removes empty directories
-- [ ] 12.1.2 **RED**: Write test that cleanup respects source root boundary
-- [ ] 12.1.3 **GREEN**: Call remove_empty_dirs() when context.clean_empty=True
-- [ ] 12.1.4 **GREEN**: Handle cleanup result in execute_organize()
-- [ ] 12.1.5 **GREEN**: Verify cleanup only runs in non-dry-run mode
+- [x] 12.1.1 **RED**: Write test that --clean-empty removes empty directories
+- [x] 12.1.2 **RED**: Write test that cleanup respects source root boundary
+- [x] 12.1.3 **GREEN**: Call remove_empty_dirs() when context.clean_empty=True
+- [x] 12.1.4 **GREEN**: Handle cleanup result in execute_organize()
+- [x] 12.1.5 **GREEN**: Verify cleanup only runs in non-dry-run mode
 
 ### 12.2 Fail Fast
-- [ ] 12.2.1 **RED**: Write test that --fail-fast stops on first error
-- [ ] 12.2.2 **RED**: Write test that default mode continues on error
-- [ ] 12.2.3 **GREEN**: Add fail_fast check in error handling
-- [ ] 12.2.4 **GREEN**: Raise exception on error when context.fail_fast=True
-- [ ] 12.2.5 **GREEN**: Verify completed moves are preserved
+- [x] 12.2.1 **RED**: Write test that --fail-fast stops on first error
+- [x] 12.2.2 **RED**: Write test that default mode continues on error
+- [x] 12.2.3 **GREEN**: Add fail_fast check in error handling
+- [x] 12.2.4 **GREEN**: Raise exception on error when context.fail_fast=True
+- [x] 12.2.5 **GREEN**: Verify completed moves are preserved
 
 ### 12.3 Commit
-- [ ] 12.3.1 Commit: "Phase 12: Empty directory cleanup and fail-fast"
+- [x] 12.3.1 Commit: "Phase 12: Empty directory cleanup and fail-fast"
 
 ---
 
