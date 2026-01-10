@@ -26,7 +26,7 @@ from fx_bin.lib import unsafe_ioresult_unwrap, unsafe_ioresult_to_result
 class TestGetFileDate(unittest.TestCase):
     """Test cases for get_file_date() function."""
 
-    def test_get_file_date_with_birthtime(self):
+    def test_given_file_with_birthtime_when_getting_date_then_returns_creation_date(self):
         """Test get_file_date() with st_birthtime (macOS)."""
         with tempfile.TemporaryDirectory() as tmpdir:
             test_file = Path(tmpdir) / "test.jpg"
@@ -41,7 +41,7 @@ class TestGetFileDate(unittest.TestCase):
             # Should be recent
             self.assertGreater(file_date.year, 2020)
 
-    def test_get_file_date_fallback_to_mtime(self):
+    def test_given_file_without_birthtime_when_getting_date_then_falls_back_to_mtime(self):
         """Test get_file_date() fallback to st_mtime."""
         with tempfile.TemporaryDirectory() as tmpdir:
             test_file = Path(tmpdir) / "test.txt"
@@ -54,7 +54,7 @@ class TestGetFileDate(unittest.TestCase):
             file_date = unsafe_ioresult_unwrap(result)
             self.assertIsInstance(file_date, datetime)
 
-    def test_get_file_date_modified_mode(self):
+    def test_given_file_and_modified_mode_when_getting_date_then_returns_modification_date(self):
         """Test get_file_date() with --date-source modified."""
         with tempfile.TemporaryDirectory() as tmpdir:
             test_file = Path(tmpdir) / "test.jpg"
@@ -67,22 +67,90 @@ class TestGetFileDate(unittest.TestCase):
             file_date = unsafe_ioresult_unwrap(result)
             self.assertIsInstance(file_date, datetime)
 
-    def test_get_file_date_never_uses_ctime(self):
-        """Test to ensure st_ctime is NEVER used."""
-        # This test verifies that get_file_date doesn't use st_ctime
-        # st_ctime is metadata change time, not creation time
+    def test_given_file_when_getting_date_then_never_uses_ctime(self):
+        """Test to ensure st_ctime is NEVER used for date calculation.
+
+        On Unix systems, st_ctime is the inode change time (updated when
+        file metadata changes like permissions or ownership), NOT the
+        creation time. This test verifies that get_file_date() uses either
+        st_birthtime (creation time on macOS/BSD) or st_mtime (modification
+        time), but never st_ctime.
+        """
+        import os
+
         with tempfile.TemporaryDirectory() as tmpdir:
             test_file = Path(tmpdir) / "test.txt"
             test_file.write_text("content")
 
+            # Get all available timestamps from the file
+            stat_info = os.stat(test_file)
+
+            # Get the timestamps that SHOULD be used
+            if hasattr(stat_info, "st_birthtime"):
+                expected_timestamp = stat_info.st_birthtime
+                using_birthtime = True
+            else:
+                expected_timestamp = stat_info.st_mtime
+                using_birthtime = False
+
+            # Get the timestamp that should NEVER be used
+            ctime_timestamp = stat_info.st_ctime
+
+            # Call get_file_date() with CREATED mode
             result = get_file_date(str(test_file), DateSource.CREATED)
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
+            file_date = unsafe_ioresult_unwrap(result)
 
-            # The implementation should use birthtime or mtime, never ctime
-            # This is verified by code inspection
+            # Convert returned datetime to timestamp for comparison
+            returned_timestamp = file_date.timestamp()
 
-    def test_get_file_date_nonexistent_file(self):
+            # Verify the returned timestamp matches the expected one (birthtime or mtime)
+            # Use approximate comparison due to floating point precision
+            self.assertAlmostEqual(
+                returned_timestamp,
+                expected_timestamp,
+                places=5,  # Compare to microsecond precision
+                msg=f"get_file_date() should return {'birthtime' if using_birthtime else 'mtime'} "
+                f"but returned a different timestamp"
+            )
+
+            # Verify the returned timestamp does NOT match ctime
+            # (unless they happen to be equal, which is possible but unlikely)
+            if abs(ctime_timestamp - expected_timestamp) > 0.00001:
+                self.assertNotAlmostEqual(
+                    returned_timestamp,
+                    ctime_timestamp,
+                    places=5,
+                    msg="get_file_date() should NEVER use st_ctime (inode change time) "
+                    "for file date calculation"
+                )
+
+            # Additional verification: test with MODIFIED mode
+            result_modified = get_file_date(str(test_file), DateSource.MODIFIED)
+            inner_result_modified = unsafe_ioresult_to_result(result_modified)
+            self.assertTrue(inner_result_modified)
+            file_date_modified = unsafe_ioresult_unwrap(result_modified)
+            returned_modified_timestamp = file_date_modified.timestamp()
+
+            # MODIFIED mode should always use mtime
+            self.assertAlmostEqual(
+                returned_modified_timestamp,
+                stat_info.st_mtime,
+                places=5,
+                msg="get_file_date() with MODIFIED mode should always use st_mtime"
+            )
+
+            # MODIFIED mode should also never use ctime
+            if abs(stat_info.st_ctime - stat_info.st_mtime) > 0.00001:
+                self.assertNotAlmostEqual(
+                    returned_modified_timestamp,
+                    stat_info.st_ctime,
+                    places=5,
+                    msg="get_file_date() with MODIFIED mode should NEVER use st_ctime"
+                )
+
+    def test_given_nonexistent_file_when_getting_date_then_returns_error(self):
         """Test get_file_date() error handling for nonexistent file."""
         result = get_file_date("/nonexistent/file.jpg", DateSource.CREATED)
 
@@ -94,7 +162,7 @@ class TestGetFileDate(unittest.TestCase):
 class TestScanFiles(unittest.TestCase):
     """Test cases for scan_files() function."""
 
-    def test_scan_files_non_recursive(self):
+    def test_given_directory_and_non_recursive_mode_when_scanning_files_then_returns_only_top_level_files(self):
         """Test scan_files() non-recursive mode."""
         with tempfile.TemporaryDirectory() as tmpdir:
             # Create some files
@@ -111,7 +179,7 @@ class TestScanFiles(unittest.TestCase):
             files = unsafe_ioresult_unwrap(result)
             self.assertEqual(len(files), 2)
 
-    def test_scan_files_recursive(self):
+    def test_given_directory_and_recursive_mode_when_scanning_files_then_returns_all_nested_files(self):
         """Test scan_files() recursive mode."""
         with tempfile.TemporaryDirectory() as tmpdir:
             # Create nested structure
@@ -130,7 +198,7 @@ class TestScanFiles(unittest.TestCase):
             files = unsafe_ioresult_unwrap(result)
             self.assertEqual(len(files), 3)
 
-    def test_scan_files_skips_symlink_files(self):
+    def test_given_symlink_files_and_no_follow_flag_when_scanning_files_then_skips_symlinks(self):
         """Test scan_files() skipping symlink files when follow_symlinks=False."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -159,7 +227,7 @@ class TestScanFiles(unittest.TestCase):
             self.assertEqual(len(files), 1)  # Only regular file, symlink skipped
             self.assertIn("regular.jpg", files[0])
 
-    def test_scan_files_max_depth(self):
+    def test_given_deep_directory_and_max_depth_when_scanning_files_then_respects_depth_limit(self):
         """Test scan_files() with max_depth limit."""
         with tempfile.TemporaryDirectory() as tmpdir:
             # Create deep nesting
@@ -177,7 +245,7 @@ class TestScanFiles(unittest.TestCase):
             # Should only scan up to depth 2 (dir0/dir1/dir2/file2.txt is depth 3)
             self.assertLess(len(files), 5)
 
-    def test_scan_files_cycle_detection(self):
+    def test_given_symlink_cycle_when_scanning_files_then_detects_cycle_via_inode_tracking(self):
         """Test scan_files() inode-based cycle detection."""
         # This test verifies that symlink cycles are detected
         # Using the FolderContext pattern with visited_inodes
@@ -203,7 +271,7 @@ class TestScanFiles(unittest.TestCase):
             # Should not hang due to cycle detection
             self.assertIsInstance(files, list)
 
-    def test_scan_files_excludes_output_dir(self):
+    def test_given_directory_with_output_subdir_when_scanning_files_then_excludes_output_directory(self):
         """Test scan_files() excluding output directory using commonpath."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -232,7 +300,7 @@ class TestScanFiles(unittest.TestCase):
 class TestMoveFileSafe(unittest.TestCase):
     """Test cases for move_file_safe() function."""
 
-    def test_move_file_safe_basic_move(self):
+    def test_given_source_and_target_when_moving_file_then_performs_basic_move(self):
         """Test move_file_safe() basic move operation."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -261,7 +329,7 @@ class TestMoveFileSafe(unittest.TestCase):
             self.assertTrue(target.exists())
             self.assertEqual(target.read_text(), "Hello World")
 
-    def test_move_file_safe_creates_parent_dirs(self):
+    def test_given_target_with_nonexistent_parents_when_moving_file_then_creates_parent_dirs(self):
         """Test move_file_safe() creates parent directories."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -289,7 +357,7 @@ class TestMoveFileSafe(unittest.TestCase):
             self.assertTrue(target.exists())
             self.assertEqual(target.read_text(), "content")
 
-    def test_move_file_safe_permission_error(self):
+    def test_given_source_same_as_target_when_moving_file_then_succeeds_as_no_op(self):
         """Test move_file_safe() handles permission errors."""
         # This test verifies permission error handling
         # Actual permission errors may be hard to test consistently
@@ -312,7 +380,7 @@ class TestMoveFileSafe(unittest.TestCase):
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
 
-    def test_move_file_safe_atomic_overwrite(self):
+    def test_given_existing_target_when_moving_file_then_performs_atomic_overwrite(self):
         """Test move_file_safe() atomic overwrite with os.replace()."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -340,7 +408,7 @@ class TestMoveFileSafe(unittest.TestCase):
             # Verify source is gone
             self.assertFalse(source.exists())
 
-    def test_move_file_safe_no_op_same_file(self):
+    def test_given_same_source_and_target_path_when_moving_file_then_succeeds_without_change(self):
         """Test move_file_safe() no-op when source equals target."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -367,7 +435,7 @@ class TestMoveFileSafe(unittest.TestCase):
 class TestRemoveEmptyDirs(unittest.TestCase):
     """Test cases for remove_empty_dirs() function."""
 
-    def test_remove_empty_dirs_single_empty_dir(self):
+    def test_given_single_empty_directory_when_removing_empty_dirs_then_deletes_directory(self):
         """Test remove_empty_dirs() removes single empty directory."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -388,7 +456,7 @@ class TestRemoveEmptyDirs(unittest.TestCase):
             # Verify directory was removed
             self.assertFalse(empty_dir.exists())
 
-    def test_remove_empty_dirs_nested_empty_dirs(self):
+    def test_given_nested_empty_directories_when_removing_empty_dirs_then_removes_all_bottom_up(self):
         """Test remove_empty_dirs() removes nested empty directories."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -417,7 +485,7 @@ class TestRemoveEmptyDirs(unittest.TestCase):
             self.assertFalse(level2.exists())
             self.assertFalse(level1.exists())
 
-    def test_remove_empty_dirs_skips_non_empty(self):
+    def test_given_directory_with_files_when_removing_empty_dirs_then_skips_non_empty(self):
         """Test remove_empty_dirs() skips directories with files."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -440,7 +508,7 @@ class TestRemoveEmptyDirs(unittest.TestCase):
             # Parent should still exist (child still there)
             self.assertTrue(parent.exists())
 
-    def test_remove_empty_dirs_scope_limit(self):
+    def test_given_source_root_and_outside_dirs_when_removing_empty_dirs_then_respects_scope_limit(self):
         """Test remove_empty_dirs() only removes under source root."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -470,7 +538,7 @@ class TestRemoveEmptyDirs(unittest.TestCase):
 class TestExecuteOrganize(unittest.TestCase):
     """Test cases for execute_organize() main execution function."""
 
-    def test_execute_organize_dry_run_mode(self):
+    def test_given_context_with_dry_run_when_executing_organize_then_does_not_modify_files(self):
         """Test execute_organize() dry-run mode doesn't modify files."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -514,7 +582,7 @@ class TestExecuteOrganize(unittest.TestCase):
             output_contents = list(output_dir.iterdir())
             self.assertEqual(len(output_contents), 0)
 
-    def test_execute_organize_actual_execution(self):
+    def test_given_context_without_dry_run_when_executing_organize_then_actually_moves_files(self):
         """Test execute_organize() actually moves files."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -559,7 +627,7 @@ class TestExecuteOrganize(unittest.TestCase):
             self.assertGreater(summary.total_files, 0)
             self.assertEqual(summary.processed, 1)
 
-    def test_execute_organize_summary_generation(self):
+    def test_given_multiple_files_when_executing_organize_then_generates_correct_summary(self):
         """Test execute_organize() generates correct summary."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -603,7 +671,7 @@ class TestExecuteOrganize(unittest.TestCase):
 class TestHiddenFileHandling(unittest.TestCase):
     """Test cases for hidden file handling (Phase 9.3)."""
 
-    def test_hidden_files_excluded_by_default(self):
+    def test_given_hidden_files_and_default_context_when_executing_organize_then_excludes_hidden_files(self):
         """Test that hidden files are excluded by default (hidden=False)."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -637,7 +705,7 @@ class TestHiddenFileHandling(unittest.TestCase):
             self.assertEqual(summary.skipped, 1)  # Hidden file is skipped
             self.assertEqual(summary.processed, 1)  # Regular file processed
 
-    def test_hidden_files_included_with_flag(self):
+    def test_given_hidden_files_and_hidden_flag_when_executing_organize_then_includes_hidden_files(self):
         """Test that --hidden includes hidden files."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -673,7 +741,7 @@ class TestHiddenFileHandling(unittest.TestCase):
 class TestRecursiveBehavior(unittest.TestCase):
     """Test cases for recursive behavior (Phase 9.4)."""
 
-    def test_non_recursive_by_default(self):
+    def test_given_nested_files_and_default_context_when_executing_organize_then_scans_only_top_level(self):
         """Test that default behavior is non-recursive (recursive=False)."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -709,7 +777,7 @@ class TestRecursiveBehavior(unittest.TestCase):
             self.assertEqual(summary.total_files, 1)  # Only root file
             self.assertEqual(summary.processed, 1)
 
-    def test_recursive_enabled_scans_subdirectories(self):
+    def test_given_nested_files_and_recursive_flag_when_executing_organize_then_scans_subdirectories(self):
         """Test that --recursive enables subdirectory scanning."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -748,7 +816,7 @@ class TestRecursiveBehavior(unittest.TestCase):
 class TestBoundaryCheck(unittest.TestCase):
     """Test cases for boundary check (Phase 9.6) - path traversal protection."""
 
-    def test_source_outside_source_root_blocked(self):
+    def test_given_source_outside_source_root_when_moving_file_then_blocks_move(self):
         """Test that source file outside source_root is blocked."""
         from fx_bin.organize_functional import move_file_safe
 
@@ -777,7 +845,7 @@ class TestBoundaryCheck(unittest.TestCase):
             # Source file should still exist
             self.assertTrue(outside_file.exists())
 
-    def test_target_outside_output_root_blocked(self):
+    def test_given_target_outside_output_root_when_moving_file_then_blocks_move(self):
         """Test that target outside output_root is blocked."""
         from fx_bin.organize_functional import move_file_safe
 
@@ -806,7 +874,7 @@ class TestBoundaryCheck(unittest.TestCase):
             # Source file should still exist
             self.assertTrue(source_file.exists())
 
-    def test_custom_output_outside_source_allowed(self):
+    def test_given_custom_output_outside_source_when_moving_file_then_allows_move(self):
         """Test that custom output directory outside source is allowed (spec-supported)."""
         from fx_bin.organize_functional import move_file_safe
 
@@ -839,7 +907,7 @@ class TestBoundaryCheck(unittest.TestCase):
 class TestDirectoriesCreated(unittest.TestCase):
     """Test cases for directories_created tracking (Phase 9.7)."""
 
-    def test_directories_created_zero_in_dry_run(self):
+    def test_given_dry_run_context_when_executing_organize_then_directories_created_is_zero(self):
         """Test that directories_created is 0 in dry-run mode."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -869,7 +937,7 @@ class TestDirectoriesCreated(unittest.TestCase):
             # Verify no directories were created in dry-run
             self.assertEqual(summary.directories_created, 0)
 
-    def test_directories_created_counts_newly_created(self):
+    def test_given_non_dry_run_context_when_executing_organize_then_counts_newly_created_directories(self):
         """Test that directories_created counts only newly created directories."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -901,7 +969,7 @@ class TestDirectoriesCreated(unittest.TestCase):
             # Verify the file was actually moved
             self.assertFalse((source_dir / "photo.jpg").exists())
 
-    def test_directories_created_zero_when_preexisting(self):
+    def test_given_preexisting_directories_when_executing_organize_then_directories_created_is_zero(self):
         """Test that directories_created is 0 when directories already exist."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -943,7 +1011,7 @@ class TestDirectoriesCreated(unittest.TestCase):
 class TestDiskConflictDetection(unittest.TestCase):
     """Test cases for disk conflict detection (Phase 11.1)."""
 
-    def test_target_exists_detection(self):
+    def test_given_existing_target_and_skip_mode_when_moving_file_then_skips_and_preserves_both(self):
         """Test that move_file_safe detects when target file exists on disk."""
         from fx_bin.organize_functional import move_file_safe
         from fx_bin.organize import ConflictMode
@@ -981,7 +1049,7 @@ class TestDiskConflictDetection(unittest.TestCase):
             self.assertTrue(target.exists())
             self.assertEqual(target.read_text(), "existing content")
 
-    def test_overwrite_mode_replaces_existing_file(self):
+    def test_given_existing_target_and_overwrite_mode_when_moving_file_then_replaces_atomically(self):
         """Test that OVERWRITE mode replaces existing files atomically."""
         from fx_bin.organize_functional import move_file_safe
         from fx_bin.organize import ConflictMode
@@ -1018,7 +1086,7 @@ class TestDiskConflictDetection(unittest.TestCase):
             self.assertTrue(target.exists())
             self.assertEqual(target.read_text(), "new content")
 
-    def test_ask_mode_skips_existing_files(self):
+    def test_given_existing_target_and_ask_mode_when_moving_file_then_skips_for_cli_prompt(self):
         """Test that ASK mode skips existing files (handled at CLI level)."""
         from fx_bin.organize_functional import move_file_safe
         from fx_bin.organize import ConflictMode
@@ -1059,7 +1127,7 @@ class TestDiskConflictDetection(unittest.TestCase):
 class TestCleanEmptyDirectories(unittest.TestCase):
     """Test cases for --clean-empty functionality (Phase 12.1)."""
 
-    def test_clean_empty_removes_empty_directories(self):
+    def test_given_clean_empty_flag_when_executing_organize_then_removes_empty_directories(self):
         """Test that --clean-empty removes empty source directories."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
@@ -1095,7 +1163,7 @@ class TestCleanEmptyDirectories(unittest.TestCase):
             # Verify empty directory was removed
             self.assertFalse(nested_dir.exists())
 
-    def test_clean_empty_skips_dry_run(self):
+    def test_given_clean_empty_flag_and_dry_run_when_executing_organize_then_skips_cleanup(self):
         """Test that --clean-empty doesn't remove directories in dry-run mode."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)

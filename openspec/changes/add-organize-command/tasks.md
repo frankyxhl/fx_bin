@@ -10,14 +10,12 @@ Each task follows RED-GREEN-REFACTOR:
 tests/
 ├── unit/
 │   └── test_organize.py          # Pure function tests
-├── integration/
-│   ├── test_organize_io.py       # IO layer tests
-│   └── test_organize_cli.py      # CLI integration tests
-└── security/
-    └── test_organize_security.py # Security-focused tests
+└── integration/
+    ├── test_organize_io.py       # IO layer and security-focused tests
+    └── test_organize_cli.py      # CLI integration tests
 ```
 
-**Coverage Target:** 95%+ (project standard)
+**Coverage Target:** Minimum 80% required (per openspec/project.md)
 
 **Code Reuse:** Leverage existing utilities:
 - `fx_bin/common.py:get_multi_ext()` - multi-part extension handling
@@ -541,23 +539,23 @@ tests/
 **Goal:** Fix documentation paths and test standards
 
 ### 13.1 Fix Documentation Paths
-- [ ] 13.1.1 **RED**: Verify test file exists at documented path
-- [ ] 13.1.2 **GREEN**: Update proposal.md test path from test_organize_security.py to test_organize_io.py
-- [ ] 13.1.3 **GREEN**: Update tasks.md test path from test_organize_security.py to test_organize_io.py
+- [x] 13.1.1 **RED**: Verify test file exists at documented path
+- [x] 13.1.2 **GREEN**: Update proposal.md test path from test_organize_security.py to test_organize_io.py
+- [x] 13.1.3 **GREEN**: Update tasks.md test path from test_organize_security.py to test_organize_io.py
 
 ### 13.2 Fix Coverage Target Description
-- [ ] 13.2.1 **GREEN**: Change tasks.md coverage description to match project.md
-- [ ] 13.2.2 **GREEN**: Clarify 80% is minimum, 95% is target if different
+- [x] 13.2.1 **GREEN**: Change tasks.md coverage description to match project.md
+- [x] 13.2.2 **GREEN**: Clarify 80% is minimum (verified project.md only specifies 80%)
 
 ### 13.3 Fix Test Naming
-- [ ] 13.3.1 **GREEN**: Rename tests to follow test_given_X_when_Y_then_Z pattern
-- [ ] 13.3.2 **GREEN**: Apply to tests/unit/test_organize.py
-- [ ] 13.3.3 **GREEN**: Apply to tests/integration/test_organize_io.py
+- [x] 13.3.1 **GREEN**: Rename tests to follow test_given_X_when_Y_then_Z pattern
+- [x] 13.3.2 **GREEN**: Apply to tests/unit/test_organize.py
+- [x] 13.3.3 **GREEN**: Apply to tests/integration/test_organize_io.py
 
 ### 13.4 Strengthen ctime Test
-- [ ] 13.4.1 **RED**: Rewrite test to verify behavior (not code inspection)
-- [ ] 13.4.2 **GREEN**: Create files and verify birthtime/mtime usage
-- [ ] 13.4.3 **GREEN**: Verify st_ctime is never used in timestamp calculation
+- [x] 13.4.1 **RED**: Rewrite test to verify behavior (not code inspection)
+- [x] 13.4.2 **GREEN**: Create files and verify birthtime/mtime usage
+- [x] 13.4.3 **GREEN**: Verify st_ctime is never used in timestamp calculation
 
 ### 13.5 Commit
 - [ ] 13.5.1 Commit: "Phase 13: Documentation and test standards fixes"
