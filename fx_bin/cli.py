@@ -732,6 +732,60 @@ def organize(
         else:
             click.echo(f"Organizing files from {source}")
 
+    # For non-dry-run mode, show preview and get confirmation
+    if not dry_run and not yes:
+        # First, scan to get file count for confirmation
+        from .organize_functional import scan_files
+        scan_result = scan_files(
+            source,
+            recursive=context.recursive,
+            follow_symlinks=False,
+            max_depth=100,
+            output_dir=context.output_dir,
+        )
+
+        try:
+            files = unsafe_ioresult_unwrap(scan_result)
+            file_count = len(files)
+
+            # Apply filters to get actual count
+            from .organize import generate_organize_plan
+            from .organize_functional import get_file_date
+
+            dates = {}
+            for f in files:
+                date_result = get_file_date(f, context.date_source)
+                try:
+                    dates[f] = unsafe_ioresult_unwrap(date_result)
+                except Exception:
+                    pass
+
+            plan = generate_organize_plan(files, dates, context)
+            actual_count = sum(1 for p in plan if p.action == "moved")
+
+            click.echo(f"\nWill organize {actual_count} file(s) from {source}")
+            click.echo(f"Output directory: {context.output_dir}")
+
+            # Check for TTY and prompt
+            if sys.stdin.isatty():
+                if not click.confirm("\nProceed?", default=False):
+                    click.echo("Cancelled.")
+                    return 0
+        except Exception:
+            # If preview fails, still ask for confirmation
+            click.echo(f"\nOrganizing files from {source}")
+            click.echo(f"Output directory: {context.output_dir}")
+            if sys.stdin.isatty():
+                if not click.confirm("\nProceed?", default=False):
+                    click.echo("Cancelled.")
+                    return 0
+    elif not dry_run and yes:
+        # --yes flag: auto-confirm
+        click.echo(f"Organizing files from {source} to {context.output_dir}...")
+    elif not sys.stdin.isatty():
+        # Non-TTY stdin: auto-confirm (piped input)
+        pass
+
     # Execute organization
     result = execute_organize(source, context)
 
