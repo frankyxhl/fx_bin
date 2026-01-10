@@ -692,8 +692,10 @@ def organize(
       --on-conflict rename     Auto-rename with _1, _2 suffix (default)
       --on-conflict skip       Skip conflicting files
       --on-conflict overwrite  Overwrite existing files
-      --on-conflict ask        Prompt for conflicts (uses rename for intra-run)
+      --on-conflict ask        Prompt for scan-time conflicts (runtime conflicts skip)
     """
+    from loguru import logger as loguru_logger
+
     from .organize_functional import execute_organize
     from .organize import (
         DateSource,
@@ -701,6 +703,21 @@ def organize(
         OrganizeContext,
     )
     from .lib import unsafe_ioresult_unwrap, unsafe_ioresult_to_result
+
+    # Configure loguru based on quiet/verbose flags (Decision 2.5)
+    # This ensures logger.warning() respects --quiet and --verbose
+    if quiet:
+        # Quiet mode: only ERROR and above
+        loguru_logger.remove()
+        loguru_logger.add(sys.stderr, level="ERROR")
+    elif verbose:
+        # Verbose mode: show everything (DEBUG and above)
+        loguru_logger.remove()
+        loguru_logger.add(sys.stderr, level="DEBUG")
+    else:
+        # Default mode: INFO and above (shows WARNING)
+        loguru_logger.remove()
+        loguru_logger.add(sys.stderr, level="INFO")
 
     # Set default output directory
     if output is None:

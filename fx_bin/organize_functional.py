@@ -439,9 +439,14 @@ def move_file_safe(
                             raise
                     raise
             elif conflict_mode == ConflictMode.ASK:
-                # Ask: prompt user (not implemented in this function,
-                # handled at CLI level)
-                # For now, treat as skip
+                # Ask: runtime conflict (TOCTOU - time-of-check-time-of-use)
+                # This occurs when a conflict appears between scan and execution phases
+                # Per Decision 3: Document ASK only handles scan-time conflicts,
+                # runtime conflicts skip with warning log
+                L.warning(
+                    f"Runtime conflict detected: {real_target} already exists. "
+                    "Skipping (ASK mode only handles scan-time conflicts)."
+                )
                 return IOResult.from_value((None, False))
             else:  # RENAME
                 # Rename: add suffix to avoid conflict

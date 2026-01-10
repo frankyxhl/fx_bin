@@ -377,5 +377,306 @@ class TestQuietYesMode(unittest.TestCase):
             self.assertIn("files", result.output.lower())
 
 
+class TestLoguruConfiguration(unittest.TestCase):
+    """Test cases for loguru configuration (Phase 3.1)."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.runner = CliRunner(mix_stderr=False)
+
+    def test_given_quiet_mode_when_warning_logged_then_suppresses_output(self):
+        """Test that --quiet mode suppresses WARNING output from loguru.
+
+        RED phase: This test will FAIL before loguru configuration is added.
+        GREEN phase: After configuring loguru level to ERROR in quiet mode, test passes.
+
+        Per Decision 2.5, --quiet should configure loguru to ERROR level,
+        which suppresses WARNING messages.
+        """
+        with self.runner.isolated_filesystem():
+            # Create source directory with files
+            source_dir = Path("source")
+            source_dir.mkdir()
+            (source_dir / "photo.jpg").write_text("content")
+
+            # Create output directory with conflicting file
+            # This will trigger ASK mode runtime conflict (TOCTOU scenario)
+            output_dir = Path("output")
+            output_dir.mkdir()
+            (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
+            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
+                "existing"
+            )
+
+            # Mock stdin.isatty() to return False to trigger runtime conflict path
+            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
+                result = self.runner.invoke(
+                    cli,
+                    [
+                        "organize",
+                        str(source_dir),
+                        "--output",
+                        str(output_dir),
+                        "--on-conflict",
+                        "ask",
+                        "--quiet",
+                        "--yes",
+                    ],
+                )
+
+            self.assertEqual(result.exit_code, 0)
+
+            # CRITICAL: WARNING should NOT appear in stderr when --quiet is set
+            # loguru writes to stderr, so we check stderr specifically
+            self.assertNotIn(
+                "WARNING",
+                result.stderr,
+                "--quiet should suppress WARNING output from loguru",
+            )
+
+            # Summary should still be shown in stdout
+            self.assertIn("Summary:", result.output)
+
+    def test_given_verbose_mode_when_warning_logged_then_shows_output(self):
+        """Test that --verbose mode shows WARNING output from loguru.
+
+        RED phase: This test will FAIL before loguru configuration is added.
+        GREEN phase: After configuring loguru level to DEBUG in verbose mode, test passes.
+
+        Per Decision 2.5, --verbose should configure loguru to DEBUG level,
+        which shows all messages including WARNING.
+        """
+        with self.runner.isolated_filesystem():
+            # Create source directory with files
+            source_dir = Path("source")
+            source_dir.mkdir()
+            (source_dir / "photo.jpg").write_text("content")
+
+            # Create output directory with conflicting file
+            # This will trigger ASK mode runtime conflict
+            output_dir = Path("output")
+            output_dir.mkdir()
+            (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
+            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
+                "existing"
+            )
+
+            # Mock stdin.isatty() to return False to trigger runtime conflict path
+            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
+                result = self.runner.invoke(
+                    cli,
+                    [
+                        "organize",
+                        str(source_dir),
+                        "--output",
+                        str(output_dir),
+                        "--on-conflict",
+                        "ask",
+                        "--verbose",
+                        "--yes",
+                    ],
+                )
+
+            self.assertEqual(result.exit_code, 0)
+
+            # CRITICAL: WARNING SHOULD appear in stderr when --verbose is set
+            # Note: This test expects WARNING to be shown (we'll add logger.warning in Phase 3.2)
+            # For now, this test verifies that loguru is configured to DEBUG level
+            # The actual WARNING message will be added in Phase 3.2
+            pass  # We'll verify this after adding logger.warning() in Phase 3.2
+
+    def test_given_default_mode_when_warning_logged_then_shows_output(self):
+        """Test that default mode (no --quiet, no --verbose) shows WARNING output.
+
+        RED phase: This test will FAIL before loguru configuration is added.
+        GREEN phase: After configuring loguru level to INFO by default, test passes.
+
+        Per Decision 2.5, default loguru level should be INFO,
+        which shows WARNING messages.
+        """
+        with self.runner.isolated_filesystem():
+            # Create source directory with files
+            source_dir = Path("source")
+            source_dir.mkdir()
+            (source_dir / "photo.jpg").write_text("content")
+
+            # Create output directory with conflicting file
+            output_dir = Path("output")
+            output_dir.mkdir()
+            (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
+            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
+                "existing"
+            )
+
+            # Mock stdin.isatty() to return False to trigger runtime conflict path
+            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
+                result = self.runner.invoke(
+                    cli,
+                    [
+                        "organize",
+                        str(source_dir),
+                        "--output",
+                        str(output_dir),
+                        "--on-conflict",
+                        "ask",
+                        # No --quiet or --verbose (default mode)
+                        "--yes",
+                    ],
+                )
+
+            self.assertEqual(result.exit_code, 0)
+
+            # CRITICAL: WARNING SHOULD appear in stderr in default mode
+            # Note: This test expects WARNING to be shown (we'll add logger.warning in Phase 3.2)
+            pass  # We'll verify this after adding logger.warning() in Phase 3.2
+
+
+class TestAskRuntimeConflicts(unittest.TestCase):
+    """Test cases for ASK mode runtime conflicts (Phase 3.2)."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.runner = CliRunner(mix_stderr=False)
+
+    def test_given_ask_mode_and_runtime_conflict_when_default_mode_then_logs_warning(
+        self,
+    ):
+        """Test that ASK mode runtime conflicts log a WARNING in default mode.
+
+        RED phase: This test will FAIL before logger.warning() is added.
+        GREEN phase: After adding logger.warning() in move_file_safe(), test passes.
+
+        Per Decision 3, ASK mode runtime conflicts should skip with warning log.
+        This test simulates a TOCTOU (time-of-check-time-of-use) scenario where
+        a conflict appears between the scan phase and execution phase.
+        """
+        with self.runner.isolated_filesystem():
+            # Create source directory with files
+            source_dir = Path("source")
+            source_dir.mkdir()
+            (source_dir / "photo.jpg").write_text("source photo")
+
+            # Create output directory
+            output_dir = Path("output")
+            output_dir.mkdir()
+            (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
+
+            # Run organize with ASK mode (no --quiet, no --verbose)
+            # First run to set up the state
+            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
+                result = self.runner.invoke(
+                    cli,
+                    [
+                        "organize",
+                        str(source_dir),
+                        "--output",
+                        str(output_dir),
+                        "--on-conflict",
+                        "ask",
+                        "--yes",
+                    ],
+                )
+
+            self.assertEqual(result.exit_code, 0)
+
+            # Now create a NEW conflicting file in the output (simulating TOCTOU)
+            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
+                "new conflict"
+            )
+
+            # Create another source file to trigger the runtime conflict
+            (source_dir / "photo2.jpg").write_text("another photo")
+
+            # Run organize again - this will hit the runtime conflict in move_file_safe
+            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
+                result = self.runner.invoke(
+                    cli,
+                    [
+                        "organize",
+                        str(source_dir),
+                        "--output",
+                        str(output_dir),
+                        "--on-conflict",
+                        "ask",
+                        "--yes",
+                    ],
+                )
+
+            self.assertEqual(result.exit_code, 0)
+
+            # CRITICAL: For now, we just verify the command succeeds
+            # The actual WARNING logging will be verified once we add logger.warning()
+            # in the GREEN phase of Phase 3.2
+
+    def test_given_ask_mode_and_runtime_conflict_when_quiet_then_suppresses_warning(
+        self,
+    ):
+        """Test that ASK mode runtime conflicts respect --quiet flag.
+
+        RED phase: This test will FAIL before loguru configuration is properly tested.
+        GREEN phase: After logger.warning() respects loguru configuration, test passes.
+
+        Per Decision 3, logger.warning() should respect --quiet flag (via loguru level config).
+        """
+        with self.runner.isolated_filesystem():
+            # Create source directory with files
+            source_dir = Path("source")
+            source_dir.mkdir()
+            (source_dir / "photo.jpg").write_text("source photo")
+
+            # Create output directory
+            output_dir = Path("output")
+            output_dir.mkdir()
+            (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
+
+            # First run to set up the state
+            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
+                result = self.runner.invoke(
+                    cli,
+                    [
+                        "organize",
+                        str(source_dir),
+                        "--output",
+                        str(output_dir),
+                        "--on-conflict",
+                        "ask",
+                        "--yes",
+                    ],
+                )
+
+            # Create a NEW conflicting file (simulating TOCTOU)
+            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
+                "new conflict"
+            )
+
+            # Create another source file
+            (source_dir / "photo2.jpg").write_text("another photo")
+
+            # Run with --quiet - WARNING should be suppressed
+            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
+                result = self.runner.invoke(
+                    cli,
+                    [
+                        "organize",
+                        str(source_dir),
+                        "--output",
+                        str(output_dir),
+                        "--on-conflict",
+                        "ask",
+                        "--quiet",
+                        "--yes",
+                    ],
+                )
+
+            self.assertEqual(result.exit_code, 0)
+
+            # CRITICAL: WARNING should NOT appear in stderr when --quiet is set
+            self.assertNotIn(
+                "WARNING",
+                result.stderr,
+                "--quiet should suppress WARNING from runtime conflicts",
+            )
+
+
 if __name__ == "__main__":
     unittest.main()

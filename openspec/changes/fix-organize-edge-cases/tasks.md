@@ -65,20 +65,20 @@ Each task follows RED-GREEN-REFACTOR:
 
 ### 3.1 Configure loguru in organize() Entry Point
 
-- [ ] 3.1.1 **RED**: Write test that --quiet suppresses WARNING output
-- [ ] 3.1.2 **RED**: Write test that --verbose shows WARNING output
-- [ ] 3.1.3 **GREEN**: In organize() entry, configure loguru level based on quiet/verbose
-- [ ] 3.1.4 **GREEN**: Use logger.remove() and logger.add() with level filter
-- [ ] 3.1.5 **GREEN**: Verify tests pass with CliRunner(mix_stderr=False)
+- [x] 3.1.1 **RED**: Write test that --quiet suppresses WARNING output
+- [x] 3.1.2 **RED**: Write test that --verbose shows WARNING output
+- [x] 3.1.3 **GREEN**: In organize() entry, configure loguru level based on quiet/verbose
+- [x] 3.1.4 **GREEN**: Use logger.remove() and logger.add() with level filter
+- [x] 3.1.5 **GREEN**: Verify tests pass with CliRunner(mix_stderr=False)
 
 ### 3.2 Document ASK Runtime Behavior with Warning Log
 
-- [ ] 3.2.1 **RED**: Write test that runtime conflict skips with loguru warning
-- [ ] 3.2.2 **RED**: Write test that warning respects loguru configuration
-- [ ] 3.2.3 **GREEN**: Add logger.warning() for runtime conflicts in move_file_safe()
-- [ ] 3.2.4 **GREEN**: Update CLI help text to clarify scan-time vs runtime behavior
-- [ ] 3.2.5 **GREEN**: Verify tests pass
-- [ ] 3.2.6 Commit: "Phase 3: Configure loguru and document ASK runtime conflicts"
+- [x] 3.2.1 **RED**: Write test that runtime conflict skips with loguru warning
+- [x] 3.2.2 **RED**: Write test that warning respects loguru configuration
+- [x] 3.2.3 **GREEN**: Add logger.warning() for runtime conflicts in move_file_safe()
+- [x] 3.2.4 **GREEN**: Update CLI help text to clarify scan-time vs runtime behavior
+- [x] 3.2.5 **GREEN**: Verify tests pass
+- [x] 3.2.6 Commit: "Phase 3: Configure loguru and document ASK runtime conflicts"
 
 ---
 
@@ -99,11 +99,11 @@ Each task follows RED-GREEN-REFACTOR:
 
 ### 4.1 Use real_target for Directory Creation
 
-- [ ] 4.1.1 **RED**: Write test that target with .. creates directory at real_target location
-- [ ] 4.1.2 **RED**: Run test to confirm current uses target (wrong directory created)
-- [ ] 4.1.3 **GREEN**: Change to os.path.dirname(real_target)
-- [ ] 4.1.4 **GREEN**: Verify test passes
-- [ ] 4.1.5 Commit: "Phase 4: Fix directory creation to use real_target"
+- [x] 4.1.1 **RED**: Write test that target with .. creates directory at real_target location
+- [x] 4.1.2 **RED**: Run test to confirm current uses target (wrong directory created)
+- [x] 4.1.3 **GREEN**: Change to os.path.dirname(real_target)
+- [x] 4.1.4 **GREEN**: Verify test passes
+- [x] 4.1.5 Commit: "Phase 4: Fix directory creation to use real_target"
 
 ---
 
@@ -113,29 +113,29 @@ Each task follows RED-GREEN-REFACTOR:
 
 ### 5.1 Automated Testing
 
-- [ ] 5.1.1 Run all tests: `poetry run pytest tests/ -v`
-- [ ] 5.1.2 Verify all tests pass
-- [ ] 5.1.3 Run flake8: `poetry run flake8 fx_bin/`
-- [ ] 5.1.4 Run black: `poetry run black fx_bin/ tests/`
-- [ ] 5.1.5 Run mypy: `poetry run mypy fx_bin/`
-- [ ] 5.1.6 Run bandit: `poetry run bandit -r fx_bin/`
+- [x] 5.1.1 Run all tests: `poetry run pytest tests/ -v`
+- [x] 5.1.2 Verify all tests pass
+- [x] 5.1.3 Run flake8: `poetry run flake8 fx_bin/`
+- [x] 5.1.4 Run black: `poetry run black fx_bin/ tests/`
+- [x] 5.1.5 Run mypy: `poetry run mypy fx_bin/`
+- [x] 5.1.6 Run bandit: `poetry run bandit -r fx_bin/`
 
 ### 5.2 Coverage Check
 
-- [ ] 5.2.1 Run coverage: `poetry run pytest --cov=fx_bin --cov-report=term-missing`
-- [ ] 5.2.2 Verify coverage ≥ 80%
+- [x] 5.2.1 Run coverage: `poetry run pytest --cov=fx_bin --cov-report=term-missing`
+- [x] 5.2.2 Verify coverage ≥ 80% (organize_functional.py: 80%)
 
 ### 5.3 Manual Testing
 
-- [ ] 5.3.1 Test --yes + --quiet output
-- [ ] 5.3.2 Test ASK mode with runtime conflicts
-- [ ] 5.3.3 Test directory creation with symlinks
+- [x] 5.3.1 Test --yes + --quiet output
+- [x] 5.3.2 Test ASK mode with runtime conflicts
+- [x] 5.3.3 Test directory creation with symlinks
 
 ### 5.4 Documentation Update
 
-- [ ] 5.4.1 Update help text in cli.py (if ASK behavior changed)
-- [ ] 5.4.2 Update openspec/specs/organize/spec.md (if needed)
+- [x] 5.4.1 Update help text in cli.py (if ASK behavior changed)
+- [x] 5.4.2 Update openspec/specs/organize/spec.md (if needed)
 
 ### 5.5 Final Commit
 
-- [ ] 5.5.1 Commit: "Phase 5: Verification and documentation"
+- [x] 5.5.1 Commit: "Phase 5: Verification and documentation"

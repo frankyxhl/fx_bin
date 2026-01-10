@@ -1797,12 +1797,17 @@ class TestFDLeakInEXDEVHandling(unittest.TestCase):
                 # We're testing that os.close() was called with the fd from mkstemp
 
                 # Verify that tempfile.mkstemp was called
-                self.assertIsNotNone(mkstemp_fd[0], "tempfile.mkstemp should have been called")
+                self.assertIsNotNone(
+                    mkstemp_fd[0], "tempfile.mkstemp should have been called"
+                )
 
                 # Verify that os.close() was called with the fd from mkstemp
                 # This is the KEY assertion - the fd MUST be closed
-                self.assertIn(mkstemp_fd[0], close_calls,
-                    f"File descriptor {mkstemp_fd[0]} from tempfile.mkstemp() must be closed to prevent leak")
+                self.assertIn(
+                    mkstemp_fd[0],
+                    close_calls,
+                    f"File descriptor {mkstemp_fd[0]} from tempfile.mkstemp() must be closed to prevent leak",
+                )
 
     def test_given_exdev_error_in_overwrite_mode_without_target_when_moving_file_then_closes_tempfile_fd(
         self,
@@ -1876,11 +1881,16 @@ class TestFDLeakInEXDEVHandling(unittest.TestCase):
                 )
 
                 # Verify that tempfile.mkstemp was called
-                self.assertIsNotNone(mkstemp_fd[0], "tempfile.mkstemp should have been called")
+                self.assertIsNotNone(
+                    mkstemp_fd[0], "tempfile.mkstemp should have been called"
+                )
 
                 # Verify that os.close() was called with the fd from mkstemp
-                self.assertIn(mkstemp_fd[0], close_calls,
-                    f"File descriptor {mkstemp_fd[0]} from tempfile.mkstemp() must be closed to prevent leak")
+                self.assertIn(
+                    mkstemp_fd[0],
+                    close_calls,
+                    f"File descriptor {mkstemp_fd[0]} from tempfile.mkstemp() must be closed to prevent leak",
+                )
 
 
 class TestCrossDeviceOutputDir(unittest.TestCase):
@@ -2016,6 +2026,7 @@ class TestDirectoryCreationWithRealTarget(unittest.TestCase):
             # Verify target file exists at real_target location
             # os.path.realpath resolves ".." to actual path
             import os
+
             real_target_path = os.path.realpath(str(target))
             self.assertTrue(Path(real_target_path).exists())
             self.assertEqual(Path(real_target_path).read_text(), "content")
@@ -2027,7 +2038,7 @@ class TestDirectoryCreationWithRealTarget(unittest.TestCase):
             self.assertFalse(
                 subdir_path.exists(),
                 f"Directory {subdir_path} should NOT exist. "
-                f"real_target resolves to {real_target_path}, so only output/ should be created."
+                f"real_target resolves to {real_target_path}, so only output/ should be created.",
             )
 
 
