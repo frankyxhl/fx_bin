@@ -112,11 +112,11 @@ Each task follows RED-GREEN-REFACTOR:
 - 捕获 ValueError，返回 False（不跳过）
 
 ### 5.1 Handle ValueError in _should_skip_entry
-- [ ] 5.1.1 **RED**: Write test that cross-device output_dir doesn't crash
-- [ ] 5.1.2 **GREEN**: Wrap os.path.commonpath() in try-except ValueError
-- [ ] 5.1.3 **GREEN**: Return False on ValueError (don't skip)
-- [ ] 5.1.4 **GREEN**: Verify test passes
-- [ ] 5.1.5 Commit: "Phase 5: Handle ValueError for cross-device paths"
+- [x] 5.1.1 **RED**: Write test that cross-device output_dir doesn't crash
+- [x] 5.1.2 **GREEN**: Wrap os.path.commonpath() in try-except ValueError
+- [x] 5.1.3 **GREEN**: Return False on ValueError (don't skip)
+- [x] 5.1.4 **GREEN**: Verify test passes
+- [x] 5.1.5 Commit: "Phase 5: Handle ValueError for cross-device paths"
 
 ---
 

@@ -1702,6 +1702,86 @@ class TestOverwriteModeAtomicReplace(unittest.TestCase):
                 self.assertEqual(target.read_text(), "new content")
 
 
+class TestCrossDeviceOutputDir(unittest.TestCase):
+    """Test cases for cross-device output_dir handling (Phase 5.1)."""
+
+    def test_given_cross_device_output_dir_when_scanning_files_then_does_not_crash(
+        self,
+    ):
+        """Test that scan_files handles cross-device output_dir without crashing.
+
+        On Windows, os.path.commonpath() raises ValueError when paths are on
+        different drives (e.g., C:\\ and D:\\). On Unix, it can also raise ValueError
+        for completely unrelated paths. This test verifies that _should_skip_entry
+        catches ValueError and returns False (don't skip) instead of crashing.
+        """
+        from unittest.mock import patch
+        import os.path as os_path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source directory
+            source_dir = tmpdir_path / "source"
+            source_dir.mkdir()
+            (source_dir / "file1.jpg").write_text("content1")
+            (source_dir / "file2.txt").write_text("content2")
+
+            # Create a fake "cross-device" output path
+            # We'll mock os.path.commonpath to raise ValueError
+            fake_output_dir = "/fake/cross/device/output"
+
+            # Mock os.path.commonpath to simulate cross-device scenario
+            original_commonpath = os_path.commonpath
+
+            def mock_commonpath(paths):
+                # Raise ValueError for any path comparison with our fake output dir
+                if any(fake_output_dir in p for p in paths):
+                    raise ValueError("Paths don't have the same drive")
+                return original_commonpath(paths)
+
+            with patch("os.path.commonpath", side_effect=mock_commonpath):
+                # This should NOT crash, even with cross-device output_dir
+                result = scan_files(
+                    str(source_dir),
+                    recursive=True,
+                    output_dir=fake_output_dir,
+                )
+
+                inner_result = unsafe_ioresult_to_result(result)
+                self.assertTrue(inner_result)
+
+                # Files should still be scanned (not skipped)
+                files = unsafe_ioresult_unwrap(result)
+                self.assertEqual(len(files), 2)
+
+    def test_given_empty_output_dir_when_scanning_files_then_does_not_skip_entries(
+        self,
+    ):
+        """Test that scan_files with empty output_dir doesn't skip any entries."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source directory with files
+            source_dir = tmpdir_path / "source"
+            source_dir.mkdir()
+            (source_dir / "file1.jpg").write_text("content1")
+
+            # Scan with empty output_dir
+            result = scan_files(
+                str(source_dir),
+                recursive=True,
+                output_dir="",  # Empty output_dir
+            )
+
+            inner_result = unsafe_ioresult_to_result(result)
+            self.assertTrue(inner_result)
+
+            files = unsafe_ioresult_unwrap(result)
+            # File should be found (not skipped)
+            self.assertEqual(len(files), 1)
+
+
 class TestRenameModeDiskConflictIntegration(unittest.TestCase):
     """Integration tests for RENAME mode disk conflict handling (Phase 1.2)."""
 

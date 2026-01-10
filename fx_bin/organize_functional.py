@@ -127,10 +127,22 @@ def resolve_disk_conflict_rename(target_path: str) -> str:
 
 
 def _should_skip_entry(entry_path: str, output_dir: str) -> bool:
-    """Check if entry should be skipped (output directory)."""
-    return (
-        bool(output_dir) and os.path.commonpath([entry_path, output_dir]) == output_dir
-    )
+    """Check if entry should be skipped (output directory).
+
+    Returns True if entry_path is within output_dir (should skip).
+    Returns False if output_dir is empty or if entry is outside output_dir.
+
+    Handles ValueError from os.path.commonpath() which occurs when:
+    - Paths are on different drives (Windows: C:\\ vs D:\\)
+    - Paths are completely unrelated (Unix)
+    """
+    if not output_dir:
+        return False
+    try:
+        return os.path.commonpath([entry_path, output_dir]) == output_dir
+    except ValueError:
+        # Paths on different drives (Windows) or otherwise incompatible
+        return False  # Don't skip, let boundary check handle it
 
 
 def _process_entry(
