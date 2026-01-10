@@ -359,13 +359,13 @@ def _handle_cross_device_move(
         os.replace(temp_path, target)
         os.unlink(source)
         return IOResult.from_value((None, dir_created))
-    except Exception:
+    except Exception as e:
         try:
             os.unlink(temp_path)
         except OSError:
             pass
         return IOResult.from_failure(
-            MoveError(f"Cannot move {source} to {target}: cross-device link failed")
+            MoveError(f"Cannot move {source} to {target}: cross-device link failed: {e}")
         )
 
 
