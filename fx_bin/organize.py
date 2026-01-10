@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from fnmatch import fnmatchcase
-from typing import Dict, List, Optional, Sequence, Set, Tuple
+from typing import Dict, List, Sequence, Set
 
 
 class DateSource(Enum):
@@ -95,7 +95,12 @@ class OrganizeSummary:
     dry_run: bool
 
 
-def get_target_path(output_dir: str, filename: str, file_date: datetime, depth: int) -> str:
+def get_target_path(
+    output_dir: str,
+    filename: str,
+    file_date: datetime,
+    depth: int,
+) -> str:
     """Calculate target path for organizing a file into date-based directories.
 
     Pure function that computes the target path based on the file's date and
@@ -299,7 +304,9 @@ def generate_organize_plan(
     Examples:
         >>> files = ["/src/photo.jpg"]
         >>> dates = {"/src/photo.jpg": datetime(2026, 1, 10)}
-        >>> ctx = OrganizeContext(DateSource.CREATED, 3, ConflictMode.RENAME, "/output", False)
+        >>> ctx = OrganizeContext(
+        ...     DateSource.CREATED, 3, ConflictMode.RENAME, "/output", False
+        ... )
         >>> plan = generate_organize_plan(files, dates, ctx)
         >>> len(plan)
         1

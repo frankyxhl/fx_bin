@@ -1,9 +1,8 @@
 """Unit tests for organize module - pure functions only."""
 
 import unittest
-from enum import Enum
 
-from fx_bin.organize import DateSource, ConflictMode
+from fx_bin.organize import DateSource, ConflictMode, OrganizeContext
 
 
 class TestDateSource(unittest.TestCase):
@@ -12,12 +11,12 @@ class TestDateSource(unittest.TestCase):
     def test_datesource_enum_exists(self):
         """Test that DateSource enum is defined and has expected values."""
         # Test enum values exist
-        self.assertTrue(hasattr(DateSource, 'CREATED'))
-        self.assertTrue(hasattr(DateSource, 'MODIFIED'))
+        self.assertTrue(hasattr(DateSource, "CREATED"))
+        self.assertTrue(hasattr(DateSource, "MODIFIED"))
 
         # Test enum values are accessible
-        self.assertEqual(DateSource.CREATED.value, 'created')
-        self.assertEqual(DateSource.MODIFIED.value, 'modified')
+        self.assertEqual(DateSource.CREATED.value, "created")
+        self.assertEqual(DateSource.MODIFIED.value, "modified")
 
 
 class TestConflictMode(unittest.TestCase):
@@ -26,16 +25,16 @@ class TestConflictMode(unittest.TestCase):
     def test_conflictmode_enum_exists(self):
         """Test that ConflictMode enum is defined and has expected values."""
         # Test enum values exist
-        self.assertTrue(hasattr(ConflictMode, 'RENAME'))
-        self.assertTrue(hasattr(ConflictMode, 'SKIP'))
-        self.assertTrue(hasattr(ConflictMode, 'OVERWRITE'))
-        self.assertTrue(hasattr(ConflictMode, 'ASK'))
+        self.assertTrue(hasattr(ConflictMode, "RENAME"))
+        self.assertTrue(hasattr(ConflictMode, "SKIP"))
+        self.assertTrue(hasattr(ConflictMode, "OVERWRITE"))
+        self.assertTrue(hasattr(ConflictMode, "ASK"))
 
         # Test enum values are accessible
-        self.assertEqual(ConflictMode.RENAME.value, 'rename')
-        self.assertEqual(ConflictMode.SKIP.value, 'skip')
-        self.assertEqual(ConflictMode.OVERWRITE.value, 'overwrite')
-        self.assertEqual(ConflictMode.ASK.value, 'ask')
+        self.assertEqual(ConflictMode.RENAME.value, "rename")
+        self.assertEqual(ConflictMode.SKIP.value, "skip")
+        self.assertEqual(ConflictMode.OVERWRITE.value, "overwrite")
+        self.assertEqual(ConflictMode.ASK.value, "ask")
 
 
 class TestOrganizeContext(unittest.TestCase):
@@ -349,6 +348,164 @@ class TestShouldProcessFile(unittest.TestCase):
         # Include all jpg, but exclude hidden
         self.assertTrue(should_process_file("photo.jpg", ("*.jpg",), (".*")))
         self.assertFalse(should_process_file(".hidden.jpg", ("*.jpg",), (".*")))
+
+
+class TestResolveConflictRename(unittest.TestCase):
+    """Test cases for resolve_conflict_rename() function."""
+
+    def test_resolve_conflict_rename_no_conflict(self):
+        """Test that non-conflicting path is returned unchanged."""
+        from fx_bin.organize import resolve_conflict_rename
+
+        allocated = {"/other/path.jpg"}
+        result = resolve_conflict_rename("/output/photo.jpg", allocated)
+        self.assertEqual(result, "/output/photo.jpg")
+
+    def test_resolve_conflict_rename_basic_conflict(self):
+        """Test basic conflict resolution with _1 suffix."""
+        from fx_bin.organize import resolve_conflict_rename
+
+        allocated = {"/output/photo.jpg"}
+        result = resolve_conflict_rename("/output/photo.jpg", allocated)
+        self.assertEqual(result, "/output/photo_1.jpg")
+
+    def test_resolve_conflict_rename_incrementing(self):
+        """Test incrementing suffix for multiple conflicts."""
+        from fx_bin.organize import resolve_conflict_rename
+
+        allocated = {"/output/photo.jpg", "/output/photo_1.jpg", "/output/photo_2.jpg"}
+        result = resolve_conflict_rename("/output/photo.jpg", allocated)
+        self.assertEqual(result, "/output/photo_3.jpg")
+
+    def test_resolve_conflict_rename_multi_part_extension(self):
+        """Test conflict resolution with multi-part extension (.tar.gz)."""
+        from fx_bin.organize import resolve_conflict_rename
+
+        allocated = {"/output/archive.tar.gz"}
+        result = resolve_conflict_rename("/output/archive.tar.gz", allocated)
+        self.assertEqual(result, "/output/archive_1.tar.gz")
+
+
+class TestGenerateOrganizePlan(unittest.TestCase):
+    """Test cases for generate_organize_plan() function."""
+
+    def test_generate_organize_plan_basic(self):
+        """Test basic plan generation."""
+        from fx_bin.organize import generate_organize_plan
+        from datetime import datetime
+
+        files = ["/src/photo.jpg"]
+        dates = {"/src/photo.jpg": datetime(2026, 1, 10)}
+        context = OrganizeContext(
+            date_source=DateSource.CREATED,
+            depth=3,
+            conflict_mode=ConflictMode.RENAME,
+            output_dir="/output",
+            dry_run=False,
+        )
+
+        plan = generate_organize_plan(files, dates, context)
+        self.assertEqual(len(plan), 1)
+        self.assertEqual(plan[0].source, "/src/photo.jpg")
+        self.assertEqual(plan[0].action, "moved")
+        self.assertIn("20260110", plan[0].target)
+
+    def test_generate_organize_plan_deterministic_ordering(self):
+        """Test that files are processed in sorted order."""
+        from fx_bin.organize import generate_organize_plan
+        from datetime import datetime
+
+        files = ["/src/zebra.jpg", "/src/apple.jpg", "/src/beta.jpg"]
+        dates = {
+            "/src/zebra.jpg": datetime(2026, 1, 10),
+            "/src/apple.jpg": datetime(2026, 1, 10),
+            "/src/beta.jpg": datetime(2026, 1, 10),
+        }
+        context = OrganizeContext(
+            date_source=DateSource.CREATED,
+            depth=3,
+            conflict_mode=ConflictMode.RENAME,
+            output_dir="/output",
+            dry_run=False,
+        )
+
+        plan = generate_organize_plan(files, dates, context)
+        self.assertEqual(len(plan), 3)
+        # Should be sorted: apple, beta, zebra
+        self.assertIn("apple", plan[0].source)
+        self.assertIn("beta", plan[1].source)
+        self.assertIn("zebra", plan[2].source)
+
+    def test_generate_organize_plan_intra_run_conflict_rename(self):
+        """Test intra-run conflict resolution with rename mode."""
+        from fx_bin.organize import generate_organize_plan
+        from datetime import datetime
+
+        # Two files with same name going to same date directory
+        files = ["/src/photo.jpg", "/src2/photo.jpg"]
+        dates = {
+            "/src/photo.jpg": datetime(2026, 1, 10),
+            "/src2/photo.jpg": datetime(2026, 1, 10),
+        }
+        context = OrganizeContext(
+            date_source=DateSource.CREATED,
+            depth=3,
+            conflict_mode=ConflictMode.RENAME,
+            output_dir="/output",
+            dry_run=False,
+        )
+
+        plan = generate_organize_plan(files, dates, context)
+        self.assertEqual(len(plan), 2)
+        self.assertEqual(plan[0].action, "moved")
+        self.assertEqual(plan[1].action, "moved")
+        # Second file should have _1 suffix
+        self.assertTrue(plan[1].target.endswith("photo_1.jpg"))
+
+    def test_generate_organize_plan_intra_run_conflict_skip(self):
+        """Test intra-run conflict with skip mode."""
+        from fx_bin.organize import generate_organize_plan
+        from datetime import datetime
+
+        files = ["/src/photo.jpg", "/src2/photo.jpg"]
+        dates = {
+            "/src/photo.jpg": datetime(2026, 1, 10),
+            "/src2/photo.jpg": datetime(2026, 1, 10),
+        }
+        context = OrganizeContext(
+            date_source=DateSource.CREATED,
+            depth=3,
+            conflict_mode=ConflictMode.SKIP,
+            output_dir="/output",
+            dry_run=False,
+        )
+
+        plan = generate_organize_plan(files, dates, context)
+        self.assertEqual(len(plan), 2)
+        self.assertEqual(plan[0].action, "moved")
+        self.assertEqual(plan[1].action, "skipped")
+
+    def test_generate_organize_plan_missing_date(self):
+        """Test handling of files without date information."""
+        from fx_bin.organize import generate_organize_plan
+        from datetime import datetime
+
+        files = ["/src/photo.jpg", "/src/no_date.jpg"]
+        dates = {"/src/photo.jpg": datetime(2026, 1, 10)}
+        context = OrganizeContext(
+            date_source=DateSource.CREATED,
+            depth=3,
+            conflict_mode=ConflictMode.RENAME,
+            output_dir="/output",
+            dry_run=False,
+        )
+
+        plan = generate_organize_plan(files, dates, context)
+        self.assertEqual(len(plan), 2)
+        # After sorting: /src/no_date.jpg comes first (no date = error)
+        # /src/photo.jpg second
+        self.assertEqual(plan[0].action, "error")
+        self.assertEqual(plan[1].action, "moved")
 
 
 if __name__ == "__main__":
