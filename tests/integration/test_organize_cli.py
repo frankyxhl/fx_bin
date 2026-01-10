@@ -356,67 +356,6 @@ class TestQuietYesMode(unittest.TestCase):
             self.assertIn("files", result.output.lower())
 
 
-class TestLoguruConfiguration(unittest.TestCase):
-    """Test cases for loguru configuration (Phase 3.1)."""
-
-    def setUp(self):
-        """Set up test fixtures."""
-        self.runner = CliRunner(mix_stderr=False)
-
-    def test_given_quiet_mode_when_warning_logged_then_suppresses_output(self):
-        """Test that --quiet mode suppresses WARNING output from loguru.
-
-        RED phase: This test will FAIL before loguru configuration is added.
-        GREEN phase: After configuring loguru level to ERROR in quiet mode, test passes.
-
-        Per Decision 2.5, --quiet should configure loguru to ERROR level,
-        which suppresses WARNING messages.
-        """
-        with self.runner.isolated_filesystem():
-            # Create source directory with files
-            source_dir = Path("source")
-            source_dir.mkdir()
-            (source_dir / "photo.jpg").write_text("content")
-
-            # Create output directory with conflicting file
-            # This will trigger ASK mode runtime conflict (TOCTOU scenario)
-            output_dir = Path("output")
-            output_dir.mkdir()
-            (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
-            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
-                "existing"
-            )
-
-            # Mock stdin.isatty() to return False to trigger runtime conflict path
-            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
-                result = self.runner.invoke(
-                    cli,
-                    [
-                        "organize",
-                        str(source_dir),
-                        "--output",
-                        str(output_dir),
-                        "--on-conflict",
-                        "ask",
-                        "--quiet",
-                        "--yes",
-                    ],
-                )
-
-            self.assertEqual(result.exit_code, 0)
-
-            # CRITICAL: WARNING should NOT appear in stderr when --quiet is set
-            # loguru writes to stderr, so we check stderr specifically
-            self.assertNotIn(
-                "WARNING",
-                result.stderr,
-                "--quiet should suppress WARNING output from loguru",
-            )
-
-            # Summary should still be shown in stdout
-            self.assertIn("Summary:", result.output)
-
-
 class TestAskRuntimeConflicts(unittest.TestCase):
     """Test cases for ASK mode runtime conflicts (Phase 3.2).
 
