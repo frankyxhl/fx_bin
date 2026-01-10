@@ -1010,17 +1010,16 @@ def organize(
                 elif item.action == "skipped":
                     click.echo(f"  {item.source} (skipped)")
 
-        # Show summary
-        if not quiet or summary.errors > 0:
-            click.echo(
-                f"\nSummary: {summary.total_files} files, "
-                f"{summary.processed} processed, "
-                f"{summary.skipped} skipped"
-            )
-            if summary.directories_created > 0:
-                click.echo(f"  {summary.directories_created} directories created")
-            if summary.errors > 0:
-                click.echo(f"  {summary.errors} errors")
+        # Show summary (always show, per help text "errors and summary only")
+        click.echo(
+            f"\nSummary: {summary.total_files} files, "
+            f"{summary.processed} processed, "
+            f"{summary.skipped} skipped"
+        )
+        if summary.directories_created > 0:
+            click.echo(f"  {summary.directories_created} directories created")
+        if summary.errors > 0:
+            click.echo(f"  {summary.errors} errors")
 
         if dry_run and not quiet:
             click.echo("\nDry-run complete. No files were moved.")
@@ -1051,17 +1050,16 @@ def organize(
             elif item.action == "error":
                 click.echo(f"  {item.source} (error)")
 
-    # Show summary (always show in quiet mode if errors exist)
-    if not quiet or summary.errors > 0:
-        click.echo(
-            f"\nSummary: {summary.total_files} files, "
-            f"{summary.processed} processed, "
-            f"{summary.skipped} skipped"
-        )
-        if summary.directories_created > 0:
-            click.echo(f"  {summary.directories_created} directories created")
-        if summary.errors > 0:
-            click.echo(f"  {summary.errors} errors")
+    # Show summary (always show, per help text "errors and summary only")
+    click.echo(
+        f"\nSummary: {summary.total_files} files, "
+        f"{summary.processed} processed, "
+        f"{summary.skipped} skipped"
+    )
+    if summary.directories_created > 0:
+        click.echo(f"  {summary.directories_created} directories created")
+    if summary.errors > 0:
+        click.echo(f"  {summary.errors} errors")
 
     if dry_run and not quiet:
         click.echo("\nDry-run complete. No files were moved.")

@@ -95,9 +95,9 @@ Each task follows RED-GREEN-REFACTOR:
 - --quiet 模式始终输出 summary（无论是否有错误）
 
 ### 4.1 Fix Quiet Summary Output
-- [ ] 4.1.1 **RED**: Write test that --quiet outputs summary even with no errors
-- [ ] 4.1.2 **GREEN**: Fix CLI output logic (remove `or summary.errors > 0` condition)
-- [ ] 4.1.3 **GREEN**: Verify test passes
+- [x] 4.1.1 **RED**: Write test that --quiet outputs summary even with no errors
+- [x] 4.1.2 **GREEN**: Fix CLI output logic (remove `or summary.errors > 0` condition)
+- [x] 4.1.3 **GREEN**: Verify test passes
 - [ ] 4.1.4 Commit: "Phase 4: Fix --quiet to always show summary"
 
 ---
