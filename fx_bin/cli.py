@@ -857,20 +857,8 @@ def organize(
                 # We check isatty() to distinguish between:
                 # - Real terminal: prompt the user
                 # - Piped input/non-TTY: auto-skip
-                if sys.stdin.isatty():
-                    # Interactive TTY: prompt for each conflict
-                    click.echo(f"\nFound {len(disk_conflicts)} disk conflict(s):")
-                    for conflict in disk_conflicts:
-                        prompt_msg = f"Overwrite {conflict.target}?"
-                        if click.confirm(prompt_msg, default=False):
-                            ask_user_choices[conflict.source] = "overwrite"
-                        else:
-                            ask_user_choices[conflict.source] = "skip"
-                else:
-                    # Non-TTY: automatically skip all conflicts (fallback to SKIP
-                    # behavior)
-                    # NOTE: This will apply in production when stdin is piped
-                    # In tests, we need to mock isatty() to test the prompting behavior
+                # Non-TTY: automatically skip all conflicts (early exit)
+                if not sys.stdin.isatty():
                     click.echo(
                         f"\nFound {len(disk_conflicts)} disk conflict(s). "
                         "Skipping (non-interactive mode)."
@@ -892,6 +880,17 @@ def organize(
                         fail_fast=context.fail_fast,
                         hidden=context.hidden,
                     )
+                    # Early exit: skip the TTY prompting code below
+                    return
+
+                # Interactive TTY: prompt for each conflict (no deep nesting now!)
+                click.echo(f"\nFound {len(disk_conflicts)} disk conflict(s):")
+                for conflict in disk_conflicts:
+                    prompt_msg = f"Overwrite {conflict.target}?"
+                    if click.confirm(prompt_msg, default=False):
+                        ask_user_choices[conflict.source] = "overwrite"
+                    else:
+                        ask_user_choices[conflict.source] = "skip"
         except Exception as e:
             # If scanning fails, fall back to SKIP mode for safety
             click.echo(
