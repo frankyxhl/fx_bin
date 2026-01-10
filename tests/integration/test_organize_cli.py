@@ -1,7 +1,5 @@
 """Integration tests for organize CLI command."""
 
-import os
-import sys
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -532,7 +530,20 @@ class TestLoguruConfiguration(unittest.TestCase):
 
 
 class TestAskRuntimeConflicts(unittest.TestCase):
-    """Test cases for ASK mode runtime conflicts (Phase 3.2)."""
+    """Test cases for ASK mode runtime conflicts (Phase 3.2).
+
+    These tests verify the TOCTOU (time-of-check-time-of-use) scenario where
+    a conflict appears between the scan phase and execution phase.
+
+    Important Implementation Note:
+    Due to the current CLI architecture, the ASK runtime conflict WARNING
+    is difficult to trigger through the CLI interface because:
+    1. TTY mode: Scan-time conflicts are detected and handled via custom execution path
+    2. Non-TTY mode: ASK is downgraded to SKIP, so no runtime conflict check
+
+    The actual WARNING logging functionality is verified by directly testing
+    move_file_safe() which contains the runtime conflict detection logic.
+    """
 
     def setUp(self):
         """Set up test fixtures."""
@@ -541,141 +552,156 @@ class TestAskRuntimeConflicts(unittest.TestCase):
     def test_given_ask_mode_and_runtime_conflict_when_default_mode_then_logs_warning(
         self,
     ):
-        """Test that ASK mode runtime conflicts log a WARNING in default mode.
-
-        RED phase: This test will FAIL before logger.warning() is added.
-        GREEN phase: After adding logger.warning() in move_file_safe(), test passes.
+        """Test that move_file_safe logs WARNING for ASK runtime conflicts.
 
         Per Decision 3, ASK mode runtime conflicts should skip with warning log.
-        This test simulates a TOCTOU (time-of-check-time-of-use) scenario where
-        a conflict appears between the scan phase and execution phase.
+
+        This test directly calls move_file_safe with ConflictMode.ASK and
+        a pre-existing target to verify the WARNING is logged correctly.
+
+        Note: This tests the underlying functionality since triggering this
+        through the CLI is not feasible (see class docstring for details).
         """
+        from fx_bin.organize_functional import move_file_safe
+        from fx_bin.organize import ConflictMode
+        from io import StringIO
+        from loguru import logger
+
         with self.runner.isolated_filesystem():
-            # Create source directory with files
+            # Create source file
             source_dir = Path("source")
             source_dir.mkdir()
-            (source_dir / "photo.jpg").write_text("source photo")
+            source_file = source_dir / "photo.jpg"
+            source_file.write_text("source photo")
 
-            # Create output directory
+            # Create output directory with pre-existing target (simulates TOCTOU)
             output_dir = Path("output")
             output_dir.mkdir()
-            (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
+            target_dir = output_dir / "2026" / "202601" / "20260110"
+            target_dir.mkdir(parents=True)
+            target_file = target_dir / "photo.jpg"
+            target_file.write_text("existing content")
 
-            # Run organize with ASK mode (no --quiet, no --verbose)
-            # First run to set up the state
-            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
-                result = self.runner.invoke(
-                    cli,
-                    [
-                        "organize",
-                        str(source_dir),
-                        "--output",
-                        str(output_dir),
-                        "--on-conflict",
-                        "ask",
-                        "--yes",
-                    ],
+            # Capture stderr using a custom handler
+            stderr_capture = StringIO()
+
+            # Configure loguru to write to our capture at INFO level
+            # Include level in format to verify WARNING is logged
+            logger.remove()
+            logger.add(stderr_capture, level="INFO", format="{level} | {message}")
+
+            try:
+                # Call move_file_safe with ASK mode
+                result = move_file_safe(
+                    str(source_file),
+                    str(target_file),
+                    str(source_dir),  # source_root
+                    str(output_dir),  # output_root
+                    ConflictMode.ASK,
                 )
 
-            self.assertEqual(result.exit_code, 0)
+                # Get captured stderr
+                stderr_output = stderr_capture.getvalue()
 
-            # Now create a NEW conflicting file in the output (simulating TOCTOU)
-            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
-                "new conflict"
-            )
-
-            # Create another source file to trigger the runtime conflict
-            (source_dir / "photo2.jpg").write_text("another photo")
-
-            # Run organize again - this will hit the runtime conflict in move_file_safe
-            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
-                result = self.runner.invoke(
-                    cli,
-                    [
-                        "organize",
-                        str(source_dir),
-                        "--output",
-                        str(output_dir),
-                        "--on-conflict",
-                        "ask",
-                        "--yes",
-                    ],
+                # Verify result is success (file was skipped)
+                self.assertTrue(
+                    str(result).startswith("<IOResult: <Success"),
+                    f"move_file_safe should return success, got: {result}",
                 )
 
-            self.assertEqual(result.exit_code, 0)
+                # Verify source file still exists (was skipped due to conflict)
+                self.assertTrue(source_file.exists())
+                self.assertTrue(target_file.exists())
 
-            # CRITICAL: For now, we just verify the command succeeds
-            # The actual WARNING logging will be verified once we add logger.warning()
-            # in the GREEN phase of Phase 3.2
+                # CRITICAL: Verify WARNING was logged
+                self.assertIn(
+                    "WARNING",
+                    stderr_output,
+                    "Default mode should show WARNING for ASK runtime "
+                    f"conflicts. Got: {repr(stderr_output)}",
+                )
+                self.assertIn(
+                    "Runtime conflict detected",
+                    stderr_output,
+                    "Should log specific runtime conflict message",
+                )
+
+            finally:
+                # Reset loguru configuration
+                logger.remove()
 
     def test_given_ask_mode_and_runtime_conflict_when_quiet_then_suppresses_warning(
         self,
     ):
         """Test that ASK mode runtime conflicts respect --quiet flag.
 
-        RED phase: This test will FAIL before loguru configuration is properly tested.
-        GREEN phase: After logger.warning() respects loguru configuration, test passes.
-
         Per Decision 3, logger.warning() should respect --quiet flag (via loguru level config).
+
+        This test directly calls move_file_safe and verifies that when loguru
+        is configured to ERROR level (simulating --quiet mode), WARNING is suppressed.
         """
+        from fx_bin.organize_functional import move_file_safe
+        from fx_bin.organize import ConflictMode
+        from io import StringIO
+        from loguru import logger
+
         with self.runner.isolated_filesystem():
-            # Create source directory with files
+            # Create source file
             source_dir = Path("source")
             source_dir.mkdir()
-            (source_dir / "photo.jpg").write_text("source photo")
+            source_file = source_dir / "photo.jpg"
+            source_file.write_text("source photo")
 
-            # Create output directory
+            # Create output directory with pre-existing target
             output_dir = Path("output")
             output_dir.mkdir()
-            (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
+            target_dir = output_dir / "2026" / "202601" / "20260110"
+            target_dir.mkdir(parents=True)
+            target_file = target_dir / "photo.jpg"
+            target_file.write_text("existing content")
 
-            # First run to set up the state
-            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
-                result = self.runner.invoke(
-                    cli,
-                    [
-                        "organize",
-                        str(source_dir),
-                        "--output",
-                        str(output_dir),
-                        "--on-conflict",
-                        "ask",
-                        "--yes",
-                    ],
+            # Capture stderr
+            stderr_capture = StringIO()
+
+            # Configure loguru to ERROR level (simulating --quiet mode)
+            logger.remove()
+            logger.add(stderr_capture, level="ERROR", format="{level} | {message}")
+
+            try:
+                # Call move_file_safe with ASK mode
+                result = move_file_safe(
+                    str(source_file),
+                    str(target_file),
+                    str(source_dir),
+                    str(output_dir),
+                    ConflictMode.ASK,
                 )
 
-            # Create a NEW conflicting file (simulating TOCTOU)
-            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
-                "new conflict"
-            )
+                # Get captured stderr
+                stderr_output = stderr_capture.getvalue()
 
-            # Create another source file
-            (source_dir / "photo2.jpg").write_text("another photo")
-
-            # Run with --quiet - WARNING should be suppressed
-            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
-                result = self.runner.invoke(
-                    cli,
-                    [
-                        "organize",
-                        str(source_dir),
-                        "--output",
-                        str(output_dir),
-                        "--on-conflict",
-                        "ask",
-                        "--quiet",
-                        "--yes",
-                    ],
+                # Verify result is success
+                self.assertTrue(
+                    str(result).startswith("<IOResult: <Success"),
+                    f"move_file_safe should return success, got: {result}",
                 )
 
-            self.assertEqual(result.exit_code, 0)
+                # CRITICAL: WARNING should NOT appear when loguru is set to ERROR level
+                self.assertNotIn(
+                    "WARNING",
+                    stderr_output,
+                    "--quiet mode (ERROR level) should suppress WARNING. "
+                    f"Got: {repr(stderr_output)}",
+                )
+                self.assertNotIn(
+                    "Runtime conflict detected",
+                    stderr_output,
+                    "--quiet mode should suppress runtime conflict message",
+                )
 
-            # CRITICAL: WARNING should NOT appear in stderr when --quiet is set
-            self.assertNotIn(
-                "WARNING",
-                result.stderr,
-                "--quiet should suppress WARNING from runtime conflicts",
-            )
+            finally:
+                # Reset loguru configuration
+                logger.remove()
 
 
 if __name__ == "__main__":
