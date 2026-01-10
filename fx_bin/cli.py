@@ -786,8 +786,249 @@ def organize(
         # Non-TTY stdin: auto-confirm (piped input)
         pass
 
-    # Execute organization
-    result = execute_organize(source, context)
+    # Handle ASK mode: check for disk conflicts and prompt before execution
+    import os as os_module
+    ask_user_choices = {}  # Map source file -> 'overwrite' or 'skip'
+
+    if conflict_mode_enum == ConflictMode.ASK and not dry_run:
+        # Scan files and generate plan to identify disk conflicts
+        from .organize_functional import scan_files, get_file_date
+        from .organize import generate_organize_plan
+
+        scan_result = scan_files(
+            source,
+            recursive=context.recursive,
+            follow_symlinks=False,
+            max_depth=100,
+            output_dir=context.output_dir,
+        )
+
+        try:
+            files = unsafe_ioresult_unwrap(scan_result)
+
+            # Get file dates
+            dates = {}
+            for f in files:
+                date_result = get_file_date(f, context.date_source)
+                try:
+                    dates[f] = unsafe_ioresult_unwrap(date_result)
+                except Exception:  # nosec B110 - Intentionally skip files with date errors
+                    pass
+
+            # Generate plan
+            plan = generate_organize_plan(files, dates, context)
+
+            # Find disk conflicts (target files that already exist)
+            disk_conflicts = []
+            for item in plan:
+                if item.action == "moved" and os_module.path.exists(item.target):
+                    disk_conflicts.append(item)
+
+            # Handle each conflict
+            if disk_conflicts:
+                # Check if we should prompt or auto-skip
+                # We check isatty() to distinguish between:
+                # - Real terminal: prompt the user
+                # - Piped input/non-TTY: auto-skip
+                if sys.stdin.isatty():
+                    # Interactive TTY: prompt for each conflict
+                    click.echo(f"\nFound {len(disk_conflicts)} disk conflict(s):")
+                    for conflict in disk_conflicts:
+                        prompt_msg = f"Overwrite {conflict.target}?"
+                        if click.confirm(prompt_msg, default=False):
+                            ask_user_choices[conflict.source] = 'overwrite'
+                        else:
+                            ask_user_choices[conflict.source] = 'skip'
+                else:
+                    # Non-TTY: automatically skip all conflicts (fallback to SKIP behavior)
+                    # NOTE: This will apply in production when stdin is piped
+                    # In tests, we need to mock isatty() to test the prompting behavior
+                    click.echo(f"\nFound {len(disk_conflicts)} disk conflict(s). Skipping (non-interactive mode).")
+                    for conflict in disk_conflicts:
+                        ask_user_choices[conflict.source] = 'skip'
+
+                    # Change conflict_mode to SKIP for non-TTY
+                    context = OrganizeContext(
+                        date_source=context.date_source,
+                        depth=context.depth,
+                        conflict_mode=ConflictMode.SKIP,  # Fallback to SKIP
+                        output_dir=context.output_dir,
+                        dry_run=context.dry_run,
+                        include_patterns=context.include_patterns,
+                        exclude_patterns=context.exclude_patterns,
+                        recursive=context.recursive,
+                        clean_empty=context.clean_empty,
+                        fail_fast=context.fail_fast,
+                        hidden=context.hidden,
+                    )
+        except Exception as e:
+            # If scanning fails, fall back to SKIP mode for safety
+            click.echo(f"Warning: Could not scan for conflicts: {e}. Using SKIP mode.", err=True)
+            context = OrganizeContext(
+                date_source=context.date_source,
+                depth=context.depth,
+                conflict_mode=ConflictMode.SKIP,
+                output_dir=context.output_dir,
+                dry_run=context.dry_run,
+                include_patterns=context.include_patterns,
+                exclude_patterns=context.exclude_patterns,
+                recursive=context.recursive,
+                clean_empty=context.clean_empty,
+                fail_fast=context.fail_fast,
+                hidden=context.hidden,
+            )
+
+    # For ASK mode with user choices, we need custom execution logic
+    # Otherwise use standard execute_organize
+    if ask_user_choices and conflict_mode_enum == ConflictMode.ASK:
+        # Custom execution for ASK mode with user choices
+        from .organize_functional import (
+            scan_files,
+            get_file_date,
+            move_file_safe,
+            remove_empty_dirs,
+        )
+        from .organize import generate_organize_plan
+
+        # Scan for files
+        scan_result = scan_files(
+            source,
+            recursive=context.recursive,
+            follow_symlinks=False,
+            max_depth=100,
+            output_dir=context.output_dir,
+        )
+
+        files = unsafe_ioresult_unwrap(scan_result)
+
+        # Read file dates
+        dates = {}
+        date_errors = 0
+        for file_path in files:
+            date_result = get_file_date(file_path, context.date_source)
+            try:
+                dates[file_path] = unsafe_ioresult_unwrap(date_result)
+            except Exception as e:
+                date_errors += 1
+                if context.fail_fast:
+                    click.echo(f"Error: Failed to read date for {file_path}: {e}", err=True)
+                    return 1
+
+        # Generate plan
+        plan = generate_organize_plan(files, dates, context)
+
+        # Execute plan with ASK mode user choices
+        processed = 0
+        skipped = 0
+        errors = 0
+        directories_created = 0
+
+        for item in plan:
+            if item.action == "moved":
+                # Check if user made a choice for this file
+                if item.source in ask_user_choices:
+                    choice = ask_user_choices[item.source]
+                    if choice == 'skip':
+                        # User chose to skip
+                        skipped += 1
+                        continue
+                    elif choice == 'overwrite':
+                        # User chose to overwrite - use OVERWRITE mode
+                        if not context.dry_run:
+                            move_result = move_file_safe(
+                                item.source,
+                                item.target,
+                                source,  # source_root
+                                context.output_dir,  # output_root
+                                ConflictMode.OVERWRITE,  # Use OVERWRITE
+                            )
+                            try:
+                                _, dir_created = unsafe_ioresult_unwrap(move_result)
+                                if dir_created:
+                                    directories_created += 1
+                                processed += 1
+                            except Exception as e:
+                                errors += 1
+                                if context.fail_fast:
+                                    click.echo(f"Error: Failed to move {item.source}: {e}", err=True)
+                                    return 1
+                else:
+                    # No conflict, proceed with normal move
+                    if not context.dry_run:
+                        move_result = move_file_safe(
+                            item.source,
+                            item.target,
+                            source,  # source_root
+                            context.output_dir,  # output_root
+                            ConflictMode.RENAME,  # Use RENAME for non-conflicting files
+                        )
+                        try:
+                            _, dir_created = unsafe_ioresult_unwrap(move_result)
+                            if dir_created:
+                                directories_created += 1
+                            processed += 1
+                        except Exception as e:
+                            errors += 1
+                            if context.fail_fast:
+                                click.echo(f"Error: Failed to move {item.source}: {e}", err=True)
+                                return 1
+            elif item.action == "skipped":
+                skipped += 1
+            elif item.action == "error":
+                errors += 1
+                if context.fail_fast:
+                    click.echo(f"Error: Planning error for {item.source}", err=True)
+                    return 1
+
+        # Build summary
+        from .organize import OrganizeSummary
+        summary = OrganizeSummary(
+            total_files=len(files),
+            processed=processed,
+            skipped=skipped,
+            errors=errors,
+            dry_run=context.dry_run,
+            directories_created=directories_created,
+        )
+
+        # Clean up empty directories if requested
+        if context.clean_empty and not context.dry_run:
+            remove_empty_dirs(source, source)
+
+        # Show results
+        if verbose:
+            click.echo("\nFile details:")
+            for item in plan:
+                if item.source in ask_user_choices:
+                    choice = ask_user_choices[item.source]
+                    if choice == 'skip':
+                        click.echo(f"  {item.source} (skipped - user choice)")
+                    elif choice == 'overwrite':
+                        click.echo(f"  {item.source} -> {item.target} (overwritten - user choice)")
+                elif item.action == "moved":
+                    click.echo(f"  {item.source} -> {item.target}")
+                elif item.action == "skipped":
+                    click.echo(f"  {item.source} (skipped)")
+
+        # Show summary
+        if not quiet or summary.errors > 0:
+            click.echo(
+                f"\nSummary: {summary.total_files} files, "
+                f"{summary.processed} processed, "
+                f"{summary.skipped} skipped"
+            )
+            if summary.directories_created > 0:
+                click.echo(f"  {summary.directories_created} directories created")
+            if summary.errors > 0:
+                click.echo(f"  {summary.errors} errors")
+
+        if dry_run and not quiet:
+            click.echo("\nDry-run complete. No files were moved.")
+
+        return 0
+    else:
+        # Standard execution for non-ASK modes
+        result = execute_organize(source, context)
 
     # Check for errors
     try:
