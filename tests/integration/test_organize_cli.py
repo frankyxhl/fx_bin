@@ -119,10 +119,12 @@ class TestAskModeInCLI(unittest.TestCase):
             output_dir = Path("output")
             output_dir.mkdir()
             (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
-            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text("existing photo")
+            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
+                "existing photo"
+            )
 
             # Mock sys.stdin.isatty() to return True to simulate TTY
-            with patch('fx_bin.cli.sys') as mock_sys:
+            with patch("fx_bin.cli.sys") as mock_sys:
                 mock_sys.stdin.isatty.return_value = True
 
                 # Run organize with ASK mode
@@ -164,10 +166,12 @@ class TestAskModeInCLI(unittest.TestCase):
             output_dir = Path("output")
             output_dir.mkdir()
             (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
-            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text("existing photo")
+            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
+                "existing photo"
+            )
 
             # Mock sys.stdin.isatty() to return True to simulate TTY
-            with patch('fx_bin.cli.sys') as mock_sys:
+            with patch("fx_bin.cli.sys") as mock_sys:
                 mock_sys.stdin.isatty.return_value = True
 
                 # User answers "y" (yes) to overwrite - this should use OVERWRITE behavior
@@ -197,7 +201,9 @@ class TestAskModeInCLI(unittest.TestCase):
             self.assertTrue(existing.exists())
             self.assertEqual(existing.read_text(), "source photo")
 
-    def test_given_ask_mode_and_non_tty_when_disk_conflict_then_falls_back_to_skip(self):
+    def test_given_ask_mode_and_non_tty_when_disk_conflict_then_falls_back_to_skip(
+        self,
+    ):
         """Test that ASK mode falls back to SKIP when stdin is not a TTY."""
         with self.runner.isolated_filesystem():
             # Create source directory with files
@@ -209,7 +215,9 @@ class TestAskModeInCLI(unittest.TestCase):
             output_dir = Path("output")
             output_dir.mkdir()
             (output_dir / "2026" / "202601" / "20260110").mkdir(parents=True)
-            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text("existing photo")
+            (output_dir / "2026" / "202601" / "20260110" / "photo.jpg").write_text(
+                "existing photo"
+            )
 
             # Mock stdin.isatty() to return False (non-TTY, like piped input)
             with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):

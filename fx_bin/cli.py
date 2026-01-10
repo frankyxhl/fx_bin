@@ -757,7 +757,9 @@ def organize(
                 date_result = get_file_date(f, context.date_source)
                 try:
                     dates[f] = unsafe_ioresult_unwrap(date_result)
-                except Exception:  # nosec B110 - Intentionally skip files with date errors
+                except (
+                    Exception
+                ):  # nosec B110 - Intentionally skip files with date errors
                     pass
 
             plan = generate_organize_plan(files, dates, context)
@@ -788,6 +790,7 @@ def organize(
 
     # Handle ASK mode: check for disk conflicts and prompt before execution
     import os as os_module
+
     ask_user_choices = {}  # Map source file -> 'overwrite' or 'skip'
 
     if conflict_mode_enum == ConflictMode.ASK and not dry_run:
@@ -812,7 +815,9 @@ def organize(
                 date_result = get_file_date(f, context.date_source)
                 try:
                     dates[f] = unsafe_ioresult_unwrap(date_result)
-                except Exception:  # nosec B110 - Intentionally skip files with date errors
+                except (
+                    Exception
+                ):  # nosec B110 - Intentionally skip files with date errors
                     pass
 
             # Generate plan
@@ -836,16 +841,20 @@ def organize(
                     for conflict in disk_conflicts:
                         prompt_msg = f"Overwrite {conflict.target}?"
                         if click.confirm(prompt_msg, default=False):
-                            ask_user_choices[conflict.source] = 'overwrite'
+                            ask_user_choices[conflict.source] = "overwrite"
                         else:
-                            ask_user_choices[conflict.source] = 'skip'
+                            ask_user_choices[conflict.source] = "skip"
                 else:
-                    # Non-TTY: automatically skip all conflicts (fallback to SKIP behavior)
+                    # Non-TTY: automatically skip all conflicts (fallback to SKIP
+                    # behavior)
                     # NOTE: This will apply in production when stdin is piped
                     # In tests, we need to mock isatty() to test the prompting behavior
-                    click.echo(f"\nFound {len(disk_conflicts)} disk conflict(s). Skipping (non-interactive mode).")
+                    click.echo(
+                        f"\nFound {len(disk_conflicts)} disk conflict(s). "
+                        "Skipping (non-interactive mode)."
+                    )
                     for conflict in disk_conflicts:
-                        ask_user_choices[conflict.source] = 'skip'
+                        ask_user_choices[conflict.source] = "skip"
 
                     # Change conflict_mode to SKIP for non-TTY
                     context = OrganizeContext(
@@ -863,7 +872,10 @@ def organize(
                     )
         except Exception as e:
             # If scanning fails, fall back to SKIP mode for safety
-            click.echo(f"Warning: Could not scan for conflicts: {e}. Using SKIP mode.", err=True)
+            click.echo(
+                f"Warning: Could not scan for conflicts: {e}. Using SKIP mode.",
+                err=True,
+            )
             context = OrganizeContext(
                 date_source=context.date_source,
                 depth=context.depth,
@@ -911,7 +923,9 @@ def organize(
             except Exception as e:
                 date_errors += 1
                 if context.fail_fast:
-                    click.echo(f"Error: Failed to read date for {file_path}: {e}", err=True)
+                    click.echo(
+                        f"Error: Failed to read date for {file_path}: {e}", err=True
+                    )
                     return 1
 
         # Generate plan
@@ -928,11 +942,11 @@ def organize(
                 # Check if user made a choice for this file
                 if item.source in ask_user_choices:
                     choice = ask_user_choices[item.source]
-                    if choice == 'skip':
+                    if choice == "skip":
                         # User chose to skip
                         skipped += 1
                         continue
-                    elif choice == 'overwrite':
+                    elif choice == "overwrite":
                         # User chose to overwrite - use OVERWRITE mode
                         if not context.dry_run:
                             move_result = move_file_safe(
@@ -950,7 +964,10 @@ def organize(
                             except Exception as e:
                                 errors += 1
                                 if context.fail_fast:
-                                    click.echo(f"Error: Failed to move {item.source}: {e}", err=True)
+                                    click.echo(
+                                        f"Error: Failed to move {item.source}: {e}",
+                                        err=True,
+                                    )
                                     return 1
                 else:
                     # No conflict, proceed with normal move
@@ -970,7 +987,10 @@ def organize(
                         except Exception as e:
                             errors += 1
                             if context.fail_fast:
-                                click.echo(f"Error: Failed to move {item.source}: {e}", err=True)
+                                click.echo(
+                                    f"Error: Failed to move {item.source}: {e}",
+                                    err=True,
+                                )
                                 return 1
             elif item.action == "skipped":
                 skipped += 1
@@ -982,6 +1002,7 @@ def organize(
 
         # Build summary
         from .organize import OrganizeSummary
+
         summary = OrganizeSummary(
             total_files=len(files),
             processed=processed,
@@ -1001,10 +1022,13 @@ def organize(
             for item in plan:
                 if item.source in ask_user_choices:
                     choice = ask_user_choices[item.source]
-                    if choice == 'skip':
+                    if choice == "skip":
                         click.echo(f"  {item.source} (skipped - user choice)")
-                    elif choice == 'overwrite':
-                        click.echo(f"  {item.source} -> {item.target} (overwritten - user choice)")
+                    elif choice == "overwrite":
+                        click.echo(
+                            f"  {item.source} -> {item.target} "
+                            "(overwritten - user choice)"
+                        )
                 elif item.action == "moved":
                     click.echo(f"  {item.source} -> {item.target}")
                 elif item.action == "skipped":

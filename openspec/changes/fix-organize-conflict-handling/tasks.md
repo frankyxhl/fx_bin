@@ -125,26 +125,26 @@ Each task follows RED-GREEN-REFACTOR:
 **目标**: 验证所有修复并更新文档
 
 ### 6.1 Automated Testing
-- [ ] 6.1.1 Run all tests: `poetry run pytest tests/ -v`
-- [ ] 6.1.2 Verify all tests pass
-- [ ] 6.1.3 Run flake8: `poetry run flake8 fx_bin/`
-- [ ] 6.1.4 Run black: `poetry run black fx_bin/ tests/`
-- [ ] 6.1.5 Run mypy: `poetry run mypy fx_bin/`
-- [ ] 6.1.6 Run bandit: `poetry run bandit -r fx_bin/`
+- [x] 6.1.1 Run all tests: `poetry run pytest tests/ -v`
+- [x] 6.1.2 Verify all tests pass (551 tests passed)
+- [x] 6.1.3 Run flake8: `poetry run flake8 fx_bin/`
+- [x] 6.1.4 Run black: `poetry run black fx_bin/ tests/`
+- [x] 6.1.5 Run mypy: `poetry run mypy fx_bin/`
+- [x] 6.1.6 Run bandit: `poetry run bandit -r fx_bin/`
 
 ### 6.2 Coverage Check
-- [ ] 6.2.1 Run coverage: `poetry run pytest --cov=fx_bin --cov-report=term-missing`
-- [ ] 6.2.2 Verify coverage ≥ 80%
+- [x] 6.2.1 Run coverage: `poetry run pytest --cov=fx_bin --cov-report=term-missing`
+- [x] 6.2.2 Verify coverage ≥ 80% (Coverage meets 80% threshold)
 
 ### 6.3 Documentation Update
-- [ ] 6.3.1 Update help text in cli.py to match implementation
-- [ ] 6.3.2 Update openspec/specs/organize/spec.md with corrected behavior
+- [x] 6.3.1 Update help text in cli.py to match implementation (already accurate)
+- [x] 6.3.2 Update openspec/specs/organize/spec.md with corrected behavior (already accurate)
 
 ### 6.4 Manual Testing
-- [ ] 6.4.1 Test RENAME mode with actual disk conflicts
-- [ ] 6.4.2 Test OVERWRITE mode with atomic replace
-- [ ] 6.4.3 Test --quiet output behavior
-- [ ] 6.4.4 Test cross-device output directory
+- [x] 6.4.1 Test RENAME mode with actual disk conflicts (verified: test1_1.txt created)
+- [x] 6.4.2 Test OVERWRITE mode with atomic replace (verified: file overwritten atomically)
+- [x] 6.4.3 Test --quiet output behavior (verified: summary always shown)
+- [x] 6.4.4 Test cross-device output directory (verified: no crash on unrelated paths)
 
 ### 6.5 Final Commit
-- [ ] 6.5.1 Commit: "Phase 6: Verification and documentation updates"
+- [x] 6.5.1 Commit: "Phase 6: Verification and documentation updates"

@@ -654,7 +654,9 @@ def execute_organize(
                         # Stop immediately on first error when fail_fast is enabled
                         # Completed moves are preserved (not rolled back)
                         return IOResult.from_failure(
-                            OrganizeError(f"Failed to move {item.source} to {item.target}: {e}")
+                            OrganizeError(
+                                f"Failed to move {item.source} to {item.target}: {e}"
+                            )
                         )
         elif item.action == "skipped":
             skipped += 1
@@ -663,7 +665,9 @@ def execute_organize(
             if context.fail_fast:
                 # Stop immediately on first error when fail_fast is enabled
                 return IOResult.from_failure(
-                    OrganizeError(f"Planning error for {item.source}: cannot organize file")
+                    OrganizeError(
+                        f"Planning error for {item.source}: cannot organize file"
+                    )
                 )
 
     summary = OrganizeSummary(

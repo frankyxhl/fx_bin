@@ -1313,6 +1313,7 @@ class TestFailFastBehavior(unittest.TestCase):
 
             # Make file2.txt unreadable to cause a date read error
             import stat
+
             file2 = source_dir / "file2.txt"
             file2.chmod(stat.S_IRUSR)  # Read-only, should still work
 
@@ -1340,6 +1341,7 @@ class TestFailFastBehavior(unittest.TestCase):
                 if "file2.txt" in file_path:
                     from returns.io import IOResult
                     from fx_bin.errors import DateReadError
+
                     return IOResult.from_failure(
                         DateReadError(f"Mocked date read failure for {file_path}")
                     )
@@ -1347,7 +1349,10 @@ class TestFailFastBehavior(unittest.TestCase):
                 return original_get_file_date(file_path, date_source)
 
             # Patch get_file_date
-            with patch("fx_bin.organize_functional.get_file_date", side_effect=mock_get_file_date):
+            with patch(
+                "fx_bin.organize_functional.get_file_date",
+                side_effect=mock_get_file_date,
+            ):
                 # Execute - should fail on second file
                 result = execute_organize(str(source_dir), context)
 
@@ -1398,6 +1403,7 @@ class TestFailFastBehavior(unittest.TestCase):
                 if "file2.txt" in file_path:
                     from returns.io import IOResult
                     from fx_bin.errors import DateReadError
+
                     return IOResult.from_failure(
                         DateReadError(f"Mocked date read failure for {file_path}")
                     )
@@ -1405,12 +1411,16 @@ class TestFailFastBehavior(unittest.TestCase):
                 return original_get_file_date(file_path, date_source)
 
             # Patch get_file_date
-            with patch("fx_bin.organize_functional.get_file_date", side_effect=mock_get_file_date):
+            with patch(
+                "fx_bin.organize_functional.get_file_date",
+                side_effect=mock_get_file_date,
+            ):
                 # Execute - should continue despite errors
                 result = execute_organize(str(source_dir), context)
 
                 # Result should still succeed despite errors
                 from fx_bin.lib import unsafe_ioresult_to_result
+
                 inner_result = unsafe_ioresult_to_result(result)
                 self.assertTrue(inner_result)
 
@@ -1454,6 +1464,7 @@ class TestFailFastBehavior(unittest.TestCase):
 
             # Should succeed in dry-run mode
             from fx_bin.lib import unsafe_ioresult_to_result
+
             inner_result = unsafe_ioresult_to_result(result)
             self.assertTrue(inner_result)
 
@@ -1634,7 +1645,9 @@ class TestOverwriteModeAtomicReplace(unittest.TestCase):
 
                 # First call (source -> target): simulate EXDEV
                 if replace_call_count[0] == 1:
-                    exdev_error = OSError(f"Invalid cross-device link: '{src}' -> '{dst}'")
+                    exdev_error = OSError(
+                        f"Invalid cross-device link: '{src}' -> '{dst}'"
+                    )
                     exdev_error.errno = errno.EXDEV
                     raise exdev_error
 
@@ -1666,10 +1679,12 @@ class TestOverwriteModeAtomicReplace(unittest.TestCase):
                 operations.append(("unlink", path))
                 return original_unlink(path)
 
-            with patch("os.replace", side_effect=mock_replace_exdev), \
-                 patch("tempfile.mkstemp", side_effect=mock_mkstemp), \
-                 patch("shutil.copy2", side_effect=mock_copy2), \
-                 patch("os.unlink", side_effect=mock_unlink):
+            with (
+                patch("os.replace", side_effect=mock_replace_exdev),
+                patch("tempfile.mkstemp", side_effect=mock_mkstemp),
+                patch("shutil.copy2", side_effect=mock_copy2),
+                patch("os.unlink", side_effect=mock_unlink),
+            ):
 
                 # With OVERWRITE mode, should handle EXDEV
                 result = move_file_safe(
@@ -1871,7 +1886,9 @@ class TestRenameModeDiskConflictIntegration(unittest.TestCase):
             self.assertTrue((output_root / "document_1.txt").exists())
             self.assertEqual((output_root / "document_1.txt").read_text(), "first copy")
             self.assertTrue((output_root / "document_2.txt").exists())
-            self.assertEqual((output_root / "document_2.txt").read_text(), "second copy")
+            self.assertEqual(
+                (output_root / "document_2.txt").read_text(), "second copy"
+            )
 
             # A NEW file with _3 suffix should be created
             renamed_target = output_root / "document_3.txt"
@@ -1912,7 +1929,9 @@ class TestRenameModeDiskConflictIntegration(unittest.TestCase):
 
             # Original should be unchanged
             self.assertTrue((output_root / "archive.tar.gz").exists())
-            self.assertEqual((output_root / "archive.tar.gz").read_text(), "existing archive")
+            self.assertEqual(
+                (output_root / "archive.tar.gz").read_text(), "existing archive"
+            )
 
             # NEW file should be archive_1.tar.gz (correct multi-part extension handling)
             renamed_target = output_root / "archive_1.tar.gz"
