@@ -150,4 +150,11 @@ AppError = Union[
 ReplaceErrors = Union[ReplaceError, IOError, PermissionError, FileOperationError]
 CommonErrors = Union[FolderError, IOError, PermissionError, FileOperationError]
 UploadErrors = Union[UploadError, SecurityError, ValidationError]
-OrganizeErrors = Union[OrganizeError, DateReadError, MoveError, IOError, PermissionError, FileOperationError]
+OrganizeErrors = Union[
+    OrganizeError,
+    DateReadError,
+    MoveError,
+    IOError,
+    PermissionError,
+    FileOperationError,
+]
