@@ -1717,6 +1717,172 @@ class TestOverwriteModeAtomicReplace(unittest.TestCase):
                 self.assertEqual(target.read_text(), "new content")
 
 
+class TestFDLeakInEXDEVHandling(unittest.TestCase):
+    """Test cases for file descriptor leak in EXDEV handling (Phase 1.1)."""
+
+    def test_given_exdev_error_in_overwrite_mode_when_moving_file_then_closes_tempfile_fd(
+        self,
+    ):
+        """Test that file descriptor from tempfile.mkstemp() is closed after EXDEV handling.
+
+        This test verifies the fix for the FD leak bug where tempfile.mkstemp()
+        returns an open file descriptor that was never closed, causing resource leaks.
+
+        The test mocks os.close() to verify it's called with the fd returned by
+        tempfile.mkstemp() when EXDEV error occurs during os.replace().
+
+        RED phase: This test will FAIL before the fix because os.close() is not called.
+        GREEN phase: After adding os.close(fd), the test will pass.
+        """
+        import errno
+        import os as os_module
+        from unittest.mock import patch, call, MagicMock
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "source.txt"
+            source.write_text("new content")
+
+            # Create output root and PRE-EXISTING target file
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+            target = output_root / "source.txt"
+            target.write_text("old content")
+
+            # Track the fd returned by mkstemp
+            mkstemp_fd = [None]
+            original_mkstemp = tempfile.mkstemp
+
+            def mock_mkstemp(*args, **kwargs):
+                fd, path = original_mkstemp(*args, **kwargs)
+                mkstemp_fd[0] = fd
+                return fd, path
+
+            # Track os.close calls
+            close_calls = []
+            original_close = os_module.close
+
+            def mock_close(fd):
+                close_calls.append(fd)
+                return original_close(fd)
+
+            # Mock os.replace to raise EXDEV error
+            original_replace = os_module.replace
+
+            def mock_replace_exdev(src, dst):
+                # Simulate EXDEV error (cross-device link)
+                exdev_error = OSError(f"Invalid cross-device link: '{src}' -> '{dst}'")
+                exdev_error.errno = errno.EXDEV
+                raise exdev_error
+
+            with (
+                patch("tempfile.mkstemp", side_effect=mock_mkstemp),
+                patch("os.close", side_effect=mock_close),
+                patch("os.replace", side_effect=mock_replace_exdev),
+            ):
+                # This should handle EXDEV and close the fd
+                result = move_file_safe(
+                    str(source),
+                    str(target),
+                    str(source_root),
+                    str(output_root),
+                    ConflictMode.OVERWRITE,
+                )
+
+                # The operation might fail due to our mocking, but that's ok
+                # We're testing that os.close() was called with the fd from mkstemp
+
+                # Verify that tempfile.mkstemp was called
+                self.assertIsNotNone(mkstemp_fd[0], "tempfile.mkstemp should have been called")
+
+                # Verify that os.close() was called with the fd from mkstemp
+                # This is the KEY assertion - the fd MUST be closed
+                self.assertIn(mkstemp_fd[0], close_calls,
+                    f"File descriptor {mkstemp_fd[0]} from tempfile.mkstemp() must be closed to prevent leak")
+
+    def test_given_exdev_error_in_overwrite_mode_without_target_when_moving_file_then_closes_tempfile_fd(
+        self,
+    ):
+        """Test that file descriptor is closed in second EXDEV block (when target doesn't exist).
+
+        This tests the second EXDEV handling block at line 475 in organize_functional.py,
+        which handles the case when os.replace() fails with EXDEV but the target file
+        doesn't exist yet.
+
+        RED phase: This test will FAIL before the fix.
+        GREEN phase: After adding os.close(fd) in both blocks, the test will pass.
+        """
+        import errno
+        import os as os_module
+        from unittest.mock import patch
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            # Create source root and source file
+            source_root = tmpdir_path / "source"
+            source_root.mkdir()
+            source = source_root / "source.txt"
+            source.write_text("content")
+
+            # Create output root but NO target file
+            output_root = tmpdir_path / "output"
+            output_root.mkdir()
+            target = output_root / "source.txt"
+            # Target does NOT exist - triggers second EXDEV block
+
+            # Track the fd returned by mkstemp
+            mkstemp_fd = [None]
+            original_mkstemp = tempfile.mkstemp
+
+            def mock_mkstemp(*args, **kwargs):
+                fd, path = original_mkstemp(*args, **kwargs)
+                mkstemp_fd[0] = fd
+                return fd, path
+
+            # Track os.close calls
+            close_calls = []
+            original_close = os_module.close
+
+            def mock_close(fd):
+                close_calls.append(fd)
+                return original_close(fd)
+
+            # Mock os.replace to raise EXDEV error
+            original_replace = os_module.replace
+
+            def mock_replace_exdev(src, dst):
+                # Simulate EXDEV error (cross-device link)
+                exdev_error = OSError(f"Invalid cross-device link: '{src}' -> '{dst}'")
+                exdev_error.errno = errno.EXDEV
+                raise exdev_error
+
+            with (
+                patch("tempfile.mkstemp", side_effect=mock_mkstemp),
+                patch("os.close", side_effect=mock_close),
+                patch("os.replace", side_effect=mock_replace_exdev),
+            ):
+                # This should handle EXDEV in the second block and close the fd
+                result = move_file_safe(
+                    str(source),
+                    str(target),
+                    str(source_root),
+                    str(output_root),
+                    ConflictMode.OVERWRITE,
+                )
+
+                # Verify that tempfile.mkstemp was called
+                self.assertIsNotNone(mkstemp_fd[0], "tempfile.mkstemp should have been called")
+
+                # Verify that os.close() was called with the fd from mkstemp
+                self.assertIn(mkstemp_fd[0], close_calls,
+                    f"File descriptor {mkstemp_fd[0]} from tempfile.mkstemp() must be closed to prevent leak")
+
+
 class TestCrossDeviceOutputDir(unittest.TestCase):
     """Test cases for cross-device output_dir handling (Phase 5.1)."""
 

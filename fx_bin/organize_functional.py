@@ -421,6 +421,7 @@ def move_file_safe(
                         # This preserves atomic semantics even across filesystems
                         target_dir = os.path.dirname(real_target) or "."
                         fd, temp_path = tempfile.mkstemp(dir=target_dir)
+                        os.close(fd)  # Close fd - we only need the unique filename
                         try:
                             # Copy source to temp file (preserves metadata)
                             shutil.copy2(real_source, temp_path)
@@ -473,6 +474,7 @@ def move_file_safe(
                     # Cross-device link: copy to temp, then atomic replace
                     target_parent = os.path.dirname(real_target) or "."
                     fd, temp_path = tempfile.mkstemp(dir=target_parent)
+                    os.close(fd)  # Close fd - we only need the unique filename
                     try:
                         # Copy source to temp file (preserves metadata)
                         shutil.copy2(source, temp_path)
