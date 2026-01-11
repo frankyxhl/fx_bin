@@ -154,12 +154,9 @@ def get_function_threshold(filepath: Path, func_name: str) -> int:
 
     Special cases:
     - fx_bin/cli.py:organize → 50 (large orchestrator function)
-    - fx_bin/organize_functional.py:execute_organize → 50 (large orchestrator function)
     - All other functions → 15
     """
     if str(filepath).endswith("fx_bin/cli.py") and func_name == "organize":
-        return 50
-    if str(filepath).endswith("fx_bin/organize_functional.py") and func_name == "execute_organize":
         return 50
     return 15
 

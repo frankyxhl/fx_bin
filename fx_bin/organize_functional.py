@@ -711,7 +711,7 @@ def _execute_move_with_error_handling(
     move_result: IOResult[Tuple[None, bool], MoveError],
     item: "FileOrganizeResult",
     fail_fast: bool,
-) -> "IOResult[Tuple[None, bool], MoveError | OrganizeError] | int":
+) -> "IOResult[Tuple[None, bool], MoveError | OrganizeError] | Tuple[int, int, int]":
     """Handle move result with error checking.
 
     Args:
@@ -721,11 +721,15 @@ def _execute_move_with_error_handling(
 
     Returns:
         - IOResult error if move failed and fail_fast is True
-        - int (0 or 1) representing dir_created if move succeeded
+        - Tuple of (processed_delta, errors_delta, dir_created_delta) if move
+          succeeded or failed with fail_fast=False:
+          - Success: (0, 0, 1) or (0, 0, 0) depending on whether directory was created
+          - Failure (non-fail-fast): (-1, 1, 0) to indicate processed should be
+            decremented and errors should be incremented
     """
     try:
         _, dir_created = unsafe_ioresult_unwrap(move_result)
-        return 1 if dir_created else 0
+        return (0, 0, 1 if dir_created else 0)
     except Exception as e:
         if fail_fast:
             return IOResult.from_failure(
@@ -733,8 +737,33 @@ def _execute_move_with_error_handling(
                     f"Failed to move {item.source} to {item.target}: {e}"
                 )
             )
-        # Don't increment errors here - caller handles that
-        return 0  # No directory created on error
+        # Non-fail-fast: return deltas to decrement processed and increment errors
+        return (-1, 1, 0)
+
+
+def _read_file_dates(
+    files: "list[str]", context: OrganizeContext
+) -> "dict[str, datetime] | tuple[None, str]":
+    """Read file dates for all files, respecting fail_fast setting.
+
+    Args:
+        files: List of file paths to read dates for
+        context: Organization context with date_source and fail_fast settings
+
+    Returns:
+        dict mapping file paths to their dates, or (None, error_message) if
+        fail_fast error occurred
+    """
+    dates: "dict[str, datetime]" = {}
+    for file_path in files:
+        date_result = get_file_date(file_path, context.date_source)
+        try:
+            dates[file_path] = unsafe_ioresult_unwrap(date_result)
+        except Exception as e:
+            if context.fail_fast:
+                # Signal fail_fast error to caller with specific error message
+                return (None, f"Failed to read date for {file_path}: {e}")
+    return dates
 
 
 def execute_organize(
@@ -778,20 +807,12 @@ def execute_organize(
         return IOResult.from_failure(e)
 
     # Read file dates
-    dates: "dict[str, datetime]" = {}
-    date_errors = 0
-
-    for file_path in files:
-        date_result = get_file_date(file_path, context.date_source)
-        try:
-            dates[file_path] = unsafe_ioresult_unwrap(date_result)
-        except Exception as e:
-            date_errors += 1
-            if context.fail_fast:
-                # Stop immediately on first error when fail_fast is enabled
-                return IOResult.from_failure(
-                    OrganizeError(f"Failed to read date for {file_path}: {e}")
-                )
+    dates_result = _read_file_dates(files, context)
+    if isinstance(dates_result, tuple):
+        # fail_fast error occurred
+        _, error_msg = dates_result
+        return IOResult.from_failure(OrganizeError(error_msg))
+    dates = dates_result
 
     # Generate plan
     plan = generate_organize_plan(files, dates, context)
@@ -829,8 +850,11 @@ def execute_organize(
                             "]",
                             exec_result,
                         )
-                    # Success: dir_created might be 0 or 1
-                    directories_created += exec_result
+                    # Success or non-fail-fast error: unpack the tuple
+                    proc_delta, err_delta, dir_delta = exec_result
+                    processed += proc_delta
+                    errors += err_delta
+                    directories_created += dir_delta
             case "skipped":
                 skipped += 1
             case "error":
