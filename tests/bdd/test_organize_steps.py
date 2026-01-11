@@ -566,15 +566,28 @@ def run_organize_command(cli_runner, command_context, temp_directory, command):
     if "organize" in command_parts:
         # Check if source argument is already provided
         # The source is the first non-option argument after "organize"
+        # that is NOT a value for a preceding option
         has_source = False
-        for i, part in enumerate(command_parts):
+        i = 0
+        while i < len(command_parts):
+            part = command_parts[i]
             if part == "organize":
-                # Check if there's a non-option argument after "organize"
-                for j in range(i + 1, len(command_parts)):
-                    if not command_parts[j].startswith("-"):
+                # Check subsequent arguments
+                j = i + 1
+                while j < len(command_parts):
+                    if command_parts[j].startswith("-"):
+                        # This is an option, skip its value too
+                        if command_parts[j] in ("--include", "-i", "--exclude", "-e", "--output", "-o",
+                                                "--date-source", "--depth", "--on-conflict"):
+                            j += 2  # Skip option and its value
+                        else:
+                            j += 1  # Skip flag (no value)
+                    else:
+                        # This is a non-option argument - it's the source
                         has_source = True
                         break
                 break
+            i += 1
 
         if not has_source:
             # Add current directory as source
@@ -748,10 +761,14 @@ def verify_files_organized_into_directory(temp_directory, directory):
 @then(parsers.parse('"{filename}" should be located at "{relative_path}"'))
 def verify_file_location(temp_directory, filename, relative_path):
     """Verify a specific file is at the expected location."""
-    full_path = temp_directory / "organized" / relative_path
+    # Don't prepend 'organized' if relative_path already starts with it
+    if relative_path.startswith("organized/"):
+        full_path = temp_directory / relative_path
+    else:
+        full_path = temp_directory / "organized" / relative_path
 
-    assert full_path.exists(), f"File {filename} not found at organized/{relative_path}"
-    assert full_path.is_file(), f"Path organized/{relative_path} is not a file"
+    assert full_path.exists(), f"File {filename} not found at {relative_path}"
+    assert full_path.is_file(), f"Path {relative_path} is not a file"
 
     # Verify filename matches
     assert full_path.name == filename, f"Expected {filename}, got {full_path.name}"
@@ -760,10 +777,14 @@ def verify_file_location(temp_directory, filename, relative_path):
 @then(parsers.parse('the new "{filename}" should be located at "{relative_path}"'))
 def verify_new_file_location(temp_directory, filename, relative_path):
     """Verify a new/renamed file is at the expected location."""
-    full_path = temp_directory / "organized" / relative_path
+    # Don't prepend 'organized' if relative_path already starts with it
+    if relative_path.startswith("organized/"):
+        full_path = temp_directory / relative_path
+    else:
+        full_path = temp_directory / "organized" / relative_path
 
-    assert full_path.exists(), f"New file {filename} not found at organized/{relative_path}"
-    assert full_path.is_file(), f"Path organized/{relative_path} is not a file"
+    assert full_path.exists(), f"New file {filename} not found at {relative_path}"
+    assert full_path.is_file(), f"Path {relative_path} is not a file"
     assert full_path.name == filename, f"Expected {filename}, got {full_path.name}"
 
 
