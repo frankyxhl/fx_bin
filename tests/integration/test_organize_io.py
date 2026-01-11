@@ -1,9 +1,10 @@
 """Integration tests for organize_functional.py IO operations."""
 
+import os
 import tempfile
 import unittest
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 from unittest.mock import patch
 
 from fx_bin.organize_functional import (
@@ -735,6 +736,63 @@ class TestExecuteOrganize(unittest.TestCase):
             self.assertEqual(summary.skipped, 0)
             self.assertEqual(summary.errors, 0)
             self.assertFalse(summary.dry_run)
+
+    def test_given_preexisting_target_and_skip_conflict_mode_when_executing_organize_then_counts_as_skipped(
+        self,
+    ):
+        """Test execute_organize() runtime disk conflict is counted as skipped."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmpdir_path = Path(tmpdir)
+
+            source_dir = tmpdir_path / "source"
+            source_dir.mkdir()
+            source_file = source_dir / "photo.jpg"
+            source_file.write_text("source")
+
+            fixed_dt = datetime(2026, 1, 10, 12, 0, 0)
+            ts = fixed_dt.timestamp()
+            os.utime(source_file, (ts, ts))
+
+            output_dir = tmpdir_path / "output"
+            output_dir.mkdir()
+
+            # First run in dry-run to learn the intended target path.
+            dry_ctx = OrganizeContext(
+                date_source=DateSource.MODIFIED,
+                depth=3,
+                conflict_mode=ConflictMode.SKIP,
+                output_dir=str(output_dir),
+                dry_run=True,
+            )
+            dry_result = execute_organize(str(source_dir), dry_ctx)
+            _, dry_plan = unsafe_ioresult_unwrap(dry_result)
+            moved_items = [p for p in dry_plan if p.action == "moved"]
+            self.assertEqual(len(moved_items), 1)
+            target_path = Path(moved_items[0].target)
+
+            # Create the target file to force a disk conflict.
+            target_path.parent.mkdir(parents=True, exist_ok=True)
+            target_path.write_text("existing")
+
+            ctx = OrganizeContext(
+                date_source=DateSource.MODIFIED,
+                depth=3,
+                conflict_mode=ConflictMode.SKIP,
+                output_dir=str(output_dir),
+                dry_run=False,
+            )
+            result = execute_organize(str(source_dir), ctx)
+            summary, _ = unsafe_ioresult_unwrap(result)
+
+            self.assertEqual(summary.total_files, 1)
+            self.assertEqual(summary.processed, 0)
+            self.assertEqual(summary.skipped, 1)
+            self.assertEqual(summary.errors, 0)
+
+            # Source remains in place and target remains unchanged.
+            self.assertTrue(source_file.exists())
+            self.assertEqual(source_file.read_text(), "source")
+            self.assertEqual(target_path.read_text(), "existing")
 
 
 class TestHiddenFileHandling(unittest.TestCase):

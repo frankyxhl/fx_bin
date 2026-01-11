@@ -729,9 +729,10 @@ def _execute_move_with_error_handling(
         - IOResult error if move failed and fail_fast is True
         - Tuple of (processed_delta, errors_delta, dir_created_delta) if move
           succeeded or failed with fail_fast=False:
-          - Success: (1, 0, 1) or (1, 0, 0) depending on whether directory was created
-          - Failure (non-fail-fast): (-1, 1, 0) to indicate errors should be
-            incremented
+          - Success: (1, 0, 1) or (1, 0, 0) depending on whether directory was
+            created
+          - Failure (non-fail-fast): (0, 1, 0) to indicate errors should be
+            incremented (processed is unchanged)
     """
     try:
         _, dir_created = unsafe_ioresult_unwrap(move_result)
@@ -743,8 +744,8 @@ def _execute_move_with_error_handling(
                     f"Failed to move {item.source} to {item.target}: {e}"
                 )
             )
-        # Non-fail-fast: return deltas to decrement processed and increment errors
-        return (-1, 1, 0)
+        # Non-fail-fast: return deltas to increment errors (processed unchanged)
+        return (0, 1, 0)
 
 
 def _read_file_dates(
@@ -790,6 +791,22 @@ def _execute_moved_item(
     """
     if context.dry_run:
         return (1, 0, 0)  # Dry run still counts as "processed"
+
+    # Runtime conflicts can appear between planning and execution.
+    # For SKIP/ASK conflict modes, treat an existing target as a skip.
+    # This avoids counting a no-op "success" as processed.
+    if context.conflict_mode in (ConflictMode.SKIP, ConflictMode.ASK):
+        try:
+            real_target = os.path.realpath(item.target)
+        except OSError:
+            real_target = item.target
+        if os.path.exists(real_target):
+            if context.conflict_mode == ConflictMode.ASK:
+                L.warning(
+                    f"Runtime conflict: {real_target} exists. "
+                    "Skipping (ASK mode only handles scan-time conflicts)."
+                )
+            return (0, 0, 0)
 
     move_result = move_file_safe(
         item.source,
@@ -880,6 +897,9 @@ def execute_organize(
                 processed += proc_delta
                 errors += err_delta
                 directories_created += dir_delta
+                if proc_delta == 0 and err_delta == 0:
+                    # Runtime skip (e.g., disk conflict in SKIP/ASK mode)
+                    skipped += 1
             case "skipped":
                 skipped += 1
             case "error":
