@@ -55,12 +55,12 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `tests/bdd/test_organize_steps.py`
 
-- [ ] 4.1 **RED**: 编写测试: 验证文件被移动
-- [ ] 4.2 **RED**: 运行测试确认失败（看到步骤未定义）
-- [ ] 4.3 **GREEN**: 实现 `files should be organized into` 步骤
-- [ ] 4.4 **GREEN**: 实现 `original directory should be empty` 步骤
-- [ ] 4.5 **GREEN**: 实现 `conflict should be handled` 步骤
-- [ ] 4.6 Commit: "Phase 4: Implement Then steps for assertions"
+- [x] 4.1 **RED**: 编写测试: 验证文件被移动
+- [x] 4.2 **RED**: 运行测试确认失败（看到步骤未定义）
+- [x] 4.3 **GREEN**: 实现 `files should be organized into` 步骤
+- [x] 4.4 **GREEN**: 实现 `original directory should be empty` 步骤
+- [x] 4.5 **GREEN**: 实现 `conflict should be handled` 步骤
+- [x] 4.6 Commit: "Phase 4: Implement Then steps for assertions" (2ffbb402)
 
 ---
 
@@ -70,16 +70,16 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `features/organize.feature`, `tests/bdd/test_organize_steps.py`
 
-- [ ] 5.1 **RED**: 编写场景: 按日期组织文件（默认模式）
-- [ ] 5.2 **RED**: 运行测试确认失败
-- [ ] 5.3 **GREEN**: 实现完整步骤链
-- [ ] 5.4 **RED**: 编写场景: 递归扫描嵌套目录
-- [ ] 5.5 **RED**: 运行测试确认失败
-- [ ] 5.6 **GREEN**: 实现递归验证步骤
-- [ ] 5.7 **RED**: 编写场景: dry-run 不修改文件
-- [ ] 5.8 **RED**: 运行测试确认失败
-- [ ] 5.9 **GREEN**: 实现 dry-run 验证步骤
-- [ ] 5.10 Commit: "Phase 5: Core scenarios - default, recursive, dry-run"
+- [x] 5.1 **RED**: 编写场景: 按日期组织文件（默认模式）
+- [x] 5.2 **RED**: 运行测试确认失败
+- [x] 5.3 **GREEN**: 实现完整步骤链
+- [x] 5.4 **RED**: 编写场景: 递归扫描嵌套目录
+- [x] 5.5 **RED**: 运行测试确认失败
+- [x] 5.6 **GREEN**: 实现递归验证步骤
+- [x] 5.7 **RED**: 编写场景: dry-run 不修改文件
+- [x] 5.8 **RED**: 运行测试确认失败
+- [x] 5.9 **GREEN**: 实现 dry-run 验证步骤
+- [x] 5.10 Commit: "Phase 5: Core scenarios - default, recursive, dry-run" (bb75990f)
 
 ---
 
@@ -89,16 +89,16 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `features/organize.feature`, `tests/bdd/test_organize_steps.py`
 
-- [ ] 6.1 **RED**: 编写场景: SKIP 模式跳过冲突文件
-- [ ] 6.2 **RED**: 运行测试确认失败
-- [ ] 6.3 **GREEN**: 实现 SKIP 验证步骤
-- [ ] 6.4 **RED**: 编写场景: OVERWRITE 覆盖冲突文件
-- [ ] 6.5 **RED**: 运行测试确认失败
-- [ ] 6.6 **GREEN**: 实现 OVERWRITE 验证步骤
-- [ ] 6.7 **RED**: 编写场景: RENAME 自动重命名冲突
-- [ ] 6.8 **RED**: 运行测试确认失败
-- [ ] 6.9 **GREEN**: 实现 RENAME 验证步骤
-- [ ] 6.10 Commit: "Phase 6: Conflict handling - SKIP, OVERWRITE, RENAME"
+- [x] 6.1 **RED**: 编写场景: SKIP 模式跳过冲突文件
+- [x] 6.2 **RED**: 运行测试确认失败
+- [x] 6.3 **GREEN**: 实现 SKIP 验证步骤
+- [x] 6.4 **RED**: 编写场景: OVERWRITE 覆盖冲突文件
+- [x] 6.5 **RED**: 运行测试确认失败
+- [x] 6.6 **GREEN**: 实现 OVERWRITE 验证步骤
+- [x] 6.7 **RED**: 编写场景: RENAME 自动重命名冲突
+- [x] 6.8 **RED**: 运行测试确认失败
+- [x] 6.9 **GREEN**: 实现 RENAME 验证步骤
+- [x] 6.10 Commit: "Phase 6: Conflict handling - SKIP, OVERWRITE, RENAME" (1a36ca2e)
 
 ---
 
@@ -108,13 +108,13 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `features/organize.feature`, `tests/bdd/test_organize_steps.py`
 
-- [ ] 7.1 **RED**: 编写场景: ASK 模式 TTY 交互
-- [ ] 7.2 **RED**: 运行测试确认失败
-- [ ] 7.3 **GREEN**: 实现 ASK 交互模拟（mock click.confirm）
-- [ ] 7.4 **RED**: 编写场景: ASK 模式非-TTY 回退 SKIP
-- [ ] 7.5 **RED**: 运行测试确认失败
-- [ ] 7.6 **GREEN**: 实现非-TTY 验证步骤
-- [ ] 7.7 Commit: "Phase 7: ASK mode interactive scenarios"
+- [x] 7.1 **RED**: 编写场景: ASK 模式 TTY 交互
+- [x] 7.2 **RED**: 运行测试确认失败
+- [x] 7.3 **GREEN**: 实现 ASK 交互模拟（mock click.confirm）
+- [x] 7.4 **RED**: 编写场景: ASK 模式非-TTY 回退 SKIP
+- [x] 7.5 **RED**: 运行测试确认失败
+- [x] 7.6 **GREEN**: 实现非-TTY 验证步骤
+- [x] 7.7 Commit: "Phase 7: ASK mode interactive scenarios" (4518f9da)
 
 ---
 
@@ -124,13 +124,13 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `features/organize.feature`, `tests/bdd/test_organize_steps.py`
 
-- [ ] 8.1 **RED**: 编写场景: 空目录处理
-- [ ] 8.2 **RED**: 运行测试确认失败
-- [ ] 8.3 **GREEN**: 实现空目录验证步骤
-- [ ] 8.4 **RED**: 编写场景: 无效路径错误处理
-- [ ] 8.5 **RED**: 运行测试确认失败
-- [ ] 8.6 **GREEN**: 实现错误消息验证步骤
-- [ ] 8.7 Commit: "Phase 8: Edge cases and error handling"
+- [x] 8.1 **RED**: 编写场景: 空目录处理
+- [x] 8.2 **RED**: 运行测试确认失败
+- [x] 8.3 **GREEN**: 实现空目录验证步骤
+- [x] 8.4 **RED**: 编写场景: 无效路径错误处理
+- [x] 8.5 **RED**: 运行测试确认失败
+- [x] 8.6 **GREEN**: 实现错误消息验证步骤
+- [x] 8.7 Commit: "Phase 8: Edge cases and error handling" (859b8e17)
 
 ---
 
