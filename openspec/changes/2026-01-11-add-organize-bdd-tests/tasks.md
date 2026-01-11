@@ -138,11 +138,11 @@ Each task follows RED-GREEN-REFACTOR:
 
 **目标**: 确保所有测试通过，文档完整
 
-- [ ] 9.1 **GREEN**: 运行所有 BDD 测试: `poetry run pytest tests/bdd/test_organize_steps.py -v`
-- [ ] 9.2 **GREEN**: 运行标签过滤（smoke 测试）: `poetry run pytest -m "bdd and smoke" -v`
-- [ ] 9.3 **GREEN**: 运行现有集成测试确保无回归: `poetry run pytest tests/integration/test_organize*.py -v`
-- [ ] 9.4 **REFACTOR**: 添加 BDD 测试运行说明到 CLAUDE.md
-- [ ] 9.5 Commit: "Phase 9: Final verification and documentation"
+- [x] 9.1 **GREEN**: 运行所有 BDD 测试: `poetry run pytest tests/bdd/test_organize_steps.py -v`
+- [x] 9.2 **GREEN**: 运行标签过滤（smoke 测试）: `poetry run pytest -m "bdd and smoke" -v`
+- [x] 9.3 **GREEN**: 运行现有集成测试确保无回归: `poetry run pytest tests/integration/test_organize*.py -v`
+- [x] 9.4 **REFACTOR**: 添加 BDD 测试运行说明到 CLAUDE.md
+- [x] 9.5 Commit: "Phase 9: Final verification and documentation" (171719b1)
 
 ---
 
