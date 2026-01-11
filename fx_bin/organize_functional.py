@@ -15,7 +15,7 @@ import os
 import shutil
 import tempfile
 from datetime import datetime
-from typing import List, Set, Tuple
+from typing import List, Set, Tuple, cast
 
 from loguru import logger as L
 from returns.io import IOResult
@@ -450,7 +450,9 @@ def _handle_cross_device_move(
         except OSError:
             pass
         return IOResult.from_failure(
-            MoveError(f"Cannot move {source} to {target}: cross-device link failed: {e}")
+            MoveError(
+                f"Cannot move {source} to {target}: cross-device link failed: {e}"
+            )
         )
 
 
@@ -709,7 +711,7 @@ def _execute_move_with_error_handling(
     move_result: IOResult[Tuple[None, bool], MoveError],
     item: "FileOrganizeResult",
     fail_fast: bool,
-) -> "IOResult[Tuple[None, bool], MoveError] | int":
+) -> "IOResult[Tuple[None, bool], MoveError | OrganizeError] | int":
     """Handle move result with error checking.
 
     Args:
@@ -816,10 +818,17 @@ def execute_organize(
                         move_result, item, context.fail_fast
                     )
                     if isinstance(exec_result, IOResult):
-                        # Error result
+                        # Error result - cast to expected return type
                         processed -= 1
                         errors += 1
-                        return exec_result
+                        # The error is always OrganizeError when fail_fast is True
+                        return cast(
+                            "IOResult["
+                            "Tuple[OrganizeSummary, List[FileOrganizeResult]], "
+                            "OrganizeError"
+                            "]",
+                            exec_result,
+                        )
                     # Success: dir_created might be 0 or 1
                     directories_created += exec_result
             case "skipped":

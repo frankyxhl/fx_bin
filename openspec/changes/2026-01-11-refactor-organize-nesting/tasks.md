@@ -262,13 +262,13 @@ Each task follows RED-GREEN-REFACTOR:
 
 **Goal**: Confirm all refactoring complete, metrics met
 
-- [ ] 17.1 **GREEN**: Run complete test suite (560 tests): `poetry run pytest --no-cov`
-- [ ] 17.2 **GREEN**: flake8 code quality check: `poetry run flake8 fx_bin/`
-- [ ] 17.3 **GREEN**: mypy type check: `poetry run mypy fx_bin/`
-- [ ] 17.4 **GREEN**: Measure final nesting complexity: `python3 scripts/check_nesting.py fx_bin/cli.py fx_bin/organize_functional.py` (confirm ≤4 levels)
-- [ ] 17.5 **GREEN**: Compare cyclomatic complexity before/after: `python3 scripts/check_complexity.py fx_bin/cli.py fx_bin/organize_functional.py` (confirm: organize() ≤50, all other functions ≤15; exit code 0 required)
-- [ ] 17.6 **GREEN**: Manual test all organize functionality
-- [ ] 17.7 Commit: "Phase 17: Final verification and metrics"
+- [x] 17.1 **GREEN**: Run complete test suite (560 tests): `poetry run pytest --no-cov`
+- [x] 17.2 **GREEN**: flake8 code quality check: `poetry run flake8 fx_bin/`
+- [x] 17.3 **GREEN**: mypy type check: `poetry run mypy fx_bin/`
+- [x] 17.4 **GREEN**: Measure final nesting complexity: `python3 scripts/check_nesting.py fx_bin/cli.py fx_bin/organize_functional.py` (confirm ≤4 levels)
+- [x] 17.5 **GREEN**: Compare cyclomatic complexity before/after: `python3 scripts/check_complexity.py fx_bin/cli.py fx_bin/organize_functional.py` (confirm: organize() ≤50, all other functions ≤15; exit code 0 required)
+- [x] 17.6 **GREEN**: Manual test all organize functionality
+- [x] 17.7 Commit: "Phase 17: Final verification and metrics"
 
 ---
 
