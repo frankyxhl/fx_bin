@@ -729,13 +729,13 @@ def _execute_move_with_error_handling(
         - IOResult error if move failed and fail_fast is True
         - Tuple of (processed_delta, errors_delta, dir_created_delta) if move
           succeeded or failed with fail_fast=False:
-          - Success: (0, 0, 1) or (0, 0, 0) depending on whether directory was created
-          - Failure (non-fail-fast): (-1, 1, 0) to indicate processed should be
-            decremented and errors should be incremented
+          - Success: (1, 0, 1) or (1, 0, 0) depending on whether directory was created
+          - Failure (non-fail-fast): (-1, 1, 0) to indicate errors should be
+            incremented
     """
     try:
         _, dir_created = unsafe_ioresult_unwrap(move_result)
-        return (0, 0, 1 if dir_created else 0)
+        return (1, 0, 1 if dir_created else 0)
     except Exception as e:
         if fail_fast:
             return IOResult.from_failure(
@@ -789,7 +789,7 @@ def _execute_moved_item(
         - Tuple of (processed_delta, errors_delta, dir_created_delta) otherwise
     """
     if context.dry_run:
-        return (0, 0, 0)
+        return (1, 0, 0)  # Dry run still counts as "processed"
 
     move_result = move_file_safe(
         item.source,
@@ -864,11 +864,9 @@ def execute_organize(
     for item in plan:
         match item.action:
             case "moved":
-                processed += 1
                 exec_result = _execute_moved_item(item, source_dir, context)
                 if isinstance(exec_result, IOResult):
                     # Error result - cast to expected return type
-                    processed -= 1
                     errors += 1
                     return cast(
                         "IOResult["

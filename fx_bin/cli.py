@@ -1057,9 +1057,6 @@ def organize(
                 ask_user_choices, context = _handle_disk_conflicts_interactively(
                     disk_conflicts, context
                 )
-                # Early exit for non-TTY mode
-                if context.conflict_mode == ConflictMode.SKIP:
-                    return 0
         except Exception as e:
             # If scanning fails, fall back to SKIP mode for safety
             click.echo(
