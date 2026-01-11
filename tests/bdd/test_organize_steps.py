@@ -2,6 +2,7 @@
 
 This module implements pytest-bdd step definitions for the fx organize command.
 Phase 2: Given steps for test data setup.
+Phase 3: When steps for command execution.
 """
 
 import os
@@ -11,7 +12,7 @@ from pathlib import Path
 from typing import Dict, Any
 
 import pytest
-from pytest_bdd import scenarios, given, parsers
+from pytest_bdd import scenarios, given, when, then, parsers
 from click.testing import CliRunner
 
 from fx_bin.cli import cli
@@ -582,3 +583,136 @@ def setup_organized_with_files(temp_directory, file_builder):
     organized_dir = temp_directory / "organized"
     organized_dir.mkdir(parents=True, exist_ok=True)
     file_builder("existing.txt", content="existing content", relative_path="organized")
+
+
+# ==============================================================================
+# WHEN STEPS - Command Execution
+# ==============================================================================
+
+
+@when(parsers.parse('I run "{command}"'))
+def run_organize_command(cli_runner, command_context, temp_directory, command):
+    """Execute fx organize command and capture results."""
+    # Save current working directory and change to temp directory for relative path operations
+    original_cwd = os.getcwd()
+    os.chdir(temp_directory)
+
+    # Parse command into parts
+    command_parts = command.split()
+    if command_parts[0] == "fx":
+        command_parts = command_parts[1:]  # Remove 'fx' prefix
+
+    # Remove quotes from arguments
+    command_parts = [arg.strip("'\"") for arg in command_parts]
+
+    # Record start time for performance testing
+    start_time = time.time()
+
+    try:
+        result = cli_runner.invoke(cli, command_parts, catch_exceptions=False)
+        execution_time = time.time() - start_time
+
+        command_context["last_exit_code"] = result.exit_code
+        command_context["last_output"] = result.output
+        command_context["last_error"] = None
+        command_context["execution_time"] = execution_time
+
+    except Exception as e:
+        execution_time = time.time() - start_time
+
+        command_context["last_exit_code"] = 1
+        command_context["last_output"] = ""
+        command_context["last_error"] = str(e)
+        command_context["execution_time"] = execution_time
+
+    finally:
+        # Always restore original working directory
+        os.chdir(original_cwd)
+
+
+@when(parsers.parse('I run "{command}" {path}'))
+def run_organize_command_with_path(cli_runner, command_context, command, path):
+    """Execute fx organize command with specific path."""
+    # Parse command into parts
+    command_parts = command.split() + [path]
+    if command_parts[0] == "fx":
+        command_parts = command_parts[1:]
+
+    start_time = time.time()
+
+    try:
+        result = cli_runner.invoke(cli, command_parts, catch_exceptions=False)
+        execution_time = time.time() - start_time
+
+        command_context["last_exit_code"] = result.exit_code
+        command_context["last_output"] = result.output
+        command_context["last_error"] = None
+        command_context["execution_time"] = execution_time
+
+    except Exception as e:
+        execution_time = time.time() - start_time
+
+        command_context["last_exit_code"] = 1
+        command_context["last_output"] = ""
+        command_context["last_error"] = str(e)
+        command_context["execution_time"] = execution_time
+
+
+@when("I confirm the prompt to overwrite")
+def confirm_overwrite_prompt(command_context, cli_runner, temp_directory):
+    """Simulate user confirming the overwrite prompt in ASK mode."""
+    # This is handled by CliRunner's input simulation
+    # For ASK mode, we need to provide input
+    if "last_command" not in command_context:
+        return
+
+    # Re-run the last command with 'y' input
+    last_command = command_context.get("last_command", "")
+    if last_command:
+        original_cwd = os.getcwd()
+        os.chdir(temp_directory)
+
+        try:
+            command_parts = last_command.split()
+            if command_parts[0] == "fx":
+                command_parts = command_parts[1:]
+
+            result = cli_runner.invoke(
+                cli, command_parts, input="y\n", catch_exceptions=False
+            )
+
+            command_context["last_exit_code"] = result.exit_code
+            command_context["last_output"] = result.output
+
+        finally:
+            os.chdir(original_cwd)
+
+
+@when("I decline the prompt to overwrite")
+def decline_overwrite_prompt(command_context, cli_runner, temp_directory):
+    """Simulate user declining the overwrite prompt in ASK mode."""
+    # This is handled by CliRunner's input simulation
+    # For ASK mode, we need to provide input
+    if "last_command" not in command_context:
+        return
+
+    # Re-run the last command with 'n' input
+    last_command = command_context.get("last_command", "")
+    if last_command:
+        original_cwd = os.getcwd()
+        os.chdir(temp_directory)
+
+        try:
+            command_parts = last_command.split()
+            if command_parts[0] == "fx":
+                command_parts = command_parts[1:]
+
+            result = cli_runner.invoke(
+                cli, command_parts, input="n\n", catch_exceptions=False
+            )
+
+            command_context["last_exit_code"] = result.exit_code
+            command_context["last_output"] = result.output
+
+        finally:
+            os.chdir(original_cwd)

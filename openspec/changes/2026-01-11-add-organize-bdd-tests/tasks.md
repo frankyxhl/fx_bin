@@ -27,11 +27,11 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `tests/bdd/test_organize_steps.py`
 
-- [ ] 2.1 **RED**: 编写测试: 验证文件目录创建步骤
-- [ ] 2.2 **RED**: 运行测试确认失败（看到 StepDefNotFound）
-- [ ] 2.3 **GREEN**: 实现 `I have a directory with files` 步骤
-- [ ] 2.4 **GREEN**: 实现 `I have nested directories` 步骤
-- [ ] 2.5 Commit: "Phase 2: Implement Given steps for test data setup"
+- [x] 2.1 **RED**: 编写测试: 验证文件目录创建步骤
+- [x] 2.2 **RED**: 运行测试确认失败（看到 StepDefNotFound）
+- [x] 2.3 **GREEN**: 实现 `I have a directory with files` 步骤
+- [x] 2.4 **GREEN**: 实现 `I have nested directories` 步骤
+- [x] 2.5 Commit: "Phase 2: Implement Given steps for test data setup" (d0c36a98)
 
 ---
 
