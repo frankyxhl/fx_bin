@@ -247,26 +247,31 @@ def _scan_recursive(
 
     files: List[str] = []
 
+    # First, get directory info for cycle detection
     try:
         dir_stat = os.stat(dir_path)
         dir_inode = (dir_stat.st_dev, dir_stat.st_ino)
-
-        # Cycle detection
-        if dir_inode in visited_inodes:
-            L.debug(f"Skipping already visited directory: {dir_path}")
-            return files
-
-        visited_inodes.add(dir_inode)
-
-        with os.scandir(dir_path) as entries:
-            for entry in entries:
-                files.extend(_process_scan_entry(
-                    entry, dir_path, depth, max_depth,
-                    output_dir, visited_inodes, follow_symlinks
-                ))
-
     except (OSError, PermissionError):
-        pass
+        return files
+
+    # Cycle detection
+    if dir_inode in visited_inodes:
+        L.debug(f"Skipping already visited directory: {dir_path}")
+        return files
+
+    visited_inodes.add(dir_inode)
+
+    # Then, scan the directory entries
+    try:
+        entries = list(os.scandir(dir_path))
+    except (OSError, PermissionError):
+        return files
+
+    for entry in entries:
+        files.extend(_process_scan_entry(
+            entry, dir_path, depth, max_depth,
+            output_dir, visited_inodes, follow_symlinks
+        ))
 
     return files
 
@@ -400,20 +405,21 @@ def _scan_non_recursive(
     follow_symlinks: bool,
 ) -> List[str]:
     """Helper for non-recursive directory scanning."""
-    files: List[str] = []
-
+    # First, ensure we can open the directory
     try:
-        with os.scandir(dir_path) as entries:
-            for entry in entries:
-                try:
-                    files.extend(
-                        _process_entry(entry, dir_path, output_dir, follow_symlinks)
-                    )
-                except (OSError, PermissionError):
-                    continue
-
+        entries = list(os.scandir(dir_path))
     except (OSError, PermissionError):
-        pass
+        return []
+
+    # Then process each entry, skipping any that fail
+    files = []
+    for entry in entries:
+        try:
+            files.extend(
+                _process_entry(entry, dir_path, output_dir, follow_symlinks)
+            )
+        except (OSError, PermissionError):
+            continue
 
     return files
 
