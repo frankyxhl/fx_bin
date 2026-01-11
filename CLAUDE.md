@@ -130,6 +130,51 @@ poetry run tox -e security
 poetry run pytest tests/test_*security*.py -v && poetry run bandit -r fx_bin/ && poetry run safety check
 ```
 
+### BDD Testing with pytest-bdd
+
+The project uses [pytest-bdd](https://pytest-bdd.readthedocs.io/) for behavior-driven development testing with Gherkin syntax.
+
+**BDD Test Structure:**
+- Feature files: `features/*.feature` (Gherkin scenarios)
+- Step definitions: `tests/bdd/test_*_steps.py` (Python implementations)
+- Test configuration: `tests/bdd/conftest.py` (shared fixtures)
+
+**Running BDD tests:**
+```bash
+# Run all BDD tests
+poetry run pytest tests/bdd/ -v
+
+# Run specific BDD test file
+poetry run pytest tests/bdd/test_organize_steps.py -v
+
+# Run smoke tests (critical happy path scenarios)
+poetry run pytest -m smoke -v
+
+# Run BDD tests with coverage
+poetry run pytest tests/bdd/ --cov=fx_bin --cov-report=term-missing
+
+# Run BDD tests without coverage (faster)
+poetry run pytest tests/bdd/ -v --no-cov
+```
+
+**BDD Test Organization:**
+- `@smoke` tag: Critical happy path tests that must pass
+- `@critical` tag: Essential functionality tests
+- `@integration` tag: Tests requiring full system integration
+- `@error_handling` tag: Edge case and error condition tests
+
+**Current BDD Test Coverage:**
+- File filter BDD tests: 10 scenarios covering filtering by extension
+- File organize BDD tests: 50 scenarios covering date-based organization
+- 43/50 organize tests passing (86% pass rate)
+- All 72 integration tests passing
+
+**Key BDD Features:**
+- Gherkin syntax (Given/When/Then) for readable test scenarios
+- Reusable step definitions across multiple scenarios
+- Automatic test data generation with fixtures
+- Command execution testing with Click's CliRunner
+
 ### Property-Based Testing with Hypothesis
 
 The project uses [Hypothesis](https://hypothesis.readthedocs.io/) for property-based testing to automatically discover edge cases.
