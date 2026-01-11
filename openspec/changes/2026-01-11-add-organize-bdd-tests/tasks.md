@@ -164,3 +164,126 @@ Each task follows RED-GREEN-REFACTOR:
 | ASK 模式非-TTY 回退 | @integration @error_handling | 非交互环境自动回退到 SKIP |
 | 空目录处理 | @edge_cases | 处理空输入目录 |
 | 无效路径错误 | @edge_cases @error_handling | 处理不存在的目录路径 |
+
+---
+
+## Follow-up: Fix 7 Failing BDD Tests
+
+**说明**: 用户 review 发现 7 个问题需要修复，以达到 50/50 测试通过。
+
+---
+
+## Phase 10: 修复 Step 参数/签名不匹配
+
+**目标**: 修复 fixture 缺失问题
+
+**文件**: `tests/bdd/test_organize_steps.py`
+
+- [ ] 10.1 **RED**: 运行测试确认失败 (fixture 'filename' not found)
+- [ ] 10.2 **GREEN**: 修复 step 签名，添加 filename 参数到 parsers.parse
+- [ ] 10.3 Commit: "Phase 10: Fix step parameter mismatch"
+
+---
+
+## Phase 11: 移除重复/冲突的 step definitions
+
+**目标**: 修复递归场景匹配错误版本
+
+**文件**: `tests/bdd/test_organize_steps.py`
+
+- [ ] 11.1 **RED**: 运行测试确认失败
+- [ ] 11.2 **GREEN**: 删除重复的 `I have a directory structure:` (保留 table 解析版本)
+- [ ] 11.3 Commit: "Phase 11: Remove duplicate step definitions"
+
+---
+
+## Phase 12: 修复 symlink 表格解析
+
+**目标**: 修复 header 过滤逻辑
+
+**文件**: `tests/bdd/test_organize_steps.py`
+
+- [ ] 12.1 **RED**: 运行测试确认失败
+- [ ] 12.2 **GREEN**: 修复 setup_directory_with_types，正确过滤 header 行
+- [ ] 12.3 Commit: "Phase 12: Fix symlink table parsing"
+
+---
+
+## Phase 13: 修复自定义 output 目录路径
+
+**目标**: 修复 sandbox 路径映射
+
+**文件**: `tests/bdd/test_organize_steps.py`
+
+- [ ] 13.1 **RED**: 运行测试确认失败
+- [ ] 13.2 **GREEN**: 修复绝对路径处理，正确映射到 temp_directory
+- [ ] 13.3 Commit: "Phase 13: Fix custom output directory path"
+
+---
+
+## Phase 14: 修复非递归命令执行
+
+**目标**: 修复 When step 不执行命令
+
+**文件**: `tests/bdd/test_organize_steps.py`
+
+- [ ] 14.1 **RED**: 运行测试确认失败
+- [ ] 14.2 **GREEN**: 把 setup_non_recursive_command 改为 When step 并执行命令
+- [ ] 14.3 Commit: "Phase 14: Fix non-recursive command execution"
+
+---
+
+## Phase 15: 修复最大深度用例
+
+**目标**: 解决 path-too-long 问题
+
+**文件**: `features/organize.feature`, `tests/bdd/test_organize_steps.py`
+
+- [ ] 15.1 **RED**: 运行测试确认失败 (OSError: File name too long)
+- [ ] 15.2 **GREEN**: 减少深度到 50 层或使用 pytest.mark.skipif (macOS)
+- [ ] 15.3 Commit: "Phase 15: Fix maximum recursion depth test"
+
+---
+
+## Phase 16: 修复 version 场景
+
+**目标**: 修复 CLI 设计不一致
+
+**文件**: `features/organize.feature`
+
+- [ ] 16.1 **RED**: 运行测试确认失败 (退出码 2)
+- [ ] 16.2 **GREEN**: 修改 feature 为 `fx --version` 或调整期望为错误
+- [ ] 16.3 Commit: "Phase 16: Fix version scenario"
+
+---
+
+## Phase 17: 优化 feature 文案语义
+
+**目标**: 移除隐式魔法，使用明确的 --date-source modified
+
+**文件**: `features/organize.feature`, `tests/bdd/test_organize_steps.py`
+
+- [ ] 17.1 **REFACTOR**: 更新 feature 文案为 "File timestamp" 替代 "Creation Date"
+- [ ] 17.2 **REFACTOR**: 显式添加 --date-source modified 到相关场景
+- [ ] 17.3 **REFACTOR**: 移除 run_organize_command 中的自动注入逻辑
+- [ ] 17.4 Commit: "Phase 17: Improve feature wording clarity"
+
+---
+
+## Phase 18: 最终验证
+
+**目标**: 确保所有测试通过
+
+- [ ] 18.1 **GREEN**: 运行所有 BDD 测试 (目标 50/50)
+- [ ] 18.2 **GREEN**: 运行集成测试确保无回归
+- [ ] 18.3 Commit: "Phase 18: Final verification - all tests passing"
+
+---
+
+## Updated Summary
+
+**Total**: 18 Phases, 85 Tasks
+
+**Current Progress**:
+- Phase 1-9: ✅ Complete (43/50 BDD tests passing)
+- Phase 10-18: 🔄 In Progress (目标: 50/50 passing)

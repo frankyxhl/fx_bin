@@ -43,11 +43,43 @@ organize 命令目前只有 71 个集成测试（pytest），缺少可读性强�
 
 ## Acceptance Criteria
 
-- [ ] BDD 测试覆盖核心场景（默认组织、冲突处理、dry-run、递归扫描）
-- [ ] 所有 BDD 测试可运行：`poetry run pytest tests/bdd/test_organize_steps.py -v`
-- [ ] BDD 测试通过：`poetry run pytest -m bdd -v`
-- [ ] 现有 71 个集成测试继续通过
-- [ ] BDD 场景描述清晰，非技术人员可理解
+- [x] BDD 测试覆盖核心场景（默认组织、冲突处理、dry-run、递归扫描）
+- [x] 所有 BDD 测试可运行：`poetry run pytest tests/bdd/test_organize_steps.py -v`
+- [ ] BDD 测试通过：`poetry run pytest -m bdd -v` (目标 50/50，当前 43/50)
+- [x] 现有 72 个集成测试继续通过
+- [x] BDD 场景描述清晰，非技术人员可理解
+
+---
+
+## Follow-up: Fix 7 Failing BDD Tests
+
+**Status**: In Progress (Phase 10-18)
+
+### Why
+
+用户 review 发现 BDD 测试代码存在 7 个问题，导致 43/50 测试通过。需要修复这些问题以达到 100% 通过率。
+
+### What Changes
+
+- [ ] 修复 Step 参数/签名不匹配 (fixture 缺失)
+- [ ] 移除重复/冲突的 step definitions
+- [ ] 修复 symlink 表格解析逻辑
+- [ ] 修复自定义 output 目录路径映射
+- [ ] 修复非递归命令执行
+- [ ] 修复最大深度用例 (path-too-long)
+- [ ] 修复 version 场景 CLI 设计
+- [ ] 优化 feature 文案语义
+
+### Impact
+
+- **Affected Code**: `tests/bdd/test_organize_steps.py`, `features/organize.feature`
+- **Breaking Change**: No
+- **Backward Compatible**: Yes
+
+### Target Results
+
+- **Current**: 43/50 BDD tests passing (86%)
+- **Target**: 50/50 BDD tests passing (100%)
 
 ## Scenarios Overview
 
