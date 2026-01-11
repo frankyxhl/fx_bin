@@ -772,6 +772,38 @@ def _read_file_dates(
     return dates
 
 
+def _execute_moved_item(
+    item: "FileOrganizeResult",
+    source_dir: str,
+    context: OrganizeContext,
+) -> "IOResult[None, OrganizeError] | Tuple[int, int, int]":
+    """Execute a single 'moved' action from the plan.
+
+    Args:
+        item: File organize result with action='moved'
+        source_dir: Source directory root
+        context: Organization context
+
+    Returns:
+        - IOResult error if move failed and fail_fast is True
+        - Tuple of (processed_delta, errors_delta, dir_created_delta) otherwise
+    """
+    if context.dry_run:
+        return (0, 0, 0)
+
+    move_result = move_file_safe(
+        item.source,
+        item.target,
+        source_dir,
+        context.output_dir,
+        context.conflict_mode,
+    )
+    exec_result = _execute_move_with_error_handling(
+        move_result, item, context.fail_fast
+    )
+    return exec_result
+
+
 def execute_organize(
     source_dir: str, context: OrganizeContext
 ) -> IOResult[Tuple[OrganizeSummary, List[FileOrganizeResult]], OrganizeError]:
@@ -833,34 +865,23 @@ def execute_organize(
         match item.action:
             case "moved":
                 processed += 1
-                if not context.dry_run:
-                    move_result = move_file_safe(
-                        item.source,
-                        item.target,
-                        source_dir,  # source_root
-                        context.output_dir,  # output_root
-                        context.conflict_mode,  # conflict_mode
+                exec_result = _execute_moved_item(item, source_dir, context)
+                if isinstance(exec_result, IOResult):
+                    # Error result - cast to expected return type
+                    processed -= 1
+                    errors += 1
+                    return cast(
+                        "IOResult["
+                        "Tuple[OrganizeSummary, List[FileOrganizeResult]], "
+                        "OrganizeError"
+                        "]",
+                        exec_result,
                     )
-                    exec_result = _execute_move_with_error_handling(
-                        move_result, item, context.fail_fast
-                    )
-                    if isinstance(exec_result, IOResult):
-                        # Error result - cast to expected return type
-                        processed -= 1
-                        errors += 1
-                        # The error is always OrganizeError when fail_fast is True
-                        return cast(
-                            "IOResult["
-                            "Tuple[OrganizeSummary, List[FileOrganizeResult]], "
-                            "OrganizeError"
-                            "]",
-                            exec_result,
-                        )
-                    # Success or non-fail-fast error: unpack the tuple
-                    proc_delta, err_delta, dir_delta = exec_result
-                    processed += proc_delta
-                    errors += err_delta
-                    directories_created += dir_delta
+                # Success or non-fail-fast error: unpack the tuple
+                proc_delta, err_delta, dir_delta = exec_result
+                processed += proc_delta
+                errors += err_delta
+                directories_created += dir_delta
             case "skipped":
                 skipped += 1
             case "error":
