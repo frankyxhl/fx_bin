@@ -41,11 +41,11 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `tests/bdd/test_organize_steps.py`
 
-- [ ] 3.1 **RED**: 编写测试: 验证 organize 命令执行
-- [ ] 3.2 **RED**: 运行测试确认失败（看到步骤未定义）
-- [ ] 3.3 **GREEN**: 实现 `I run "fx organize"` 步骤
-- [ ] 3.4 **GREEN**: 实现 `I run "fx organize --dry-run"` 步骤
-- [ ] 3.5 Commit: "Phase 3: Implement When steps for command execution"
+- [x] 3.1 **RED**: 编写测试: 验证 organize 命令执行
+- [x] 3.2 **RED**: 运行测试确认失败（看到步骤未定义）
+- [x] 3.3 **GREEN**: 实现 `I run "fx organize"` 步骤
+- [x] 3.4 **GREEN**: 实现 `I run "fx organize --dry-run"` 步骤
+- [x] 3.5 Commit: "Phase 3: Implement When steps for command execution" (f587ed1e)
 
 ---
 
