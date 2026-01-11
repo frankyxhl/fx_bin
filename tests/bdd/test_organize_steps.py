@@ -989,6 +989,14 @@ def verify_message_in_output(command_context, message):
     assert message in output, f"Expected message '{message}' not found in output: {output}"
 
 
+@then(parsers.parse('I should see an error message "{message}"'))
+def verify_error_message_in_output(command_context, message):
+    """Verify specific error message appears in output."""
+    output = command_context.get("last_output", "")
+
+    assert message in output, f"Expected error message '{message}' not found in output: {output}"
+
+
 @then(parsers.parse("the command should exit with status {exit_code:d}"))
 def verify_exit_status(command_context, exit_code):
     """Verify command exit code."""

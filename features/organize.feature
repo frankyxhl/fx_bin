@@ -156,7 +156,7 @@ Feature: File Organization by Date
   Scenario: Handle empty directory gracefully
     Given I have an empty directory
     When I run "fx organize"
-    Then I should see a message "No files to organize"
+    Then I should see a message "Summary: 0 files, 0 processed, 0 skipped"
     And the command should exit with status 0
     And no date directories should be created
 
@@ -164,8 +164,8 @@ Feature: File Organization by Date
   Scenario: Handle non-existent directory path
     Given the directory "/nonexistent/path" does not exist
     When I run "fx organize /nonexistent/path"
-    Then I should see an error message "Error: Path not found: /nonexistent/path"
-    And the command should exit with status 0
+    Then I should see an error message "Directory '/nonexistent/path' does not exist"
+    And the command should exit with status 2
 
   @edge_cases
   Scenario: Skip symlink files for security
