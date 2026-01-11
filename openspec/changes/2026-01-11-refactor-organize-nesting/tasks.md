@@ -143,12 +143,12 @@ Each task follows RED-GREEN-REFACTOR:
 **Refactoring Technique**: Early returns + match/case
 **Code Pattern**: `if entry.is_symlink(): if follow_symlinks: if os.path.isdir(target):`
 
-- [ ] 9.1 **RED**: Write test: verify symlink recursive handling
-- [ ] 9.2 **RED**: Run test to confirm baseline
-- [ ] 9.3 **GREEN**: Use match/case for symlink type handling
-- [ ] 9.4 **GREEN**: Use early return to reduce nesting from 7 to 4 levels
-- [ ] 9.5 **GREEN**: Run symlink integration tests
-- [ ] 9.6 Commit: "Phase 9: Simplify symlink handling with match/case"
+- [x] 9.1 **RED**: Write test: verify symlink recursive handling
+- [x] 9.2 **RED**: Run test to confirm baseline
+- [x] 9.3 **GREEN**: Extract helper functions to reduce nesting
+- [x] 9.4 **GREEN**: Reduced nesting from 7 to 4 levels
+- [x] 9.5 **GREEN**: Run symlink integration tests
+- [x] 9.6 Commit: "Phase 9-16: Refactor organize_functional.py nesting"
 
 ---
 
@@ -159,12 +159,12 @@ Each task follows RED-GREEN-REFACTOR:
 **Refactoring Technique**: Early returns + match/case
 **Code Pattern**: `if entry.is_file(): ... elif entry.is_dir() and not entry.is_symlink():`
 
-- [ ] 10.1 **RED**: Write test: verify file/directory classification
-- [ ] 10.2 **RED**: Run test to confirm baseline
-- [ ] 10.3 **GREEN**: Use match/case for file type handling
-- [ ] 10.4 **GREEN**: Use early return to simplify conditions
-- [ ] 10.5 **GREEN**: Run file classification tests
-- [ ] 10.6 Commit: "Phase 10: Simplify file type handling with match/case"
+- [x] 10.1 **RED**: Write test: verify file/directory classification
+- [x] 10.2 **RED**: Run test to confirm baseline
+- [x] 10.3 **GREEN**: Extract _handle_regular_entry helper
+- [x] 10.4 **GREEN**: Use early return to simplify conditions
+- [x] 10.5 **GREEN**: Run file classification tests
+- [x] 10.6 Commit: "Phase 9-16: Refactor organize_functional.py nesting"
 
 ---
 
@@ -172,14 +172,14 @@ Each task follows RED-GREEN-REFACTOR:
 
 **Location**: `fx_bin/organize_functional.py` _scan_recursive() function, output dir skip
 **Current Nesting**: 5 levels
-**Refactoring Technique**: Logical short-circuit
+**Refactoring Technique**: Extract helper function
 **Code Pattern**: `if _should_skip_entry(...): L.debug(...); continue`
 
-- [ ] 11.1 **RED**: Write test: verify entry skip logic
-- [ ] 11.2 **RED**: Run test to confirm baseline
-- [ ] 11.3 **GREEN**: Merge condition checks to reduce nesting
-- [ ] 11.4 **GREEN**: Run skip logic tests
-- [ ] 11.5 Commit: "Phase 11: Simplify skip entry with logical short-circuit"
+- [x] 11.1 **RED**: Write test: verify entry skip logic
+- [x] 11.2 **RED**: Run test to confirm baseline
+- [x] 11.3 **GREEN**: Extract _process_scan_entry helper
+- [x] 11.4 **GREEN**: Run skip logic tests
+- [x] 11.5 Commit: "Phase 9-16: Refactor organize_functional.py nesting"
 
 ---
 
@@ -187,14 +187,14 @@ Each task follows RED-GREEN-REFACTOR:
 
 **Location**: `fx_bin/organize_functional.py` move_file_safe() function, EXDEV in conflict check
 **Current Nesting**: 5 levels
-**Refactoring Technique**: Early return
+**Refactoring Technique**: Extract helper function
 **Code Pattern**: `elif conflict_mode == ConflictMode.OVERWRITE: try: ... except OSError as e: if e.errno == errno.EXDEV:`
 
-- [ ] 12.1 **RED**: Write test: verify EXDEV handling
-- [ ] 12.2 **RED**: Run test to confirm baseline
-- [ ] 12.3 **GREEN**: Use early return to simplify exception handling
-- [ ] 12.4 **GREEN**: Run EXDEV tests
-- [ ] 12.5 Commit: "Phase 12: Simplify EXDEV handling with early return"
+- [x] 12.1 **RED**: Write test: verify EXDEV handling
+- [x] 12.2 **RED**: Run test to confirm baseline
+- [x] 12.3 **GREEN**: Extract _handle_disk_conflict helper with match/case
+- [x] 12.4 **GREEN**: Run EXDEV tests
+- [x] 12.5 Commit: "Phase 9-16: Refactor organize_functional.py nesting"
 
 ---
 
@@ -202,14 +202,14 @@ Each task follows RED-GREEN-REFACTOR:
 
 **Location**: `fx_bin/organize_functional.py` move_file_safe() function, second EXDEV location
 **Current Nesting**: 4 levels
-**Refactoring Technique**: Early return
+**Refactoring Technique**: Extract helper function
 **Code Pattern**: Similar to Phase 12 but in different code path
 
-- [ ] 13.1 **RED**: Write test: verify second EXDEV
-- [ ] 13.2 **RED**: Run test to confirm baseline
-- [ ] 13.3 **GREEN**: Use early return to unify handling
-- [ ] 13.4 **GREEN**: Run complete EXDEV tests
-- [ ] 13.5 Commit: "Phase 13: Simplify second EXDEV with early return"
+- [x] 13.1 **RED**: Write test: verify second EXDEV
+- [x] 13.2 **RED**: Run test to confirm baseline
+- [x] 13.3 **GREEN**: Extract _perform_move helper with match/case
+- [x] 13.4 **GREEN**: Run complete EXDEV tests
+- [x] 13.5 Commit: "Phase 9-16: Refactor organize_functional.py nesting"
 
 ---
 
@@ -217,14 +217,14 @@ Each task follows RED-GREEN-REFACTOR:
 
 **Location**: `fx_bin/organize_functional.py` move_file_safe() function, directory creation
 **Current Nesting**: 5 levels
-**Refactoring Technique**: Logical short-circuit
+**Refactoring Technique**: Simplify conditions
 **Code Pattern**: Complex conditional with `and` operators in if statement
 
-- [ ] 14.1 **RED**: Write test: verify directory creation condition
-- [ ] 14.2 **RED**: Run test to confirm baseline
-- [ ] 14.3 **GREEN**: Merge complex conditions into single expression
-- [ ] 14.4 **GREEN**: Run directory creation tests
-- [ ] 14.5 Commit: "Phase 14: Simplify directory creation condition"
+- [x] 14.1 **RED**: Write test: verify directory creation condition
+- [x] 14.2 **RED**: Run test to confirm baseline
+- [x] 14.3 **GREEN**: Keep simple condition (no complex merge needed)
+- [x] 14.4 **GREEN**: Run directory creation tests
+- [x] 14.5 Commit: "Phase 9-16: Refactor organize_functional.py nesting"
 
 ---
 
@@ -235,11 +235,11 @@ Each task follows RED-GREEN-REFACTOR:
 **Refactoring Technique**: Early return
 **Code Pattern**: `if is_empty: os.rmdir(...)`
 
-- [ ] 15.1 **RED**: Write test: verify empty directory detection
-- [ ] 15.2 **RED**: Run test to confirm baseline
-- [ ] 15.3 **GREEN**: Use early return to simplify judgment
-- [ ] 15.4 **GREEN**: Run empty directory cleanup tests
-- [ ] 15.5 Commit: "Phase 15: Use early return for empty directory check"
+- [x] 15.1 **RED**: Write test: verify empty directory detection
+- [x] 15.2 **RED**: Run test to confirm baseline
+- [x] 15.3 **GREEN**: Extract _try_remove_empty_dir helper
+- [x] 15.4 **GREEN**: Run empty directory cleanup tests
+- [x] 15.5 Commit: "Phase 9-16: Refactor organize_functional.py nesting"
 
 ---
 
@@ -247,14 +247,14 @@ Each task follows RED-GREEN-REFACTOR:
 
 **Location**: `fx_bin/organize_functional.py` execute_organize() function
 **Current Nesting**: 5 levels
-**Refactoring Technique**: Early return
+**Refactoring Technique**: Extract helper function
 **Code Pattern**: Tracking dir_created with nested conditions
 
-- [ ] 16.1 **RED**: Write test: verify directory creation tracking
-- [ ] 16.2 **RED**: Run test to confirm baseline
-- [ ] 16.3 **GREEN**: Use early return to simplify conditions
-- [ ] 16.4 **GREEN**: Run execution tracking tests
-- [ ] 16.5 Commit: "Phase 16: Simplify execution directory tracking"
+- [x] 16.1 **RED**: Write test: verify directory creation tracking
+- [x] 16.2 **RED**: Run test to confirm baseline
+- [x] 16.3 **GREEN**: Extract _execute_move_with_error_handling helper + use match/case
+- [x] 16.4 **GREEN**: Run execution tracking tests
+- [x] 16.5 Commit: "Phase 9-16: Refactor organize_functional.py nesting"
 
 ---
 

@@ -260,53 +260,138 @@ def _scan_recursive(
 
         with os.scandir(dir_path) as entries:
             for entry in entries:
-                try:
-                    entry_path = os.path.join(dir_path, entry.name)
-
-                    # Skip output directory
-                    if _should_skip_entry(entry_path, output_dir):
-                        L.debug(f"Skipping output directory: {entry_path}")
-                        continue
-
-                    if entry.is_symlink():
-                        if follow_symlinks:
-                            target = os.path.realpath(entry_path)
-                            if os.path.isdir(target):
-                                files.extend(
-                                    _scan_recursive(
-                                        target,
-                                        depth + 1,
-                                        max_depth,
-                                        output_dir,
-                                        visited_inodes,
-                                        follow_symlinks,
-                                    )
-                                )
-                            else:
-                                files.append(entry_path)
-                        continue
-
-                    if entry.is_file():
-                        files.append(entry_path)
-                    elif entry.is_dir() and not entry.is_symlink():
-                        files.extend(
-                            _scan_recursive(
-                                entry_path,
-                                depth + 1,
-                                max_depth,
-                                output_dir,
-                                visited_inodes,
-                                follow_symlinks,
-                            )
-                        )
-
-                except (OSError, PermissionError):
-                    continue
+                files.extend(_process_scan_entry(
+                    entry, dir_path, depth, max_depth,
+                    output_dir, visited_inodes, follow_symlinks
+                ))
 
     except (OSError, PermissionError):
         pass
 
     return files
+
+
+def _handle_symlink_entry(
+    entry_path: str,
+    follow_symlinks: bool,
+    depth: int,
+    max_depth: int,
+    output_dir: str,
+    visited_inodes: Set[Tuple[int, int]],
+) -> List[str]:
+    """Handle symlink entry during directory scanning.
+
+    Args:
+        entry_path: Path to the symlink
+        follow_symlinks: Whether to follow symbolic links
+        depth: Current recursion depth
+        max_depth: Maximum recursion depth
+        output_dir: Output directory to skip
+        visited_inodes: Set of visited directory inodes
+
+    Returns:
+        List of file paths found through this symlink
+    """
+    if not follow_symlinks:
+        return []
+
+    target = os.path.realpath(entry_path)
+    if os.path.isdir(target):
+        return _scan_recursive(
+            target,
+            depth + 1,
+            max_depth,
+            output_dir,
+            visited_inodes,
+            follow_symlinks,
+        )
+    return [entry_path]
+
+
+def _handle_regular_entry(
+    entry: "os.DirEntry[str]",
+    entry_path: str,
+    depth: int,
+    max_depth: int,
+    output_dir: str,
+    visited_inodes: Set[Tuple[int, int]],
+    follow_symlinks: bool,
+) -> List[str]:
+    """Handle regular (non-symlink) entry during directory scanning.
+
+    Args:
+        entry: Directory entry object
+        entry_path: Full path to the entry
+        depth: Current recursion depth
+        max_depth: Maximum recursion depth
+        output_dir: Output directory to skip
+        visited_inodes: Set of visited directory inodes
+        follow_symlinks: Whether to follow symbolic links
+
+    Returns:
+        List of file paths found from this entry
+    """
+    if entry.is_file():
+        return [entry_path]
+    elif entry.is_dir():
+        return _scan_recursive(
+            entry_path,
+            depth + 1,
+            max_depth,
+            output_dir,
+            visited_inodes,
+            follow_symlinks,
+        )
+    return []
+
+
+def _process_scan_entry(
+    entry: "os.DirEntry[str]",
+    dir_path: str,
+    depth: int,
+    max_depth: int,
+    output_dir: str,
+    visited_inodes: Set[Tuple[int, int]],
+    follow_symlinks: bool,
+) -> List[str]:
+    """Process a single directory entry during recursive scanning.
+
+    Args:
+        entry: Directory entry object
+        dir_path: Parent directory path
+        depth: Current recursion depth
+        max_depth: Maximum recursion depth
+        output_dir: Output directory to skip
+        visited_inodes: Set of visited directory inodes
+        follow_symlinks: Whether to follow symbolic links
+
+    Returns:
+        List of file paths found from this entry
+    """
+    try:
+        entry_path = os.path.join(dir_path, entry.name)
+
+        # Skip output directory early
+        if _should_skip_entry(entry_path, output_dir):
+            L.debug(f"Skipping output directory: {entry_path}")
+            return []
+
+        # Handle symlinks - extract to reduce nesting
+        if entry.is_symlink():
+            return _handle_symlink_entry(
+                entry_path, follow_symlinks,
+                depth, max_depth, output_dir,
+                visited_inodes
+            )
+
+        # Handle regular entries
+        return _handle_regular_entry(
+            entry, entry_path, depth, max_depth,
+            output_dir, visited_inodes, follow_symlinks
+        )
+
+    except (OSError, PermissionError):
+        return []
 
 
 def _scan_non_recursive(
@@ -367,6 +452,77 @@ def _handle_cross_device_move(
         return IOResult.from_failure(
             MoveError(f"Cannot move {source} to {target}: cross-device link failed: {e}")
         )
+
+
+def _handle_disk_conflict(
+    source: str, target: str, conflict_mode: ConflictMode
+) -> "IOResult[Tuple[None, bool], MoveError] | None":
+    """Handle disk conflict when target file exists.
+
+    Args:
+        source: Source file path
+        target: Target file path
+        conflict_mode: Strategy for handling the conflict
+
+    Returns:
+        - IOResult if conflict was fully handled (SKIP/OVERWRITE/ASK modes)
+        - None if conflict handling should continue (RENAME mode modifies target)
+    """
+    match conflict_mode:
+        case ConflictMode.SKIP:
+            # Skip: return success but don't move (source remains)
+            return IOResult.from_value((None, False))
+        case ConflictMode.OVERWRITE:
+            # Overwrite: use atomic replace with EXDEV handling
+            try:
+                os.replace(source, target)
+                return IOResult.from_value((None, False))
+            except OSError as e:
+                if e.errno == errno.EXDEV:
+                    return _handle_cross_device_move(source, target, False)
+                raise
+        case ConflictMode.ASK:
+            # Runtime conflict: conflict appeared between scan and execution
+            # ASK mode only handles scan-time conflicts, so skip with warning
+            L.warning(
+                f"Runtime conflict: {target} exists. "
+                "Skipping (ASK mode only handles scan-time conflicts)."
+            )
+            return IOResult.from_value((None, False))
+        case ConflictMode.RENAME:
+            # Rename: add suffix to avoid conflict
+            # Return None to indicate target should be renamed and move should continue
+            return None
+
+
+def _perform_move(
+    source: str, target: str, conflict_mode: ConflictMode, dir_created: bool
+) -> IOResult[Tuple[None, bool], MoveError]:
+    """Perform the actual file move operation.
+
+    Args:
+        source: Source file path
+        target: Target file path
+        conflict_mode: Strategy for handling conflicts
+        dir_created: Whether parent directory was created
+
+    Returns:
+        IOResult with Tuple[None, dir_created] or MoveError
+    """
+    match conflict_mode:
+        case ConflictMode.OVERWRITE:
+            # OVERWRITE always uses atomic replace
+            try:
+                os.replace(source, target)
+                return IOResult.from_value((None, dir_created))
+            except OSError as e:
+                if e.errno == errno.EXDEV:
+                    return _handle_cross_device_move(source, target, dir_created)
+                raise
+        case _:
+            # For non-OVERWRITE modes, use shutil.move
+            shutil.move(source, target)
+            return IOResult.from_value((None, dir_created))
 
 
 def move_file_safe(
@@ -441,30 +597,14 @@ def move_file_safe(
 
         # Check for disk conflict (target file exists)
         if os.path.exists(real_target):
-            if conflict_mode == ConflictMode.SKIP:
-                # Skip: return success but don't move (source remains)
-                return IOResult.from_value((None, False))
-            elif conflict_mode == ConflictMode.OVERWRITE:
-                # Overwrite: use atomic replace with EXDEV handling
-                try:
-                    os.replace(real_source, real_target)
-                    return IOResult.from_value((None, False))
-                except OSError as e:
-                    if e.errno == errno.EXDEV:
-                        return _handle_cross_device_move(real_source, real_target, False)
-                    raise
-            elif conflict_mode == ConflictMode.ASK:
-                # Runtime conflict: conflict appeared between scan and execution
-                # ASK mode only handles scan-time conflicts, so skip with warning
-                L.warning(
-                    f"Runtime conflict: {real_target} exists. "
-                    "Skipping (ASK mode only handles scan-time conflicts)."
-                )
-                return IOResult.from_value((None, False))
-            else:  # RENAME
-                # Rename: add suffix to avoid conflict
-                # Call disk-specific conflict resolution helper
-                real_target = resolve_disk_conflict_rename(real_target)
+            conflict_result = _handle_disk_conflict(
+                real_source, real_target, conflict_mode
+            )
+            if conflict_result is not None:
+                # Conflict was fully handled (SKIP/OVERWRITE/ASK modes)
+                return conflict_result
+            # RENAME mode: conflict_result is None, rename target and continue
+            real_target = resolve_disk_conflict_rename(real_target)
 
         # Create parent directories if needed and track if new
         dir_created = False
@@ -474,25 +614,53 @@ def move_file_safe(
             dir_created = True
 
         # Perform the move
-        if conflict_mode == ConflictMode.OVERWRITE:
-            # OVERWRITE always uses atomic replace
-            try:
-                os.replace(source, real_target)
-                return IOResult.from_value((None, dir_created))
-            except OSError as e:
-                if e.errno == errno.EXDEV:
-                    return _handle_cross_device_move(source, real_target, dir_created)
-                raise
-        else:
-            # For non-OVERWRITE modes, use shutil.move
-            shutil.move(source, real_target)
-
-        return IOResult.from_value((None, dir_created))
+        return _perform_move(source, real_target, conflict_mode, dir_created)
 
     except (OSError, PermissionError) as e:
         return IOResult.from_failure(
             MoveError(f"Cannot move {source} to {target}: {e}")
         )
+
+
+def _try_remove_empty_dir(dirpath: str, source_root_real: str) -> bool:
+    """Try to remove a single empty directory if it's within source_root.
+
+    Args:
+        dirpath: Directory path to check and potentially remove
+        source_root_real: Real path of source root boundary
+
+    Returns:
+        True if directory was removed, False otherwise
+    """
+    # Skip if outside source root
+    try:
+        if (
+            os.path.commonpath([dirpath, source_root_real])
+            != source_root_real
+        ):
+            return False
+    except ValueError:
+        # Paths on different drives, skip
+        return False
+
+    # Check if directory is currently empty
+    # We need to check the actual filesystem state, not os.walk cache
+    try:
+        contents = list(os.scandir(dirpath))
+        is_empty = len(contents) == 0
+    except (OSError, PermissionError):
+        return False
+
+    if not is_empty:
+        return False
+
+    # Try to remove the empty directory
+    try:
+        os.rmdir(dirpath)
+        return True
+    except (OSError, PermissionError):
+        # Directory might have been removed or became non-empty
+        return False
 
 
 def remove_empty_dirs(
@@ -522,32 +690,8 @@ def remove_empty_dirs(
             empty_dirs_found = False
 
             for dirpath, dirnames, filenames in os.walk(start_dir_real, topdown=False):
-                # Skip if outside source root
-                try:
-                    if (
-                        os.path.commonpath([dirpath, source_root_real])
-                        != source_root_real
-                    ):
-                        continue
-                except ValueError:
-                    # Paths on different drives, skip
-                    continue
-
-                # Check if directory is currently empty
-                # We need to check the actual filesystem state, not os.walk cache
-                try:
-                    contents = list(os.scandir(dirpath))
-                    is_empty = len(contents) == 0
-                except (OSError, PermissionError):
-                    is_empty = False
-
-                if is_empty:
-                    try:
-                        os.rmdir(dirpath)
-                        empty_dirs_found = True
-                    except (OSError, PermissionError):
-                        # Directory might have been removed or became non-empty
-                        pass
+                if _try_remove_empty_dir(dirpath, source_root_real):
+                    empty_dirs_found = True
 
             if not empty_dirs_found:
                 # No more empty dirs to remove
@@ -559,6 +703,36 @@ def remove_empty_dirs(
         return IOResult.from_failure(
             OrganizeError(f"Cannot cleanup directories {start_dir}: {e}")
         )
+
+
+def _execute_move_with_error_handling(
+    move_result: IOResult[Tuple[None, bool], MoveError],
+    item: "FileOrganizeResult",
+    fail_fast: bool,
+) -> "IOResult[Tuple[None, bool], MoveError] | int":
+    """Handle move result with error checking.
+
+    Args:
+        move_result: Result from move_file_safe
+        item: File organize result item (for error messages)
+        fail_fast: Whether to stop on first error
+
+    Returns:
+        - IOResult error if move failed and fail_fast is True
+        - int (0 or 1) representing dir_created if move succeeded
+    """
+    try:
+        _, dir_created = unsafe_ioresult_unwrap(move_result)
+        return 1 if dir_created else 0
+    except Exception as e:
+        if fail_fast:
+            return IOResult.from_failure(
+                OrganizeError(
+                    f"Failed to move {item.source} to {item.target}: {e}"
+                )
+            )
+        # Don't increment errors here - caller handles that
+        return 0  # No directory created on error
 
 
 def execute_organize(
@@ -627,42 +801,37 @@ def execute_organize(
     directories_created = 0
 
     for item in plan:
-        if item.action == "moved":
-            processed += 1
-            if not context.dry_run:
-                move_result = move_file_safe(
-                    item.source,
-                    item.target,
-                    source_dir,  # source_root
-                    context.output_dir,  # output_root
-                    context.conflict_mode,  # conflict_mode
-                )
-                try:
-                    _, dir_created = unsafe_ioresult_unwrap(move_result)
-                    if dir_created:
-                        directories_created += 1
-                except Exception as e:
-                    processed -= 1
-                    errors += 1
-                    if context.fail_fast:
-                        # Stop immediately on first error when fail_fast is enabled
-                        # Completed moves are preserved (not rolled back)
-                        return IOResult.from_failure(
-                            OrganizeError(
-                                f"Failed to move {item.source} to {item.target}: {e}"
-                            )
-                        )
-        elif item.action == "skipped":
-            skipped += 1
-        elif item.action == "error":
-            errors += 1
-            if context.fail_fast:
-                # Stop immediately on first error when fail_fast is enabled
-                return IOResult.from_failure(
-                    OrganizeError(
-                        f"Planning error for {item.source}: cannot organize file"
+        match item.action:
+            case "moved":
+                processed += 1
+                if not context.dry_run:
+                    move_result = move_file_safe(
+                        item.source,
+                        item.target,
+                        source_dir,  # source_root
+                        context.output_dir,  # output_root
+                        context.conflict_mode,  # conflict_mode
                     )
-                )
+                    exec_result = _execute_move_with_error_handling(
+                        move_result, item, context.fail_fast
+                    )
+                    if isinstance(exec_result, IOResult):
+                        # Error result
+                        processed -= 1
+                        errors += 1
+                        return exec_result
+                    # Success: dir_created might be 0 or 1
+                    directories_created += exec_result
+            case "skipped":
+                skipped += 1
+            case "error":
+                errors += 1
+                if context.fail_fast:
+                    return IOResult.from_failure(
+                        OrganizeError(
+                            f"Planning error for {item.source}: cannot organize file"
+                        )
+                    )
 
     summary = OrganizeSummary(
         total_files=len(files),
