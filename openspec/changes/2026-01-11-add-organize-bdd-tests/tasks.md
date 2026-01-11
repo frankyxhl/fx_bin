@@ -15,9 +15,9 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `features/organize.feature`
 
-- [ ] 1.1 **RED**: 编写 `features/organize.feature` 核心场景（默认组织、冲突模式、dry-run、递归等）
-- [ ] 1.2 **RED**: 运行 `pytest-bdd` 验证场景可解析（无步骤实现）
-- [ ] 1.3 Commit: "Phase 1: Create organize.feature BDD scenarios"
+- [x] 1.1 **RED**: 编写 `features/organize.feature` 核心场景（默认组织、冲突模式、dry-run、递归等）
+- [x] 1.2 **RED**: 运行 `pytest-bdd` 验证场景可解析（无步骤实现）
+- [x] 1.3 Commit: "Phase 1: Create organize.feature BDD scenarios"
 
 ---
 
