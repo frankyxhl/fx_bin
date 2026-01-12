@@ -268,10 +268,17 @@ def _scan_recursive(
         return files
 
     for entry in entries:
-        files.extend(_process_scan_entry(
-            entry, dir_path, depth, max_depth,
-            output_dir, visited_inodes, follow_symlinks
-        ))
+        files.extend(
+            _process_scan_entry(
+                entry,
+                dir_path,
+                depth,
+                max_depth,
+                output_dir,
+                visited_inodes,
+                follow_symlinks,
+            )
+        )
 
     return files
 
@@ -384,15 +391,23 @@ def _process_scan_entry(
         # Handle symlinks - extract to reduce nesting
         if entry.is_symlink():
             return _handle_symlink_entry(
-                entry_path, follow_symlinks,
-                depth, max_depth, output_dir,
-                visited_inodes
+                entry_path,
+                follow_symlinks,
+                depth,
+                max_depth,
+                output_dir,
+                visited_inodes,
             )
 
         # Handle regular entries
         return _handle_regular_entry(
-            entry, entry_path, depth, max_depth,
-            output_dir, visited_inodes, follow_symlinks
+            entry,
+            entry_path,
+            depth,
+            max_depth,
+            output_dir,
+            visited_inodes,
+            follow_symlinks,
         )
 
     except (OSError, PermissionError):
@@ -415,9 +430,7 @@ def _scan_non_recursive(
     files = []
     for entry in entries:
         try:
-            files.extend(
-                _process_entry(entry, dir_path, output_dir, follow_symlinks)
-            )
+            files.extend(_process_entry(entry, dir_path, output_dir, follow_symlinks))
         except (OSError, PermissionError):
             continue
 
@@ -642,10 +655,7 @@ def _try_remove_empty_dir(dirpath: str, source_root_real: str) -> bool:
     """
     # Skip if outside source root
     try:
-        if (
-            os.path.commonpath([dirpath, source_root_real])
-            != source_root_real
-        ):
+        if os.path.commonpath([dirpath, source_root_real]) != source_root_real:
             return False
     except ValueError:
         # Paths on different drives, skip
@@ -740,9 +750,7 @@ def _execute_move_with_error_handling(
     except Exception as e:
         if fail_fast:
             return IOResult.from_failure(
-                OrganizeError(
-                    f"Failed to move {item.source} to {item.target}: {e}"
-                )
+                OrganizeError(f"Failed to move {item.source} to {item.target}: {e}")
             )
         # Non-fail-fast: return deltas to increment errors (processed unchanged)
         return (0, 1, 0)

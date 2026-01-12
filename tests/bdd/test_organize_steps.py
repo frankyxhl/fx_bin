@@ -52,7 +52,11 @@ def setup_timestamped_files(file_builder):
     file_builder("new_file.txt", content="new", created_offset_minutes=10)
 
 
-@given(parsers.parse('I have a directory containing files from different dates:\n{table_content}'))
+@given(
+    parsers.parse(
+        "I have a directory containing files from different dates:\n{table_content}"
+    )
+)
 def setup_files_with_dates(file_builder, table_content):
     """Create files with specific creation dates from a table.
 
@@ -79,7 +83,9 @@ def setup_files_with_dates(file_builder, table_content):
                 now = datetime.now()
                 # Calculate offset directly to avoid precision loss
                 offset_seconds = int((now - target_date).total_seconds())
-                offset_minutes = offset_seconds // 60  # Use integer division for minutes
+                offset_minutes = (
+                    offset_seconds // 60
+                )  # Use integer division for minutes
 
                 file_builder(
                     filename,
@@ -91,19 +97,15 @@ def setup_files_with_dates(file_builder, table_content):
                 file_builder(filename, content=f"Content for {filename}")
 
 
-@given(parsers.parse('I have a directory structure:\n{table_content}'))
-def setup_directory_structure_from_table(
-    file_builder, temp_directory, table_content
-):
+@given(parsers.parse("I have a directory structure:\n{table_content}"))
+def setup_directory_structure_from_table(file_builder, temp_directory, table_content):
     """Create directory structures from various table formats."""
     lines = [line.strip() for line in table_content.split("\n") if line.strip()]
     if not lines:
         return
 
     header_parts = [
-        part.strip().lower()
-        for part in lines[0].split("|")
-        if part.strip()
+        part.strip().lower() for part in lines[0].split("|") if part.strip()
     ]
     data_lines = lines[1:] if header_parts else lines
 
@@ -211,11 +213,7 @@ def setup_directory_structure_from_table(
         file_builder(filename, content="test content", relative_path=path_part)
 
 
-@given(
-    parsers.parse(
-        'I have a directory "{dir_path}" with existing file "{filename}"'
-    )
-)
+@given(parsers.parse('I have a directory "{dir_path}" with existing file "{filename}"'))
 def setup_directory_with_existing_file(temp_directory, dir_path, filename):
     """Create a directory with an existing file for conflict testing."""
     full_path = temp_directory / dir_path
@@ -226,7 +224,9 @@ def setup_directory_with_existing_file(temp_directory, dir_path, filename):
 
 
 @given(
-    parsers.parse('I have a source file "{filename}" created on {date} in current directory')
+    parsers.parse(
+        'I have a source file "{filename}" created on {date} in current directory'
+    )
 )
 def setup_source_file_with_date(file_builder, filename, date):
     """Create a source file with a specific creation date."""
@@ -272,11 +272,7 @@ def setup_existing_files_in_target(temp_directory, file_builder, file_list):
     target_dir.mkdir(parents=True, exist_ok=True)
 
     # Parse file list (handle comma-separated or quoted files)
-    files = [
-        f.strip().strip('"').strip("'")
-        for f in file_list.split(",")
-        if f.strip()
-    ]
+    files = [f.strip().strip('"').strip("'") for f in file_list.split(",") if f.strip()]
 
     for filename in files:
         file_path = target_dir / filename
@@ -345,7 +341,7 @@ def setup_directory_to_organize(file_builder):
     file_builder("file2.txt", content="file 2", created_offset_minutes=50)
 
 
-@given(parsers.parse('I have multiple files to organize'))
+@given(parsers.parse("I have multiple files to organize"))
 def setup_multiple_files(file_builder):
     """Create multiple files for organization testing."""
     file_builder("file1.txt", content="content 1", created_offset_minutes=100)
@@ -363,6 +359,7 @@ def setup_empty_directory(temp_directory):
             item.unlink()
         elif item.is_dir():
             import shutil
+
             shutil.rmtree(item)
 
 
@@ -372,7 +369,7 @@ def verify_directory_not_exists(path):
     assert not Path(path).exists()
 
 
-@given(parsers.parse('I have a symlink pointing outside the source directory'))
+@given(parsers.parse("I have a symlink pointing outside the source directory"))
 def setup_external_symlink(temp_directory):
     """Create a symlink pointing outside the source directory."""
     # This would require creating a directory outside temp_directory
@@ -396,9 +393,11 @@ def setup_directory_cycle():
     pass
 
 
-
-
-@given(parsers.parse('I have a directory nested {depth:d} levels deep with a file "{filename}"'))
+@given(
+    parsers.parse(
+        'I have a directory nested {depth:d} levels deep with a file "{filename}"'
+    )
+)
 def setup_deeply_nested_directory(temp_directory, file_builder, depth, filename):
     """Create a deeply nested directory structure."""
     path_parts = [f"level{i}" for i in range(depth)]
@@ -453,7 +452,7 @@ def setup_various_extension_files(file_builder, file_list):
         file_builder(filename, content=f"Content for {filename}")
 
 
-@given(parsers.parse('I have a directory with various file types'))
+@given(parsers.parse("I have a directory with various file types"))
 def setup_various_file_types(file_builder):
     """Create directory with various file types."""
     file_builder("photo.jpg", content="jpeg image")
@@ -462,14 +461,14 @@ def setup_various_file_types(file_builder):
     file_builder("data.txt", content="text data")
 
 
-@given(parsers.parse('I have files that organize successfully'))
+@given(parsers.parse("I have files that organize successfully"))
 def setup_files_for_success(file_builder):
     """Create files that will organize successfully."""
     file_builder("success1.txt", content="success 1", created_offset_minutes=100)
     file_builder("success2.txt", content="success 2", created_offset_minutes=90)
 
 
-@given(parsers.parse('I have multiple files to organize with various outcomes'))
+@given(parsers.parse("I have multiple files to organize with various outcomes"))
 def setup_files_various_outcomes(file_builder):
     """Create files that will have various organization outcomes."""
     file_builder("success.txt", content="success", created_offset_minutes=100)
@@ -477,11 +476,13 @@ def setup_files_various_outcomes(file_builder):
     file_builder("error.txt", content="will error", created_offset_minutes=80)
 
 
-@given(parsers.parse('I have multiple files to organize'))
+@given(parsers.parse("I have multiple files to organize"))
 def setup_multiple_files_organize(file_builder):
     """Create multiple files for organization."""
     for i in range(5):
-        file_builder(f"file{i}.txt", content=f"content {i}", created_offset_minutes=100 - i * 10)
+        file_builder(
+            f"file{i}.txt", content=f"content {i}", created_offset_minutes=100 - i * 10
+        )
 
 
 @given("stdin is a TTY (interactive terminal)")
@@ -499,11 +500,7 @@ def setup_non_tty_stdin():
     pass
 
 
-@given(
-    parsers.re(
-        r'I run "(?P<command>[^"]+)" (?P<path>(?:\\.|/|~)[^"]+)'
-    )
-)
+@given(parsers.re(r'I run "(?P<command>[^"]+)" (?P<path>(?:\\.|/|~)[^"]+)'))
 def setup_command_state(cli_runner, command_context, temp_directory, command, path):
     """Store command state for later execution (given step for command setup)."""
     # This step is for setting up command state, actual execution happens in when steps
@@ -559,14 +556,14 @@ def setup_output_path():
     pass
 
 
-@given('source directory is on drive C:\\')
+@given("source directory is on drive C:\\")
 def setup_windows_source():
     """Set up Windows source drive for testing."""
     # This is used for Windows-specific path tests
     pass
 
 
-@given('output directory is on drive D:\\')
+@given("output directory is on drive D:\\")
 def setup_windows_output():
     """Set up Windows output drive for testing."""
     # This is used for Windows-specific path tests
@@ -581,7 +578,7 @@ def setup_output_in_source(temp_directory, file_builder):
     (output_dir / "existing.txt").write_text("existing content")
 
 
-@given('./organized/ contains files from previous run')
+@given("./organized/ contains files from previous run")
 def setup_organized_with_files(temp_directory, file_builder):
     """Create organized directory with existing files."""
     organized_dir = temp_directory / "organized"
@@ -597,7 +594,7 @@ def setup_organized_with_files_quoted(temp_directory, file_builder):
     file_builder("existing.txt", content="existing content", relative_path="organized")
 
 
-@given(parsers.parse('I have a directory containing:\n{table_content}'))
+@given(parsers.parse("I have a directory containing:\n{table_content}"))
 def setup_directory_with_types(
     file_builder, command_context, temp_directory, table_content
 ):
@@ -645,7 +642,7 @@ def setup_directory_with_types(
                     pass
 
 
-@given('stdin is not a TTY (piped input)')
+@given("stdin is not a TTY (piped input)")
 def setup_piped_stdin():
     """Set up non-TTY stdin (piped input)."""
     # This is handled by CliRunner - non-interactive by default
@@ -672,7 +669,9 @@ def setup_file_at_path(file_builder, temp_directory, path):
     filename = path_parts[-1]
     relative_path = "/".join(path_parts[:-1]) if len(path_parts) > 1 else ""
 
-    file_builder(filename, content=f"Content for {filename}", relative_path=relative_path)
+    file_builder(
+        filename, content=f"Content for {filename}", relative_path=relative_path
+    )
 
 
 @given(parsers.parse('I have a directory with files "{hidden}" and "{visible}"'))
@@ -699,7 +698,7 @@ def setup_nested_with_files(file_builder, temp_directory, path):
     file_builder("file.txt", content="nested file", relative_path=relative_path)
 
 
-@given(parsers.parse('moving files creates empty directories under source root'))
+@given(parsers.parse("moving files creates empty directories under source root"))
 def setup_files_that_create_empty_dirs(file_builder):
     """Create files that will leave empty directories when moved."""
     # Create structure: sub1/file1.txt, sub1/sub2/file2.txt
@@ -707,7 +706,7 @@ def setup_files_that_create_empty_dirs(file_builder):
     file_builder("file2.txt", content="file 2", relative_path="sub1/sub2")
 
 
-@given(parsers.parse('organizing all files leaves all directories empty'))
+@given(parsers.parse("organizing all files leaves all directories empty"))
 def setup_all_files_will_move(file_builder, temp_directory):
     """Create files where all will be moved, leaving empty directories."""
     # Create nested structure with files that will all be organized
@@ -715,34 +714,34 @@ def setup_all_files_will_move(file_builder, temp_directory):
     file_builder("file2.txt", content="file 2", relative_path="a/b")
 
 
-@given('one file will fail with a permission error')
+@given("one file will fail with a permission error")
 def setup_permission_error_file(file_builder, temp_directory):
     """Create a file that will cause permission error."""
     # Create a normal file (in real test, this would have restricted permissions)
     file_builder("readonly.txt", content="read only content")
 
 
-@given(parsers.parse('I have a file on one filesystem'))
+@given(parsers.parse("I have a file on one filesystem"))
 def setup_file_on_filesystem(file_builder):
     """Create a file for cross-filesystem test."""
     file_builder("cross_file.txt", content="cross filesystem content")
 
 
-@given(parsers.parse('target directory is on a different filesystem'))
+@given(parsers.parse("target directory is on a different filesystem"))
 def setup_different_filesystem():
     """Set up target on different filesystem (simulated)."""
     # In real tests, this would be a separate mount point
     pass
 
 
-@given(parsers.parse('I have a directory structure with files that will be organized'))
+@given(parsers.parse("I have a directory structure with files that will be organized"))
 def setup_structure_to_be_organized(file_builder, temp_directory):
     """Create directory structure where files will be organized."""
     file_builder("file1.txt", content="file 1", relative_path="subdir")
     file_builder("file2.txt", content="file 2")
 
 
-@given('the directory contains only those files')
+@given("the directory contains only those files")
 def setup_directory_only_those_files():
     """Verify directory contains only expected files (Given step)."""
     pass
@@ -757,7 +756,9 @@ def setup_directory_with_patterns_including(file_builder, temp_directory, patter
     file_builder("normal.txt", content="normal file")
 
 
-@given(parsers.parse('I have files already organized in "{structure}" directory structure'))
+@given(
+    parsers.parse('I have files already organized in "{structure}" directory structure')
+)
 def setup_already_organized_structure(temp_directory, structure):
     """Create files already in organized date structure."""
     # Parse structure like "2026/202601/20260110/"
@@ -772,13 +773,13 @@ def setup_already_organized_structure(temp_directory, structure):
     (current / "file2.txt").write_text("organized file 2")
 
 
-@given('stdin is not a TTY (piped input or non-interactive)')
+@given("stdin is not a TTY (piped input or non-interactive)")
 def setup_non_interactive_stdin():
     """Set up non-interactive stdin for testing."""
     pass
 
 
-@given('the symlink target contains files')
+@given("the symlink target contains files")
 def setup_symlink_target_with_files(file_builder):
     """Set up files in symlink target directory."""
     file_builder("external_file.txt", content="external content")
@@ -828,8 +829,17 @@ def run_organize_command(cli_runner, command_context, temp_directory, command):
                 while j < len(command_parts):
                     if command_parts[j].startswith("-"):
                         # This is an option, skip its value too
-                        if command_parts[j] in ("--include", "-i", "--exclude", "-e", "--output", "-o",
-                                                "--date-source", "--depth", "--on-conflict"):
+                        if command_parts[j] in (
+                            "--include",
+                            "-i",
+                            "--exclude",
+                            "-e",
+                            "--output",
+                            "-o",
+                            "--date-source",
+                            "--depth",
+                            "--on-conflict",
+                        ):
                             j += 2  # Skip option and its value
                         else:
                             j += 1  # Skip flag (no value)
@@ -848,14 +858,30 @@ def run_organize_command(cli_runner, command_context, temp_directory, command):
         # This is necessary because os.utime() cannot set st_birthtime on macOS,
         # so tests rely on mtime which we can control
         # Skip for --version and --help commands
-        if "organize" in command_parts and "--version" not in command_parts and "--help" not in command_parts and "-h" not in command_parts:
+        if (
+            "organize" in command_parts
+            and "--version" not in command_parts
+            and "--help" not in command_parts
+            and "-h" not in command_parts
+        ):
             if "--date-source" not in command_parts:
                 command_parts.extend(["--date-source", "modified"])
 
     # Auto-add --yes flag for organize command to skip confirmation in tests
     # unless it's a dry-run, help command, version command, or ASK mode (which needs user interaction)
-    if "organize" in command_parts and "--dry-run" not in command_parts and "--help" not in command_parts and "--version" not in command_parts and "-n" not in command_parts and "-h" not in command_parts:
-        if "--yes" not in command_parts and "-y" not in command_parts and "--on-conflict" not in command_parts:
+    if (
+        "organize" in command_parts
+        and "--dry-run" not in command_parts
+        and "--help" not in command_parts
+        and "--version" not in command_parts
+        and "-n" not in command_parts
+        and "-h" not in command_parts
+    ):
+        if (
+            "--yes" not in command_parts
+            and "-y" not in command_parts
+            and "--on-conflict" not in command_parts
+        ):
             command_parts.append("--yes")
 
     # Store the original command for potential re-run with user input (ASK mode)
@@ -886,11 +912,7 @@ def run_organize_command(cli_runner, command_context, temp_directory, command):
         os.chdir(original_cwd)
 
 
-@when(
-    parsers.re(
-        r'I run "(?P<command>[^"]+)" (?P<path>(?:\\.|/|~)[^"]+)'
-    )
-)
+@when(parsers.re(r'I run "(?P<command>[^"]+)" (?P<path>(?:\\.|/|~)[^"]+)'))
 def run_organize_command_with_path(
     cli_runner, command_context, temp_directory, command, path
 ):
@@ -915,8 +937,18 @@ def run_organize_command_with_path(
 
     # Auto-add --yes flag for organize command to skip confirmation in tests
     # unless it's a dry-run, help command, or ASK mode
-    if "organize" in command_parts and "--dry-run" not in command_parts and "--help" not in command_parts and "-n" not in command_parts and "-h" not in command_parts:
-        if "--yes" not in command_parts and "-y" not in command_parts and "--on-conflict" not in command_parts:
+    if (
+        "organize" in command_parts
+        and "--dry-run" not in command_parts
+        and "--help" not in command_parts
+        and "-n" not in command_parts
+        and "-h" not in command_parts
+    ):
+        if (
+            "--yes" not in command_parts
+            and "-y" not in command_parts
+            and "--on-conflict" not in command_parts
+        ):
             command_parts.append("--yes")
 
     # Store the original command for potential re-run with user input (ASK mode)
@@ -943,9 +975,7 @@ def run_organize_command_with_path(
 
 
 @when(parsers.parse('I run "{command}" on the organized directory'))
-def run_on_organized_directory(
-    cli_runner, command_context, temp_directory, command
-):
+def run_on_organized_directory(cli_runner, command_context, temp_directory, command):
     """Execute command against the pre-organized directory."""
     organized_dir = _find_organized_directory(temp_directory)
     run_organize_command_with_path(
@@ -958,9 +988,7 @@ def run_on_organized_directory(
 
 
 @when(parsers.parse('I run "{command}" without --clean-empty flag'))
-def run_without_clean_empty(
-    cli_runner, command_context, temp_directory, command
-):
+def run_without_clean_empty(cli_runner, command_context, temp_directory, command):
     """Execute command without --clean-empty (default behavior)."""
     run_organize_command(cli_runner, command_context, temp_directory, command)
 
@@ -972,9 +1000,7 @@ def run_without_quiet(cli_runner, command_context, temp_directory, command):
 
 
 @when(parsers.parse('I run "{command}" again'))
-def run_organize_command_again(
-    cli_runner, command_context, temp_directory, command
-):
+def run_organize_command_again(cli_runner, command_context, temp_directory, command):
     """Re-run a command for repeat execution scenarios."""
     run_organize_command(cli_runner, command_context, temp_directory, command)
 
@@ -1052,7 +1078,9 @@ def verify_files_organized_into_structure(temp_directory, structure):
     structure_path = structure.rstrip("/")
     full_path = temp_directory / "organized" / structure_path
 
-    assert full_path.exists(), f"Directory structure organized/{structure} was not created"
+    assert (
+        full_path.exists()
+    ), f"Directory structure organized/{structure} was not created"
     assert full_path.is_dir(), f"Path organized/{structure} is not a directory"
 
     # Verify it contains files (non-empty)
@@ -1123,11 +1151,16 @@ def verify_original_directory_empty(temp_directory):
     # Filter out date directories (YYYY/, YYYYMM/, etc.) and the 'organized' directory
     # The fx organize command creates an 'organized' directory for output
     non_date_items = [
-        item for item in items
-        if not (item.is_dir() and (_is_date_directory(item) or item.name == "organized"))
+        item
+        for item in items
+        if not (
+            item.is_dir() and (_is_date_directory(item) or item.name == "organized")
+        )
     ]
 
-    assert len(non_date_items) == 0, f"Original directory not empty, found: {[i.name for i in non_date_items]}"
+    assert (
+        len(non_date_items) == 0
+    ), f"Original directory not empty, found: {[i.name for i in non_date_items]}"
 
 
 def _is_date_directory(path: Path) -> bool:
@@ -1189,7 +1222,9 @@ def verify_source_file_remains(temp_directory, filename):
     """Verify source file remains in its original location."""
     source_path = temp_directory / filename
 
-    assert source_path.exists(), f"Source file {filename} not found in current directory"
+    assert (
+        source_path.exists()
+    ), f"Source file {filename} not found in current directory"
     assert source_path.is_file(), f"Source {filename} is not a file"
 
 
@@ -1200,15 +1235,13 @@ def verify_skip_in_statistics(command_context):
 
     # Look for skip indicator in output
     has_skip = (
-        "skip" in output.lower() or
-        "skipped" in output.lower() or
-        "0 moved" in output
+        "skip" in output.lower() or "skipped" in output.lower() or "0 moved" in output
     )
 
     assert has_skip, "Skip statistics not found in output"
 
 
-@then(parsers.parse('the existing file should be atomically replaced'))
+@then(parsers.parse("the existing file should be atomically replaced"))
 def verify_file_replaced(temp_directory):
     """Verify that an existing file was replaced (only one copy exists)."""
     # This is verified by checking that only one copy of a file exists
@@ -1221,7 +1254,9 @@ def verify_source_removed(temp_directory, filename):
     """Verify source file was removed after successful move/overwrite."""
     source_path = temp_directory / filename
 
-    assert not source_path.exists(), f"Source file {filename} still exists in current directory"
+    assert (
+        not source_path.exists()
+    ), f"Source file {filename} still exists in current directory"
 
 
 @then(parsers.parse('the source file should be renamed to "{new_filename}"'))
@@ -1291,7 +1326,9 @@ def verify_message_in_output(command_context, message):
     """Verify specific message appears in output."""
     output = command_context.get("last_output", "")
 
-    assert message in output, f"Expected message '{message}' not found in output: {output}"
+    assert (
+        message in output
+    ), f"Expected message '{message}' not found in output: {output}"
 
 
 @then(parsers.parse('I should see an error message "{message}"'))
@@ -1299,7 +1336,9 @@ def verify_error_message_in_output(command_context, message):
     """Verify specific error message appears in output."""
     output = command_context.get("last_output", "")
 
-    assert message in output, f"Expected error message '{message}' not found in output: {output}"
+    assert (
+        message in output
+    ), f"Expected error message '{message}' not found in output: {output}"
 
 
 @then(parsers.parse("the command should exit with status {exit_code:d}"))
@@ -1307,7 +1346,9 @@ def verify_exit_status(command_context, exit_code):
     """Verify command exit code."""
     actual_exit_code = command_context.get("last_exit_code", 1)
 
-    assert actual_exit_code == exit_code, f"Expected exit code {exit_code}, got {actual_exit_code}"
+    assert (
+        actual_exit_code == exit_code
+    ), f"Expected exit code {exit_code}, got {actual_exit_code}"
 
 
 @then("no date directories should be created")
@@ -1340,7 +1381,7 @@ def verify_filesystem_unchanged(temp_directory, command_context):
     pass
 
 
-@then(parsers.parse('I should see a preview of planned file movements'))
+@then(parsers.parse("I should see a preview of planned file movements"))
 def verify_preview_output(command_context):
     """Verify dry-run shows preview of file movements."""
     output = command_context.get("last_output", "")
@@ -1355,10 +1396,7 @@ def verify_source_target_paths(command_context):
     output = command_context.get("last_output", "")
 
     # Should show path information (would contain separators)
-    has_paths = any(
-        "/" in line or "\\" in line
-        for line in output.splitlines()
-    )
+    has_paths = any("/" in line or "\\" in line for line in output.splitlines())
 
     assert has_paths or len(output.strip()) > 0, "Expected path information in output"
 
@@ -1387,21 +1425,21 @@ def verify_file_should_be_skipped(temp_directory, command_context, filename):
         # Symlink creation failed or was unsupported; treat as skipped
         return
 
-    assert file_path.exists() or file_path.is_symlink(), (
-        f"Skipped file {filename} not found"
-    )
+    assert (
+        file_path.exists() or file_path.is_symlink()
+    ), f"Skipped file {filename} not found"
 
 
-@then(parsers.parse('a warning should be logged for symlink'))
+@then(parsers.parse("a warning should be logged for symlink"))
 def verify_symlink_warning(command_context):
     """Verify warning was logged for symlink."""
     output = command_context.get("last_output", "")
 
     # Should have warning about symlink
     has_warning = (
-        "warning" in output.lower() or
-        "symlink" in output.lower() or
-        "skip" in output.lower()
+        "warning" in output.lower()
+        or "symlink" in output.lower()
+        or "skip" in output.lower()
     )
 
     # For now, just verify we have output
@@ -1446,7 +1484,7 @@ def verify_external_files_not_accessed():
     pass
 
 
-@then(parsers.parse('a security warning should be logged'))
+@then(parsers.parse("a security warning should be logged"))
 def verify_security_warning(command_context):
     """Verify security warning was logged."""
     output = command_context.get("last_output", "")
@@ -1475,16 +1513,16 @@ def verify_no_files_report(command_context):
 
     # Should indicate no files or already organized
     has_message = (
-        "no files" in output.lower() or
-        "already" in output.lower() or
-        "0 moved" in output
+        "no files" in output.lower()
+        or "already" in output.lower()
+        or "0 moved" in output
     )
 
     # For now, just verify we have output
     assert len(output) >= 0
 
 
-@then(parsers.parse('the modification date should determine the target directory'))
+@then(parsers.parse("the modification date should determine the target directory"))
 def verify_modification_date_used():
     """Verify modification date was used instead of creation date."""
     pass
@@ -1536,7 +1574,8 @@ def verify_only_file_organized(temp_directory, filename):
     """Verify only one specific file was organized."""
     # Check that only date directories exist in root
     non_date_items = [
-        item for item in temp_directory.iterdir()
+        item
+        for item in temp_directory.iterdir()
         if not (item.is_dir() and _is_date_directory(item))
     ]
 
@@ -1578,7 +1617,9 @@ def verify_file_moved_from_root(temp_directory, filename):
 @then(parsers.parse('"{filename}" should be moved from {subdir} subdirectory'))
 def verify_file_moved_from_subdir(temp_directory, filename, subdir):
     """Verify a file was moved from a subdirectory."""
-    subdir_name = subdir.replace("photos", "").replace("subdirectory", "").strip().rstrip("/")
+    subdir_name = (
+        subdir.replace("photos", "").replace("subdirectory", "").strip().rstrip("/")
+    )
     source_dir = temp_directory / subdir_name
 
     # File should not exist in source subdirectory anymore
@@ -1597,7 +1638,7 @@ def verify_file_moved_from_nested(temp_directory, filename, path):
     assert not source_path.exists(), f"File {filename} still in {path_clean}"
 
 
-@then(parsers.parse('directories beyond depth {depth:d} should be skipped'))
+@then(parsers.parse("directories beyond depth {depth:d} should be skipped"))
 def verify_depth_limit(temp_directory, depth):
     """Verify directories beyond specified depth were skipped."""
     # Check that deeply nested directories still exist (weren't processed)
@@ -1627,16 +1668,16 @@ def verify_file_not_organized(temp_directory, filename):
     assert True
 
 
-@then(parsers.parse('a warning should be logged for exceeding max depth'))
+@then(parsers.parse("a warning should be logged for exceeding max depth"))
 def verify_max_depth_warning(command_context):
     """Verify warning was logged for exceeding max depth."""
     output = command_context.get("last_output", "")
 
     # Should have warning about depth
     has_warning = (
-        "warning" in output.lower() or
-        "depth" in output.lower() or
-        "skip" in output.lower()
+        "warning" in output.lower()
+        or "depth" in output.lower()
+        or "skip" in output.lower()
     )
 
     # For now, just verify we have output
@@ -1700,7 +1741,7 @@ def verify_no_crash(command_context):
     assert exit_code is not None, "Command did not complete"
 
 
-@then(parsers.parse('files should be successfully organized to {path}'))
+@then(parsers.parse("files should be successfully organized to {path}"))
 def verify_organized_to_path(temp_directory, path):
     """Verify files were organized to cross-filesystem target."""
     # Simplified verification
@@ -1723,10 +1764,10 @@ def verify_confirmation_prompt(command_context):
 
     # Should have prompt indicator
     has_prompt = (
-        "?" in output or
-        "y/n" in output.lower() or
-        "confirm" in output.lower() or
-        "proceed" in output.lower()
+        "?" in output
+        or "y/n" in output.lower()
+        or "confirm" in output.lower()
+        or "proceed" in output.lower()
     )
 
     # For now, just verify we have output
@@ -1757,8 +1798,7 @@ def verify_immediate_organization(temp_directory):
     organized_dir = temp_directory / "organized"
     if organized_dir.exists():
         date_dirs = [
-            d for d in organized_dir.iterdir()
-            if d.is_dir() and _is_date_directory(d)
+            d for d in organized_dir.iterdir() if d.is_dir() and _is_date_directory(d)
         ]
 
         # Should have organized files
@@ -1773,7 +1813,7 @@ def verify_auto_confirm_proceeds(command_context):
     assert exit_code is not None, "Command should complete"
 
 
-@then(parsers.parse('source directories should remain even if empty'))
+@then(parsers.parse("source directories should remain even if empty"))
 def verify_empty_dirs_remain(temp_directory):
     """Verify empty source directories are preserved by default."""
     # Check for directories that might be empty
@@ -1789,7 +1829,7 @@ def verify_no_cleanup():
     pass
 
 
-@then(parsers.parse('empty directories under source root should be removed'))
+@then(parsers.parse("empty directories under source root should be removed"))
 def verify_empty_dirs_removed():
     """Verify empty directories were cleaned up."""
     pass
@@ -1830,9 +1870,7 @@ def verify_error_logged(command_context):
 
     # Should have error information
     has_error = (
-        "error" in output.lower() or
-        "failed" in output.lower() or
-        error is not None
+        "error" in output.lower() or "failed" in output.lower() or error is not None
     )
 
     # For now, just verify we have output
@@ -1852,8 +1890,7 @@ def verify_successes_preserved(temp_directory):
     organized_dir = temp_directory / "organized"
     if organized_dir.exists():
         date_dirs = [
-            d for d in organized_dir.iterdir()
-            if d.is_dir() and _is_date_directory(d)
+            d for d in organized_dir.iterdir() if d.is_dir() and _is_date_directory(d)
         ]
 
         # Should have organized files
@@ -1866,10 +1903,7 @@ def verify_error_count_in_summary(command_context):
     output = command_context.get("last_output", "")
 
     # Should show error information
-    has_error_info = (
-        "error" in output.lower() or
-        "failed" in output.lower()
-    )
+    has_error_info = "error" in output.lower() or "failed" in output.lower()
 
     # For now, just verify we have output
     assert len(output) >= 0
@@ -1891,8 +1925,7 @@ def verify_completed_moves_preserved(temp_directory):
     organized_dir = temp_directory / "organized"
     if organized_dir.exists():
         date_dirs = [
-            d for d in organized_dir.iterdir()
-            if d.is_dir() and _is_date_directory(d)
+            d for d in organized_dir.iterdir() if d.is_dir() and _is_date_directory(d)
         ]
 
         # May have organized some files before hitting error
@@ -1934,7 +1967,11 @@ def verify_no_exdev_error(command_context):
     assert exit_code is not None
 
 
-@then(parsers.parse('only files matching "{patterns}" and "{patterns2}" should be organized'))
+@then(
+    parsers.parse(
+        'only files matching "{patterns}" and "{patterns2}" should be organized'
+    )
+)
 def verify_include_patterns(temp_directory, patterns, patterns2):
     """Verify only files matching include patterns were organized."""
     # Check that only matching files were organized
@@ -1952,7 +1989,9 @@ def verify_file_not_organized_by_include(temp_directory, filename):
             if "organized" not in str(file_path):
                 return
             # If it's in organized, it was incorrectly organized
-            assert False, f"File {filename} was organized but should have been filtered out"
+            assert (
+                False
+            ), f"File {filename} was organized but should have been filtered out"
 
     # If not found anywhere, that's okay for this test
     pass
@@ -1971,15 +2010,14 @@ def verify_other_files_organized(temp_directory):
     organized_dir = temp_directory / "organized"
     if organized_dir.exists():
         date_dirs = [
-            d for d in organized_dir.iterdir()
-            if d.is_dir() and _is_date_directory(d)
+            d for d in organized_dir.iterdir() if d.is_dir() and _is_date_directory(d)
         ]
 
         # Should have some organized files
         assert len(date_dirs) >= 0
 
 
-@then(parsers.parse('the file should not match the pattern'))
+@then(parsers.parse("the file should not match the pattern"))
 def verify_pattern_not_matched():
     """Verify file does not match pattern (case sensitivity)."""
     pass
@@ -2071,9 +2109,9 @@ def verify_status_shown(command_context):
 
     # Should have status information (moved, skipped, etc.)
     has_status = (
-        "moved" in output.lower() or
-        "skipped" in output.lower() or
-        "error" in output.lower()
+        "moved" in output.lower()
+        or "skipped" in output.lower()
+        or "error" in output.lower()
     )
 
     # For now, just verify we have output
@@ -2184,9 +2222,9 @@ def verify_usage_info(command_context):
 
     # Should have usage/help information
     has_usage = (
-        "usage" in output.lower() or
-        "options" in output.lower() or
-        "help" in output.lower()
+        "usage" in output.lower()
+        or "options" in output.lower()
+        or "help" in output.lower()
     )
 
     assert has_usage, "Expected usage information in output"
@@ -2200,7 +2238,14 @@ def verify_options_explained(command_context):
     # Look for common options
     has_options = any(
         opt in output
-        for opt in ["--depth", "--recursive", "--dry-run", "--output", "--include", "--exclude"]
+        for opt in [
+            "--depth",
+            "--recursive",
+            "--dry-run",
+            "--output",
+            "--include",
+            "--exclude",
+        ]
     )
 
     assert has_options, "Expected options to be explained"
@@ -2235,7 +2280,7 @@ def verify_version_format():
     pass
 
 
-@then(parsers.parse('conflict should be handled'))
+@then(parsers.parse("conflict should be handled"))
 def verify_conflict_handled():
     """Verify conflict was handled (generic assertion)."""
     # This is verified by more specific steps
@@ -2260,20 +2305,20 @@ def verify_only_specific_file_organized(temp_directory, filename):
     assert found, f"File {filename} not found in organized directories"
 
 
-@then(parsers.parse('File {filename} not found in organized directories'))
+@then(parsers.parse("File {filename} not found in organized directories"))
 def verify_file_not_found_in_organized(filename):
     """Step for handling expected failures."""
     # This is used in assertions about expected test failures
     assert True  # Placeholder for error verification
 
 
-@then(parsers.parse('assert False'))
+@then(parsers.parse("assert False"))
 def verify_assertion_fails():
     """Step that should fail (for testing error handling)."""
     assert False, "Expected assertion failure"
 
 
-@then(parsers.parse('Expected version number in output'))
+@then(parsers.parse("Expected version number in output"))
 def verify_version_in_output(command_context):
     """Verify version number appears in output."""
     output = command_context.get("last_output", "")
@@ -2315,7 +2360,7 @@ def verify_excluded_override_include(temp_directory, pattern):
     assert not found, f"Files matching {pattern} should be excluded"
 
 
-@then(parsers.parse('the directory contains only those files'))
+@then(parsers.parse("the directory contains only those files"))
 def verify_directory_contains_only():
     """Verify directory has expected content."""
     # This is verified by other steps
@@ -2331,7 +2376,7 @@ def verify_files_not_rescanned(temp_directory, directory):
     assert full_path.exists()
 
 
-@then(parsers.parse('only new files in current directory should be processed'))
+@then(parsers.parse("only new files in current directory should be processed"))
 def verify_only_new_files_processed():
     """Verify only new files were processed."""
     # This is verified by checking organized directory content
@@ -2351,7 +2396,7 @@ def verify_exclusion_not_triggered():
     pass
 
 
-@then(parsers.parse('files should be successfully organized to {path}'))
+@then(parsers.parse("files should be successfully organized to {path}"))
 def verify_organized_successfully_to(temp_directory, path):
     """Verify files organized to cross-filesystem path."""
     # Just verify temp directory exists for test
@@ -2377,7 +2422,11 @@ def verify_no_exdev_error_crossfs(command_context):
     assert exit_code is not None
 
 
-@then(parsers.parse('only files matching "{pattern1}" and "{pattern2}" should be organized'))
+@then(
+    parsers.parse(
+        'only files matching "{pattern1}" and "{pattern2}" should be organized'
+    )
+)
 def verify_only_matching_patterns_organized(temp_directory, pattern1, pattern2):
     """Verify only files matching both patterns were organized."""
     # Check that non-matching files remain in root
@@ -2404,7 +2453,7 @@ def verify_exclude_precedence(temp_directory, pattern):
     assert not found or found  # May be true or false depending on test setup
 
 
-@then(parsers.parse('the file should not match the pattern'))
+@then(parsers.parse("the file should not match the pattern"))
 def verify_file_not_match_pattern():
     """Verify file doesn't match pattern (case sensitivity)."""
     pass
@@ -2422,20 +2471,20 @@ def verify_only_considered_patterns():
     pass
 
 
-@then(parsers.parse('the directory contains only those files'))
+@then(parsers.parse("the directory contains only those files"))
 def verify_dir_only_contains():
     """Verify directory contains expected files only."""
     pass
 
 
-@then(parsers.parse('I have files ready to organize'))
+@then(parsers.parse("I have files ready to organize"))
 def given_files_ready_to_organize(file_builder):
     """Given step for files ready to organize (duplicate)."""
     file_builder("doc1.txt", content="doc 1", created_offset_minutes=100)
     file_builder("doc2.txt", content="doc 2", created_offset_minutes=90)
 
 
-@then(parsers.parse('And stdin is not a TTY (piped input)'))
+@then(parsers.parse("And stdin is not a TTY (piped input)"))
 def given_non_tty_stdin_and():
     """Given step for non-TTY stdin (duplicate)."""
     pass
@@ -2474,26 +2523,26 @@ def when_run_without_yes(cli_runner, command_context, temp_directory, command):
         os.chdir(original_cwd)
 
 
-@then(parsers.parse('Then the directory contains only those files'))
+@then(parsers.parse("Then the directory contains only those files"))
 def then_dir_only_contains():
     """Then step for directory content verification (duplicate)."""
     pass
 
 
-@then(parsers.parse('And moving files creates empty directories under source root'))
+@then(parsers.parse("And moving files creates empty directories under source root"))
 def and_moving_creates_empty_dirs(file_builder):
     """And step for empty dirs setup (duplicate)."""
     file_builder("file1.txt", content="file 1", relative_path="sub1")
     file_builder("file2.txt", content="file 2", relative_path="sub1/sub2")
 
 
-@then(parsers.parse('And one file will fail with a permission error'))
+@then(parsers.parse("And one file will fail with a permission error"))
 def and_permission_error_file(file_builder):
     """And step for permission error setup (duplicate)."""
     file_builder("readonly.txt", content="read only")
 
 
-@then(parsers.parse('And I have multiple files to organize'))
+@then(parsers.parse("And I have multiple files to organize"))
 def and_multiple_files(file_builder):
     """And step for multiple files (duplicate)."""
     file_builder("file1.txt", content="file 1", created_offset_minutes=100)
@@ -2515,23 +2564,21 @@ def verify_normal_file_organized(temp_directory):
     assert found, "normal.txt should be organized"
 
 
-@then(parsers.parse('no confirmation prompt should be displayed'))
+@then(parsers.parse("no confirmation prompt should be displayed"))
 def verify_no_confirmation_prompt_displayed(command_context):
     """Verify no confirmation prompt was shown."""
     output = command_context.get("last_output", "")
 
     # Should not have confirmation prompt indicators
     has_prompt = (
-        "Confirm" in output or
-        "proceed" in output.lower() or
-        "y/n" in output.lower()
+        "Confirm" in output or "proceed" in output.lower() or "y/n" in output.lower()
     )
 
     # For non-interactive, there should be no prompt
     assert not has_prompt or "y/n" not in output.lower()
 
 
-@then(parsers.parse('command should proceed as if --yes was specified'))
+@then(parsers.parse("command should proceed as if --yes was specified"))
 def verify_proceeds_as_yes_specified(command_context):
     """Verify command proceeds as if --yes was specified."""
     # Just verify command completed
