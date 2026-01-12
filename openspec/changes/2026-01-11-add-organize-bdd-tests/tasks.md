@@ -239,9 +239,9 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `features/organize.feature`, `tests/bdd/test_organize_steps.py`
 
-- [ ] 15.1 **RED**: 运行测试确认失败 (OSError: File name too long)
-- [ ] 15.2 **GREEN**: 减少深度到 50 层或使用 pytest.mark.skipif (macOS)
-- [ ] 15.3 Commit: "Phase 15: Fix maximum recursion depth test"
+- [x] 15.1 **RED**: 运行测试确认失败 (OSError: File name too long)
+- [x] 15.2 **GREEN**: 减少深度到 50 层或使用 pytest.mark.skipif (macOS)
+- [x] 15.3 Commit: "Phase 15: Fix maximum recursion depth test" (8cdfb4c5)
 
 ---
 
@@ -251,9 +251,9 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `features/organize.feature`
 
-- [ ] 16.1 **RED**: 运行测试确认失败 (退出码 2)
-- [ ] 16.2 **GREEN**: 修改 feature 为 `fx --version` 或调整期望为错误
-- [ ] 16.3 Commit: "Phase 16: Fix version scenario"
+- [x] 16.1 **RED**: 运行测试确认失败 (退出码 2)
+- [x] 16.2 **GREEN**: 修改 feature 为 `fx --version` 或调整期望为错误
+- [x] 16.3 Commit: "Phase 16: Fix version scenario" (8cdfb4c5)
 
 ---
 
@@ -286,4 +286,4 @@ Each task follows RED-GREEN-REFACTOR:
 
 **Current Progress**:
 - Phase 1-9: ✅ Complete (43/50 BDD tests passing)
-- Phase 10-18: 🔄 In Progress (目标: 50/50 passing)
+- Phase 10-14, 17-18: 🔄 In Progress (Phase 15-16: ✅ Complete)
