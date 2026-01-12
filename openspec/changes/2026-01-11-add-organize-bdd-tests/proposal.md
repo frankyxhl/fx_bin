@@ -45,7 +45,7 @@ organize 命令目前只有 71 个集成测试（pytest），缺少可读性强�
 
 - [x] BDD 测试覆盖核心场景（默认组织、冲突处理、dry-run、递归扫描）
 - [x] 所有 BDD 测试可运行：`poetry run pytest tests/bdd/test_organize_steps.py -v`
-- [ ] BDD 测试通过：`poetry run pytest -m bdd -v` (目标 50/50，当前 45/50)
+- [x] BDD 测试通过：`poetry run pytest -m bdd -v` (目标 50/50，当前 50/50)
 - [x] 现有 72 个集成测试继续通过
 - [x] BDD 场景描述清晰，非技术人员可理解
 
@@ -53,7 +53,7 @@ organize 命令目前只有 71 个集成测试（pytest），缺少可读性强�
 
 ## Follow-up: Fix 7 Failing BDD Tests
 
-**Status**: In Progress (Phase 10-14, 17-18, Phase 15-16: Complete)
+**Status**: Complete ✅ (All 7 issues fixed, 50/50 tests passing)
 
 ### Why
 
@@ -61,14 +61,14 @@ organize 命令目前只有 71 个集成测试（pytest），缺少可读性强�
 
 ### What Changes
 
-- [ ] 修复 Step 参数/签名不匹配 (fixture 缺失)
-- [ ] 移除重复/冲突的 step definitions
-- [ ] 修复 symlink 表格解析逻辑
-- [ ] 修复自定义 output 目录路径映射
-- [ ] 修复非递归命令执行
-- [ ] 修复最大深度用例 (path-too-long)
-- [ ] 修复 version 场景 CLI 设计
-- [ ] 优化 feature 文案语义
+- [x] 修复 Step 参数/签名不匹配 (fixture 缺失)
+- [x] 移除重复/冲突的 step definitions
+- [x] 修复 symlink 表格解析逻辑
+- [x] 修复自定义 output 目录路径映射
+- [x] 修复非递归命令执行
+- [x] 修复最大深度用例 (path-too-long)
+- [x] 修复 version 场景 CLI 设计
+- [x] 优化 feature 文案语义
 
 ### Impact
 
@@ -78,7 +78,7 @@ organize 命令目前只有 71 个集成测试（pytest），缺少可读性强�
 
 ### Target Results
 
-- **Current**: 45/50 BDD tests passing (90%, up from 86%)
+- **Current**: 50/50 BDD tests passing (100%) ✅
 - **Target**: 50/50 BDD tests passing (100%)
 
 ### Recent Fixes (Phase 15-16) ✅
