@@ -266,7 +266,7 @@ Each task follows RED-GREEN-REFACTOR:
 - [x] 17.1 **REFACTOR**: 更新 feature 文案为 "File timestamp" 替代 "Creation Date"
 - [x] 17.2 **REFACTOR**: 显式添加 --date-source modified 到相关场景
 - [x] 17.3 **REFACTOR**: 移除 run_organize_command 中的自动注入逻辑
-- [ ] 17.4 Commit: "Phase 17: Improve feature wording clarity"
+- [x] 17.4 Commit: "Phase 17: Improve feature wording clarity"
 
 ---
 
