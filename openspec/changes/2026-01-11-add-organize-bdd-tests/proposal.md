@@ -45,7 +45,7 @@ organize 命令目前只有 71 个集成测试（pytest），缺少可读性强�
 
 - [x] BDD 测试覆盖核心场景（默认组织、冲突处理、dry-run、递归扫描）
 - [x] 所有 BDD 测试可运行：`poetry run pytest tests/bdd/test_organize_steps.py -v`
-- [ ] BDD 测试通过：`poetry run pytest -m bdd -v` (目标 50/50，当前 43/50)
+- [ ] BDD 测试通过：`poetry run pytest -m bdd -v` (目标 50/50，当前 45/50)
 - [x] 现有 72 个集成测试继续通过
 - [x] BDD 场景描述清晰，非技术人员可理解
 
@@ -53,7 +53,7 @@ organize 命令目前只有 71 个集成测试（pytest），缺少可读性强�
 
 ## Follow-up: Fix 7 Failing BDD Tests
 
-**Status**: In Progress (Phase 10-18)
+**Status**: In Progress (Phase 10-14, 17-18, Phase 15-16: Complete)
 
 ### Why
 
@@ -78,8 +78,32 @@ organize 命令目前只有 71 个集成测试（pytest），缺少可读性强�
 
 ### Target Results
 
-- **Current**: 43/50 BDD tests passing (86%)
+- **Current**: 45/50 BDD tests passing (90%, up from 86%)
 - **Target**: 50/50 BDD tests passing (100%)
+
+### Recent Fixes (Phase 15-16) ✅
+
+**Phase 15: Fix maximum recursion depth test**
+- Problem: 150-level depth causes OSError: File name too long on macOS
+- Fix: Reduce depth to 50 levels in feature file
+- Result: `test_maximum_recursion_depth_is_enforced` ✓
+- Commit: 8cdfb4c5
+
+**Phase 16: Fix version scenario**
+- Problem: `fx organize --version` command doesn't exist (exit code 2)
+- Fix: Change command to `fx --version` (global command)
+- Result: `test_version_information_display` ✓
+- Commit: 8cdfb4c5
+
+### Remaining Failed Tests (5/50)
+
+| Test Name | Issue | Phase |
+|-----------|-------|-------|
+| test_recursive_scanning_of_nested_directories | Directory not created | Phase 11 |
+| test_skip_symlink_files_for_security | File not organized | Phase 12 |
+| test_use_modification_time_instead_of_creation_time | Date mismatch | Phase 17 |
+| test_organize_to_custom_output_directory | Absolute path not mapped | Phase 13 |
+| test_nonrecursive_mode_limits_to_current_directory | Command not executed | Phase 14 |
 
 ## Scenarios Overview
 
