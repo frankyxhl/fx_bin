@@ -179,9 +179,9 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `tests/bdd/test_organize_steps.py`
 
-- [ ] 10.1 **RED**: 运行测试确认失败 (fixture 'filename' not found)
-- [ ] 10.2 **GREEN**: 修复 step 签名，添加 filename 参数到 parsers.parse
-- [ ] 10.3 Commit: "Phase 10: Fix step parameter mismatch"
+- [x] 10.1 **RED**: 运行测试确认失败 (fixture 'filename' not found)
+- [x] 10.2 **GREEN**: 修复 step 签名，添加 filename 参数到 parsers.parse
+- [x] 10.3 Commit: "Phase 10: Fix step parameter mismatch"
 
 ---
 
@@ -191,9 +191,9 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `tests/bdd/test_organize_steps.py`
 
-- [ ] 11.1 **RED**: 运行测试确认失败
-- [ ] 11.2 **GREEN**: 删除重复的 `I have a directory structure:` (保留 table 解析版本)
-- [ ] 11.3 Commit: "Phase 11: Remove duplicate step definitions"
+- [x] 11.1 **RED**: 运行测试确认失败
+- [x] 11.2 **GREEN**: 删除重复的 `I have a directory structure:` (保留 table 解析版本)
+- [x] 11.3 Commit: "Phase 11: Remove duplicate step definitions"
 
 ---
 
@@ -203,9 +203,9 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `tests/bdd/test_organize_steps.py`
 
-- [ ] 12.1 **RED**: 运行测试确认失败
-- [ ] 12.2 **GREEN**: 修复 setup_directory_with_types，正确过滤 header 行
-- [ ] 12.3 Commit: "Phase 12: Fix symlink table parsing"
+- [x] 12.1 **RED**: 运行测试确认失败
+- [x] 12.2 **GREEN**: 修复 setup_directory_with_types，正确过滤 header 行
+- [x] 12.3 Commit: "Phase 12: Fix symlink table parsing"
 
 ---
 
@@ -215,9 +215,9 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `tests/bdd/test_organize_steps.py`
 
-- [ ] 13.1 **RED**: 运行测试确认失败
-- [ ] 13.2 **GREEN**: 修复绝对路径处理，正确映射到 temp_directory
-- [ ] 13.3 Commit: "Phase 13: Fix custom output directory path"
+- [x] 13.1 **RED**: 运行测试确认失败
+- [x] 13.2 **GREEN**: 修复绝对路径处理，正确映射到 temp_directory
+- [x] 13.3 Commit: "Phase 13: Fix custom output directory path"
 
 ---
 
@@ -227,9 +227,9 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `tests/bdd/test_organize_steps.py`
 
-- [ ] 14.1 **RED**: 运行测试确认失败
-- [ ] 14.2 **GREEN**: 把 setup_non_recursive_command 改为 When step 并执行命令
-- [ ] 14.3 Commit: "Phase 14: Fix non-recursive command execution"
+- [x] 14.1 **RED**: 运行测试确认失败
+- [x] 14.2 **GREEN**: 把 setup_non_recursive_command 改为 When step 并执行命令
+- [x] 14.3 Commit: "Phase 14: Fix non-recursive command execution"
 
 ---
 
@@ -263,9 +263,9 @@ Each task follows RED-GREEN-REFACTOR:
 
 **文件**: `features/organize.feature`, `tests/bdd/test_organize_steps.py`
 
-- [ ] 17.1 **REFACTOR**: 更新 feature 文案为 "File timestamp" 替代 "Creation Date"
-- [ ] 17.2 **REFACTOR**: 显式添加 --date-source modified 到相关场景
-- [ ] 17.3 **REFACTOR**: 移除 run_organize_command 中的自动注入逻辑
+- [x] 17.1 **REFACTOR**: 更新 feature 文案为 "File timestamp" 替代 "Creation Date"
+- [x] 17.2 **REFACTOR**: 显式添加 --date-source modified 到相关场景
+- [x] 17.3 **REFACTOR**: 移除 run_organize_command 中的自动注入逻辑
 - [ ] 17.4 Commit: "Phase 17: Improve feature wording clarity"
 
 ---
@@ -274,9 +274,9 @@ Each task follows RED-GREEN-REFACTOR:
 
 **目标**: 确保所有测试通过
 
-- [ ] 18.1 **GREEN**: 运行所有 BDD 测试 (目标 50/50)
-- [ ] 18.2 **GREEN**: 运行集成测试确保无回归
-- [ ] 18.3 Commit: "Phase 18: Final verification - all tests passing"
+- [x] 18.1 **GREEN**: 运行所有 BDD 测试 (目标 50/50)
+- [x] 18.2 **GREEN**: 运行集成测试确保无回归
+- [x] 18.3 Commit: "Phase 18: Final verification - all tests passing"
 
 ---
 
