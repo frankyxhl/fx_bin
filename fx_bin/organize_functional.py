@@ -62,7 +62,7 @@ def get_file_date(
 
         # CREATED mode: try birthtime first, fallback to mtime
         if hasattr(stat_info, "st_birthtime"):
-            birthtime = stat_info.st_birthtime
+            birthtime = getattr(stat_info, "st_birthtime", 0)
             if birthtime > 0:  # Valid birthtime
                 return IOResult.from_value(datetime.fromtimestamp(birthtime))
             else:
@@ -727,7 +727,7 @@ def _execute_move_with_error_handling(
     move_result: IOResult[Tuple[None, bool], MoveError],
     item: "FileOrganizeResult",
     fail_fast: bool,
-) -> "IOResult[Tuple[None, bool], MoveError | OrganizeError] | Tuple[int, int, int]":
+) -> "IOResult[None, OrganizeError] | Tuple[int, int, int]":
     """Handle move result with error checking.
 
     Args:
