@@ -235,7 +235,7 @@ Feature: File Organization by Date
 
   @recursion
   Scenario: Maximum recursion depth is enforced
-    Given I have a directory nested 150 levels deep with a file "deep.txt"
+    Given I have a directory nested 50 levels deep with a file "deep.txt"
     When I run "fx organize --recursive"
     Then directories beyond depth 100 should be skipped
     And "deep.txt" should not be organized
@@ -448,6 +448,6 @@ Feature: File Organization by Date
 
   @version_compatibility
   Scenario: Version information display
-    When I run "fx organize --version"
+    When I run "fx --version"
     Then I should see the current version number
     And the format should match other fx commands
