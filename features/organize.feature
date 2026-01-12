@@ -209,7 +209,7 @@ Feature: File Organization by Date
   @sorting
   Scenario: Use modification time instead of creation time
     Given I have a file "old_file.txt" created on 2026-01-01
-    And the file was modified on 2026-01-20
+    And the file "old_file.txt" was modified on 2026-01-20
     When I run "fx organize --date-source modified"
     Then "old_file.txt" should be organized into "2026/202601/20260120/" directory
     And the modification date should determine the target directory
