@@ -1,6 +1,586 @@
 # CHANGELOG
 
 
+## v2.4.0 (2026-01-13)
+
+### Bug Fixes
+
+- Address code review feedback - fail_fast bug and complexity
+  ([`c2bdc00`](https://github.com/frankyxhl/fx_bin/commit/c2bdc00a62018323f16a28e82fff5c7c96131070))
+
+## Problem 1: execute_organize() fail_fast=False error counting bug When fail_fast=False, move
+  failures were not counted as errors and files were still counted as processed. This was because
+  _execute_move_with_error_handling returned 0 for both "success without dir created" and
+  "non-fail-fast error".
+
+Fix: Changed return type to tuple (processed_delta, errors_delta, dir_created_delta):
+
+- Success: (0, 0, 1) or (0, 0, 0) - Failure (non-fail-fast): (-1, 1, 0) to correctly decrement
+  processed and increment errors
+
+## Problem 2: Complexity gate inconsistent with spec The spec requires "all other functions ≤15" but
+  execute_organize had complexity 16.
+
+Fix: Extracted _read_file_dates helper to reduce complexity from 16 to 15. Also removed the special
+  threshold exception for execute_organize from check_complexity.py (it's no longer needed).
+
+## Additional changes: - Fixed flake8 E501 line length issues in docstrings - All 71 tests passing -
+  Nesting: max 4 levels ✓ - Complexity: all functions within thresholds ✓ - flake8: clean ✓ - mypy:
+  clean ✓
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Apply Black code formatting
+  ([`e3f502a`](https://github.com/frankyxhl/fx_bin/commit/e3f502a6aa61edea1e65077fbd0e1fd158237808))
+
+- Fixed formatting in fx_bin/organize_functional.py - Fixed formatting in fx_bin/cli.py - Fixed
+  formatting in tests/bdd/test_organize_steps.py - All files now comply with Black style guide
+
+Resolves CI Quality check failure in PR #34
+
+- Correct ASK mode logic errors in organize command
+  ([`1e730d2`](https://github.com/frankyxhl/fx_bin/commit/1e730d23eb78239c027bb95ebe32039f72f0c858))
+
+Fixes two critical bugs affecting file organization:
+
+**P1: ASK mode non-TTY early exit (cli.py)** - Removed early return that prevented SKIP mode
+  execution - When --on-conflict ask detects conflicts in non-TTY mode, it now continues to organize
+  non-conflicting files instead of exiting immediately - Fixed: lines 1060-1062 deleted
+
+**P2: Processed count miscounting (organize_functional.py)** - Changed counter logic from
+  pre-increment to delta-driven - SUCCESS: Now returns (1, 0, dir_delta) - correctly counts
+  processed moves - SKIP/ASK conflicts: Return (0, 0, 0) - correctly NOT counted as processed -
+  FAILURE: Returns (-1, 1, 0) - correctly adds to errors - DRY_RUN: Returns (1, 0, 0) - dry-run
+  still counts as "processed" - Removed pre-increment (line 867) and error decrement (line 871)
+
+**Impact**: - Non-TTY ASK mode now processes files instead of doing nothing - Processed/skipped
+  counts now accurately reflect actual file operations - All 71 organize tests pass
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Correct organize runtime conflict counting
+  ([`d089547`](https://github.com/frankyxhl/fx_bin/commit/d0895479fad095763eb368b660a157b40d0f51c0))
+
+- Implement fail-fast functionality for organize command
+  ([`2678fc1`](https://github.com/frankyxhl/fx_bin/commit/2678fc19732d2e90cd3d38b9780a0a3441f99df9))
+
+- Add fail_fast checks in execute_organize() for date read, move, and plan errors - Add 3
+  comprehensive tests for fail-fast behavior - Mark task 14.6.2 as completed in archived tasks.md
+
+When context.fail_fast=True and an error occurs, processing stops immediately while preserving
+  completed moves (no rollback).
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Include original exception in cross-device move error
+  ([`0a5406c`](https://github.com/frankyxhl/fx_bin/commit/0a5406cda063793295557e3cb39fa5088eb37268))
+
+Change _handle_cross_device_move() error handling to preserve exception details for easier
+  debugging.
+
+Before: MoveError(f"Cannot move {source} to {target}: cross-device link failed")
+
+After: MoveError(f"Cannot move {source} to {target}: cross-device link failed: {e}")
+
+This helps diagnose issues when cross-device moves fail for reasons other than EXDEV (e.g.,
+  permission errors, disk full, etc.).
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Phase 1 - Fix RENAME mode to rename on disk conflict
+  ([`bd40317`](https://github.com/frankyxhl/fx_bin/commit/bd403174abb11e867a422183721d31798d5950cd))
+
+Phase 1.1: Create resolve_disk_conflict_rename helper - Add new function to handle disk conflicts by
+  checking filesystem - Reuse get_base_name() and get_multi_ext() for multi-part extensions - Add 4
+  tests for helper function behavior
+
+Phase 1.2: Integrate helper into move_file_safe - Update RENAME branch to call
+  resolve_disk_conflict_rename() - Fix bug where RENAME mode was overwriting existing files - Add 3
+  integration tests for disk conflict handling - Fix 1 existing test to use correct conflict mode
+  (OVERWRITE)
+
+Before: RENAME mode would overwrite existing files on disk
+
+After: RENAME mode adds _1, _2 suffix to prevent data loss
+
+Test Results: - All 7 new tests pass - All 542 tests in full suite pass - No regressions
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Resolve MyPy type checking errors
+  ([`c5d91fc`](https://github.com/frankyxhl/fx_bin/commit/c5d91fc09da2073a14a52d900425126e491ef6cf))
+
+- Fixed st_birthtime attribute access using getattr() to satisfy MyPy on non-macOS platforms - Fixed
+  return type annotation in _execute_move_with_error_handling from IOResult[Tuple[None, bool],
+  MoveError | OrganizeError] to IOResult[None, OrganizeError] | Tuple[int, int, int] - All MyPy
+  checks now pass
+
+Resolves CI Quality check failure in PR #34
+
+### Chores
+
+- Archive fix-organize-conflict-handling change
+  ([`d8880f9`](https://github.com/frankyxhl/fx_bin/commit/d8880f9ac2a775568c6dba94f11e6d240ad1baa1))
+
+All 6 phases completed (48/48 tasks): - Phase 1: Fix RENAME mode (prevent overwrite) - Phase 2:
+  Implement ASK mode in CLI layer - Phase 3: Implement atomic OVERWRITE with EXDEV - Phase 4: Fix
+  --quiet to always show summary - Phase 5: Handle ValueError for cross-device paths - Phase 6:
+  Verification and documentation
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Archive fix-organize-edge-cases change
+  ([`9f3e8e3`](https://github.com/frankyxhl/fx_bin/commit/9f3e8e3365eedce5bd08c9eeca0c116c8be7ab72))
+
+All 41 tasks completed and verified:
+
+### Fixes Implemented 1. FD leak: os.close(fd) after tempfile.mkstemp() (2 locations) 2. --yes +
+  --quiet: Respects --quiet flag (cli.py:803) 3. loguru config: Configured based on quiet/verbose
+  (cli.py:707-720) 4. ASK runtime warning: Documented with loguru.warning()
+  (organize_functional.py:446-449) 5. Directory creation: Uses real_target
+  (organize_functional.py:459)
+
+### Test Improvements - Stabilized ASK CLI tests with FIXED_MODIFIED_TS - Fixed ASK runtime conflict
+  tests to use direct unit testing - Removed 3 invalid tests with pass placeholders - Removed
+  redundant TestLoguruConfiguration class
+
+### Verification - All 560 tests pass - 12 organize CLI tests (clean, no placeholders) - 55 organize
+  IO tests - openspec validate --strict passes
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Complete OpenSpec add-organize-command implementation
+  ([`eadc00e`](https://github.com/frankyxhl/fx_bin/commit/eadc00e7db4daa280c55646e8706abdd1f2f06c3))
+
+- Phase 13: Documentation fixes and test naming (74 tests renamed to test_given_X_when_Y_then_Z
+  pattern) - Phase 14: Manual testing and code quality checks (all passed) - Fix fail-fast
+  implementation with 3 new tests - Archive change to
+  openspec/changes/archive/2026-01-10-add-organize-command/ - Move organize spec to
+  openspec/specs/organize/spec.md
+
+Test Results: - 532 tests PASSED - Organize coverage: 83% (exceeds 80% requirement) - All code
+  quality checks passed (flake8, black, mypy, bandit)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Ignore task_plan.md working file
+  ([`732b05f`](https://github.com/frankyxhl/fx_bin/commit/732b05fa5991807e20a9f251f2073d20820f6a3f))
+
+Add task_plan.md to .gitignore as it is a temporary Ralph Loop working tracker, not a project asset.
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Un-ignore openspec/changes/ to track tasks.md
+  ([`3e4f8a5`](https://github.com/frankyxhl/fx_bin/commit/3e4f8a53f96bf7a4c7c9899291670ea4be998893))
+
+Remove openspec/changes/ from .gitignore to allow tracking the task list and proposal documentation.
+
+- **deps-dev**: Bump authlib from 1.6.5 to 1.6.6
+  ([`6491d46`](https://github.com/frankyxhl/fx_bin/commit/6491d4639ed3249a23c8743c9be3a46366e247ce))
+
+Bumps [authlib](https://github.com/authlib/authlib) from 1.6.5 to 1.6.6. - [Release
+  notes](https://github.com/authlib/authlib/releases) -
+  [Changelog](https://github.com/authlib/authlib/blob/main/docs/changelog.rst) -
+  [Commits](https://github.com/authlib/authlib/compare/v1.6.5...v1.6.6)
+
+--- updated-dependencies: - dependency-name: authlib dependency-version: 1.6.6
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump urllib3 from 2.6.0 to 2.6.3
+  ([`1131e5e`](https://github.com/frankyxhl/fx_bin/commit/1131e5e2b3c6fc549881222cab1d8f0aa3da9d2f))
+
+Bumps [urllib3](https://github.com/urllib3/urllib3) from 2.6.0 to 2.6.3. - [Release
+  notes](https://github.com/urllib3/urllib3/releases) -
+  [Changelog](https://github.com/urllib3/urllib3/blob/main/CHANGES.rst) -
+  [Commits](https://github.com/urllib3/urllib3/compare/2.6.0...2.6.3)
+
+--- updated-dependencies: - dependency-name: urllib3 dependency-version: 2.6.3
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+### Code Style
+
+- Fix line length in OrganizeErrors union type
+  ([`0de273d`](https://github.com/frankyxhl/fx_bin/commit/0de273d2affcf7f393afe2cb85ce16bb44848ff9))
+
+Fix E501 flake8 error by splitting OrganizeErrors union type across multiple lines for readability.
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+### Documentation
+
+- Add openspec change proposal and specs for add-organize-command
+  ([`dcf902f`](https://github.com/frankyxhl/fx_bin/commit/dcf902f4a44d90435f11441dc4d7fffb7a44af71))
+
+- Add proposal.md with feature specification - Add design.md with technical design decisions - Add
+  specs/organize/spec.md with detailed requirements - Add tasks.md with TDD task list (note:
+  checkboxes reflect plan, actual implementation is complete - see git history for Phases 9-12)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Archive functional programming and testing standards
+  ([`add3439`](https://github.com/frankyxhl/fx_bin/commit/add34395d679207ff0479ad775cf31dce1f4034d))
+
+Archive project architecture and standards specifications from refactor-functional-and-testing
+  change:
+
+- code-structure: Error type hierarchy, type annotation precision, module organization, path
+  boundary validation standards
+
+- functional-programming: Pure vs IO function separation, shared backup utilities, frozen
+  dataclasses, RequiresContext pattern
+
+- testing-standards: Shared test fixtures, property-based testing with Hypothesis, mock helpers,
+  comprehensive test coverage
+
+These specifications document the project's architectural standards and best practices for future
+  development.
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Phase 13 - Documentation and test standards fixes
+  ([`e17a7ad`](https://github.com/frankyxhl/fx_bin/commit/e17a7ad2575f01bb6ed853953a5418e29b67bd8f))
+
+- Fix test file paths in proposal.md and tasks.md (test_organize_security.py → test_organize_io.py)
+  - Update coverage target description to match project.md (80% minimum) - Rename all tests to
+  follow test_given_X_when_Y_then_Z pattern (74 tests renamed) - Strengthen ctime test to verify
+  behavior instead of code inspection
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Update organize spec for fix-organize-conflict-handling
+  ([`f3496c0`](https://github.com/frankyxhl/fx_bin/commit/f3496c03becbd594a85224705130d30f2e41c25d))
+
+- Update Requirement: File Conflict Resolution with Correct Disk Semantics - Add scenarios for
+  RENAME disk conflict (FIXED) - Add scenarios for OVERWRITE atomic replace (FIXED) - Add scenarios
+  for ASK prompt/fallback (FIXED) - Add Requirement: Quiet Mode Always Shows Summary - Add
+  cross-device output directory robustness scenario - Re-add intra-run collision scenarios
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Update proposal.md - 45/50 BDD tests passing
+  ([`3983952`](https://github.com/frankyxhl/fx_bin/commit/398395295dd3091cee66f6114fefae980435aed6))
+
+- Phase 15-16: Complete (2 tests fixed) - Update test status: 45/50 passing (90%) - Add remaining
+  failed tests table
+
+- Update proposal.md - All 50/50 BDD tests passing ✅
+  ([`85dba4f`](https://github.com/frankyxhl/fx_bin/commit/85dba4f476b2aa49f8db630fe560db87738e8a0d))
+
+- All 7 failing tests fixed - New When step definitions added: - I run on organized directory - I
+  run without --yes flag - I run without --clean-empty flag - I run without --quiet flag - Path
+  regex preserved to avoid matching 'on/without/again' keywords
+
+- Update tasks.md - 45/50 BDD tests passing (90% pass rate)
+  ([`ac1538d`](https://github.com/frankyxhl/fx_bin/commit/ac1538dba4c0cf073bfde46fcf37edc803f7658b))
+
+- Phase 15-16: Complete (2 tests fixed) - Remaining 5 tests require Phase 10-14, 17-18 fixes
+
+- Update tasks.md - All Phase 10-18 complete
+  ([`29b83cb`](https://github.com/frankyxhl/fx_bin/commit/29b83cbe4216a462d7f7d958286c6cd1da267c8f))
+
+- All 85 tasks marked as complete - 50/50 BDD tests passing (100%)
+
+- Update tasks.md - mark Phases 10-12 as completed
+  ([`05e7807`](https://github.com/frankyxhl/fx_bin/commit/05e7807b51510596cdfc4146ec19bd716162ce5f))
+
+Updated task checkboxes to reflect actual implementation status: - Phase 10: Confirmation & Output
+  (confirmation prompt, verbose/quiet/progress modes) - Phase 11: Conflict Resolution (disk conflict
+  detection, skip/overwrite/ask modes, EXDEV handling) - Phase 12: Cleanup Features (empty directory
+  cleanup, fail-fast mode)
+
+All tasks in these phases have been implemented and tested (78 tests passing).
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Update tasks.md - Phase 15-16 complete
+  ([`cb07b96`](https://github.com/frankyxhl/fx_bin/commit/cb07b96e80a27e38e24e3dac30d718c39a42502a))
+
+### Features
+
+- Add organize command Phase 2 complete - conflict resolution and plan generation
+  ([`76df5ed`](https://github.com/frankyxhl/fx_bin/commit/76df5edb2464c0193a951ddf6ee651f9e00d0ae3))
+
+Complete Phase 2.3 (Conflict Resolution) and Phase 2.4 (Plan Generation):
+
+Phase 2.3 - Conflict Resolution: - resolve_conflict_rename(): Incrementing suffix (_1, _2, etc.) for
+  conflicts - Reuses get_base_name() and get_multi_ext() from common.py - Handles multi-part
+  extensions (.tar.gz) correctly
+
+Phase 2.4 - Plan Generation: - generate_organize_plan(): Full planning with intra-run collision
+  detection - Deterministic ordering (sorted by source path) - Conflict resolution modes: RENAME,
+  SKIP, OVERWRITE, ASK - No-op detection for files already at target - Error handling for files
+  without date information
+
+Tests: 34 passing tests in test_organize.py
+
+- TestResolveConflictRename: 4 tests for rename logic - TestGenerateOrganizePlan: 5 tests for plan
+  generation - All previous tests still pass (44 total)
+
+Code quality: flake8 clean, black formatted
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Add organize command Phase 3 - IO Operations
+  ([`35a6d2e`](https://github.com/frankyxhl/fx_bin/commit/35a6d2ef87a470b0d006f75174c7a82661332ba4))
+
+Implement functional IO operations for file organization using returns library:
+
+Phase 3.1 - File Date Reading: - get_file_date(): Read file dates with birthtime/mtime fallback -
+  NEVER uses st_ctime (only birthtime with mtime fallback) - Supports CREATED and MODIFIED date
+  sources - Returns IOResult[datetime, DateReadError]
+
+Phase 3.2 - File Scanning: - scan_files(): Recursive directory scanning - Symlink handling
+  (follow_symlinks=False by default for security) - Inode-based cycle detection (FolderContext
+  pattern) - Max recursion depth enforcement (100) - Output directory exclusion using
+  os.path.commonpath
+
+Phase 3.3 - Safe File Move: - move_file_safe(): Safe file moves with error handling - Creates parent
+  directories automatically - Atomic overwrite using os.replace() - No-op detection for same
+  source/target - Cross-filesystem move handling (EXDEV)
+
+Phase 3.4 - Empty Directory Cleanup: - remove_empty_dirs(): Bottom-up recursive removal - Iterative
+  cleanup for cascading empty directories - Scope boundary enforcement (only under source_root)
+
+Phase 3.5 - Main Execution Flow: - execute_organize(): Main orchestration function - Dry-run mode
+  support (no IO writes) - Error collection and continuation - OrganizeSummary return with
+  statistics
+
+Tests: 27 integration tests in test_organize_io.py
+
+- TestGetFileDate: 5 tests for date reading - TestScanFiles: 7 tests for scanning logic -
+  TestMoveFileSafe: 5 tests for file moves - TestRemoveEmptyDirs: 4 tests for cleanup -
+  TestExecuteOrganize: 3 tests for main execution
+
+Code quality: flake8 clean, mypy pass
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Add organize command Phase 4 - CLI Integration
+  ([`eed514a`](https://github.com/frankyxhl/fx_bin/commit/eed514adfc2d0027a85d256c8813b13688876b10))
+
+Add complete CLI integration for organize command:
+
+Command Registration: - Added @cli.command() decorator for organize subcommand - Updated
+  COMMANDS_INFO list with organize description - Source argument validation (must exist, directory
+  only)
+
+Options: - --output, -o: Output directory for organized files (default: ./organized) -
+  --date-source: Timestamp source (created/modified, default: created) - --depth: Directory depth
+  (1-3, default: 3) - --on-conflict: Conflict mode (rename/skip/overwrite/ask, default: rename) -
+  --include, -i: Include patterns (repeatable) - --exclude, -e: Exclude patterns (repeatable) -
+  --dry-run, -n: Preview changes without executing - --yes, -y: Skip confirmation prompt -
+  --verbose, -v: Verbose output - --quiet, -q: Quiet mode (errors and summary only)
+
+Output Formatting: - Progress display for normal mode - Verbose mode with full paths - Quiet mode
+  (errors and summary only) - Summary statistics - Deterministic output ordering (sorted by source
+  path)
+
+Confirmation Flow: - TTY confirmation prompt with click.confirm() - --yes flag skips confirmation -
+  Non-TTY stdin auto-confirms for piped input
+
+Interactive Conflict Resolution: - ASK mode prompts for disk conflicts only - Intra-run conflicts
+  use rename strategy
+
+Tests: 4 CLI integration tests in test_organize_cli.py - test_organize_help_displays_options -
+  test_organize_requires_source_argument - test_organize_dry_run_shows_plan -
+  test_organize_actual_execution_moves_files
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Add organize command pure functions and types (Phase 1-2)
+  ([`da0b86b`](https://github.com/frankyxhl/fx_bin/commit/da0b86b244cef4b53d8e681dcac643cc5551fe2b))
+
+Implement Phase 1 (Infrastructure) and Phase 2 (Pure Functions) for the fx organize command.
+
+Phase 1 - Infrastructure: - Add DateSource enum (CREATED, MODIFIED) - Add ConflictMode enum (RENAME,
+  SKIP, OVERWRITE, ASK) - Add OrganizeContext, FileOrganizeResult, OrganizeSummary frozen
+  dataclasses - Add OrganizeError, DateReadError, MoveError to error hierarchy
+
+Phase 2 - Pure Functions: - get_target_path(): Date-based directory path calculation (depths 1/2/3)
+  - is_hidden_file(): Unix hidden file detection - matches_glob_pattern(): Case-sensitive glob
+  matching - should_process_file(): Include/exclude pattern filtering - resolve_conflict_rename():
+  Incrementing suffix collision resolution - generate_organize_plan(): Full planning with intra-run
+  collision detection
+
+All functions follow pure functional patterns with no side effects. 25 passing unit tests for enums,
+  dataclasses, and pure functions.
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+### Refactoring
+
+- Extract _execute_moved_item to reduce execute_organize nesting
+  ([`8b29b41`](https://github.com/frankyxhl/fx_bin/commit/8b29b41ef143e8e7cb7252c99bdb720c04e00ad1))
+
+Extract the 'moved' case execution logic into a separate helper function to reduce visual nesting
+  depth in execute_organize.
+
+Before: - case "moved" → if not dry_run → move_file_safe → if isinstance (5 levels)
+
+After: - case "moved" → exec_result = _execute_moved_item(...) → if isinstance (3 levels)
+
+Benefits: - Cleaner main loop with reduced visual complexity - Better separation of concerns -
+  Easier to test individual pieces
+
+All 71 tests passing, nesting ≤4, complexity ≤15
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Flatten nested try-except blocks in scan functions
+  ([`235c2f3`](https://github.com/frankyxhl/fx_bin/commit/235c2f318eae26c45ab322d2aa00cb3012393fa8))
+
+Replace nested try-except with same exception types using early returns:
+
+_before (nested try-except with unclear intent):_ ```python try: with os.scandir(dir_path) as
+  entries: for entry in entries: try: files.extend(_process_entry(...)) except (OSError,
+  PermissionError): continue except (OSError, PermissionError): pass ```
+
+_after (flat, explicit error handling):_ ```python # First, ensure we can open the directory try:
+  entries = list(os.scandir(dir_path)) except (OSError, PermissionError): return []
+
+# Then process each entry, skipping any that fail files = [] for entry in entries: try:
+  files.extend(_process_entry(...)) except (OSError, PermissionError): continue ```
+
+Benefits: - Each try-except has a clear, single purpose - Reduced nesting depth - More explicit
+  about which operation might fail
+
+Applied to: - _scan_non_recursive() - _scan_recursive()
+
+All 71 tests passing, nesting ≤4, complexity ≤15
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Phase 8 code simplification and refactoring
+  ([`d6a30c6`](https://github.com/frankyxhl/fx_bin/commit/d6a30c6c7e9b8633b8d4b06c677f3330e9efc95a))
+
+Complete Phase 8 code simplification and refactoring to reduce duplication, improve readability, and
+  align with project standards.
+
+Changes: - Extracted _should_skip_entry() and _process_entry() helpers - Fixed mutable default
+  parameter antipattern (use None sentinel) - Simplified enum mapping with Enum[name] pattern -
+  Added unwrap_or_convert_error() helper to lib.py - Changed generate_organize_plan() to use
+  Sequence[str] - Wired include/exclude patterns through OrganizeContext - Merged duplicate
+  dry-run/actual execution counting loops - Applied guard clause pattern in should_process_file()
+
+Code Impact: - Reduced ~70-80 lines of code - Improved type safety with better annotations -
+  Enhanced maintainability through reduced duplication - Fixed mypy TypeVar bound for Exception
+  types
+
+Tests: All 61 organize tests passing (34 unit + 27 integration)
+
+Quality: flake8 clean, black formatted, mypy pass, bandit clean
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Simplify organize code with helper function and cleanups
+  ([`efca5b9`](https://github.com/frankyxhl/fx_bin/commit/efca5b9f2e0cdb9f8ec9cbd98196067420ab4f33))
+
+Major improvements:
+
+1. Extract _handle_cross_device_move() helper function - Eliminates ~60 lines of duplicate EXDEV
+  handling code - Single responsibility: handles cross-device moves - Returns IOResult for
+  functional consistency - Easier to test and maintain
+
+2. Normalize import statements - Move errno and tempfile imports to file top - Follows PEP 8 best
+  practices
+
+3. Simplify loguru configuration - Remove redundant logger.remove() calls - Clearer conditional flow
+
+4. Streamline ASK runtime warning comments - Reduce from 5 lines to 2 lines - Keep key information
+
+5. Optimize directory creation logic - Reduce nesting levels - Maintain same functionality
+
+Stats: -67 lines deleted, +50 lines added (net -17 lines) All 67 integration tests pass.
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+### Testing
+
+- Fix ASK runtime conflict tests to actually verify WARNING logging
+  ([`294c9a4`](https://github.com/frankyxhl/fx_bin/commit/294c9a493b5baf546f1560f8f3f4cf7fa3042d18))
+
+Fixed two critical issues in TestAskRuntimeConflicts:
+
+1. Removed `pass` placeholders that weren't verifying anything 2. Rewrote tests to directly call
+  move_file_safe() instead of through CLI
+
+Root cause: When isatty() returns False, CLI downgrades ASK to SKIP mode (cli.py:881), so
+  move_file_safe() never sees ConflictMode.ASK and the runtime conflict WARNING is never triggered.
+
+Solution: Direct unit testing of move_file_safe() with proper loguru
+
+configuration to verify: - Default mode (INFO level): WARNING is logged - Quiet mode (ERROR level):
+  WARNING is suppressed
+
+Tests now properly validate the ASK runtime conflict WARNING functionality implemented in
+  organize_functional.py:446-449.
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Remove redundant TestLoguruConfiguration class
+  ([`9198a53`](https://github.com/frankyxhl/fx_bin/commit/9198a539f60efe4ca928e324453164572eda5769))
+
+Removed the entire TestLoguruConfiguration class containing: -
+  test_given_quiet_mode_when_warning_logged_then_suppresses_output
+
+Why removed: 1. Test tried to trigger ASK runtime conflict through CLI 2. Using isatty=False causes
+  CLI to downgrade ASK to SKIP 3. No WARNING is actually triggered, test only checks for ABSENCE of
+  WARNING 4. This makes the test a false positive (passes for wrong reason)
+
+Coverage maintained: - TestAskRuntimeConflicts properly tests loguru configuration: * Default mode
+  (INFO level): WARNING is logged * Quiet mode (ERROR level): WARNING is suppressed - These tests
+  directly call move_file_safe() and capture loguru output
+
+Result: 12 tests in test_organize_cli.py (down from 13)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Remove two invalid loguru tests with pass placeholders
+  ([`9532203`](https://github.com/frankyxhl/fx_bin/commit/9532203b0504e2b21e03377b3664a0c09a7cf235))
+
+Removed TestLoguruConfiguration tests that had pass placeholders: -
+  test_given_verbose_mode_when_warning_logged_then_shows_output -
+  test_given_default_mode_when_warning_logged_then_shows_output
+
+Why removed: 1. These tests tried to trigger ASK runtime conflicts through CLI 2. Using isatty=False
+  causes CLI to downgrade ASK to SKIP (cli.py:881) 3. No WARNING is triggered, so tests can't verify
+  loguru configuration 4. TestAskRuntimeConflicts already properly tests this functionality
+
+The remaining test in TestLoguruConfiguration: -
+  test_given_quiet_mode_when_warning_logged_then_suppresses_output This test works because it checks
+  WARNING is ABSENT (always true).
+
+The ASK runtime conflict WARNING functionality is properly tested by TestAskRuntimeConflicts which
+  directly calls move_file_safe().
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+- Stabilize ASK mode CLI tests with fixed modified timestamp
+  ([`42b1ea1`](https://github.com/frankyxhl/fx_bin/commit/42b1ea16195085e94a20c497cfd85560d7299d17))
+
+Fixed flaky ASK mode tests that failed when crossing date boundaries:
+
+1. Use FIXED_MODIFIED_TS and os.utime() to set consistent modification time 2. Add --date-source
+  modified flag to use predictable date path (20260110) 3. Add assertion for "Found 1 disk
+  conflict(s):" to verify TTY interactive path 4. Simplify code by extracting variables
+  (source_file, conflict_dir, etc.)
+
+Root cause: Tests used --date-source created (birthtime) which varies with actual file creation
+  time. After midnight, the target path became 20260111 instead of expected 20260110, so the "disk
+  conflict" never occurred.
+
+Changes: - TestAskModeInCLI: All 3 tests now use fixed modified timestamp - Added FIXED_MODIFIED_TS
+  constant at module level
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+
 ## v2.3.0 (2026-01-06)
 
 ### Bug Fixes
