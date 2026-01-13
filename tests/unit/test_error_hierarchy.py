@@ -128,3 +128,52 @@ def test_given_error_types_when_using_isinstance_then_proper_hierarchy():
     assert isinstance(io_err, FileOperationError)
     assert isinstance(io_err, FxBinError)
     assert isinstance(io_err, Exception)
+
+
+def test_given_organizeerror_when_checking_inheritance_then_inherits_from_fileoperationerror():
+    """RED: Test that OrganizeError inherits from FileOperationError.
+
+    Organization operations are file operations, so OrganizeError should
+    inherit from FileOperationError for proper error handling hierarchy.
+    """
+    from fx_bin.errors import OrganizeError, FileOperationError
+
+    # GIVEN: OrganizeError is imported
+    # WHEN: checking its inheritance
+    # THEN: it should inherit from FileOperationError
+    assert issubclass(OrganizeError, FileOperationError)
+
+
+def test_given_datereaderror_when_checking_inheritance_then_inherits_from_organizeerror():
+    """RED: Test that DateReadError inherits from OrganizeError."""
+    from fx_bin.errors import DateReadError, OrganizeError
+
+    # GIVEN: DateReadError is imported
+    # WHEN: checking its inheritance
+    # THEN: it should inherit from OrganizeError
+    assert issubclass(DateReadError, OrganizeError)
+
+
+def test_given_moveerror_when_checking_inheritance_then_inherits_from_organizeerror():
+    """RED: Test that MoveError inherits from OrganizeError."""
+    from fx_bin.errors import MoveError, OrganizeError
+
+    # GIVEN: MoveError is imported
+    # WHEN: checking its inheritance
+    # THEN: it should inherit from OrganizeError
+    assert issubclass(MoveError, OrganizeError)
+
+
+def test_given_organizeerror_hierarchy_when_catching_then_polymorphic():
+    """RED: Test that OrganizeError catches all organize-specific errors."""
+    from fx_bin.errors import OrganizeError, DateReadError, MoveError
+
+    # GIVEN: organize-specific errors are raised
+    # WHEN: catching OrganizeError
+    # THEN: both DateReadError and MoveError should be caught
+
+    with pytest.raises(OrganizeError):
+        raise DateReadError("Cannot read file date")
+
+    with pytest.raises(OrganizeError):
+        raise MoveError("Cannot move file")

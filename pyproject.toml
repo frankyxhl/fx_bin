@@ -81,6 +81,14 @@ markers = [
     "sorting: Sorting tests",
     "version_compatibility: Version compatibility tests",
     "bdd: BDD tests",
+    "organize_command: Tests for the organize command",
+    "cleanup: Cleanup tests",
+    "confirmation: Confirmation tests",
+    "filtering: Filtering tests",
+    "hidden_files: Hidden files tests",
+    "output_options: Output options tests",
+    "progress: Progress tests",
+    "statistics: Statistics tests",
 ]
 timeout = 300
 bdd_features_base_dir = "features"

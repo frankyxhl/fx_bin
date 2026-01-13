@@ -3,7 +3,12 @@
 
 import click
 import sys
-from typing import List, Tuple, Optional, Any
+from datetime import datetime
+from pathlib import Path
+from typing import TYPE_CHECKING, List, Tuple, Optional, Any, Sequence
+
+if TYPE_CHECKING:
+    from .organize import FileOrganizeResult
 
 import importlib.metadata
 
@@ -30,6 +35,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("root", "Find Git project root directory"),
     ("realpath", "Get absolute path of a file or directory"),
     ("today", "Create/navigate to today's workspace directory"),
+    ("organize", "Organize files into date-based directories"),
     ("list", "List all available commands"),
     ("help", "Show help information (same as fx -h)"),
     ("version", "Show version and system information"),
@@ -553,6 +559,615 @@ def list_commands() -> int:
     click.echo(
         "\nUse 'fx COMMAND --help' for more information on a " "specific command."
     )
+    return 0
+
+
+@cli.command()
+@click.argument(
+    "source",
+    type=click.Path(exists=True, file_okay=False, dir_okay=True),
+)
+@click.option(
+    "--output",
+    "-o",
+    type=click.Path(file_okay=False, dir_okay=True),
+    help="Output directory for organized files (default: ./organized)",
+)
+@click.option(
+    "--date-source",
+    type=click.Choice(["created", "modified"], case_sensitive=False),
+    default="created",
+    help="Which file date to use for organization (default: created)",
+)
+@click.option(
+    "--depth",
+    type=click.IntRange(1, 3),
+    default=3,
+    help="Directory depth: 1=day, 2=year/day, 3=year/month/day (default: 3)",
+)
+@click.option(
+    "--on-conflict",
+    type=click.Choice(["rename", "skip", "overwrite", "ask"], case_sensitive=False),
+    default="rename",
+    help="How to handle filename conflicts (default: rename)",
+)
+@click.option(
+    "--include",
+    "-i",
+    multiple=True,
+    help="Include only files matching these glob patterns (repeatable)",
+)
+@click.option(
+    "--exclude",
+    "-e",
+    multiple=True,
+    help="Exclude files matching these glob patterns (repeatable)",
+)
+@click.option(
+    "--hidden",
+    "-H",
+    is_flag=True,
+    help="Include hidden files (files starting with .)",
+)
+@click.option(
+    "--recursive",
+    "-r",
+    is_flag=True,
+    help="Process files in subdirectories recursively",
+)
+@click.option(
+    "--clean-empty",
+    is_flag=True,
+    help="Remove empty directories after organization",
+)
+@click.option(
+    "--fail-fast",
+    is_flag=True,
+    help="Stop on first error instead of continuing",
+)
+@click.option(
+    "--dry-run",
+    "-n",
+    is_flag=True,
+    help="Preview changes without actually moving files",
+)
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    help="Skip confirmation prompt",
+)
+@click.option(
+    "--verbose",
+    "-v",
+    is_flag=True,
+    help="Show detailed progress information",
+)
+@click.option(
+    "--quiet",
+    "-q",
+    is_flag=True,
+    help="Suppress progress output (errors and summary only)",
+)
+def organize(
+    source: str,
+    output: Optional[str],
+    date_source: str,
+    depth: int,
+    on_conflict: str,
+    include: Sequence[str],
+    exclude: Sequence[str],
+    hidden: bool,
+    recursive: bool,
+    clean_empty: bool,
+    fail_fast: bool,
+    dry_run: bool,
+    yes: bool,
+    verbose: bool,
+    quiet: bool,
+) -> int:
+    """Organize files into date-based directories.
+
+    Organizes files from SOURCE directory into OUTPUT directory using
+    date-based folder structure (e.g., 2026/202601/20260110/).
+
+    \b
+    Examples:
+      fx organize ~/Photos                    # Organize photos by date
+      fx organize ~/Downloads -o ~/Sorted     # Custom output directory
+      fx organize . --depth 2                 # Use year/day structure
+      fx organize . --dry-run                 # Preview without changes
+      fx organize . -i "*.jpg" -i "*.png"     # Only images
+      fx organize . -e ".*"                   # Skip hidden files
+
+    \b
+    Date Sources:
+      --date-source created    Use file creation time (default)
+      --date-source modified   Use file modification time
+
+    \b
+    Directory Depth:
+      --depth 1    output/20260110/
+      --depth 2    output/2026/20260110/
+      --depth 3    output/2026/202601/20260110/ (default)
+
+    \b
+    Conflict Modes:
+      --on-conflict rename     Auto-rename with _1, _2 suffix (default)
+      --on-conflict skip       Skip conflicting files
+      --on-conflict overwrite  Overwrite existing files
+      --on-conflict ask        Prompt for scan-time conflicts (runtime conflicts skip)
+    """
+    from loguru import logger as loguru_logger
+
+    from .organize_functional import execute_organize
+    from .organize import (
+        DateSource,
+        ConflictMode,
+        OrganizeContext,
+    )
+    from .lib import unsafe_ioresult_unwrap, unsafe_ioresult_to_result
+
+    # Configure loguru based on quiet/verbose flags (Decision 2.5)
+    # This ensures logger.warning() respects --quiet and --verbose
+    loguru_logger.remove()
+
+    if quiet:
+        loguru_logger.add(sys.stderr, level="ERROR")
+    elif verbose:
+        loguru_logger.add(sys.stderr, level="DEBUG")
+    else:
+        loguru_logger.add(sys.stderr, level="INFO")
+
+    # Set default output directory
+    if output is None:
+        output = str(Path(source) / "organized")
+
+    # Map string options to enums using Enum[name] pattern
+    date_source_enum = DateSource[date_source.upper()]
+    conflict_mode_enum = ConflictMode[on_conflict.upper()]
+
+    # Create context with all options
+    context = OrganizeContext(
+        date_source=date_source_enum,
+        depth=depth,
+        conflict_mode=conflict_mode_enum,
+        output_dir=output,
+        dry_run=dry_run,
+        include_patterns=include,
+        exclude_patterns=exclude,
+        recursive=recursive,
+        clean_empty=clean_empty,
+        fail_fast=fail_fast,
+        hidden=hidden,
+    )
+
+    def _confirm_with_user() -> bool:
+        """Ask user to confirm proceeding with organization.
+
+        Returns:
+            True if user confirms or not in TTY mode, False if user cancels.
+        """
+        if sys.stdin.isatty():
+            if not click.confirm("\nProceed?", default=False):
+                click.echo("Cancelled.")
+                return False
+        return True
+
+    def _execute_move_with_tracking(
+        item: "FileOrganizeResult",
+        source: str,
+        context: "OrganizeContext",
+        conflict_mode: "ConflictMode",
+    ) -> Tuple[int, int, int]:
+        """Execute a single file move and track results.
+
+        Returns:
+            Tuple of (processed_change, skipped_change, errors_change)
+        """
+        from .organize_functional import move_file_safe
+
+        if context.dry_run:
+            return (1, 0, 0)
+
+        move_result = move_file_safe(
+            item.source,
+            item.target,
+            source,  # source_root
+            context.output_dir,  # output_root
+            conflict_mode,
+        )
+        try:
+            _, dir_created = unsafe_ioresult_unwrap(move_result)
+            return (1, 0, 0)
+        except Exception as e:
+            if context.fail_fast:
+                click.echo(
+                    f"Error: Failed to move {item.source}: {e}",
+                    err=True,
+                )
+                raise
+            return (0, 0, 1)
+
+    def _read_file_dates_for_ask_mode(
+        files: "list[str]", context: "OrganizeContext"
+    ) -> "dict[str, datetime]":
+        """Read file dates for ASK mode, respecting fail_fast setting.
+
+        Returns:
+            Dictionary mapping file paths to their dates
+        """
+        from .organize_functional import get_file_date
+
+        dates: "dict[str, datetime]" = {}
+        for file_path in files:
+            date_result = get_file_date(file_path, context.date_source)
+            try:
+                dates[file_path] = unsafe_ioresult_unwrap(date_result)
+            except Exception as e:
+                if context.fail_fast:
+                    click.echo(
+                        f"Error: Failed to read date for {file_path}: {e}", err=True
+                    )
+                    raise
+        return dates
+
+    def _execute_ask_plan_item(
+        item: "FileOrganizeResult",
+        ask_user_choices: "dict[str, str]",
+        source: str,
+        context: "OrganizeContext",
+    ) -> Tuple[int, int, int]:
+        """Execute a single plan item in ASK mode.
+
+        Returns:
+            Tuple of (processed_delta, skipped_delta, errors_delta)
+        """
+        if item.source not in ask_user_choices:
+            # No conflict, proceed with normal move
+            return _execute_move_with_tracking(
+                item, source, context, ConflictMode.RENAME
+            )
+
+        choice = ask_user_choices[item.source]
+        match choice:
+            case "skip":
+                return (0, 1, 0)
+            case "overwrite":
+                return _execute_move_with_tracking(
+                    item, source, context, ConflictMode.OVERWRITE
+                )
+            case _:
+                # Unknown choice - treat as skip
+                return (0, 1, 0)
+
+    def _execute_ask_mode_with_choices(
+        ask_user_choices: "dict[str, str]",
+        source: str,
+        context: "OrganizeContext",
+    ) -> Tuple[int, int, int]:
+        """Execute organization in ASK mode with user choices.
+
+        Returns:
+            Tuple of (processed, skipped, errors)
+        """
+        from .organize_functional import scan_files, remove_empty_dirs
+        from .organize import generate_organize_plan
+
+        # Scan for files
+        scan_result = scan_files(
+            source,
+            recursive=context.recursive,
+            follow_symlinks=False,
+            max_depth=100,
+            output_dir=context.output_dir,
+        )
+
+        files = unsafe_ioresult_unwrap(scan_result)
+
+        # Read file dates
+        dates = _read_file_dates_for_ask_mode(files, context)
+
+        # Generate plan
+        plan = generate_organize_plan(files, dates, context)
+
+        # Execute plan with ASK mode user choices
+        processed = 0
+        skipped = 0
+        errors = 0
+
+        for item in plan:
+            match item.action:
+                case "moved":
+                    proc_delta, skip_delta, err_delta = _execute_ask_plan_item(
+                        item, ask_user_choices, source, context
+                    )
+                    processed += proc_delta
+                    skipped += skip_delta
+                    errors += err_delta
+                    if err_delta and context.fail_fast:
+                        raise
+
+                case "skipped":
+                    skipped += 1
+                case "error":
+                    errors += 1
+                    if context.fail_fast:
+                        click.echo(f"Error: Planning error for {item.source}", err=True)
+                        raise
+
+        # Clean up empty directories if requested
+        if context.clean_empty and not context.dry_run:
+            remove_empty_dirs(source, source)
+
+        return (processed, skipped, errors)
+
+    def _handle_disk_conflicts_interactively(
+        disk_conflicts: "list[FileOrganizeResult]",
+        context: "OrganizeContext",
+    ) -> "tuple[dict[str, str], OrganizeContext]":
+        """Handle disk conflicts interactively based on TTY availability.
+
+        Returns:
+            Tuple of (ask_user_choices, updated_context)
+        """
+        ask_user_choices = {}
+
+        # Check if we should prompt or auto-skip
+        # We check isatty() to distinguish between:
+        # - Real terminal: prompt the user
+        # - Piped input/non-TTY: auto-skip
+        if not sys.stdin.isatty():
+            click.echo(
+                f"\nFound {len(disk_conflicts)} disk conflict(s). "
+                "Skipping (non-interactive mode)."
+            )
+            for conflict in disk_conflicts:
+                ask_user_choices[conflict.source] = "skip"
+
+            # Change conflict_mode to SKIP for non-TTY
+            context = OrganizeContext(
+                date_source=context.date_source,
+                depth=context.depth,
+                conflict_mode=ConflictMode.SKIP,  # Fallback to SKIP
+                output_dir=context.output_dir,
+                dry_run=context.dry_run,
+                include_patterns=context.include_patterns,
+                exclude_patterns=context.exclude_patterns,
+                recursive=context.recursive,
+                clean_empty=context.clean_empty,
+                fail_fast=context.fail_fast,
+                hidden=context.hidden,
+            )
+        else:
+            # Interactive TTY: prompt for each conflict
+            click.echo(f"\nFound {len(disk_conflicts)} disk conflict(s):")
+            for conflict in disk_conflicts:
+                prompt_msg = f"Overwrite {conflict.target}?"
+                if click.confirm(prompt_msg, default=False):
+                    ask_user_choices[conflict.source] = "overwrite"
+                else:
+                    ask_user_choices[conflict.source] = "skip"
+
+        return (ask_user_choices, context)
+
+    # Show what we're doing
+    if not quiet:
+        if dry_run:
+            click.echo(f"DRY RUN: Previewing organization of {source}")
+        else:
+            click.echo(f"Organizing files from {source}")
+
+    # For non-dry-run mode, show preview and get confirmation
+    if not dry_run and not yes:
+        # First, scan to get file count for confirmation
+        from .organize_functional import scan_files
+
+        scan_result = scan_files(
+            source,
+            recursive=context.recursive,
+            follow_symlinks=False,
+            max_depth=100,
+            output_dir=context.output_dir,
+        )
+
+        try:
+            files = unsafe_ioresult_unwrap(scan_result)
+
+            # Apply filters to get actual count
+            from .organize import generate_organize_plan
+            from .organize_functional import get_file_date
+
+            dates = {}
+            for f in files:
+                date_result = get_file_date(f, context.date_source)
+                try:
+                    dates[f] = unsafe_ioresult_unwrap(date_result)
+                except (
+                    Exception
+                ):  # nosec B110 - Intentionally skip files with date errors
+                    pass
+
+            plan = generate_organize_plan(files, dates, context)
+            actual_count = sum(1 for p in plan if p.action == "moved")
+
+            click.echo(f"\nWill organize {actual_count} file(s) from {source}")
+            click.echo(f"Output directory: {context.output_dir}")
+
+            # Check for TTY and prompt
+            if not _confirm_with_user():
+                return 0
+        except Exception:
+            # If preview fails, still ask for confirmation
+            click.echo(f"\nOrganizing files from {source}")
+            click.echo(f"Output directory: {context.output_dir}")
+            if not _confirm_with_user():
+                return 0
+    elif not dry_run and yes:
+        # --yes flag: auto-confirm
+        if not quiet:
+            click.echo(f"Organizing files from {source} to {context.output_dir}...")
+    elif not sys.stdin.isatty():
+        # Non-TTY stdin: auto-confirm (piped input)
+        pass
+
+    # Handle ASK mode: check for disk conflicts and prompt before execution
+    import os as os_module
+
+    ask_user_choices: dict[str, str] = {}  # Map source file -> 'overwrite' or 'skip'
+
+    if conflict_mode_enum == ConflictMode.ASK and not dry_run:
+        # Scan files and generate plan to identify disk conflicts
+        from .organize_functional import scan_files, get_file_date
+        from .organize import generate_organize_plan
+
+        scan_result = scan_files(
+            source,
+            recursive=context.recursive,
+            follow_symlinks=False,
+            max_depth=100,
+            output_dir=context.output_dir,
+        )
+
+        try:
+            files = unsafe_ioresult_unwrap(scan_result)
+
+            # Get file dates
+            dates = {}
+            for f in files:
+                date_result = get_file_date(f, context.date_source)
+                try:
+                    dates[f] = unsafe_ioresult_unwrap(date_result)
+                except (
+                    Exception
+                ):  # nosec B110 - Intentionally skip files with date errors
+                    pass
+
+            # Generate plan
+            plan = generate_organize_plan(files, dates, context)
+
+            # Find disk conflicts (target files that already exist)
+            disk_conflicts = [
+                item
+                for item in plan
+                if item.action == "moved" and os_module.path.exists(item.target)
+            ]
+
+            # Handle each conflict
+            if disk_conflicts:
+                ask_user_choices, context = _handle_disk_conflicts_interactively(
+                    disk_conflicts, context
+                )
+        except Exception as e:
+            # If scanning fails, fall back to SKIP mode for safety
+            click.echo(
+                f"Warning: Could not scan for conflicts: {e}. Using SKIP mode.",
+                err=True,
+            )
+            context = OrganizeContext(
+                date_source=context.date_source,
+                depth=context.depth,
+                conflict_mode=ConflictMode.SKIP,
+                output_dir=context.output_dir,
+                dry_run=context.dry_run,
+                include_patterns=context.include_patterns,
+                exclude_patterns=context.exclude_patterns,
+                recursive=context.recursive,
+                clean_empty=context.clean_empty,
+                fail_fast=context.fail_fast,
+                hidden=context.hidden,
+            )
+
+    # For ASK mode with user choices, we need custom execution logic
+    # Otherwise use standard execute_organize
+    if ask_user_choices and conflict_mode_enum == ConflictMode.ASK:
+        # Custom execution for ASK mode with user choices
+        from .organize_functional import scan_files
+        from .organize import generate_organize_plan
+
+        # Scan for files to get count for summary
+        scan_result = scan_files(
+            source,
+            recursive=context.recursive,
+            follow_symlinks=False,
+            max_depth=100,
+            output_dir=context.output_dir,
+        )
+        files = unsafe_ioresult_unwrap(scan_result)
+
+        # Execute with custom logic
+        try:
+            processed, skipped, errors = _execute_ask_mode_with_choices(
+                ask_user_choices, source, context
+            )
+        except Exception:
+            return 1
+
+        # Build summary
+        from .organize import OrganizeSummary
+
+        summary = OrganizeSummary(
+            total_files=len(files),
+            processed=processed,
+            skipped=skipped,
+            errors=errors,
+            dry_run=context.dry_run,
+            directories_created=0,  # Not tracked in ASK mode
+        )
+
+        # Show summary (always show, per help text "errors and summary only")
+        click.echo(
+            f"\nSummary: {summary.total_files} files, "
+            f"{summary.processed} processed, "
+            f"{summary.skipped} skipped"
+        )
+        if summary.errors > 0:
+            click.echo(f"  {summary.errors} errors")
+
+        if dry_run and not quiet:
+            click.echo("\nDry-run complete. No files were moved.")
+
+        return 0
+    else:
+        # Standard execution for non-ASK modes
+        result = execute_organize(source, context)
+
+    # Check for errors
+    try:
+        summary, plan = unsafe_ioresult_unwrap(result)
+    except Exception:
+        # It's a failure
+        inner_result = unsafe_ioresult_to_result(result)
+        error = inner_result.failure()
+        click.echo(f"Error: {error}", err=True)
+        return 1
+
+    # Show per-file details in verbose mode
+    if verbose:
+        click.echo("\nFile details:")
+        for item in plan:
+            match item.action:
+                case "moved":
+                    click.echo(f"  {item.source} -> {item.target}")
+                case "skipped":
+                    click.echo(f"  {item.source} (skipped)")
+                case "error":
+                    click.echo(f"  {item.source} (error)")
+
+    # Show summary (always show, per help text "errors and summary only")
+    click.echo(
+        f"\nSummary: {summary.total_files} files, "
+        f"{summary.processed} processed, "
+        f"{summary.skipped} skipped"
+    )
+    if summary.directories_created > 0:
+        click.echo(f"  {summary.directories_created} directories created")
+    if summary.errors > 0:
+        click.echo(f"  {summary.errors} errors")
+
+    if dry_run and not quiet:
+        click.echo("\nDry-run complete. No files were moved.")
+
     return 0
 
 

@@ -89,8 +89,14 @@ def file_builder(temp_directory):
 
         # Set timestamps
         now = time.time()
+        # For more precision, use seconds instead of minutes * 60
         created_time = now - (created_offset_minutes * 60)
-        modified_time = now - (modified_offset_minutes * 60)
+        # Use created_offset_minutes for modified_time if modified_offset_minutes is 0
+        # This allows tests to set file dates using created_offset_minutes
+        if modified_offset_minutes == 0 and created_offset_minutes != 0:
+            modified_time = created_time
+        else:
+            modified_time = now - (modified_offset_minutes * 60)
 
         os.utime(file_path, (created_time, modified_time))
 

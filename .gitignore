@@ -145,5 +145,6 @@ test_results_*.json
 .opencode/
 
 # OpenSpec - only track final specs, not change process
-openspec/changes/
+# openspec/changes/  # REMOVED: Track change process for add-organize-command
 openspec/.opencode/
+# task_plan.md  # REMOVED: Track task plan

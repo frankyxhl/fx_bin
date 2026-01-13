@@ -102,9 +102,36 @@ class FindError(FxBinError):
     pass
 
 
+class OrganizeError(FileOperationError):
+    """Errors during file organization operations.
+
+    Inherits from FileOperationError since organization involves file operations.
+    """
+
+    pass
+
+
+class DateReadError(OrganizeError):
+    """Errors during file date reading for organization.
+
+    Inherits from OrganizeError since date reading is part of organization.
+    """
+
+    pass
+
+
+class MoveError(OrganizeError):
+    """Errors during file move operations.
+
+    Inherits from OrganizeError since moving is part of organization.
+    """
+
+    pass
+
+
 # Union types for Result error parameters
 AppError = Union[
-    FileOperationError,  # Base for IOError, ReplaceError
+    FileOperationError,  # Base for IOError, ReplaceError, OrganizeError
     IOError,
     ValidationError,
     SecurityError,
@@ -115,6 +142,7 @@ AppError = Union[
     SizeError,
     FilesError,
     FindError,
+    OrganizeError,
 ]
 
 # Specific error union types for modules
@@ -122,3 +150,11 @@ AppError = Union[
 ReplaceErrors = Union[ReplaceError, IOError, PermissionError, FileOperationError]
 CommonErrors = Union[FolderError, IOError, PermissionError, FileOperationError]
 UploadErrors = Union[UploadError, SecurityError, ValidationError]
+OrganizeErrors = Union[
+    OrganizeError,
+    DateReadError,
+    MoveError,
+    IOError,
+    PermissionError,
+    FileOperationError,
+]
