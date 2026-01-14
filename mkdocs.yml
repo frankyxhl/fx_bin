@@ -23,10 +23,6 @@ theme:
 
 plugins:
   - search
-  - minify:
-      minify_html: true
-      minify_js: true
-
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
