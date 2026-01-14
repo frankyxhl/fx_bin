@@ -1,6 +1,36 @@
 # CHANGELOG
 
 
+## v2.5.0 (2026-01-14)
+
+### Chores
+
+- **deps-dev**: Bump filelock from 3.20.1 to 3.20.3
+  ([`d564f7b`](https://github.com/frankyxhl/fx_bin/commit/d564f7bfe4f4b8fe931d5d2edc8892916a8a26ee))
+
+Bumps [filelock](https://github.com/tox-dev/py-filelock) from 3.20.1 to 3.20.3. - [Release
+  notes](https://github.com/tox-dev/py-filelock/releases) -
+  [Changelog](https://github.com/tox-dev/filelock/blob/main/docs/changelog.rst) -
+  [Commits](https://github.com/tox-dev/py-filelock/compare/3.20.1...3.20.3)
+
+--- updated-dependencies: - dependency-name: filelock dependency-version: 3.20.3
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+### Features
+
+- Add GitHub Pages documentation site proposal
+  ([`8cc72c7`](https://github.com/frankyxhl/fx_bin/commit/8cc72c73b3784f803b9be34d7995a5ea80d759d3))
+
+- Create OpenSpec proposal for GitHub Pages documentation site - Add comprehensive design document
+  with MkDocs + Material Theme - Define 7-phase implementation plan with 50+ tasks - Add spec deltas
+  for documentation capability - Include 10 command reference requirements with examples - Include
+  5+ real-world use case scenarios - Include shell integration and performance optimization guides -
+  Validate with openspec --strict
+
+
 ## v2.4.0 (2026-01-13)
 
 ### Bug Fixes
