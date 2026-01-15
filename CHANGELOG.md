@@ -1,6 +1,20 @@
 # CHANGELOG
 
 
+## v2.5.2 (2026-01-15)
+
+### Bug Fixes
+
+- Update GitHub Actions workflow for proper Pages deployment
+  ([`3f5bd14`](https://github.com/frankyxhl/fx_bin/commit/3f5bd148ec458cd85c946e1f9ad536c7cc316e57))
+
+Updated workflow to: - Use proper GitHub Pages deployment with actions/deploy-pages@v4 - Separate
+  build and deploy jobs - Add correct permissions (pages: write, id-token: write) - Only deploy from
+  main branch on push (not PR)
+
+This fixes the 404 issue by ensuring proper GitHub Pages deployment configuration.
+
+
 ## v2.5.1 (2026-01-15)
 
 ### Bug Fixes
