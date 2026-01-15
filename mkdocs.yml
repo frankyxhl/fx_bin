@@ -1,5 +1,6 @@
 site_name: fx-bin
 site_url: https://frankyxhl.github.io/fx_bin/
+docs_dir: docs/site
 site_description: A powerful, secure, and well-tested collection of Python file operation utilities
 repo_url: https://github.com/frankyxhl/fx_bin
 repo_name: frankyxhl/fx_bin
