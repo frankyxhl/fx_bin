@@ -1,6 +1,40 @@
 # CHANGELOG
 
 
+## v2.5.1 (2026-01-15)
+
+### Bug Fixes
+
+- Remove minify plugin from mkdocs.yml to fix build error
+  ([`d93615f`](https://github.com/frankyxhl/fx_bin/commit/d93615f355ca65f911fcddf747df9c020d711b19))
+
+The minify plugin was causing GitHub Actions build to fail because it wasn't installed. Removing it
+  fixes the build error and allows documentation to deploy successfully.
+
+### Documentation
+
+- Add comprehensive GitHub Pages documentation site
+  ([`1378f4f`](https://github.com/frankyxhl/fx_bin/commit/1378f4f97805a1cae20cb515e96f4afb01b2a2f5))
+
+This commit adds a complete documentation site for fx-bin ready for GitHub Pages deployment.
+
+Features: - 23 markdown documentation files (7,134 lines) - Complete command reference for all 10
+  commands - 5 real-world use case guides - 2 advanced topic guides (shell integration, performance)
+  - Contributing guide and changelog - GitHub Actions workflow for automatic deployment
+
+Documentation Structure: - docs/site/index.md - Project homepage - docs/site/quick-start.md - Quick
+  start guide - docs/site/docs/index.md - Documentation navigation hub - docs/site/commands/ -
+  Complete command reference (10 files) - docs/site/use-cases/ - Real-world workflow guides (5
+  files) - docs/site/advanced/ - Power user guides (2 files) - docs/site/contributing/ - Developer
+  resources - docs/site/changelog.md - Project changelog
+
+Deployment: - .github/workflows/deploy-docs.yml - GitHub Actions workflow - mkdocs.yml - MkDocs
+  configuration for site building
+
+This documentation is production-ready and will be automatically deployed to GitHub Pages when
+  merged to main.
+
+
 ## v2.5.0 (2026-01-14)
 
 ### Chores
