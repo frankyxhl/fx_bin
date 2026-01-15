@@ -1,6 +1,38 @@
 # CHANGELOG
 
 
+## v2.5.4 (2026-01-15)
+
+### Bug Fixes
+
+- Add docs_dir configuration to MkDocs
+  ([`078ad78`](https://github.com/frankyxhl/fx_bin/commit/078ad78f4cb178b7b54b501b2f9e9c4634357a28))
+
+Fixes the root cause of documentation build and deployment issues by specifying the correct
+  documentation directory in mkdocs.yml.
+
+Root Cause: - Documentation files are located in docs/site/ directory - MkDocs nav configuration
+  references files as commands/files.md - MkDocs defaults to looking for files in docs/ directory -
+  Without docs_dir configuration, MkDocs cannot find files
+
+Solution: - Add docs_dir: docs/site to mkdocs.yml - This tells MkDocs to look for files in
+  docs/site/ directory - Nav paths (commands/files.md) now resolve correctly
+
+Impact: - MkDocs builds successfully without errors - All documentation pages are accessible via
+  directory URLs - GitHub Actions workflow will deploy documentation correctly
+
+Configuration: - docs_dir: docs/site (relative to repository root) - use_directory_urls: true
+  (MkDocs default, generates index.html files) - URLs: /commands/files/ (directory URL, serves
+  index.html)
+
+Testing: - Local build: Success (0.58s, no errors) - Local preview: Success (localhost:8000 works) -
+  Output: site/commands/files/index.html generated correctly
+
+Fixes: GitHub Pages 404 errors
+
+Related: openspec/changes/fix-docs-directory-urls/
+
+
 ## v2.5.3 (2026-01-15)
 
 ### Bug Fixes
