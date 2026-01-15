@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v2.5.3 (2026-01-15)
+
+### Bug Fixes
+
+- Use gh-pages branch deployment instead of Pages API
+  ([`c64c1f0`](https://github.com/frankyxhl/fx_bin/commit/c64c1f0ffc0cfa1ecb651876cca8af687c506aad))
+
+Changed deployment method from GitHub Pages API to gh-pages branch deployment, which is more
+  reliable and doesn't require enabling GitHub Pages in settings.
+
+This should resolve 404 issues.
+
+
 ## v2.5.2 (2026-01-15)
 
 ### Bug Fixes
