@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://frankyxhl.github.io/fx_bin/quick-start/">
       
       
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../commands/files/">
       
       
         
@@ -23,7 +27,7 @@
     
     
       
-        <title>fx_bin Quick Start Guide - fx-bin</title>
+        <title>Quick Start - fx-bin</title>
       
     
     
@@ -72,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#fx_bin-quick-start-guide" class="md-skip">
+        <a href="#quick-start" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              fx_bin Quick Start Guide
+              Quick Start
             
           </span>
         </div>
@@ -279,14 +283,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../index.md" class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    fx-bin
   
 
     
@@ -379,7 +383,7 @@
   <span class="md-ellipsis">
     
   
-    fx_bin Quick Start Guide
+    Quick Start
   
 
     
@@ -397,7 +401,7 @@
   <span class="md-ellipsis">
     
   
-    fx_bin Quick Start Guide
+    Quick Start
   
 
     
@@ -423,44 +427,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#current-state-2025-09-06-2340-utc" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Current State (2025-09-06 23:40 UTC)
+        Installation
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#immediate-next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Immediate Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#project-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Project Overview
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Project Overview">
+    <nav class="md-nav" aria-label="Installation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#available-commands" class="md-nav__link">
+  <a href="#method-1-pip-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available Commands
+        Method 1: pip (Recommended)
       
     </span>
   </a>
@@ -468,10 +450,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fx-ff-examples" class="md-nav__link">
+  <a href="#method-2-pipx-isolated-installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        fx ff examples
+        Method 2: pipx (Isolated Installation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-3-from-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 3: From Source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Installation
       
     </span>
   </a>
@@ -484,22 +488,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#whats-new-in-development-v136" class="md-nav__link">
+  <a href="#your-first-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What's New in Development (v1.3.6)
+        Your First Commands
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="What&#39;s New in Development (v1.3.6)">
+    <nav class="md-nav" aria-label="Your First Commands">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#git-root-command" class="md-nav__link">
+  <a href="#explore-available-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Git Root Command
+        Explore Available Commands
       
     </span>
   </a>
@@ -507,10 +511,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#usage-examples" class="md-nav__link">
+  <a href="#count-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Usage Examples
+        Count Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analyze-sizes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analyze Sizes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-by-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter by Extension
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replace-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace Text
       
     </span>
   </a>
@@ -523,22 +571,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#whats-new-in-v133" class="md-nav__link">
+  <a href="#common-workflows" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What's New in v1.3.3
+        Common Workflows
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="What&#39;s New in v1.3.3">
+    <nav class="md-nav" aria-label="Common Workflows">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#file-size-alignment-fix" class="md-nav__link">
+  <a href="#daily-development-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        File Size Alignment Fix
+        Daily Development Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#project-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Organization
       
     </span>
   </a>
@@ -551,208 +621,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#whats-new-in-v132" class="md-nav__link">
+  <a href="#command-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What's New in v1.3.2
+        Command Reference
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="What&#39;s New in v1.3.2">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#test-suite-fixes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Suite Fixes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cli-enhancements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI Enhancements
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#features-from-v130" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Features from v1.3.0
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Features from v1.3.0">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#bdd-testing-infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BDD Testing Infrastructure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#enhanced-test-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Enhanced Test Organization
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fx-filter-command-from-v120" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        fx filter Command (from v1.2.0)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="fx filter Command (from v1.2.0)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#fx-filter-command-enhanced-in-v132" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        fx filter Command (Enhanced in v1.3.2)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#testing-excellence-v130" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing Excellence (v1.3.0)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#development-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Development Environment
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Development Environment">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#quick-setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Setup
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#key-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Files
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recent-decisions-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recent Decisions &amp; Context
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Recent Decisions &amp; Context">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#architecture-decisions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture Decisions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#testing-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing Strategy
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#documentation-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Documentation Standards
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -769,10 +644,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
+  <a href="#command-not-found" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Issues
+        Command Not Found
       
     </span>
   </a>
@@ -780,10 +655,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#environment-check" class="md-nav__link">
+  <a href="#permission-denied" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Environment Check
+        Permission Denied
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Not Found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Conflicts
       
     </span>
   </a>
@@ -796,82 +693,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#context-for-development" class="md-nav__link">
+  <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context for Development
+        Next Steps
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Context for Development">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#last-session-2025-09-06" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Last Session (2025-09-06)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#previous-session-2025-08-30" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Previous Session (2025-08-30)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#previous-session" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Previous Session
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#testing-infrastructure-v130" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing Infrastructure (v1.3.0)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#next-development-focus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Development Focus
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#emergency-recovery" class="md-nav__link">
+  <a href="#getting-help" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Emergency Recovery
+        Getting Help
       
     </span>
   </a>
@@ -948,14 +784,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/files.md" class="md-nav__link">
+      <a href="../commands/files/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Command: fx files
   
 
     
@@ -976,14 +812,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/size.md" class="md-nav__link">
+      <a href="../commands/size/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Command: fx size
   
 
     
@@ -1004,14 +840,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/ff.md" class="md-nav__link">
+      <a href="../commands/ff/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Command: fx ff
   
 
     
@@ -1032,14 +868,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/fff.md" class="md-nav__link">
+      <a href="../commands/fff/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Command: fx fff
   
 
     
@@ -1060,14 +896,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/filter.md" class="md-nav__link">
+      <a href="../commands/filter/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Command: fx filter
   
 
     
@@ -1088,14 +924,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/replace.md" class="md-nav__link">
+      <a href="../commands/replace/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Command: fx replace
   
 
     
@@ -1116,14 +952,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/backup.md" class="md-nav__link">
+      <a href="../commands/backup/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Command: fx backup
   
 
     
@@ -1144,14 +980,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/organize.md" class="md-nav__link">
+      <a href="../commands/organize/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Command: fx organize
   
 
     
@@ -1172,14 +1008,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/root.md" class="md-nav__link">
+      <a href="../commands/root/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Command: fx root
   
 
     
@@ -1200,14 +1036,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/today.md" class="md-nav__link">
+      <a href="../commands/today/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Command: fx today
   
 
     
@@ -1282,14 +1118,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-cases/daily-workflow.md" class="md-nav__link">
+      <a href="../use-cases/daily-workflow/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Use Case: Daily Development Workflow
   
 
     
@@ -1310,14 +1146,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-cases/project-cleanup.md" class="md-nav__link">
+      <a href="../use-cases/project-cleanup/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Use Case: Project Cleanup
   
 
     
@@ -1338,14 +1174,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-cases/version-updates.md" class="md-nav__link">
+      <a href="../use-cases/version-updates/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Use Case: Version Updates
   
 
     
@@ -1366,14 +1202,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-cases/dataset-management.md" class="md-nav__link">
+      <a href="../use-cases/dataset-management/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Use Case: Dataset Management
   
 
     
@@ -1394,14 +1230,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-cases/automation-scripts.md" class="md-nav__link">
+      <a href="../use-cases/automation-scripts/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Use Case: Automation Scripts
   
 
     
@@ -1476,14 +1312,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced/shell-integration.md" class="md-nav__link">
+      <a href="../advanced/shell-integration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Shell Integration
   
 
     
@@ -1504,14 +1340,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced/performance.md" class="md-nav__link">
+      <a href="../advanced/performance/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Performance Optimization
   
 
     
@@ -1586,14 +1422,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/index.md" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Contributing Guide
   
 
     
@@ -1634,297 +1470,210 @@
   
 
 
-<h1 id="fx_bin-quick-start-guide">fx_bin Quick Start Guide</h1>
-<p><strong>Get up to speed in &lt; 2 minutes</strong></p>
-<h2 id="current-state-2025-09-06-2340-utc">Current State (2025-09-06 23:40 UTC)</h2>
-<p><strong>Status</strong>: Code Quality and Security Improvements Complete ✅<br />
-<strong>Branch</strong>: develop (3 commits ahead of origin)<br />
-<strong>Latest Enhancement</strong>: Comprehensive security fixes and code quality improvements  </p>
-<h2 id="immediate-next-steps">Immediate Next Steps</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Stage all improvements</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>add<span class="w"> </span>-A
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. Commit code quality and security fixes</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix: comprehensive code quality and security improvements</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s2">- Fixed CLI documentation consistency (mtime → modified)</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s2">- Renamed format parameter to output_format (avoid shadowing)</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s2">- Enhanced security with comprehensive URL validation</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s2">- Added 5 new security tests (400 total tests passing)</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s2">- Fixed Makefile paths and Windows compatibility issues&quot;</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># 3. Test fx today functionality</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>fx<span class="w"> </span>today<span class="w"> </span>--help<span class="w">  </span><span class="c1"># View command help</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>fx<span class="w"> </span>today<span class="w"> </span>--dry-run<span class="w">  </span><span class="c1"># Preview without creating directory</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>fx<span class="w"> </span>today<span class="w">  </span><span class="c1"># Creates workspace and starts shell (default behavior)</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># 4. Optional: Set up shell integration</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>bash<span class="w"> </span>scripts/setup-fx-today.sh
+<h1 id="quick-start">Quick Start</h1>
+<p>Get up and running with fx-bin in 5 minutes.</p>
+<hr />
+<h2 id="installation">Installation</h2>
+<h3 id="method-1-pip-recommended">Method 1: pip (Recommended)</h3>
+<p>The easiest way to install fx-bin:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
 </span></code></pre></div>
-<h2 id="project-overview">Project Overview</h2>
-<p><strong>fx_bin</strong> is a Python utility collection providing command-line tools for file operations. Version 1.4.0 (pending) includes comprehensive security enhancements, code quality improvements, and all previous features including shell integration for fx root and fx today commands.</p>
-<h3 id="available-commands">Available Commands</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>fx<span class="w"> </span>files<span class="w">       </span><span class="c1"># Count files in directories</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>fx<span class="w"> </span>size<span class="w">        </span><span class="c1"># Analyze file/directory sizes  </span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>fx<span class="w"> </span>ff<span class="w">          </span><span class="c1"># Find files by keyword</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>fx<span class="w"> </span>fff<span class="w">         </span><span class="c1"># Find first file (alias for ff --first)</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>fx<span class="w"> </span>filter<span class="w">      </span><span class="c1"># Filter files by extension (v1.2.0)</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>fx<span class="w"> </span>replace<span class="w">     </span><span class="c1"># Replace text in files</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>fx<span class="w"> </span>root<span class="w">        </span><span class="c1"># Find Git project root (v1.3.6, shell integration v1.3.7+)</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>fx<span class="w"> </span>today<span class="w">       </span><span class="c1"># Daily workspace manager (v1.4.0)</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>fx<span class="w"> </span><span class="nb">help</span><span class="w">        </span><span class="c1"># Display main help (v1.3.6)</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>fx<span class="w"> </span>list<span class="w">        </span><span class="c1"># List all available commands</span>
+<p>Upgrade to the latest version:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>fx-bin
 </span></code></pre></div>
-<p>Note: <code>fx ff</code> skips <code>.git</code>, <code>.venv</code>, <code>node_modules</code> by default. Use <code>--include-ignored</code> to include them, and <code>--exclude NAME</code> (repeatable, supports globs) to prune additional names/patterns.</p>
-<h3 id="fx-ff-examples">fx ff examples</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Names containing &#39;test&#39; (skips .git/.venv/node_modules by default)</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Include default-ignored directories</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--include-ignored
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Exclude additional names/patterns (repeatable)</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.log&quot;</span>
+<h3 id="method-2-pipx-isolated-installation">Method 2: pipx (Isolated Installation)</h3>
+<p>For a clean, isolated environment:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>fx-bin
 </span></code></pre></div>
-<h2 id="whats-new-in-development-v136">What's New in Development (v1.3.6)</h2>
-<h3 id="git-root-command">Git Root Command</h3>
-<ul>
-<li><strong>New Command</strong>: <code>fx root</code> to find Git project root directory</li>
-<li><strong>Shell Integration</strong>: <code>--cd</code> flag for use with shell cd command</li>
-<li><strong>Git Worktree Support</strong>: Handles <code>.git</code> files for worktrees</li>
-<li><strong>Cross-Platform</strong>: Proper symlink resolution on macOS</li>
-<li><strong>Comprehensive Testing</strong>: 24 tests (12 unit, 12 integration)</li>
-</ul>
-<h3 id="usage-examples">Usage Examples</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Show Git project root</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>fx<span class="w"> </span>root
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Output: Git project root: /Users/frank/Projects/fx_bin</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Change to Git project root</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># or</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>-c<span class="k">)</span><span class="s2">&quot;</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Use in scripts</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">if</span><span class="w"> </span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;In a Git repository&quot;</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">else</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Not in a Git repository&quot;</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">fi</span>
+<p>Upgrade to the latest version:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pipx<span class="w"> </span>upgrade<span class="w"> </span>fx-bin
 </span></code></pre></div>
-<h2 id="whats-new-in-v133">What's New in v1.3.3</h2>
-<h3 id="file-size-alignment-fix">File Size Alignment Fix</h3>
-<ul>
-<li><strong>Formatting Consistency</strong>: All size units (B, KB, MB, GB) now use 9-character width</li>
-<li><strong>Perfect Alignment</strong>: Right-aligned numeric values for easy visual scanning</li>
-<li><strong>User Experience</strong>: Resolved alignment issues reported by international users</li>
-<li><strong>Test Updates</strong>: All 36 filter tests updated to match new formatting</li>
-</ul>
-<h2 id="whats-new-in-v132">What's New in v1.3.2</h2>
-<h3 id="test-suite-fixes">Test Suite Fixes</h3>
-<ul>
-<li><strong>Test Isolation</strong>: Fixed BDD tests changing working directory without restoration</li>
-<li><strong>Complete Pass Rate</strong>: All 301 tests now passing (was 21 failures)</li>
-<li><strong>BDD Step Definitions</strong>: Added comprehensive table parsing and directory validation</li>
-<li><strong>Code Quality</strong>: Fixed all flake8 linting errors and applied black formatting</li>
-</ul>
-<h3 id="cli-enhancements">CLI Enhancements</h3>
-<ul>
-<li><strong>--limit Option</strong>: Limit number of results in fx filter</li>
-<li><strong>Multi-path Support</strong>: Process multiple directories in one command</li>
-<li><strong>Glob Patterns</strong>: Wildcard support using fnmatch integration</li>
-</ul>
-<h2 id="features-from-v130">Features from v1.3.0</h2>
-<h3 id="bdd-testing-infrastructure">BDD Testing Infrastructure</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Run BDD scenarios</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/bdd/<span class="w"> </span>-v
+<h3 id="method-3-from-source">Method 3: From Source</h3>
+<p>For development or testing:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Clone the repository</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/frankyxhl/fx_bin.git
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Run critical scenarios only  </span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/bdd/<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;smoke or critical&quot;</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Navigate to the directory</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">cd</span><span class="w"> </span>fx_bin
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Run with detailed BDD report</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/bdd/<span class="w"> </span>--html<span class="o">=</span>reports/bdd.html
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Install using Poetry</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>poetry<span class="w"> </span>install<span class="w"> </span>--with<span class="w"> </span>dev
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Run fx commands</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>poetry<span class="w"> </span>run<span class="w"> </span>fx<span class="w"> </span>--help
 </span></code></pre></div>
-<h3 id="enhanced-test-organization">Enhanced Test Organization</h3>
-<ul>
-<li><strong>pytest-bdd 7.3.0+</strong>: Complete BDD framework integration</li>
-<li><strong>18+ Test Markers</strong>: Comprehensive test categorization (smoke, critical, performance, etc.)</li>
-<li><strong>Smart Step Patterns</strong>: 70%+ step definition reuse across scenarios</li>
-<li><strong>Advanced Fixtures</strong>: Sophisticated test data builders and realistic scenarios</li>
-</ul>
-<h2 id="fx-filter-command-from-v120">fx filter Command (from v1.2.0)</h2>
-<h3 id="fx-filter-command-enhanced-in-v132">fx filter Command (Enhanced in v1.3.2)</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>txt<span class="w">                    </span><span class="c1"># Find .txt files</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;mp4,avi,mkv&quot;</span><span class="w">         </span><span class="c1"># Multiple extensions</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span><span class="c1"># Sort by modification time</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>fx<span class="w"> </span>filter<span class="w"> </span>txt<span class="w"> </span>--format<span class="w"> </span>detailed<span class="w"> </span><span class="c1"># Show file metadata</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--no-recursive<span class="w">     </span><span class="c1"># Current directory only</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w">         </span><span class="c1"># NEW: Limit results to 10 files</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>fx<span class="w"> </span>filter<span class="w"> </span>txt<span class="w"> </span>dir1<span class="w"> </span>dir2<span class="w"> </span>dir3<span class="w">    </span><span class="c1"># NEW: Search multiple directories</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;*.test.py&quot;</span><span class="w">           </span><span class="c1"># NEW: Glob pattern support</span>
+<h3 id="verify-installation">Verify Installation</h3>
+<p>Check that fx-bin is installed correctly:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fx<span class="w"> </span>--version
 </span></code></pre></div>
-<h3 id="testing-excellence-v130">Testing Excellence (v1.3.0)</h3>
-<ul>
-<li><strong>Production BDD Framework</strong>: pytest-bdd with intelligent step patterns</li>
-<li><strong>23 Unit Tests</strong>: Complete TDD implementation (maintained)</li>
-<li><strong>25+ BDD Scenarios</strong>: Business-readable specifications in Gherkin</li>
-<li><strong>Quality Validation</strong>: Built-in BDD best practice compliance scoring</li>
-<li><strong>Smart Fixtures</strong>: Advanced test data builders with cleanup strategies</li>
-<li><strong>Comprehensive Coverage</strong>: Edge cases, security, performance testing with BDD validation</li>
-</ul>
-<h2 id="development-environment">Development Environment</h2>
-<h3 id="quick-setup">Quick Setup</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Install dependencies</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>poetry<span class="w"> </span>install<span class="w"> </span>--with<span class="w"> </span>dev,test
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Run all tests</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Run BDD tests (NEW v1.3.0 infrastructure)</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/bdd/<span class="w"> </span>-v
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Run by test category</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-m<span class="w"> </span>smoke<span class="w">           </span><span class="c1"># Critical scenarios</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-m<span class="w"> </span>performance<span class="w">     </span><span class="c1"># Performance tests</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-m<span class="w"> </span>edge_cases<span class="w">       </span><span class="c1"># Edge case validation</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Run linting</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>poetry<span class="w"> </span>run<span class="w"> </span>flake8<span class="w"> </span>fx_bin
+<p>You should see output like:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>FX-Bin v2.4.0
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Repository: https://github.com/frankyxhl/fx_bin
 </span></code></pre></div>
-<h3 id="key-files">Key Files</h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>fx_bin/
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>├── filter.py              # NEW: Filter command implementation
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>├── cli.py                 # Updated: Filter command integration
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>└── ...                    # Existing utilities
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>tests/
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>├── test_filter.py         # 23 unit tests (v1.2.0)
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>├── bdd/                   # ENHANCED: Production BDD infrastructure (v1.3.0)
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>│   ├── conftest.py        # 400+ lines of sophisticated fixtures
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>│   ├── step_patterns.py   # 590+ lines of reusable patterns
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>│   └── test_file_filter_steps.py  # Smart step definitions
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>└── ...                    # Existing tests
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>features/
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>└── file_filter.feature    # ENHANCED: 25+ Gherkin scenarios with proper tagging
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>docs/
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>├── sessions/              # Session documentation (established)
-</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>├── changelog/             # Release documentation
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>└── bdd-testing-guide.md   # COMPREHENSIVE: 480+ lines BDD guide (v1.3.0)
+<hr />
+<h2 id="your-first-commands">Your First Commands</h2>
+<h3 id="explore-available-commands">Explore Available Commands</h3>
+<p>List all available fx commands:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>fx<span class="w"> </span>list
 </span></code></pre></div>
-<h2 id="recent-decisions-context">Recent Decisions &amp; Context</h2>
-<h3 id="architecture-decisions">Architecture Decisions</h3>
+<p>Get help for the fx CLI:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>fx<span class="w"> </span>--help
+</span></code></pre></div>
+<h3 id="count-files">Count Files</h3>
+<p>Count files in the current directory:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>fx<span class="w"> </span>files<span class="w"> </span>.
+</span></code></pre></div>
+<p>Count only Python files:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+</span></code></pre></div>
+<h3 id="analyze-sizes">Analyze Sizes</h3>
+<p>Show file sizes in the current directory:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.
+</span></code></pre></div>
+<p>Show the 10 largest files:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span>--unit<span class="w"> </span>MB
+</span></code></pre></div>
+<h3 id="find-files">Find Files</h3>
+<p>Find files containing "config" in their name:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>config
+</span></code></pre></div>
+<p>Find Python files:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>.py
+</span></code></pre></div>
+<h3 id="filter-by-extension">Filter by Extension</h3>
+<p>Find all Python files, sorted by modification time:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
+</span></code></pre></div>
+<p>Find multiple file types:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;jpg,png,gif&quot;</span><span class="w"> </span>--format<span class="w"> </span>detailed
+</span></code></pre></div>
+<h3 id="replace-text">Replace Text</h3>
+<p>Replace "old" with "new" in a file:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>file.txt
+</span></code></pre></div>
+<p>Replace text in multiple files:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;v1.0&quot;</span><span class="w"> </span><span class="s2">&quot;v2.0&quot;</span><span class="w"> </span>*.py
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><strong>Safety First</strong>: <code>fx replace</code> uses atomic writes with automatic backup. If the replacement fails, the original file is automatically restored.</p>
+</div>
+<hr />
+<h2 id="common-workflows">Common Workflows</h2>
+<h3 id="daily-development-setup">Daily Development Setup</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Navigate to today&#39;s workspace</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>fx<span class="w"> </span>today
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Count project files</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Find recently modified files</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;py,js,ts&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># Locate TODO markers</span>
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>fx<span class="w"> </span>ff<span class="w"> </span>TODO<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
+</span></code></pre></div>
+<h3 id="project-analysis">Project Analysis</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Analyze file sizes</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Count files by type</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.js&quot;</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.md&quot;</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># Find configuration files</span>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--exclude<span class="w"> </span>backup
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="c1"># Identify largest directories</span>
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--sort<span class="w"> </span>desc
+</span></code></pre></div>
+<h3 id="file-organization">File Organization</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Create a backup before organizing</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>my_project<span class="w"> </span>--compress
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Organize files by date (preview)</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>my_project<span class="w"> </span>--date-source<span class="w"> </span>created<span class="w"> </span>--depth<span class="w"> </span><span class="m">3</span><span class="w"> </span>--dry-run
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Execute organization</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>my_project<span class="w"> </span>--date-source<span class="w"> </span>created<span class="w"> </span>--depth<span class="w"> </span><span class="m">3</span>
+</span></code></pre></div>
+<hr />
+<h2 id="command-reference">Command Reference</h2>
+<p>For detailed information about each command, see:</p>
 <ul>
-<li><strong>Production BDD Framework</strong>: pytest-bdd with smart patterns and quality validation</li>
-<li><strong>TDD + BDD Approach</strong>: Mature testing strategy with stakeholder communication</li>
-<li><strong>Unified CLI</strong>: Single <code>fx</code> command with subcommands for consistency</li>
-<li><strong>Click Framework</strong>: Modern CLI framework for all commands</li>
+<li><a href="../commands/files/"><code>fx files</code></a> - Count files in directories</li>
+<li><a href="../commands/size/"><code>fx size</code></a> - Analyze file/directory sizes</li>
+<li><a href="../commands/ff/"><code>fx ff</code></a> - Find files by keyword</li>
+<li><a href="../commands/fff/"><code>fx fff</code></a> - Find first file matching keyword</li>
+<li><a href="../commands/filter/"><code>fx filter</code></a> - Filter files by extension</li>
+<li><a href="../commands/replace/"><code>fx replace</code></a> - Replace text in files</li>
+<li><a href="../commands/backup/"><code>fx backup</code></a> - Create timestamped backups</li>
+<li><a href="../commands/organize/"><code>fx organize</code></a> - Organize files by date</li>
+<li><a href="../commands/root/"><code>fx root</code></a> - Find Git project root</li>
+<li><a href="../commands/today/"><code>fx today</code></a> - Create daily workspace</li>
 </ul>
-<h3 id="testing-strategy">Testing Strategy</h3>
-<ul>
-<li><strong>Unit Tests First</strong>: TDD methodology for core functionality (established)</li>
-<li><strong>Production BDD</strong>: pytest-bdd framework with intelligent step patterns</li>
-<li><strong>Living Documentation</strong>: Gherkin scenarios as executable specifications</li>
-<li><strong>Quality Validation</strong>: Built-in BDD best practice compliance scoring</li>
-<li><strong>Smart Fixtures</strong>: Advanced test data builders for realistic scenarios</li>
-<li><strong>Comprehensive Coverage</strong>: Multiple testing layers with marker-based execution</li>
-</ul>
-<h3 id="documentation-standards">Documentation Standards</h3>
-<ul>
-<li><strong>Session Documentation</strong>: Preserve context between sessions</li>
-<li><strong>Living Documentation</strong>: BDD scenarios as executable specifications</li>
-<li><strong>Comprehensive Changelogs</strong>: Detailed release notes for users</li>
-</ul>
+<hr />
 <h2 id="troubleshooting">Troubleshooting</h2>
-<h3 id="common-issues">Common Issues</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Test failures</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/test_filter.py<span class="w"> </span>-v
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># BDD test issues (v1.3.0 infrastructure)</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/bdd/<span class="w"> </span>-v<span class="w"> </span>--tb<span class="o">=</span>short
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Test specific BDD categories</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/bdd/<span class="w"> </span>-m<span class="w"> </span>smoke<span class="w"> </span>-v
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/bdd/<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;not slow&quot;</span><span class="w"> </span>-v
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Linting errors</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>poetry<span class="w"> </span>run<span class="w"> </span>flake8<span class="w"> </span>fx_bin/filter.py
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Module import issues</span>
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<h3 id="command-not-found">Command Not Found</h3>
+<p>If you see "command not found: fx":</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Check Python installation</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>python<span class="w"> </span>--version
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Reinstall with pip</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>pip<span class="w"> </span>uninstall<span class="w"> </span>fx-bin
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="c1"># Or with pipx</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>pipx<span class="w"> </span>uninstall<span class="w"> </span>fx-bin
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>pipx<span class="w"> </span>install<span class="w"> </span>fx-bin
 </span></code></pre></div>
-<h3 id="environment-check">Environment Check</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify installation</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>fx<span class="w"> </span>--help
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>fx<span class="w"> </span>list
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Test filter command</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>fx<span class="w"> </span>filter<span class="w"> </span>py
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Check version</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import fx_bin; print(fx_bin.__version__)&quot;</span>
+<h3 id="permission-denied">Permission Denied</h3>
+<p>If you see "Permission denied" errors:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># macOS/Linux: Use sudo</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>sudo<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Or use a virtual environment</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
 </span></code></pre></div>
-<h2 id="context-for-development">Context for Development</h2>
-<h3 id="last-session-2025-09-06">Last Session (2025-09-06)</h3>
-<ul>
-<li><strong>Added</strong>: New <code>fx today</code> command for daily workspace management</li>
-<li><strong>Implementation</strong>: Security-hardened directory creation with default shell execution</li>
-<li><strong>Default Behavior</strong>: Spawns new shell in today's workspace (user requirement)</li>
-<li><strong>Testing</strong>: TDD unit tests + BDD scenarios + CLI integration tests</li>
-<li><strong>Files</strong>: Created fx_bin/today.py, features/today_workspace.feature, comprehensive test suites</li>
-<li><strong>Version</strong>: Bumped to 1.4.0 for significant feature addition</li>
-</ul>
-<h3 id="previous-session-2025-08-30">Previous Session (2025-08-30)</h3>
-<ul>
-<li><strong>Fixed</strong>: File size alignment issues in fx filter detailed output</li>
-<li><strong>Root Cause</strong>: Inconsistent column widths (8 chars for B/KB, 9 chars for MB/GB)</li>
-<li><strong>Solution</strong>: Standardized all units to 9-character right-aligned format</li>
-<li><strong>Updated</strong>: Test expectations in test_filter_improvements_v1_3_1.py</li>
-<li><strong>Version</strong>: Bumped from 1.3.2 to 1.3.3</li>
-<li><strong>Result</strong>: All 36 filter tests passing including 14 doctests</li>
-</ul>
-<h3 id="previous-session">Previous Session</h3>
-<ul>
-<li><strong>Fixed</strong>: BDD test isolation issues causing 21 test failures</li>
-<li><strong>Enhanced</strong>: fx filter with --limit option and multi-path support</li>
-<li><strong>Code Quality</strong>: Fixed all flake8 errors and applied black formatting</li>
-</ul>
-<h3 id="testing-infrastructure-v130">Testing Infrastructure (v1.3.0)</h3>
-<ul>
-<li><strong>Production BDD Framework</strong>: Complete pytest-bdd infrastructure with smart patterns</li>
-<li><strong>Advanced Fixtures</strong>: Sophisticated test data builders and cleanup strategies</li>
-<li><strong>Quality Validation</strong>: Built-in BDD best practice compliance scoring</li>
-<li><strong>Comprehensive Documentation</strong>: 480+ lines BDD testing guide</li>
-<li><strong>Proven Foundation</strong>: 23 unit tests + BDD framework ready for execution</li>
-</ul>
-<h3 id="next-development-focus">Next Development Focus</h3>
-<ul>
-<li><strong>BDD Validation</strong>: Execute and validate all BDD scenarios with new infrastructure</li>
-<li><strong>Test Integration</strong>: Integrate BDD tests into CI/CD pipeline</li>
-<li><strong>Pattern Expansion</strong>: Add BDD scenarios for remaining commands</li>
-<li><strong>Performance Testing</strong>: Execute performance-tagged BDD scenarios</li>
-</ul>
-<h2 id="emergency-recovery">Emergency Recovery</h2>
-<p>If you need to quickly understand the current state:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check current status</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>status
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-5
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Verify tests</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--co<span class="w"> </span>-q<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w">  </span><span class="c1"># Count tests</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-x<span class="w">              </span><span class="c1"># Run until first failure</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Quick functionality check</span>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>fx<span class="w"> </span>filter<span class="w"> </span>txt<span class="w">                     </span><span class="c1"># Should work without errors</span>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span><span class="w">            </span><span class="c1"># Test new limit option</span>
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>fx<span class="w"> </span>filter<span class="w"> </span>txt<span class="w"> </span>/path1<span class="w"> </span>/path2<span class="w">       </span><span class="c1"># Test multi-path support</span>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Test BDD infrastructure (v1.3.0)</span>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/bdd/<span class="w"> </span>--collect-only<span class="w">  </span><span class="c1"># Should discover scenarios</span>
-</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/bdd/<span class="w"> </span>-m<span class="w"> </span>smoke<span class="w"> </span>--dry-run<span class="w">  </span><span class="c1"># Should run without errors</span>
+<h3 id="module-not-found">Module Not Found</h3>
+<p>If you see "ModuleNotFoundError":</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Reinstall with all dependencies</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>pip<span class="w"> </span>install<span class="w"> </span>--force-reinstall<span class="w"> </span>fx-bin
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Or upgrade pip first</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>fx-bin
 </span></code></pre></div>
-<p><strong>Documentation Location</strong>: All context preserved in <code>docs/sessions/</code> and <code>docs/changelog/</code> directories.</p>
+<h3 id="version-conflicts">Version Conflicts</h3>
+<p>If you have multiple Python versions:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Specify Python version</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>python3.11<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Or use pyenv/pyenv-win to manage Python versions</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>pyenv<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.11.0
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>pyenv<span class="w"> </span>global<span class="w"> </span><span class="m">3</span>.11.0
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
+</span></code></pre></div>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<ol>
+<li><strong>Explore</strong> the <a href="../commands/files/">Command Reference</a> for detailed usage</li>
+<li><strong>Try</strong> the <a href="../use-cases/daily-workflow/">Use Cases</a> for real-world examples</li>
+<li><strong>Integrate</strong> fx-bin into your workflow with <a href="../advanced/shell-integration/">Shell Integration</a></li>
+</ol>
+<hr />
+<h2 id="getting-help">Getting Help</h2>
+<ul>
+<li><strong>Documentation</strong>: <a href="https://frankyxhl.github.io/fx_bin/">Full documentation</a></li>
+<li><strong>GitHub Issues</strong>: <a href="https://github.com/frankyxhl/fx_bin/issues">Report bugs</a></li>
+<li><strong>GitHub Discussions</strong>: <a href="https://github.com/frankyxhl/fx_bin/discussions">Ask questions</a></li>
+<li><strong>Email</strong>: frank@frankxu.me</li>
+</ul>
+<hr />
+<p><strong>Ready to go?</strong> Start using fx-bin today and make your file operations faster, safer, and more efficient! 🚀</p>
 
 
 
