@@ -243,19 +243,19 @@ Filter files by extension with intelligent sorting capabilities.
 
 ```bash
 # Find Python files sorted by creation time
-fx filter . py
+fx filter py .
 
 # Multiple extensions with detailed output
-fx filter . "jpg,png,gif" --format detailed
+fx filter "jpg,png,gif" . --format detailed
 
 # Sort by modification time, newest first
-fx filter ~/Documents pdf --sort-by modified --reverse
+fx filter pdf ~/Documents --sort-by modified --reverse
 
 # Non-recursive search
-fx filter . txt --no-recursive
+fx filter txt . --no-recursive
 
 # Simple output format (just paths)
-fx filter . py --format simple
+fx filter py . --format simple
 ```
 
 **Options:**
@@ -659,7 +659,7 @@ fx files .
 fx size . --limit 10 --unit MB
 
 # Find old log files
-fx filter . log --sort-by modified --reverse
+fx filter log . --sort-by modified --reverse
 
 # Find backup files for deletion
 fx ff .bak
@@ -675,7 +675,7 @@ fx files . | grep test
 cd "$(fx root --cd)"
 
 # Find all Python source files
-fx filter . py
+fx filter py .
 
 # Find TODO markers
 fx ff TODO
@@ -694,7 +694,7 @@ fx backup src --compress
 fx organize ~/Photos -i "*.jpg" -i "*.png" -i "*.heic"
 
 # Find recent PDFs
-fx filter ~/Documents pdf --sort-by modified --reverse --limit 10
+fx filter pdf ~/Documents --sort-by modified --reverse --limit 10
 
 # Backup important documents
 fx backup ~/Documents/important.xlsx --backup-dir ~/Backups
@@ -729,7 +729,7 @@ fx replace "old_api_url" "new_api_url" *.py *.js *.yaml
 fx organize ~/Downloads -o ~/Organized --depth 3 --clean-empty
 
 # Find and count all source files
-fx filter . "py,js,ts,jsx,tsx" --format simple | wc -l
+fx filter "py,js,ts,jsx,tsx" . --format simple | wc -l
 
 # Batch backup multiple directories
 for dir in src tests docs; do
@@ -741,7 +741,7 @@ done
 
 ```bash
 # Find large log files
-fx filter /var/log log --sort-by modified
+fx filter log /var/log --sort-by modified
 
 # Count configuration files
 fx files /etc
