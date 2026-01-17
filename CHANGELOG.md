@@ -1,6 +1,30 @@
 # CHANGELOG
 
 
+## v2.5.8 (2026-01-17)
+
+### Bug Fixes
+
+- **docs**: Correct fx filter example argument order
+  ([`f691e4f`](https://github.com/frankyxhl/fx_bin/commit/f691e4ff746823532588d36c9ef3e7c3e3c17d5e))
+
+fx filter expects EXTENSION first, then PATHS. Fixed all examples that incorrectly showed path
+  before extension (e.g., `fx filter . py` should be `fx filter py .`).
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+
+### Documentation
+
+- Add SKILL.md for AI assistant guidance
+  ([`91a330c`](https://github.com/frankyxhl/fx_bin/commit/91a330cd1522e41b734ae60710fcdbb4416d1abd))
+
+Add comprehensive skill documentation to guide AI assistants working on this project. The
+  documentation covers Python development workflow, functional programming patterns with the returns
+  library, and testing approaches.
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+
+
 ## v2.5.7 (2026-01-17)
 
 ### Bug Fixes
