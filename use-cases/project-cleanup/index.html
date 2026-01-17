@@ -1272,86 +1272,86 @@
 <h2 id="cleanup-tasks">Cleanup Tasks</h2>
 <h3 id="1-find-backup-files">1. Find Backup Files</h3>
 <p>Identify all backup files in project:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Find .bak files</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>.bak<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Find .backup files</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>.backup<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Find all backup patterns</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">for</span><span class="w"> </span>pattern<span class="w"> </span><span class="k">in</span><span class="w"> </span>.bak<span class="w"> </span>.backup<span class="w"> </span>_backup<span class="w"> </span>old_*<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$pattern</span><span class="s2"> ===&quot;</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$pattern</span><span class="s2">&quot;</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">done</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find .bak files</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.bak<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
+
+<span class="c1"># Find .backup files</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.backup<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
+
+<span class="c1"># Find all backup patterns</span>
+<span class="k">for</span><span class="w"> </span>pattern<span class="w"> </span><span class="k">in</span><span class="w"> </span>.bak<span class="w"> </span>.backup<span class="w"> </span>_backup<span class="w"> </span>old_*<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$pattern</span><span class="s2"> ===&quot;</span>
+<span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$pattern</span><span class="s2">&quot;</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
+<span class="k">done</span>
+</code></pre></div>
 <h3 id="2-find-temporary-files">2. Find Temporary Files</h3>
 <p>Identify temporary files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Find .tmp files</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>.tmp<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Find .swp files (vim)</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>.swp<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Find .DS_Store files (macOS)</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>fx<span class="w"> </span>ff<span class="w"> </span>.DS_Store<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find .tmp files</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.tmp<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
+
+<span class="c1"># Find .swp files (vim)</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.swp<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
+
+<span class="c1"># Find .DS_Store files (macOS)</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.DS_Store<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
+</code></pre></div>
 <h3 id="3-analyze-large-files">3. Analyze Large Files</h3>
 <p>Find and analyze large files that might need cleanup:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Find top 20 largest files</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Find large log files</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>.log<span class="w"> </span>--exclude<span class="w"> </span>archive<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Find large temporary files</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">for</span><span class="w"> </span>pattern<span class="w"> </span><span class="k">in</span><span class="w"> </span>.tmp<span class="w"> </span>.bak<span class="w"> </span>.swp<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$pattern</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">done</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find top 20 largest files</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
+
+<span class="c1"># Find large log files</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.log<span class="w"> </span>--exclude<span class="w"> </span>archive<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+
+<span class="c1"># Find large temporary files</span>
+<span class="k">for</span><span class="w"> </span>pattern<span class="w"> </span><span class="k">in</span><span class="w"> </span>.tmp<span class="w"> </span>.bak<span class="w"> </span>.swp<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$pattern</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
+<span class="k">done</span>
+</code></pre></div>
 <h2 id="cleanup-script">Cleanup Script</h2>
 <p>Create a comprehensive cleanup script:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># cleanup_project.sh</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">set</span><span class="w"> </span>-e
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: Not in a Git repository&quot;</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">fi</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Project Cleanup: </span><span class="nv">$PROJECT_ROOT</span><span class="s2"> ===&quot;</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># 1. Find backup files</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1. Backup files found:&quot;</span>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="nv">backup_count</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.bak<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   .bak files: </span><span class="nv">$backup_count</span><span class="s2">&quot;</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$backup_count</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Files:&quot;</span>
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span>.bak<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="k">fi</span>
-</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
-</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="c1"># 2. Find temporary files</span>
-</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. Temporary files found:&quot;</span>
-</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="nv">tmp_count</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.tmp<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span>
-</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   .tmp files: </span><span class="nv">$tmp_count</span><span class="s2">&quot;</span>
-</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
-</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$tmp_count</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Files:&quot;</span>
-</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span>.tmp<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="k">fi</span>
-</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>
-</span><span id="__span-3-39"><a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="c1"># 3. Summary</span>
-</span><span id="__span-3-40"><a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Cleanup Complete ===&quot;</span>
-</span><span id="__span-3-41"><a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Review files and delete as needed&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># cleanup_project.sh</span>
+
+<span class="nb">set</span><span class="w"> </span>-e
+
+<span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: Not in a Git repository&quot;</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Project Cleanup: </span><span class="nv">$PROJECT_ROOT</span><span class="s2"> ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># 1. Find backup files</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1. Backup files found:&quot;</span>
+<span class="nv">backup_count</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.bak<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   .bak files: </span><span class="nv">$backup_count</span><span class="s2">&quot;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$backup_count</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Files:&quot;</span>
+<span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span>.bak<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<span class="k">fi</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># 2. Find temporary files</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. Temporary files found:&quot;</span>
+<span class="nv">tmp_count</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.tmp<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   .tmp files: </span><span class="nv">$tmp_count</span><span class="s2">&quot;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$tmp_count</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Files:&quot;</span>
+<span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span>.tmp<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<span class="k">fi</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># 3. Summary</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Cleanup Complete ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Review files and delete as needed&quot;</span>
+</code></pre></div>
 <h2 id="related-commands">Related Commands</h2>
 <ul>
 <li><a href="../../commands/ff/"><code>fx ff</code></a> - Find files by keyword</li>

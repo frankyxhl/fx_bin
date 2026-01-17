@@ -1674,281 +1674,281 @@
 <h2 id="optimization-strategies">Optimization Strategies</h2>
 <h3 id="1-reduce-search-scope">1. Reduce Search Scope</h3>
 <p>Limit search scope for better performance:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># ❌ Slow: Search entire project</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>config
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># ✅ Fast: Search specific directory</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>src/
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># ❌ Slow: Count all files recursively</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># ✅ Fast: Count files in specific directory</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>fx<span class="w"> </span>files<span class="w"> </span>src/<span class="w"> </span>--recursive
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># ❌ Slow: Search entire project</span>
+fx<span class="w"> </span>ff<span class="w"> </span>config
+
+<span class="c1"># ✅ Fast: Search specific directory</span>
+fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>src/
+
+<span class="c1"># ❌ Slow: Count all files recursively</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive
+
+<span class="c1"># ✅ Fast: Count files in specific directory</span>
+fx<span class="w"> </span>files<span class="w"> </span>src/<span class="w"> </span>--recursive
+</code></pre></div>
 <h3 id="2-use-first-match-mode">2. Use First Match Mode</h3>
 <p>Use <code>--first</code> for quick lookups:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># ❌ Slow: Full search</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>config
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># ✅ Fast: First match only</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--first
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Or use fff command</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>fx<span class="w"> </span>fff<span class="w"> </span>config
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># ❌ Slow: Full search</span>
+fx<span class="w"> </span>ff<span class="w"> </span>config
+
+<span class="c1"># ✅ Fast: First match only</span>
+fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--first
+
+<span class="c1"># Or use fff command</span>
+fx<span class="w"> </span>fff<span class="w"> </span>config
+</code></pre></div>
 <h3 id="3-exclude-large-directories">3. Exclude Large Directories</h3>
 <p>Exclude heavy directories from search:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># ❌ Slow: Search everything</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>api
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># ✅ Fast: Exclude heavy directories</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.venv<span class="w"> </span>--exclude<span class="w"> </span>dist<span class="w"> </span>--exclude<span class="w"> </span>build
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># ❌ Slow: Search everything</span>
+fx<span class="w"> </span>ff<span class="w"> </span>api
+
+<span class="c1"># ✅ Fast: Exclude heavy directories</span>
+fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.venv<span class="w"> </span>--exclude<span class="w"> </span>dist<span class="w"> </span>--exclude<span class="w"> </span>build
+</code></pre></div>
 <h3 id="4-use-specific-patterns">4. Use Specific Patterns</h3>
 <p>Use specific patterns instead of wildcards:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># ❌ Slow: Broad wildcard</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>.*
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># ✅ Fast: Specific extension</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>.py
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># ✅ Fast: Specific keyword</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>fx<span class="w"> </span>ff<span class="w"> </span>config
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># ❌ Slow: Broad wildcard</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.*
+
+<span class="c1"># ✅ Fast: Specific extension</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.py
+
+<span class="c1"># ✅ Fast: Specific keyword</span>
+fx<span class="w"> </span>ff<span class="w"> </span>config
+</code></pre></div>
 <h3 id="5-limit-results">5. Limit Results</h3>
 <p>Limit output for large result sets:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># ❌ Slow: All results</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># ✅ Fast: Limited results</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># ❌ Slow: All files</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># ✅ Fast: Limited files</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># ❌ Slow: All results</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive
+
+<span class="c1"># ✅ Fast: Limited results</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
+
+<span class="c1"># ❌ Slow: All files</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
+
+<span class="c1"># ✅ Fast: Limited files</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <h3 id="6-use-dry-run-mode">6. Use Dry-Run Mode</h3>
 <p>Preview operations before execution:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Preview organization</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--dry-run
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Preview replacement</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Note: fx replace doesn&#39;t have dry-run, use grep first</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Preview organization</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--dry-run
+
+<span class="c1"># Preview replacement</span>
+<span class="c1"># Note: fx replace doesn&#39;t have dry-run, use grep first</span>
+grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+</code></pre></div>
 <h2 id="large-project-optimization">Large Project Optimization</h2>
 <h3 id="1-batch-processing">1. Batch Processing</h3>
 <p>Process large projects in batches:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Process in batches</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Split processing by directory</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>src/<span class="w"> </span>tests/<span class="w"> </span>docs/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Processing: </span><span class="nv">$dir</span><span class="s2">&quot;</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">done</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Process in batches</span>
+
+<span class="c1"># Split processing by directory</span>
+<span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>src/<span class="w"> </span>tests/<span class="w"> </span>docs/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Processing: </span><span class="nv">$dir</span><span class="s2">&quot;</span>
+<span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
 <h3 id="2-parallel-processing">2. Parallel Processing</h3>
 <p>Use parallel execution where possible:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Parallel file finding</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Find in multiple directories in parallel</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span><span class="p">|</span><span class="w"> </span>parallel<span class="w"> </span><span class="s2">&quot;fx ff config {} --exclude node_modules&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Parallel file finding</span>
+
+<span class="c1"># Find in multiple directories in parallel</span>
+find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span><span class="p">|</span><span class="w"> </span>parallel<span class="w"> </span><span class="s2">&quot;fx ff config {} --exclude node_modules&quot;</span>
+</code></pre></div>
 <h3 id="3-caching-results">3. Caching Results</h3>
 <p>Cache frequently accessed information:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Cache file counts</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">CACHE_FILE</span><span class="o">=</span><span class="s2">&quot;.fx_cache.txt&quot;</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Check cache age</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nv">CACHE_AGE</span><span class="o">=</span><span class="k">$((</span><span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">$(</span>stat<span class="w"> </span>-c<span class="w"> </span>%Y<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span><span class="k">)</span><span class="w"> </span><span class="k">))</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$CACHE_AGE</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="c1"># Cache is less than 1 hour old</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="k">fi</span>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="k">fi</span>
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Update cache</span>
-</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span>
-</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Cache file counts</span>
+
+<span class="nv">CACHE_FILE</span><span class="o">=</span><span class="s2">&quot;.fx_cache.txt&quot;</span>
+
+<span class="c1"># Check cache age</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nv">CACHE_AGE</span><span class="o">=</span><span class="k">$((</span><span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">$(</span>stat<span class="w"> </span>-c<span class="w"> </span>%Y<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span><span class="k">)</span><span class="w"> </span><span class="k">))</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$CACHE_AGE</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="c1"># Cache is less than 1 hour old</span>
+<span class="w">    </span>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<span class="w">  </span><span class="k">fi</span>
+<span class="k">fi</span>
+
+<span class="c1"># Update cache</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span>
+cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span>
+</code></pre></div>
 <h2 id="memory-optimization">Memory Optimization</h2>
 <h3 id="1-avoid-large-output">1. Avoid Large Output</h3>
 <p>Avoid storing large command outputs in variables:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># ❌ Bad: Store large output</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">FILES</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.<span class="k">)</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$FILES</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">done</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># ✅ Good: Stream output</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>fx<span class="w"> </span>ff<span class="w"> </span>.<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>file<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="k">done</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># ❌ Bad: Store large output</span>
+<span class="nv">FILES</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.<span class="k">)</span>
+<span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$FILES</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+
+<span class="c1"># ✅ Good: Stream output</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>file<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
 <h3 id="2-process-files-individually">2. Process Files Individually</h3>
 <p>Process files one at a time:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># ❌ Bad: Load all files into array</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">FILES</span><span class="o">=(</span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w"> </span>--exclude<span class="w"> </span>__pycache__<span class="k">)</span><span class="o">)</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FILES</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>python<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">done</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># ✅ Good: Process files individually</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w"> </span>--exclude<span class="w"> </span>__pycache__<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>file<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>python<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="k">done</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># ❌ Bad: Load all files into array</span>
+<span class="nv">FILES</span><span class="o">=(</span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w"> </span>--exclude<span class="w"> </span>__pycache__<span class="k">)</span><span class="o">)</span>
+<span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FILES</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span>python<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+
+<span class="c1"># ✅ Good: Process files individually</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w"> </span>--exclude<span class="w"> </span>__pycache__<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>file<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span>python<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
 <h2 id="disk-io-optimization">Disk I/O Optimization</h2>
 <h3 id="1-minimize-disk-access">1. Minimize Disk Access</h3>
 <p>Minimize disk access patterns:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># ❌ Bad: Multiple passes</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>config
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>fx<span class="w"> </span>ff<span class="w"> </span>api
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>fx<span class="w"> </span>ff<span class="w"> </span>service
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># ✅ Good: Single pass with broader pattern</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;config|api|service&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># ❌ Bad: Multiple passes</span>
+fx<span class="w"> </span>ff<span class="w"> </span>config
+fx<span class="w"> </span>ff<span class="w"> </span>api
+fx<span class="w"> </span>ff<span class="w"> </span>service
+
+<span class="c1"># ✅ Good: Single pass with broader pattern</span>
+fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;config|api|service&quot;</span>
+</code></pre></div>
 <h3 id="2-use-compression-wisely">2. Use Compression Wisely</h3>
 <p>Use compression only for large directories:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># ❌ Bad: Compress small directory</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>small_dir/<span class="w"> </span>--compress
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># ✅ Good: Compress large directory</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>fx<span class="w"> </span>backup<span class="w"> </span>large_project/<span class="w"> </span>--compress
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># ✅ Good: No compression for single files</span>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>fx<span class="w"> </span>backup<span class="w"> </span>file.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># ❌ Bad: Compress small directory</span>
+fx<span class="w"> </span>backup<span class="w"> </span>small_dir/<span class="w"> </span>--compress
+
+<span class="c1"># ✅ Good: Compress large directory</span>
+fx<span class="w"> </span>backup<span class="w"> </span>large_project/<span class="w"> </span>--compress
+
+<span class="c1"># ✅ Good: No compression for single files</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt
+</code></pre></div>
 <h2 id="performance-testing">Performance Testing</h2>
 <h3 id="benchmark-commands">Benchmark Commands</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># benchmark_fx.sh</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Time fx commands</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Performance Benchmark ===&quot;</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1. fx ff (full search)&quot;</span>
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>ff<span class="w"> </span>api
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
-</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. fx ff --first&quot;</span>
-</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--first
-</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
-</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;3. fx fff&quot;</span>
-</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>fff<span class="w"> </span>api
-</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>
-</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;4. fx files&quot;</span>
-</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive
-</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>
-</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;5. fx filter&quot;</span>
-</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># benchmark_fx.sh</span>
+
+<span class="c1"># Time fx commands</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Performance Benchmark ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1. fx ff (full search)&quot;</span>
+<span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>ff<span class="w"> </span>api
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. fx ff --first&quot;</span>
+<span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--first
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;3. fx fff&quot;</span>
+<span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>fff<span class="w"> </span>api
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;4. fx files&quot;</span>
+<span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;5. fx filter&quot;</span>
+<span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <h3 id="memory-profiling">Memory Profiling</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># memory_profile.sh</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Profile memory usage</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Memory Profile ===&quot;</span>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Track memory usage</span>
-</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="k">for</span><span class="w"> </span>cmd<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;fx ff .&quot;</span><span class="w"> </span><span class="s2">&quot;fx files .&quot;</span><span class="w"> </span><span class="s2">&quot;fx filter py&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Command: </span><span class="nv">$cmd</span><span class="s2">&quot;</span>
-</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">  </span>/usr/bin/time<span class="w"> </span>-v<span class="w"> </span><span class="nv">$cmd</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Maximum resident set size&quot;</span>
-</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="k">done</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># memory_profile.sh</span>
+
+<span class="c1"># Profile memory usage</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Memory Profile ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># Track memory usage</span>
+<span class="k">for</span><span class="w"> </span>cmd<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;fx ff .&quot;</span><span class="w"> </span><span class="s2">&quot;fx files .&quot;</span><span class="w"> </span><span class="s2">&quot;fx filter py&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Command: </span><span class="nv">$cmd</span><span class="s2">&quot;</span>
+<span class="w">  </span>/usr/bin/time<span class="w"> </span>-v<span class="w"> </span><span class="nv">$cmd</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Maximum resident set size&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
 <h2 id="performance-best-practices">Performance Best Practices</h2>
 <h3 id="1-use-appropriate-commands">1. Use Appropriate Commands</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># For quick lookup: Use fff</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>fx<span class="w"> </span>fff<span class="w"> </span>config
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># For browsing: Use ff</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>config
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># For counting: Use files</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># For analysis: Use size</span>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># For quick lookup: Use fff</span>
+fx<span class="w"> </span>fff<span class="w"> </span>config
+
+<span class="c1"># For browsing: Use ff</span>
+fx<span class="w"> </span>ff<span class="w"> </span>config
+
+<span class="c1"># For counting: Use files</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+
+<span class="c1"># For analysis: Use size</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <h3 id="2-filter-aggressively">2. Filter Aggressively</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Always exclude heavy directories</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.venv<span class="w"> </span>--exclude<span class="w"> </span>dist<span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Always exclude heavy directories</span>
+fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.venv<span class="w"> </span>--exclude<span class="w"> </span>dist<span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
+</code></pre></div>
 <h3 id="3-use-limits">3. Use Limits</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Always limit results for large output</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Always limit results for large output</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <h3 id="4-profile-before-optimization">4. Profile Before Optimization</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Always profile before optimizing</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>ff<span class="w"> </span>.
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Measure baseline</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Apply optimization</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># Measure improvement</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Always profile before optimizing</span>
+<span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>ff<span class="w"> </span>.
+
+<span class="c1"># Measure baseline</span>
+<span class="c1"># Apply optimization</span>
+<span class="c1"># Measure improvement</span>
+</code></pre></div>
 <h2 id="troubleshooting-performance">Troubleshooting Performance</h2>
 <h3 id="slow-file-finding">Slow File Finding</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># If fx ff is slow:</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1"># 1. Check what directories are being searched</span>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Add verbose output if available</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>.<span class="w"> </span>--verbose
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># 2. Exclude heavy directories</span>
-</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>fx<span class="w"> </span>ff<span class="w"> </span>.<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.venv<span class="w"> </span>--exclude<span class="w"> </span>dist
-</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
-</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># 3. Use --first for quick lookup</span>
-</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>fx<span class="w"> </span>ff<span class="w"> </span>.<span class="w"> </span>--first
-</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
-</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="c1"># 4. Be more specific with pattern</span>
-</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;api_v1&quot;</span><span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span><span class="s2">&quot;api&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># If fx ff is slow:</span>
+
+<span class="c1"># 1. Check what directories are being searched</span>
+<span class="c1"># Add verbose output if available</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.<span class="w"> </span>--verbose
+
+<span class="c1"># 2. Exclude heavy directories</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.venv<span class="w"> </span>--exclude<span class="w"> </span>dist
+
+<span class="c1"># 3. Use --first for quick lookup</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.<span class="w"> </span>--first
+
+<span class="c1"># 4. Be more specific with pattern</span>
+fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;api_v1&quot;</span><span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span><span class="s2">&quot;api&quot;</span>
+</code></pre></div>
 <h3 id="slow-file-counting">Slow File Counting</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># If fx files is slow:</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1"># 1. Reduce recursion depth</span>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--max-depth<span class="w"> </span><span class="m">2</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># 2. Use pattern to filter</span>
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
-</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># 3. Count specific directories</span>
-</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>fx<span class="w"> </span>files<span class="w"> </span>src/<span class="w"> </span>--recursive
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># If fx files is slow:</span>
+
+<span class="c1"># 1. Reduce recursion depth</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--max-depth<span class="w"> </span><span class="m">2</span>
+
+<span class="c1"># 2. Use pattern to filter</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive
+
+<span class="c1"># 3. Count specific directories</span>
+fx<span class="w"> </span>files<span class="w"> </span>src/<span class="w"> </span>--recursive
+</code></pre></div>
 <h3 id="slow-file-organization">Slow File Organization</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># If fx organize is slow:</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="c1"># 1. Preview with dry-run</span>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>fx<span class="w"> </span>organize<span class="w"> </span>.<span class="w"> </span>--dry-run
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="c1"># 2. Use filtering</span>
-</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>fx<span class="w"> </span>organize<span class="w"> </span>.<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>--recursive
-</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>
-</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="c1"># 3. Process in batches</span>
-</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>fx<span class="w"> </span>organize<span class="w"> </span>batch1/
-</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>fx<span class="w"> </span>organize<span class="w"> </span>batch2/
-</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>fx<span class="w"> </span>organize<span class="w"> </span>batch3/
-</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>
-</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="c1"># 4. Use quiet mode</span>
-</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>fx<span class="w"> </span>organize<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--quiet
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># If fx organize is slow:</span>
+
+<span class="c1"># 1. Preview with dry-run</span>
+fx<span class="w"> </span>organize<span class="w"> </span>.<span class="w"> </span>--dry-run
+
+<span class="c1"># 2. Use filtering</span>
+fx<span class="w"> </span>organize<span class="w"> </span>.<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>--recursive
+
+<span class="c1"># 3. Process in batches</span>
+fx<span class="w"> </span>organize<span class="w"> </span>batch1/
+fx<span class="w"> </span>organize<span class="w"> </span>batch2/
+fx<span class="w"> </span>organize<span class="w"> </span>batch3/
+
+<span class="c1"># 4. Use quiet mode</span>
+fx<span class="w"> </span>organize<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--quiet
+</code></pre></div>
 <h2 id="related-commands">Related Commands</h2>
 <ul>
 <li><a href="../../commands/ff/"><code>fx ff</code></a> - Find files by keyword</li>

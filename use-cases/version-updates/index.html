@@ -1272,71 +1272,71 @@
 <h2 id="version-update-workflow">Version Update Workflow</h2>
 <h3 id="1-create-backup">1. Create Backup</h3>
 <p>Always backup before version updates:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Backup project directory</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>project_dir<span class="w"> </span>--compress
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Verify backup created</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ls<span class="w"> </span>-la<span class="w"> </span>project_dir_*.tar.xz
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup project directory</span>
+fx<span class="w"> </span>backup<span class="w"> </span>project_dir<span class="w"> </span>--compress
+
+<span class="c1"># Verify backup created</span>
+ls<span class="w"> </span>-la<span class="w"> </span>project_dir_*.tar.xz
+</code></pre></div>
 <h3 id="2-update-version-strings">2. Update Version Strings</h3>
 <p>Replace version strings across files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Update version in setup.py</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;version=&#39;1.0.0&#39;&quot;</span><span class="w"> </span><span class="s2">&quot;version=&#39;2.0.0&#39;&quot;</span><span class="w"> </span>setup.py
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Update version in __init__.py</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;__version__ = &#39;1.0.0&#39;&quot;</span><span class="w"> </span><span class="s2">&quot;__version__ = &#39;2.0.0&#39;&quot;</span><span class="w"> </span>*/__init__.py
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Update version in README</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;v1.0.0&quot;</span><span class="w"> </span><span class="s2">&quot;v2.0.0&quot;</span><span class="w"> </span>README.md
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Update version in setup.py</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;version=&#39;1.0.0&#39;&quot;</span><span class="w"> </span><span class="s2">&quot;version=&#39;2.0.0&#39;&quot;</span><span class="w"> </span>setup.py
+
+<span class="c1"># Update version in __init__.py</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;__version__ = &#39;1.0.0&#39;&quot;</span><span class="w"> </span><span class="s2">&quot;__version__ = &#39;2.0.0&#39;&quot;</span><span class="w"> </span>*/__init__.py
+
+<span class="c1"># Update version in README</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;v1.0.0&quot;</span><span class="w"> </span><span class="s2">&quot;v2.0.0&quot;</span><span class="w"> </span>README.md
+</code></pre></div>
 <h3 id="3-verify-changes">3. Verify Changes</h3>
 <p>Check that version strings were updated correctly:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Count occurrences of new version</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;2.0.0&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.md&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show context of changes</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;2.0.0&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.md&quot;</span><span class="w"> </span>-C<span class="w"> </span><span class="m">2</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Ensure no old versions remain</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.md&quot;</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Should return nothing if all updated</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Count occurrences of new version</span>
+grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;2.0.0&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.md&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+
+<span class="c1"># Show context of changes</span>
+grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;2.0.0&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.md&quot;</span><span class="w"> </span>-C<span class="w"> </span><span class="m">2</span>
+
+<span class="c1"># Ensure no old versions remain</span>
+grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.md&quot;</span>
+<span class="c1"># Should return nothing if all updated</span>
+</code></pre></div>
 <h2 id="comprehensive-version-update-script">Comprehensive Version Update Script</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># update_version.sh</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">set</span><span class="w"> </span>-e
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nv">OLD_VERSION</span><span class="o">=</span><span class="nv">$1</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nv">NEW_VERSION</span><span class="o">=</span><span class="nv">$2</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OLD_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Usage: update_version.sh OLD_VERSION NEW_VERSION&quot;</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Example: update_version.sh 1.0.0 2.0.0&quot;</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">fi</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Version Update: </span><span class="nv">$OLD_VERSION</span><span class="s2"> -&gt; </span><span class="nv">$NEW_VERSION</span><span class="s2"> ===&quot;</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># 1. Create backup</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1. Creating backup...&quot;</span>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="nv">BACKUP_NAME</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>backup<span class="w"> </span>.<span class="w"> </span>--compress<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;backup_[^ ]*&quot;</span><span class="k">)</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Backup: </span><span class="nv">$BACKUP_NAME</span><span class="s2">&quot;</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># 2. Update version strings</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. Updating version strings...&quot;</span>
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OLD_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_VERSION</span><span class="s2">&quot;</span><span class="w"> </span>setup.py
-</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OLD_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_VERSION</span><span class="s2">&quot;</span><span class="w"> </span>*/__init__.py
-</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OLD_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_VERSION</span><span class="s2">&quot;</span><span class="w"> </span>README.md
-</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Version strings updated&quot;</span>
-</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
-</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="c1"># 3. Verify updates</span>
-</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;3. Verifying updates...&quot;</span>
-</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="nv">NEW_COUNT</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_VERSION</span><span class="s2">&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.md&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span>
-</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Found </span><span class="nv">$NEW_COUNT</span><span class="s2"> occurrences of new version&quot;</span>
-</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>
-</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Version Update Complete ===&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># update_version.sh</span>
+
+<span class="nb">set</span><span class="w"> </span>-e
+
+<span class="nv">OLD_VERSION</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nv">NEW_VERSION</span><span class="o">=</span><span class="nv">$2</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OLD_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Usage: update_version.sh OLD_VERSION NEW_VERSION&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Example: update_version.sh 1.0.0 2.0.0&quot;</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Version Update: </span><span class="nv">$OLD_VERSION</span><span class="s2"> -&gt; </span><span class="nv">$NEW_VERSION</span><span class="s2"> ===&quot;</span>
+
+<span class="c1"># 1. Create backup</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1. Creating backup...&quot;</span>
+<span class="nv">BACKUP_NAME</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>backup<span class="w"> </span>.<span class="w"> </span>--compress<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;backup_[^ ]*&quot;</span><span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Backup: </span><span class="nv">$BACKUP_NAME</span><span class="s2">&quot;</span>
+
+<span class="c1"># 2. Update version strings</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. Updating version strings...&quot;</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OLD_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_VERSION</span><span class="s2">&quot;</span><span class="w"> </span>setup.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OLD_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_VERSION</span><span class="s2">&quot;</span><span class="w"> </span>*/__init__.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OLD_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_VERSION</span><span class="s2">&quot;</span><span class="w"> </span>README.md
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Version strings updated&quot;</span>
+
+<span class="c1"># 3. Verify updates</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;3. Verifying updates...&quot;</span>
+<span class="nv">NEW_COUNT</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEW_VERSION</span><span class="s2">&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.md&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Found </span><span class="nv">$NEW_COUNT</span><span class="s2"> occurrences of new version&quot;</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Version Update Complete ===&quot;</span>
+</code></pre></div>
 <h2 id="related-commands">Related Commands</h2>
 <ul>
 <li><a href="../../commands/replace/"><code>fx replace</code></a> - Replace text in files</li>

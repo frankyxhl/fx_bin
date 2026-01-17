@@ -1619,8 +1619,8 @@
 - 🔄 Consistent naming convention
 - 💾 Same-directory backup creation</p>
 <h2 id="usage">Usage</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>fx<span class="w"> </span>backup<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>path
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>backup<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>path
+</code></pre></div>
 <h2 id="parameters">Parameters</h2>
 <table>
 <thead>
@@ -1655,140 +1655,140 @@
 <h2 id="examples">Examples</h2>
 <h3 id="basic-usage">Basic Usage</h3>
 <p>Backup a file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>fx<span class="w"> </span>backup<span class="w"> </span>file.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>backup<span class="w"> </span>file.txt
+</code></pre></div>
 <p><strong>Output:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Backup created: file_20260110_143022.txt
-</span></code></pre></div></p>
+<div class="language-text highlight"><pre><span></span><code>Backup created: file_20260110_143022.txt
+</code></pre></div></p>
 <p>Backup a directory:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>fx<span class="w"> </span>backup<span class="w"> </span>mydir/
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>backup<span class="w"> </span>mydir/
+</code></pre></div>
 <p><strong>Output:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Backup created: mydir_20260110_143022/
-</span></code></pre></div></p>
+<div class="language-text highlight"><pre><span></span><code>Backup created: mydir_20260110_143022/
+</code></pre></div></p>
 <h3 id="compressed-backups">Compressed Backups</h3>
 <p>Compress directory backup:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fx<span class="w"> </span>backup<span class="w"> </span>mydir/<span class="w"> </span>--compress
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>backup<span class="w"> </span>mydir/<span class="w"> </span>--compress
+</code></pre></div>
 <p><strong>Output:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Backup created: mydir_20260110_143022.tar.xz
-</span></code></pre></div></p>
+<div class="language-text highlight"><pre><span></span><code>Backup created: mydir_20260110_143022.tar.xz
+</code></pre></div></p>
 <h3 id="custom-timestamp-format">Custom Timestamp Format</h3>
 <p>Use custom timestamp format:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Default format (YYYYMMDD_HHMMSS)</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>file.txt
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Custom format (YYYY-MM-DD)</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Custom format (YYYYMMDD)</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Default format (YYYYMMDD_HHMMSS)</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt
+
+<span class="c1"># Custom format (YYYY-MM-DD)</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
+
+<span class="c1"># Custom format (YYYYMMDD)</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
+</code></pre></div>
 <h3 id="real-world-scenarios">Real-World Scenarios</h3>
 <h4 id="scenario-1-pre-update-backup">Scenario 1: Pre-Update Backup</h4>
 <p>Backup before making changes:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Backup project directory</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>project_dir/
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Make changes...</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># If needed, restore from backup</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>cp<span class="w"> </span>project_dir_20260110_143022/<span class="w"> </span>project_dir/
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup project directory</span>
+fx<span class="w"> </span>backup<span class="w"> </span>project_dir/
+
+<span class="c1"># Make changes...</span>
+<span class="c1"># If needed, restore from backup</span>
+cp<span class="w"> </span>project_dir_20260110_143022/<span class="w"> </span>project_dir/
+</code></pre></div>
 <h4 id="scenario-2-code-refactoring">Scenario 2: Code Refactoring</h4>
 <p>Backup before refactoring:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Backup current version</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>src/
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Refactor code...</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Test refactored code</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>pytest
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># If tests fail, restore</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>cp<span class="w"> </span>src_20260110_143022/<span class="w"> </span>src/
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup current version</span>
+fx<span class="w"> </span>backup<span class="w"> </span>src/
+
+<span class="c1"># Refactor code...</span>
+<span class="c1"># Test refactored code</span>
+pytest
+
+<span class="c1"># If tests fail, restore</span>
+cp<span class="w"> </span>src_20260110_143022/<span class="w"> </span>src/
+</code></pre></div>
 <h4 id="scenario-3-configuration-backup">Scenario 3: Configuration Backup</h4>
 <p>Backup configuration files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Backup config directory</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>~/.config/myapp/
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Make configuration changes...</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># If issues occur, restore</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>cp<span class="w"> </span>~/.config/myapp_20260110_143022/<span class="w"> </span>~/.config/myapp/
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup config directory</span>
+fx<span class="w"> </span>backup<span class="w"> </span>~/.config/myapp/
+
+<span class="c1"># Make configuration changes...</span>
+<span class="c1"># If issues occur, restore</span>
+cp<span class="w"> </span>~/.config/myapp_20260110_143022/<span class="w"> </span>~/.config/myapp/
+</code></pre></div>
 <h4 id="scenario-4-data-migration">Scenario 4: Data Migration</h4>
 <p>Backup before data migration:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Backup data directory with compression</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>~/data/<span class="w"> </span>--compress
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Perform data migration</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>python<span class="w"> </span>migrate_data.py
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Verify migration</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># If needed, restore from backup</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>tar<span class="w"> </span>-xf<span class="w"> </span>data_20260110_143022.tar.xz
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup data directory with compression</span>
+fx<span class="w"> </span>backup<span class="w"> </span>~/data/<span class="w"> </span>--compress
+
+<span class="c1"># Perform data migration</span>
+python<span class="w"> </span>migrate_data.py
+
+<span class="c1"># Verify migration</span>
+<span class="c1"># If needed, restore from backup</span>
+tar<span class="w"> </span>-xf<span class="w"> </span>data_20260110_143022.tar.xz
+</code></pre></div>
 <h4 id="scenario-5-daily-backup-routine">Scenario 5: Daily Backup Routine</h4>
 <p>Create daily backups:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Backup today&#39;s work</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>~/workspace/
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Compress to save space</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>fx<span class="w"> </span>backup<span class="w"> </span>~/workspace/<span class="w"> </span>--compress
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup today&#39;s work</span>
+fx<span class="w"> </span>backup<span class="w"> </span>~/workspace/
+
+<span class="c1"># Compress to save space</span>
+fx<span class="w"> </span>backup<span class="w"> </span>~/workspace/<span class="w"> </span>--compress
+</code></pre></div>
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="combining-with-other-commands">Combining with Other Commands</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Find and backup files</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>important.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>backup
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Backup multiple directories</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>src/<span class="w"> </span>tests/<span class="w"> </span>docs/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span>fx<span class="w"> </span>backup<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="k">done</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find and backup files</span>
+fx<span class="w"> </span>ff<span class="w"> </span>important.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>backup
+
+<span class="c1"># Backup multiple directories</span>
+<span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>src/<span class="w"> </span>tests/<span class="w"> </span>docs/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span>fx<span class="w"> </span>backup<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
 <h3 id="automated-backup-script">Automated Backup Script</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Daily backup script</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Create compressed backup</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nv">timestamp</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="nv">backup_file</span><span class="o">=</span><span class="s2">&quot;project_</span><span class="si">${</span><span class="nv">timestamp</span><span class="si">}</span><span class="s2">.tar.xz&quot;</span>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Backup project</span>
-</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>fx<span class="w"> </span>backup<span class="w"> </span>.<span class="w"> </span>--compress
-</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
-</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># Copy to remote storage (optional)</span>
-</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># cp project_${timestamp}.tar.xz /backup/remote/</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Daily backup script</span>
+
+<span class="c1"># Create compressed backup</span>
+<span class="nv">timestamp</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
+<span class="nv">backup_file</span><span class="o">=</span><span class="s2">&quot;project_</span><span class="si">${</span><span class="nv">timestamp</span><span class="si">}</span><span class="s2">.tar.xz&quot;</span>
+
+<span class="c1"># Backup project</span>
+fx<span class="w"> </span>backup<span class="w"> </span>.<span class="w"> </span>--compress
+
+<span class="c1"># Copy to remote storage (optional)</span>
+<span class="c1"># cp project_${timestamp}.tar.xz /backup/remote/</span>
+</code></pre></div>
 <h3 id="backup-with-verification">Backup with Verification</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Backup and verify</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Create backup</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="nv">backup_name</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>backup<span class="w"> </span>mydir/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;mydir_[^ ]*&quot;</span><span class="k">)</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Verify backup exists</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$backup_name</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Backup verified: </span><span class="nv">$backup_name</span><span class="s2">&quot;</span>
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="k">else</span>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Backup failed!&quot;</span>
-</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="k">fi</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Backup and verify</span>
+
+<span class="c1"># Create backup</span>
+<span class="nv">backup_name</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>backup<span class="w"> </span>mydir/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;mydir_[^ ]*&quot;</span><span class="k">)</span>
+
+<span class="c1"># Verify backup exists</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$backup_name</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Backup verified: </span><span class="nv">$backup_name</span><span class="s2">&quot;</span>
+<span class="k">else</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Backup failed!&quot;</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+</code></pre></div>
 <h3 id="selective-backup">Selective Backup</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Backup specific file types</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>fx<span class="w"> </span>backup<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="k">)</span><span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Backup multiple specific files</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>fx<span class="w"> </span>backup<span class="w"> </span>file1.txt<span class="w"> </span>file2.txt<span class="w"> </span>file3.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup specific file types</span>
+fx<span class="w"> </span>backup<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="k">)</span><span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
+
+<span class="c1"># Backup multiple specific files</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file1.txt<span class="w"> </span>file2.txt<span class="w"> </span>file3.txt
+</code></pre></div>
 <h3 id="backup-rotation">Backup Rotation</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Keep last N backups</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># Find and remove old backups (keep last 5)</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;project_*&quot;</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span>sort<span class="w"> </span>-r<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span>tail<span class="w"> </span>-n<span class="w"> </span>+6<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span>xargs<span class="w"> </span>rm<span class="w"> </span>-rf
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Keep last N backups</span>
+<span class="c1"># Find and remove old backups (keep last 5)</span>
+find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;project_*&quot;</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>sort<span class="w"> </span>-r<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>tail<span class="w"> </span>-n<span class="w"> </span>+6<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>xargs<span class="w"> </span>rm<span class="w"> </span>-rf
+</code></pre></div>
 <h2 id="default-timestamp-format">Default Timestamp Format</h2>
 <p>The default timestamp format is: <code>%Y%m%d_%H%MSS</code></p>
 <p>Example output: <code>file_20260110_143022.txt</code></p>
@@ -1807,20 +1807,20 @@
 <li><strong>Restoration</strong>: Use <code>tar -xf filename.tar.xz</code></li>
 </ul>
 <p>Example:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Create compressed backup</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>mydir/<span class="w"> </span>--compress
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Restore compressed backup</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>tar<span class="w"> </span>-xf<span class="w"> </span>mydir_20260110_143022.tar.xz
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create compressed backup</span>
+fx<span class="w"> </span>backup<span class="w"> </span>mydir/<span class="w"> </span>--compress
+
+<span class="c1"># Restore compressed backup</span>
+tar<span class="w"> </span>-xf<span class="w"> </span>mydir_20260110_143022.tar.xz
+</code></pre></div>
 <h2 id="backup-location">Backup Location</h2>
 <p>Backups are created in the <strong>same directory as the source</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Source: /home/user/project/file.txt</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1"># Backup: /home/user/project/file_20260110_143022.txt</span>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Source: /home/user/project/mydir/</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1"># Backup: /home/user/project/mydir_20260110_143022/</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Source: /home/user/project/file.txt</span>
+<span class="c1"># Backup: /home/user/project/file_20260110_143022.txt</span>
+
+<span class="c1"># Source: /home/user/project/mydir/</span>
+<span class="c1"># Backup: /home/user/project/mydir_20260110_143022/</span>
+</code></pre></div>
 <h2 id="performance-notes">Performance Notes</h2>
 <ul>
 <li><strong>Large files</strong>: Fast for single files, depends on size for directories</li>
@@ -1830,91 +1830,91 @@
 </ul>
 <h2 id="common-issues">Common Issues</h2>
 <h3 id="permission-denied">Permission Denied</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check permissions</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>file.txt
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Make file readable/writable (if allowed)</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>chmod<span class="w"> </span>+r<span class="w"> </span>file.txt
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>chmod<span class="w"> </span>+w<span class="w"> </span>file.txt
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># Use sudo if necessary (not recommended)</span>
-</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>sudo<span class="w"> </span>fx<span class="w"> </span>backup<span class="w"> </span>/protected/path
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check permissions</span>
+ls<span class="w"> </span>-la<span class="w"> </span>file.txt
+
+<span class="c1"># Make file readable/writable (if allowed)</span>
+chmod<span class="w"> </span>+r<span class="w"> </span>file.txt
+chmod<span class="w"> </span>+w<span class="w"> </span>file.txt
+
+<span class="c1"># Use sudo if necessary (not recommended)</span>
+sudo<span class="w"> </span>fx<span class="w"> </span>backup<span class="w"> </span>/protected/path
+</code></pre></div>
 <h3 id="disk-space-issues">Disk Space Issues</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Check available space</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>df<span class="w"> </span>-h
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Use compression to save space</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>fx<span class="w"> </span>backup<span class="w"> </span>large_dir/<span class="w"> </span>--compress
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
-</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Check backup size</span>
-</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>du<span class="w"> </span>-sh<span class="w"> </span>backup_20260110_143022/
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check available space</span>
+df<span class="w"> </span>-h
+
+<span class="c1"># Use compression to save space</span>
+fx<span class="w"> </span>backup<span class="w"> </span>large_dir/<span class="w"> </span>--compress
+
+<span class="c1"># Check backup size</span>
+du<span class="w"> </span>-sh<span class="w"> </span>backup_20260110_143022/
+</code></pre></div>
 <h3 id="backup-already-exists">Backup Already Exists</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># If backup name conflicts, new timestamp is generated</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>file.txt
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1"># Creates: file_20260110_143022.txt</span>
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>fx<span class="w"> </span>backup<span class="w"> </span>file.txt
-</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># Creates: file_20260110_143023.txt (different timestamp)</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># If backup name conflicts, new timestamp is generated</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt
+<span class="c1"># Creates: file_20260110_143022.txt</span>
+
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt
+<span class="c1"># Creates: file_20260110_143023.txt (different timestamp)</span>
+</code></pre></div>
 <h3 id="compression-failures">Compression Failures</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># If compression fails, try without compression</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>mydir/<span class="w">  </span><span class="c1"># Without --compress</span>
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Check for sufficient disk space</span>
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>df<span class="w"> </span>-h
-</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
-</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># Check for xz compression support</span>
-</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>which<span class="w"> </span>xz
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># If compression fails, try without compression</span>
+fx<span class="w"> </span>backup<span class="w"> </span>mydir/<span class="w">  </span><span class="c1"># Without --compress</span>
+
+<span class="c1"># Check for sufficient disk space</span>
+df<span class="w"> </span>-h
+
+<span class="c1"># Check for xz compression support</span>
+which<span class="w"> </span>xz
+</code></pre></div>
 <h3 id="timestamp-format-errors">Timestamp Format Errors</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Valid formats</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="c1"># Invalid formats (may cause errors)</span>
-</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;invalid&quot;</span><span class="w">  </span><span class="c1"># ❌</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Valid formats</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
+
+<span class="c1"># Invalid formats (may cause errors)</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;invalid&quot;</span><span class="w">  </span><span class="c1"># ❌</span>
+</code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="always-backup-before-changes">Always Backup Before Changes</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Before any destructive operation</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>important_file_or_directory/
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Then perform operation</span>
-</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
-</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads/
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Before any destructive operation</span>
+fx<span class="w"> </span>backup<span class="w"> </span>important_file_or_directory/
+
+<span class="c1"># Then perform operation</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads/
+</code></pre></div>
 <h3 id="use-compression-for-large-directories">Use Compression for Large Directories</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Large directories - use compression</span>
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>large_project/<span class="w"> </span>--compress
-</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
-</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Small files - no compression needed</span>
-</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>fx<span class="w"> </span>backup<span class="w"> </span>file.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Large directories - use compression</span>
+fx<span class="w"> </span>backup<span class="w"> </span>large_project/<span class="w"> </span>--compress
+
+<span class="c1"># Small files - no compression needed</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt
+</code></pre></div>
 <h3 id="regular-backup-schedule">Regular Backup Schedule</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Add to cron for automated backups</span>
-</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="c1"># Example: Daily backup at 2 AM</span>
-</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="c1"># 0 2 * * * fx backup ~/workspace/ --compress</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Add to cron for automated backups</span>
+<span class="c1"># Example: Daily backup at 2 AM</span>
+<span class="c1"># 0 2 * * * fx backup ~/workspace/ --compress</span>
+</code></pre></div>
 <h3 id="verify-backups">Verify Backups</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Test restore on a copy</span>
-</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>cp<span class="w"> </span>backup_20260110_143022.tar.xz<span class="w"> </span>backup_test.tar.xz
-</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>tar<span class="w"> </span>-xf<span class="w"> </span>backup_test.tar.xz
-</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>
-</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="c1"># Verify contents</span>
-</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>ls<span class="w"> </span>-la<span class="w"> </span>backup_test/
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Test restore on a copy</span>
+cp<span class="w"> </span>backup_20260110_143022.tar.xz<span class="w"> </span>backup_test.tar.xz
+tar<span class="w"> </span>-xf<span class="w"> </span>backup_test.tar.xz
+
+<span class="c1"># Verify contents</span>
+ls<span class="w"> </span>-la<span class="w"> </span>backup_test/
+</code></pre></div>
 <h3 id="organize-backups">Organize Backups</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Create separate backup directory</span>
-</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/backups
-</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
-</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="c1"># Copy backups to centralized location</span>
-</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>cp<span class="w"> </span>project_*<span class="w"> </span>~/backups/
-</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>
-</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="c1"># Clean up old backups (keep last 10)</span>
-</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>ls<span class="w"> </span>-t<span class="w"> </span>~/backups/project_*<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-n<span class="w"> </span>+11<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>rm<span class="w"> </span>-rf
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create separate backup directory</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/backups
+
+<span class="c1"># Copy backups to centralized location</span>
+cp<span class="w"> </span>project_*<span class="w"> </span>~/backups/
+
+<span class="c1"># Clean up old backups (keep last 10)</span>
+ls<span class="w"> </span>-t<span class="w"> </span>~/backups/project_*<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-n<span class="w"> </span>+11<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>rm<span class="w"> </span>-rf
+</code></pre></div>
 <h2 id="see-also">See Also</h2>
 <ul>
 <li><a href="../replace/"><code>fx replace</code></a> - Replace text in files</li>

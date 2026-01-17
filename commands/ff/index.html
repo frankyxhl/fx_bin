@@ -1564,8 +1564,8 @@
 - 📝 Multiple exclusion patterns (repeatable)
 - 🔄 Recursive search with symlink cycle detection</p>
 <h2 id="usage">Usage</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>KEYWORD
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>KEYWORD
+</code></pre></div>
 <h2 id="parameters">Parameters</h2>
 <table>
 <thead>
@@ -1606,207 +1606,207 @@
 <h2 id="examples">Examples</h2>
 <h3 id="basic-usage">Basic Usage</h3>
 <p>Find files containing "test" in their names:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
 <p>Find configuration files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>config
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>config
+</code></pre></div>
 <p>Find all Python files (using partial match):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>.py
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>.py
+</code></pre></div>
 <h3 id="first-match-only">First Match Only</h3>
 <p>Return only the first match (faster):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--first
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--first
+</code></pre></div>
 <p>Find first config file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--first
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--first
+</code></pre></div>
 <h3 id="including-ignored-directories">Including Ignored Directories</h3>
 <p>Search in .git, .venv, node_modules:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--include-ignored
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--include-ignored
+</code></pre></div>
 <h3 id="excluding-directories-and-patterns">Excluding Directories and Patterns</h3>
 <p>Exclude specific directories:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span>cache
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span>cache
+</code></pre></div>
 <p>Exclude glob patterns:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.log&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.log&quot;</span>
+</code></pre></div>
 <p>Combine multiple exclusions:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>src<span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span>cache<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>src<span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span>cache<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span>
+</code></pre></div>
 <h3 id="real-world-scenarios">Real-World Scenarios</h3>
 <h4 id="scenario-1-development-workflow">Scenario 1: Development Workflow</h4>
 <p>Find TODO markers in code:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>TODO<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>TODO<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
+</code></pre></div>
 <p>Find test files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>coverage<span class="w"> </span>--exclude<span class="w"> </span>.nyc_output
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>coverage<span class="w"> </span>--exclude<span class="w"> </span>.nyc_output
+</code></pre></div>
 <p>Find configuration files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--exclude<span class="w"> </span>backup
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--exclude<span class="w"> </span>backup
+</code></pre></div>
 <h4 id="scenario-2-project-cleanup">Scenario 2: Project Cleanup</h4>
 <p>Find backup files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>.bak
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>.bak
+</code></pre></div>
 <p>Find temporary files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>.tmp
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>.tmp
+</code></pre></div>
 <p>Find log files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>.log<span class="w"> </span>--exclude<span class="w"> </span>archive
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>.log<span class="w"> </span>--exclude<span class="w"> </span>archive
+</code></pre></div>
 <h4 id="scenario-3-debugging">Scenario 3: Debugging</h4>
 <p>Find error-related files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>error
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>error
+</code></pre></div>
 <p>Find debug files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>debug
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>debug
+</code></pre></div>
 <p>Find exception files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>exception
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>exception
+</code></pre></div>
 <h4 id="scenario-4-dependency-management">Scenario 4: Dependency Management</h4>
 <p>Find jQuery files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>jquery<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>dist
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>jquery<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>dist
+</code></pre></div>
 <p>Find React components:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>Component<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>build
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>Component<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>build
+</code></pre></div>
 <p>Find library files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>lodash<span class="w"> </span>--exclude<span class="w"> </span>node_modules
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>lodash<span class="w"> </span>--exclude<span class="w"> </span>node_modules
+</code></pre></div>
 <h4 id="scenario-5-configuration-discovery">Scenario 5: Configuration Discovery</h4>
 <p>Find all config files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--include-ignored
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--include-ignored
+</code></pre></div>
 <p>Find environment files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>.env<span class="w"> </span>--exclude<span class="w"> </span>node_modules
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>.env<span class="w"> </span>--exclude<span class="w"> </span>node_modules
+</code></pre></div>
 <p>Find setting files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>settings<span class="w"> </span>--exclude<span class="w"> </span>backup
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>settings<span class="w"> </span>--exclude<span class="w"> </span>backup
+</code></pre></div>
 <h4 id="scenario-6-code-navigation">Scenario 6: Code Navigation</h4>
 <p>Find API files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span>cache<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span>cache<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span>
+</code></pre></div>
 <p>Find service files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>service<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>dist
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>service<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>dist
+</code></pre></div>
 <p>Find model files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>model<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>model<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
+</code></pre></div>
 <h4 id="scenario-7-test-discovery">Scenario 7: Test Discovery</h4>
 <p>Find unit tests:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;*unit*test*&quot;</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;*unit*test*&quot;</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
+</code></pre></div>
 <p>Find integration tests:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;*integration*test*&quot;</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;*integration*test*&quot;</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules
+</code></pre></div>
 <p>Find e2e tests:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;*e2e*test*&quot;</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;*e2e*test*&quot;</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules
+</code></pre></div>
 <h4 id="scenario-8-code-review">Scenario 8: Code Review</h4>
 <p>Find implementation files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>impl<span class="w"> </span>--exclude<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>impl<span class="w"> </span>--exclude<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules
+</code></pre></div>
 <p>Find interface files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>interface<span class="w"> </span>--exclude<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>interface<span class="w"> </span>--exclude<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules
+</code></pre></div>
 <p>Find abstract files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>abstract<span class="w"> </span>--exclude<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>abstract<span class="w"> </span>--exclude<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules
+</code></pre></div>
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="combining-with-other-commands">Combining with Other Commands</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Find and grep file contents</span>
-</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>grep<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;endpoint&quot;</span>
-</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
-</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># Find and analyze sizes</span>
-</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size
-</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>
-</span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="c1"># Find and filter</span>
-</span><span id="__span-34-8"><a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find and grep file contents</span>
+fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>grep<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;endpoint&quot;</span>
+
+<span class="c1"># Find and analyze sizes</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size
+
+<span class="c1"># Find and filter</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified
+</code></pre></div>
 <h3 id="finding-by-extension">Finding by Extension</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># Find all Python files</span>
-</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>.py
-</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>
-</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="c1"># Find all JavaScript files</span>
-</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>.js
-</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>
-</span><span id="__span-35-7"><a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="c1"># Find all markdown files</span>
-</span><span id="__span-35-8"><a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>fx<span class="w"> </span>ff<span class="w"> </span>.md
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find all Python files</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.py
+
+<span class="c1"># Find all JavaScript files</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.js
+
+<span class="c1"># Find all markdown files</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.md
+</code></pre></div>
 <h3 id="quick-file-lookup">Quick File Lookup</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Find file and open it</span>
-</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>vim<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>my_file<span class="w"> </span>--first<span class="k">)</span>
-</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>
-</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="c1"># Find file and display it</span>
-</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>cat<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>README<span class="w"> </span>--first<span class="k">)</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find file and open it</span>
+vim<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>my_file<span class="w"> </span>--first<span class="k">)</span>
+
+<span class="c1"># Find file and display it</span>
+cat<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>README<span class="w"> </span>--first<span class="k">)</span>
+</code></pre></div>
 <h3 id="complex-filtering">Complex Filtering</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1"># Find &quot;api&quot; files but exclude multiple directories</span>
-</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span>cache<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.log&quot;</span>
-</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>
-</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="c1"># Find test files excluding coverage reports</span>
-</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>coverage<span class="w"> </span>--exclude<span class="w"> </span>.nyc_output<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*spec*&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find &quot;api&quot; files but exclude multiple directories</span>
+fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span>cache<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.log&quot;</span>
+
+<span class="c1"># Find test files excluding coverage reports</span>
+fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>coverage<span class="w"> </span>--exclude<span class="w"> </span>.nyc_output<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*spec*&quot;</span>
+</code></pre></div>
 <h3 id="pipeline-integration">Pipeline Integration</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># Chain multiple searches</span>
-</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>grep<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;database&quot;</span>
-</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>
-</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="c1"># Find and count</span>
-</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-</span><span id="__span-38-6"><a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>
-</span><span id="__span-38-7"><a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="c1"># Find and backup</span>
-</span><span id="__span-38-8"><a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a>fx<span class="w"> </span>ff<span class="w"> </span>important.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>backup
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Chain multiple searches</span>
+fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>grep<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;database&quot;</span>
+
+<span class="c1"># Find and count</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+
+<span class="c1"># Find and backup</span>
+fx<span class="w"> </span>ff<span class="w"> </span>important.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>backup
+</code></pre></div>
 <h2 id="performance-tips">Performance Tips</h2>
 <h3 id="speed-up-searches">Speed Up Searches</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># Use --first for quick lookups</span>
-</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>my_file<span class="w"> </span>--first
-</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>
-</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="c1"># Exclude large directories</span>
-</span><span id="__span-39-5"><a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>build
-</span><span id="__span-39-6"><a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>
-</span><span id="__span-39-7"><a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="c1"># Use specific keywords instead of broad patterns</span>
-</span><span id="__span-39-8"><a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;api_v1&quot;</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use --first for quick lookups</span>
+fx<span class="w"> </span>ff<span class="w"> </span>my_file<span class="w"> </span>--first
+
+<span class="c1"># Exclude large directories</span>
+fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>build
+
+<span class="c1"># Use specific keywords instead of broad patterns</span>
+fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;api_v1&quot;</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span>
+</code></pre></div>
 <h3 id="optimize-for-large-projects">Optimize for Large Projects</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Exclude multiple heavy directories</span>
-</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.venv<span class="w"> </span>--exclude<span class="w"> </span>dist<span class="w"> </span>--exclude<span class="w"> </span>build
-</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
-</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># Use extension matching for faster results</span>
-</span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Exclude multiple heavy directories</span>
+fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.venv<span class="w"> </span>--exclude<span class="w"> </span>dist<span class="w"> </span>--exclude<span class="w"> </span>build
+
+<span class="c1"># Use extension matching for faster results</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
+</code></pre></div>
 <h2 id="common-issues">Common Issues</h2>
 <h3 id="too-many-results">Too Many Results</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="c1"># Use --first for quick lookup</span>
-</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--first
-</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>
-</span><span id="__span-41-4"><a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a><span class="c1"># Add exclusions</span>
-</span><span id="__span-41-5"><a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span>cache
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use --first for quick lookup</span>
+fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--first
+
+<span class="c1"># Add exclusions</span>
+fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>build<span class="w"> </span>--exclude<span class="w"> </span>cache
+</code></pre></div>
 <h3 id="no-results-found">No Results Found</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># Check spelling</span>
-</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>configuration<span class="w">  </span><span class="c1"># instead of config</span>
-</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>
-</span><span id="__span-42-4"><a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="c1"># Try partial matches</span>
-</span><span id="__span-42-5"><a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w">  </span><span class="c1"># instead of python</span>
-</span><span id="__span-42-6"><a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a>
-</span><span id="__span-42-7"><a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a><span class="c1"># Include ignored directories</span>
-</span><span id="__span-42-8"><a id="__codelineno-42-8" name="__codelineno-42-8" href="#__codelineno-42-8"></a>fx<span class="w"> </span>ff<span class="w"> </span>my_file<span class="w"> </span>--include-ignored
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check spelling</span>
+fx<span class="w"> </span>ff<span class="w"> </span>configuration<span class="w">  </span><span class="c1"># instead of config</span>
+
+<span class="c1"># Try partial matches</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w">  </span><span class="c1"># instead of python</span>
+
+<span class="c1"># Include ignored directories</span>
+fx<span class="w"> </span>ff<span class="w"> </span>my_file<span class="w"> </span>--include-ignored
+</code></pre></div>
 <h3 id="slow-performance">Slow Performance</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="c1"># Exclude heavy directories</span>
-</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.venv<span class="w"> </span>--exclude<span class="w"> </span>dist
-</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>
-</span><span id="__span-43-4"><a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="c1"># Use --first for quick match</span>
-</span><span id="__span-43-5"><a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>my_file<span class="w"> </span>--first
-</span><span id="__span-43-6"><a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a>
-</span><span id="__span-43-7"><a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a><span class="c1"># Be more specific with keyword</span>
-</span><span id="__span-43-8"><a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;api_v1_user&quot;</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Exclude heavy directories</span>
+fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.venv<span class="w"> </span>--exclude<span class="w"> </span>dist
+
+<span class="c1"># Use --first for quick match</span>
+fx<span class="w"> </span>ff<span class="w"> </span>my_file<span class="w"> </span>--first
+
+<span class="c1"># Be more specific with keyword</span>
+fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;api_v1_user&quot;</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span>
+</code></pre></div>
 <h2 id="see-also">See Also</h2>
 <ul>
 <li><a href="../fff/"><code>fx fff</code></a> - Find first file matching keyword</li>

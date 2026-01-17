@@ -1714,8 +1714,8 @@
 - 🎯 Perfect for daily workflows
 - 🔄 Consistent daily structure</p>
 <h2 id="usage">Usage</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>fx<span class="w"> </span>today<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>today<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
 <h2 id="parameters">Parameters</h2>
 <table>
 <thead>
@@ -1768,268 +1768,268 @@
 <h2 id="examples">Examples</h2>
 <h3 id="basic-usage">Basic Usage</h3>
 <p>Create today's workspace and start new shell:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>fx<span class="w"> </span>today
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>today
+</code></pre></div>
 <p><strong>Output:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Created workspace: ~/Downloads/20260110
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Starting new shell...
-</span></code></pre></div></p>
+<div class="language-text highlight"><pre><span></span><code>Created workspace: ~/Downloads/20260110
+Starting new shell...
+</code></pre></div></p>
 <p>Create workspace without starting shell:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>fx<span class="w"> </span>today<span class="w"> </span>--no-exec
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>today<span class="w"> </span>--no-exec
+</code></pre></div>
 <h3 id="path-only-output">Path-Only Output</h3>
 <p>Output path for shell integration:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>fx<span class="w"> </span>today<span class="w"> </span>--cd
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>today<span class="w"> </span>--cd
+</code></pre></div>
 <p><strong>Output:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/home/user/Downloads/20260110
-</span></code></pre></div></p>
+<div class="language-text highlight"><pre><span></span><code>/home/user/Downloads/20260110
+</code></pre></div></p>
 <h3 id="custom-base-directory">Custom Base Directory</h3>
 <p>Use custom base directory:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Projects
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Documents
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>/tmp/workspaces
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Projects
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Documents
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>/tmp/workspaces
+</code></pre></div>
 <h3 id="custom-date-format">Custom Date Format</h3>
 <p>Use custom date format:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Format: YYYY-MM-DD</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Creates: ~/Downloads/2026-01-10</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Format: YYYYMMDD</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Creates: ~/Downloads/20260110</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Format: YYYYMM</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y%m&quot;</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Creates: ~/Downloads/202601</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Format: YYYY-MM-DD</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
+<span class="c1"># Creates: ~/Downloads/2026-01-10</span>
+
+<span class="c1"># Format: YYYYMMDD</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
+<span class="c1"># Creates: ~/Downloads/20260110</span>
+
+<span class="c1"># Format: YYYYMM</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y%m&quot;</span>
+<span class="c1"># Creates: ~/Downloads/202601</span>
+</code></pre></div>
 <h3 id="real-world-scenarios">Real-World Scenarios</h3>
 <h4 id="scenario-1-daily-development-workflow">Scenario 1: Daily Development Workflow</h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Start daily development session</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>fx<span class="w"> </span>today
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># In the new shell, work on today&#39;s tasks</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Create files, write code, etc.</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># All work is automatically organized by date</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># When done, exit shell</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">exit</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Return to previous directory</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Start daily development session</span>
+fx<span class="w"> </span>today
+
+<span class="c1"># In the new shell, work on today&#39;s tasks</span>
+<span class="c1"># Create files, write code, etc.</span>
+<span class="c1"># All work is automatically organized by date</span>
+
+<span class="c1"># When done, exit shell</span>
+<span class="nb">exit</span>
+
+<span class="c1"># Return to previous directory</span>
+</code></pre></div>
 <h4 id="scenario-2-shell-integration">Scenario 2: Shell Integration</h4>
 <p>Add to <code>.bashrc</code> or <code>.zshrc</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Create alias for quick access</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">&#39;fx today&#39;</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ftcd</span><span class="o">=</span><span class="s1">&#39;cd &quot;$(fx today --cd)&quot;&#39;</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Usage</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>ft<span class="w">          </span><span class="c1"># Create workspace and start shell</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>ftcd<span class="w">        </span><span class="c1"># Just change to today&#39;s workspace</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create alias for quick access</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">&#39;fx today&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftcd</span><span class="o">=</span><span class="s1">&#39;cd &quot;$(fx today --cd)&quot;&#39;</span>
+
+<span class="c1"># Usage</span>
+ft<span class="w">          </span><span class="c1"># Create workspace and start shell</span>
+ftcd<span class="w">        </span><span class="c1"># Just change to today&#39;s workspace</span>
+</code></pre></div>
 <h4 id="scenario-3-daily-documentation">Scenario 3: Daily Documentation</h4>
 <p>Organize daily documentation:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Create workspace for today&#39;s docs</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Documents
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Write documentation in workspace</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Automatically organized by date</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create workspace for today&#39;s docs</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Documents
+
+<span class="c1"># Write documentation in workspace</span>
+<span class="c1"># Automatically organized by date</span>
+</code></pre></div>
 <h4 id="scenario-4-research-notes">Scenario 4: Research Notes</h4>
 <p>Organize daily research:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Create workspace for research</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Research
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># All notes for today go here</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Easy to find later by date</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create workspace for research</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Research
+
+<span class="c1"># All notes for today go here</span>
+<span class="c1"># Easy to find later by date</span>
+</code></pre></div>
 <h4 id="scenario-5-meeting-notes">Scenario 5: Meeting Notes</h4>
 <p>Organize daily meeting notes:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create workspace for meetings</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Meetings
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># All meeting notes organized by date</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Easy to review chronologically</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create workspace for meetings</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Meetings
+
+<span class="c1"># All meeting notes organized by date</span>
+<span class="c1"># Easy to review chronologically</span>
+</code></pre></div>
 <h4 id="scenario-6-testing-workspace">Scenario 6: Testing Workspace</h4>
 <p>Create daily testing workspace:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Create workspace for testing</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Testing
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># All test results organized by date</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Easy to compare results across days</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create workspace for testing</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Testing
+
+<span class="c1"># All test results organized by date</span>
+<span class="c1"># Easy to compare results across days</span>
+</code></pre></div>
 <h4 id="scenario-7-backup-workspace">Scenario 7: Backup Workspace</h4>
 <p>Create daily backup workspace:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Create workspace for backups</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Backups
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># All backups organized by date</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Easy to rotate and clean up</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create workspace for backups</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Backups
+
+<span class="c1"># All backups organized by date</span>
+<span class="c1"># Easy to rotate and clean up</span>
+</code></pre></div>
 <h4 id="scenario-8-logging-workspace">Scenario 8: Logging Workspace</h4>
 <p>Organize daily logs:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Create workspace for logs</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Logs
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># All logs organized by date</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Easy to search and analyze</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create workspace for logs</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Logs
+
+<span class="c1"># All logs organized by date</span>
+<span class="c1"># Easy to search and analyze</span>
+</code></pre></div>
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="shell-aliases">Shell Aliases</h3>
 <p>Create aliases in <code>.bashrc</code> or <code>.zshrc</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Quick workspace creation</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">&#39;fx today&#39;</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Change to workspace</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ftcd</span><span class="o">=</span><span class="s1">&#39;cd &quot;$(fx today --cd)&quot;&#39;</span>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Workspace with custom base</span>
-</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ftp</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Projects&#39;</span>
-</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
-</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Workspace for documents</span>
-</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ftd</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Documents&#39;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Quick workspace creation</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">&#39;fx today&#39;</span>
+
+<span class="c1"># Change to workspace</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftcd</span><span class="o">=</span><span class="s1">&#39;cd &quot;$(fx today --cd)&quot;&#39;</span>
+
+<span class="c1"># Workspace with custom base</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftp</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Projects&#39;</span>
+
+<span class="c1"># Workspace for documents</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftd</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Documents&#39;</span>
+</code></pre></div>
 <h3 id="daily-workflows">Daily Workflows</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># Daily workflow script</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Create workspace</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
-</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
-</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
-</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c1"># Create daily TODO list</span>
-</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>TODO.md<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
-</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="s"># TODO - $(date +%Y-%m-%d)</span>
-</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>
-</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="s">## Tasks</span>
-</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="s">- [ ] Task 1</span>
-</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="s">- [ ] Task 2</span>
-</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
-</span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="s">## Notes</span>
-</span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="s">EOF</span>
-</span><span id="__span-17-18"><a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>
-</span><span id="__span-17-19"><a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="c1"># Open TODO in editor</span>
-</span><span id="__span-17-20"><a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>vim<span class="w"> </span>TODO.md
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Daily workflow script</span>
+
+<span class="c1"># Create workspace</span>
+<span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
+
+<span class="c1"># Create daily TODO list</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>TODO.md<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+<span class="s"># TODO - $(date +%Y-%m-%d)</span>
+
+<span class="s">## Tasks</span>
+<span class="s">- [ ] Task 1</span>
+<span class="s">- [ ] Task 2</span>
+
+<span class="s">## Notes</span>
+<span class="s">EOF</span>
+
+<span class="c1"># Open TODO in editor</span>
+vim<span class="w"> </span>TODO.md
+</code></pre></div>
 <h3 id="script-integration">Script Integration</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Script that uses daily workspace</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Get workspace path</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Create subdirectories</span>
-</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>/<span class="o">{</span>src,test,docs<span class="o">}</span>
-</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
-</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Copy templates</span>
-</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>cp<span class="w"> </span>~/templates/*.py<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">/src/&quot;</span>
-</span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
-</span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># Start working</span>
-</span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
-</span><span id="__span-18-15"><a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>vim<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">/src/main.py&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Script that uses daily workspace</span>
+
+<span class="c1"># Get workspace path</span>
+<span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
+
+<span class="c1"># Create subdirectories</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>/<span class="o">{</span>src,test,docs<span class="o">}</span>
+
+<span class="c1"># Copy templates</span>
+cp<span class="w"> </span>~/templates/*.py<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">/src/&quot;</span>
+
+<span class="c1"># Start working</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
+vim<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">/src/main.py&quot;</span>
+</code></pre></div>
 <h3 id="dry-run-preview">Dry-Run Preview</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Preview workspace creation without creating</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--dry-run
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Output:</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1"># Would create: ~/Downloads/20260110</span>
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1"># (No directory actually created)</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Preview workspace creation without creating</span>
+fx<span class="w"> </span>today<span class="w"> </span>--dry-run
+
+<span class="c1"># Output:</span>
+<span class="c1"># Would create: ~/Downloads/20260110</span>
+<span class="c1"># (No directory actually created)</span>
+</code></pre></div>
 <h3 id="multiple-workspaces">Multiple Workspaces</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Create different workspaces for different purposes</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Work<span class="w">           </span><span class="c1"># Work workspace</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Personal<span class="w">       </span><span class="c1"># Personal workspace</span>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Projects<span class="w">      </span><span class="c1"># Project workspace</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create different workspaces for different purposes</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Work<span class="w">           </span><span class="c1"># Work workspace</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Personal<span class="w">       </span><span class="c1"># Personal workspace</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Projects<span class="w">      </span><span class="c1"># Project workspace</span>
+</code></pre></div>
 <h3 id="date-formats-reference">Date Formats Reference</h3>
 <p>Common date formats (strftime):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Daily: 20260110</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Standard: 2026-01-10</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
-</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Short: 202601</span>
-</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y%m&quot;</span>
-</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
-</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="c1"># Long: Saturday, January 10, 2026</span>
-</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%A, %B %d, %Y&quot;</span>
-</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
-</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="c1"># ISO Week: 2026-W02</span>
-</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-W%V&quot;</span>
-</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
-</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="c1"># Day of Week: 2026-Saturday</span>
-</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-%A&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Daily: 20260110</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
+
+<span class="c1"># Standard: 2026-01-10</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
+
+<span class="c1"># Short: 202601</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y%m&quot;</span>
+
+<span class="c1"># Long: Saturday, January 10, 2026</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%A, %B %d, %Y&quot;</span>
+
+<span class="c1"># ISO Week: 2026-W02</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-W%V&quot;</span>
+
+<span class="c1"># Day of Week: 2026-Saturday</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-%A&quot;</span>
+</code></pre></div>
 <h3 id="combining-with-other-commands">Combining with Other Commands</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Create workspace and copy files</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>cp<span class="w"> </span>~/template/*<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">/&quot;</span>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
-</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># Create workspace and initialize project</span>
-</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Projects
-</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span>
-</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>git<span class="w"> </span>init
-</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>touch<span class="w"> </span>README.md
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create workspace and copy files</span>
+<span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
+cp<span class="w"> </span>~/template/*<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">/&quot;</span>
+
+<span class="c1"># Create workspace and initialize project</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Projects
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span>
+git<span class="w"> </span>init
+touch<span class="w"> </span>README.md
+</code></pre></div>
 <h2 id="advanced-usage">Advanced Usage</h2>
 <h3 id="custom-shell">Custom Shell</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># Create workspace with custom shell</span>
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>
-</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="c1"># Start zsh instead of default shell</span>
-</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exec</span><span class="w"> </span>zsh
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Create workspace with custom shell</span>
+
+<span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
+
+<span class="c1"># Start zsh instead of default shell</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exec</span><span class="w"> </span>zsh
+</code></pre></div>
 <h3 id="workspace-templates">Workspace Templates</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># Create workspace from template</span>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>
-</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="c1"># Copy template files</span>
-</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-d<span class="w"> </span>~/templates/default<span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="w">  </span>cp<span class="w"> </span>-r<span class="w"> </span>~/templates/default/*<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">/&quot;</span>
-</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="k">fi</span>
-</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>
-</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="c1"># Customize workspace</span>
-</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
-</span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/DATE/</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">/g&quot;</span><span class="w"> </span>README.md
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Create workspace from template</span>
+
+<span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
+
+<span class="c1"># Copy template files</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-d<span class="w"> </span>~/templates/default<span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span>cp<span class="w"> </span>-r<span class="w"> </span>~/templates/default/*<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">/&quot;</span>
+<span class="k">fi</span>
+
+<span class="c1"># Customize workspace</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
+sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/DATE/</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">/g&quot;</span><span class="w"> </span>README.md
+</code></pre></div>
 <h3 id="workspace-organization">Workspace Organization</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1"># Create organized workspace structure</span>
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
-</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>
-</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="c1"># Create standard directories</span>
-</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>/<span class="o">{</span>src,test,docs,build<span class="o">}</span>
-</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>
-</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="c1"># Create standard files</span>
-</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>touch<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>/<span class="o">{</span>README.md,TODO.md,CHANGELOG.md<span class="o">}</span>
-</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>
-</span><span id="__span-25-12"><a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a><span class="c1"># Initialize git if desired</span>
-</span><span id="__span-25-13"><a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>init
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Create organized workspace structure</span>
+
+<span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
+
+<span class="c1"># Create standard directories</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>/<span class="o">{</span>src,test,docs,build<span class="o">}</span>
+
+<span class="c1"># Create standard files</span>
+touch<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>/<span class="o">{</span>README.md,TODO.md,CHANGELOG.md<span class="o">}</span>
+
+<span class="c1"># Initialize git if desired</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>init
+</code></pre></div>
 <h3 id="daily-backup">Daily Backup</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1"># Daily backup routine</span>
-</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
-</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Create workspace for backup</span>
-</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Backups<span class="k">)</span>
-</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
-</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>
-</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="c1"># Create backup</span>
-</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>fx<span class="w"> </span>backup<span class="w"> </span>~/project_dir<span class="w"> </span>--compress
-</span><span id="__span-26-10"><a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>
-</span><span id="__span-26-11"><a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="c1"># Link backup</span>
-</span><span id="__span-26-12"><a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>ln<span class="w"> </span>-s<span class="w"> </span>~/project_dir_*.tar.xz<span class="w"> </span>project_backup.tar.xz
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Daily backup routine</span>
+
+<span class="c1"># Create workspace for backup</span>
+<span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Backups<span class="k">)</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
+
+<span class="c1"># Create backup</span>
+fx<span class="w"> </span>backup<span class="w"> </span>~/project_dir<span class="w"> </span>--compress
+
+<span class="c1"># Link backup</span>
+ln<span class="w"> </span>-s<span class="w"> </span>~/project_dir_*.tar.xz<span class="w"> </span>project_backup.tar.xz
+</code></pre></div>
 <h2 id="performance-notes">Performance Notes</h2>
 <ul>
 <li><strong>Speed</strong>: Instant directory creation</li>
@@ -2039,89 +2039,89 @@
 </ul>
 <h2 id="common-issues">Common Issues</h2>
 <h3 id="permission-denied">Permission Denied</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># If base directory is not writable</span>
-</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>/protected/path
-</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
-</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># Error: Permission denied</span>
-</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>
-</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="c1"># Solution: Use writable directory</span>
-</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Downloads
-</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>/tmp
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># If base directory is not writable</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>/protected/path
+
+<span class="c1"># Error: Permission denied</span>
+
+<span class="c1"># Solution: Use writable directory</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Downloads
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>/tmp
+</code></pre></div>
 <h3 id="shell-not-found">Shell Not Found</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># If default shell is not found</span>
-</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>fx<span class="w"> </span>today
-</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
-</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Error: Shell not found</span>
-</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>
-</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="c1"># Solution: Specify shell explicitly</span>
-</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exec</span><span class="w"> </span>/bin/bash
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># If default shell is not found</span>
+fx<span class="w"> </span>today
+
+<span class="c1"># Error: Shell not found</span>
+
+<span class="c1"># Solution: Specify shell explicitly</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exec</span><span class="w"> </span>/bin/bash
+</code></pre></div>
 <h3 id="directory-already-exists">Directory Already Exists</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># If workspace already exists</span>
-</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>fx<span class="w"> </span>today
-</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
-</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="c1"># Output: Workspace already exists: ~/Downloads/20260110</span>
-</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="c1"># (No error, just notification)</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># If workspace already exists</span>
+fx<span class="w"> </span>today
+
+<span class="c1"># Output: Workspace already exists: ~/Downloads/20260110</span>
+<span class="c1"># (No error, just notification)</span>
+</code></pre></div>
 <h3 id="invalid-date-format">Invalid Date Format</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># If date format is invalid</span>
-</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;invalid&quot;</span>
-</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
-</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Error: Invalid date format</span>
-</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>
-</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="c1"># Solution: Use valid strftime format</span>
-</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># If date format is invalid</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;invalid&quot;</span>
+
+<span class="c1"># Error: Invalid date format</span>
+
+<span class="c1"># Solution: Use valid strftime format</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
+</code></pre></div>
 <h3 id="base-directory-not-found">Base Directory Not Found</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># If base directory doesn&#39;t exist</span>
-</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/NonExistent
-</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
-</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="c1"># Error: Base directory not found</span>
-</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>
-</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="c1"># Solution: Create base directory first</span>
-</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/NonExistent
-</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/NonExistent
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># If base directory doesn&#39;t exist</span>
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/NonExistent
+
+<span class="c1"># Error: Base directory not found</span>
+
+<span class="c1"># Solution: Create base directory first</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/NonExistent
+fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/NonExistent
+</code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="consistent-workflow">Consistent Workflow</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Always use same base directory</span>
-</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Work&#39;</span>
-</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
-</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># All workspaces in ~/Work/</span>
-</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="c1"># Easy to find and backup</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Always use same base directory</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Work&#39;</span>
+
+<span class="c1"># All workspaces in ~/Work/</span>
+<span class="c1"># Easy to find and backup</span>
+</code></pre></div>
 <h3 id="organize-by-project">Organize by Project</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Different base for different projects</span>
-</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ftwork</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Work&#39;</span>
-</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ftpersonal</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Personal&#39;</span>
-</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ftprojects</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Projects&#39;</span>
-</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>
-</span><span id="__span-33-6"><a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="c1"># Clear separation of concerns</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Different base for different projects</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftwork</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Work&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftpersonal</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Personal&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftprojects</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Projects&#39;</span>
+
+<span class="c1"># Clear separation of concerns</span>
+</code></pre></div>
 <h3 id="use-daily-todo">Use Daily TODO</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Create TODO in workspace</span>
-</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span>
-</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>TODO.md<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
-</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="s"># TODO - $(date +%Y-%m-%d)</span>
-</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>
-</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="s">- [ ] Task 1</span>
-</span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="s">- [ ] Task 2</span>
-</span><span id="__span-34-8"><a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a><span class="s">EOF</span>
-</span><span id="__span-34-9"><a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>
-</span><span id="__span-34-10"><a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="c1"># Update throughout day</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create TODO in workspace</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>TODO.md<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+<span class="s"># TODO - $(date +%Y-%m-%d)</span>
+
+<span class="s">- [ ] Task 1</span>
+<span class="s">- [ ] Task 2</span>
+<span class="s">EOF</span>
+
+<span class="c1"># Update throughout day</span>
+</code></pre></div>
 <h3 id="clean-up-old-workspaces">Clean Up Old Workspaces</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># Remove workspaces older than N days</span>
-</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>find<span class="w"> </span>~/Work<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Remove workspaces older than N days</span>
+find<span class="w"> </span>~/Work<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+</code></pre></div>
 <h3 id="backup-workspaces">Backup Workspaces</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Backup all workspaces</span>
-</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>tar<span class="w"> </span>-czf<span class="w"> </span>workspaces_backup_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span>~/Work/
-</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>
-</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="c1"># Store in backup location</span>
-</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>mv<span class="w"> </span>workspaces_backup_*.tar.gz<span class="w"> </span>~/Backup/
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup all workspaces</span>
+tar<span class="w"> </span>-czf<span class="w"> </span>workspaces_backup_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span>~/Work/
+
+<span class="c1"># Store in backup location</span>
+mv<span class="w"> </span>workspaces_backup_*.tar.gz<span class="w"> </span>~/Backup/
+</code></pre></div>
 <h2 id="see-also">See Also</h2>
 <ul>
 <li><a href="../root/"><code>fx root</code></a> - Find Git project root</li>

@@ -1503,8 +1503,8 @@
 - 📁 Include hidden files optionally
 - 🔄 Recursive directory size calculation</p>
 <h2 id="usage">Usage</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>fx<span class="w"> </span>size<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span><span class="o">[</span>PATHS...<span class="o">]</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span><span class="o">[</span>PATHS...<span class="o">]</span>
+</code></pre></div>
 <h2 id="parameters">Parameters</h2>
 <table>
 <thead>
@@ -1551,118 +1551,118 @@
 <h2 id="examples">Examples</h2>
 <h3 id="basic-usage">Basic Usage</h3>
 <p>Show sizes in the current directory:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>.
+</code></pre></div>
 <p><strong>Output:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1.2 MB    fx_bin/
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>456 KB     docs/
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>12.3 KB    README.md
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Total: 1.7 MB
-</span></code></pre></div></p>
+<div class="language-text highlight"><pre><span></span><code>1.2 MB    fx_bin/
+456 KB     docs/
+12.3 KB    README.md
+Total: 1.7 MB
+</code></pre></div></p>
 <p>Analyze specific directories:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>fx<span class="w"> </span>size<span class="w"> </span>/path/to/dir1<span class="w"> </span>/path/to/dir2
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>/path/to/dir1<span class="w"> </span>/path/to/dir2
+</code></pre></div>
 <h3 id="limiting-results">Limiting Results</h3>
 <p>Show top 10 largest files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <p>Show top 5 largest directories:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
+</code></pre></div>
 <h3 id="size-units">Size Units</h3>
 <p>Display sizes in MB:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--unit<span class="w"> </span>MB
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--unit<span class="w"> </span>MB
+</code></pre></div>
 <p>Display sizes in KB:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--unit<span class="w"> </span>KB
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--unit<span class="w"> </span>KB
+</code></pre></div>
 <p>Display sizes in GB:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--unit<span class="w"> </span>GB
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--unit<span class="w"> </span>GB
+</code></pre></div>
 <h3 id="sorting">Sorting</h3>
 <p>Sort by size ascending (smallest first):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--sort<span class="w"> </span>asc
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--sort<span class="w"> </span>asc
+</code></pre></div>
 <p>Sort by size descending (largest first - default):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--sort<span class="w"> </span>desc
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--sort<span class="w"> </span>desc
+</code></pre></div>
 <h3 id="hidden-files">Hidden Files</h3>
 <p>Include hidden files in analysis:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--all
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--all
+</code></pre></div>
 <h3 id="real-world-scenarios">Real-World Scenarios</h3>
 <h4 id="scenario-1-find-large-files">Scenario 1: Find Large Files</h4>
 <p>Find the 20 largest files in a project:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span><span class="w"> </span>--sort<span class="w"> </span>desc
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span><span class="w"> </span>--sort<span class="w"> </span>desc
+</code></pre></div>
 <h4 id="scenario-2-analyze-log-files">Scenario 2: Analyze Log Files</h4>
 <p>Find largest log files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Find log files</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>.log<span class="w"> </span>--exclude<span class="w"> </span>archive
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Analyze their sizes</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>.log<span class="w"> </span>--exclude<span class="w"> </span>archive<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find log files</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.log<span class="w"> </span>--exclude<span class="w"> </span>archive
+
+<span class="c1"># Analyze their sizes</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.log<span class="w"> </span>--exclude<span class="w"> </span>archive<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+</code></pre></div>
 <h4 id="scenario-3-cleanup-planning">Scenario 3: Cleanup Planning</h4>
 <p>Identify directories taking most space:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Find top 10 largest directories</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Analyze specific directories</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>fx<span class="w"> </span>size<span class="w"> </span>node_modules/
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>fx<span class="w"> </span>size<span class="w"> </span>.venv/
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>fx<span class="w"> </span>size<span class="w"> </span>dist/
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find top 10 largest directories</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+
+<span class="c1"># Analyze specific directories</span>
+fx<span class="w"> </span>size<span class="w"> </span>node_modules/
+fx<span class="w"> </span>size<span class="w"> </span>.venv/
+fx<span class="w"> </span>size<span class="w"> </span>dist/
+</code></pre></div>
 <h4 id="scenario-4-disk-usage-summary">Scenario 4: Disk Usage Summary</h4>
 <p>Get total size of current directory:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Get total (last line shows total)</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Or count specific file types</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.js&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Get total (last line shows total)</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
+
+<span class="c1"># Or count specific file types</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.js&quot;</span>
+</code></pre></div>
 <h4 id="scenario-5-compare-directories">Scenario 5: Compare Directories</h4>
 <p>Compare sizes of multiple directories:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Compare three directories</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Project A: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>project_a<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Project B: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>project_b<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Project C: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>project_c<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Compare three directories</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Project A: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>project_a<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Project B: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>project_b<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Project C: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>project_c<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="combining-with-other-commands">Combining with Other Commands</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Find and analyze large Python files</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-exec<span class="w"> </span>fx<span class="w"> </span>size<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Analyze only files matching a pattern</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.log&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find and analyze large Python files</span>
+find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-exec<span class="w"> </span>fx<span class="w"> </span>size<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+
+<span class="c1"># Analyze only files matching a pattern</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.log&quot;</span>
+</code></pre></div>
 <h3 id="finding-space-hogs">Finding Space Hogs</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Find directories over 100MB</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="nv">size</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$size</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;GB&quot;</span>*<span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$size</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;10&quot;</span>*<span class="s2">&quot;MB&quot;</span>*<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">: </span><span class="nv">$size</span><span class="s2">&quot;</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">  </span><span class="k">fi</span>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="k">done</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find directories over 100MB</span>
+<span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nv">size</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$size</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;GB&quot;</span>*<span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$size</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;10&quot;</span>*<span class="s2">&quot;MB&quot;</span>*<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">: </span><span class="nv">$size</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="k">fi</span>
+<span class="k">done</span>
+</code></pre></div>
 <h3 id="recursive-size-calculation">Recursive Size Calculation</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Get total size of all subdirectories</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="k">done</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Get total size of all subdirectories</span>
+<span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
 <h3 id="size-comparison-script">Size Comparison Script</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># Compare sizes before and after operations</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="nv">before_size</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1"># ... perform operations ...</span>
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="nv">after_size</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span>
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
-</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Before: </span><span class="nv">$before_size</span><span class="s2">&quot;</span>
-</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;After:  </span><span class="nv">$after_size</span><span class="s2">&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Compare sizes before and after operations</span>
+<span class="nv">before_size</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span>
+
+<span class="c1"># ... perform operations ...</span>
+
+<span class="nv">after_size</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Before: </span><span class="nv">$before_size</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;After:  </span><span class="nv">$after_size</span><span class="s2">&quot;</span>
+</code></pre></div>
 <h2 id="performance-notes">Performance Notes</h2>
 <ul>
 <li><strong>Large directories</strong>: Efficiently handles directories with thousands of files</li>
@@ -1672,34 +1672,34 @@
 </ul>
 <h2 id="common-issues">Common Issues</h2>
 <h3 id="permission-denied">Permission Denied</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Use sudo to analyze protected directories</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>sudo<span class="w"> </span>fx<span class="w"> </span>size<span class="w"> </span>/protected/path
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Or check permissions</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>ls<span class="w"> </span>-la<span class="w"> </span>/path/to/directory
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use sudo to analyze protected directories</span>
+sudo<span class="w"> </span>fx<span class="w"> </span>size<span class="w"> </span>/protected/path
+
+<span class="c1"># Or check permissions</span>
+ls<span class="w"> </span>-la<span class="w"> </span>/path/to/directory
+</code></pre></div>
 <h3 id="slow-performance">Slow Performance</h3>
 <p>For very large directory trees:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Use limit to reduce output</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Use pattern to filter</span>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
-</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
-</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Use specific paths instead of full recursion</span>
-</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>fx<span class="w"> </span>size<span class="w"> </span>src/<span class="w"> </span>tests/<span class="w"> </span>docs/
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use limit to reduce output</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+
+<span class="c1"># Use pattern to filter</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+
+<span class="c1"># Use specific paths instead of full recursion</span>
+fx<span class="w"> </span>size<span class="w"> </span>src/<span class="w"> </span>tests/<span class="w"> </span>docs/
+</code></pre></div>
 <h3 id="inaccurate-sizes">Inaccurate Sizes</h3>
 <p>If sizes seem incorrect:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Check for hidden files</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--all
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Verify with system command</span>
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>.
-</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
-</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># Use recursive mode for directories</span>
-</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check for hidden files</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--all
+
+<span class="c1"># Verify with system command</span>
+du<span class="w"> </span>-sh<span class="w"> </span>.
+
+<span class="c1"># Use recursive mode for directories</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive
+</code></pre></div>
 <h2 id="see-also">See Also</h2>
 <ul>
 <li><a href="../files/"><code>fx files</code></a> - Count files in directories</li>

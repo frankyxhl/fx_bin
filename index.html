@@ -1453,41 +1453,41 @@
 <hr />
 <h2 id="installation">Installation</h2>
 <h3 id="via-pip-recommended">Via pip (Recommended)</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
+</code></pre></div>
 <h3 id="via-pipx-for-isolated-installation">Via pipx (For Isolated Installation)</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>fx-bin
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Upgrade to latest version</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>pipx<span class="w"> </span>upgrade<span class="w"> </span>fx-bin
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>fx-bin
+
+<span class="c1"># Upgrade to latest version</span>
+pipx<span class="w"> </span>upgrade<span class="w"> </span>fx-bin
+</code></pre></div>
 <h3 id="from-source">From Source</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/frankyxhl/fx_bin.git
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>fx_bin
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>poetry<span class="w"> </span>install
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>poetry<span class="w"> </span>run<span class="w"> </span>fx<span class="w"> </span>--help
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/frankyxhl/fx_bin.git
+<span class="nb">cd</span><span class="w"> </span>fx_bin
+poetry<span class="w"> </span>install
+poetry<span class="w"> </span>run<span class="w"> </span>fx<span class="w"> </span>--help
+</code></pre></div>
 <hr />
 <h2 id="quick-preview">Quick Preview</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Show help and available commands</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>fx<span class="w"> </span>--help<span class="w">              </span><span class="c1"># Same as fx -h</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>fx<span class="w"> </span>list<span class="w">                 </span><span class="c1"># Show all commands</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Count Python files</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Find large files</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span>--unit<span class="w"> </span>MB
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Find files containing keyword</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>fx<span class="w"> </span>ff<span class="w"> </span>TODO
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Filter documents by extension</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>fx<span class="w"> </span>filter<span class="w"> </span>~/Documents<span class="w"> </span><span class="s2">&quot;pdf,docx&quot;</span><span class="w"> </span>--format<span class="w"> </span>detailed
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Safe text replacement</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span><span class="s2">&quot;new_text&quot;</span><span class="w"> </span>file.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Show help and available commands</span>
+fx<span class="w"> </span>--help<span class="w">              </span><span class="c1"># Same as fx -h</span>
+fx<span class="w"> </span>list<span class="w">                 </span><span class="c1"># Show all commands</span>
+
+<span class="c1"># Count Python files</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+
+<span class="c1"># Find large files</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span>--unit<span class="w"> </span>MB
+
+<span class="c1"># Find files containing keyword</span>
+fx<span class="w"> </span>ff<span class="w"> </span>TODO
+
+<span class="c1"># Filter documents by extension</span>
+fx<span class="w"> </span>filter<span class="w"> </span>~/Documents<span class="w"> </span><span class="s2">&quot;pdf,docx&quot;</span><span class="w"> </span>--format<span class="w"> </span>detailed
+
+<span class="c1"># Safe text replacement</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span><span class="s2">&quot;new_text&quot;</span><span class="w"> </span>file.txt
+</code></pre></div>
 <hr />
 <h2 id="commands">Commands</h2>
 <table>
@@ -1571,38 +1571,38 @@
 <hr />
 <h2 id="real-world-use-cases">Real-World Use Cases</h2>
 <h3 id="development-workflow">Development Workflow</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Start your daily workspace</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>fx<span class="w"> </span>today
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Count Python files</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Find recently modified files</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;py,js,ts&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Locate TODO markers</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>fx<span class="w"> </span>ff<span class="w"> </span>TODO<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Start your daily workspace</span>
+fx<span class="w"> </span>today
+
+<span class="c1"># Count Python files</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive
+
+<span class="c1"># Find recently modified files</span>
+fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;py,js,ts&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+
+<span class="c1"># Locate TODO markers</span>
+fx<span class="w"> </span>ff<span class="w"> </span>TODO<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
+</code></pre></div>
 <h3 id="project-cleanup">Project Cleanup</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Find and analyze large log files</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>.log<span class="w"> </span>--exclude<span class="w"> </span>archive<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Identify backup files</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>.bak<span class="w"> </span>--exclude<span class="w"> </span>node_modules
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Count configuration files</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>fx<span class="w"> </span>files<span class="w"> </span>/etc
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find and analyze large log files</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.log<span class="w"> </span>--exclude<span class="w"> </span>archive<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size
+
+<span class="c1"># Identify backup files</span>
+fx<span class="w"> </span>ff<span class="w"> </span>.bak<span class="w"> </span>--exclude<span class="w"> </span>node_modules
+
+<span class="c1"># Count configuration files</span>
+fx<span class="w"> </span>files<span class="w"> </span>/etc
+</code></pre></div>
 <h3 id="version-updates">Version Updates</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Backup before changes</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>project_dir<span class="w"> </span>--compress
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Update version strings</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;version=&#39;1.0.0&#39;&quot;</span><span class="w"> </span><span class="s2">&quot;version=&#39;2.0.0&#39;&quot;</span><span class="w"> </span>*.py
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify changes</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;version=&#39;2.0.0&#39;&quot;</span><span class="w"> </span>.<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup before changes</span>
+fx<span class="w"> </span>backup<span class="w"> </span>project_dir<span class="w"> </span>--compress
+
+<span class="c1"># Update version strings</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;version=&#39;1.0.0&#39;&quot;</span><span class="w"> </span><span class="s2">&quot;version=&#39;2.0.0&#39;&quot;</span><span class="w"> </span>*.py
+
+<span class="c1"># Verify changes</span>
+grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;version=&#39;2.0.0&#39;&quot;</span><span class="w"> </span>.<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+</code></pre></div>
 <hr />
 <h2 id="contributing">Contributing</h2>
 <p>We welcome contributions! See the <a href="contributing/">Contributing Guide</a> for details.</p>

@@ -1469,8 +1469,8 @@
 - 🔄 Returns single result immediately
 - 📝 Uses smart exclusions (.git, .venv, node_modules)</p>
 <h2 id="usage">Usage</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>fx<span class="w"> </span>fff<span class="w"> </span>KEYWORD
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>fff<span class="w"> </span>KEYWORD
+</code></pre></div>
 <h2 id="parameters">Parameters</h2>
 <table>
 <thead>
@@ -1493,109 +1493,109 @@
 <h2 id="examples">Examples</h2>
 <h3 id="basic-usage">Basic Usage</h3>
 <p>Find first file with "test" in name:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>fx<span class="w"> </span>fff<span class="w"> </span><span class="nb">test</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>fff<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
 <p>Find first configuration file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>fx<span class="w"> </span>fff<span class="w"> </span>config
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>fff<span class="w"> </span>config
+</code></pre></div>
 <p>Find first Python file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>fx<span class="w"> </span>fff<span class="w"> </span>.py
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>fff<span class="w"> </span>.py
+</code></pre></div>
 <h3 id="real-world-scenarios">Real-World Scenarios</h3>
 <h4 id="scenario-1-quick-file-lookup">Scenario 1: Quick File Lookup</h4>
 <p>Open the first README file found:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vim<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>README<span class="k">)</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>vim<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>README<span class="k">)</span>
+</code></pre></div>
 <p>Display the first config file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cat<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>config<span class="k">)</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>cat<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>config<span class="k">)</span>
+</code></pre></div>
 <h4 id="scenario-2-script-integration">Scenario 2: Script Integration</h4>
 <p>Check if a specific file exists:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">file</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>my_script.py<span class="k">)</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>python<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">else</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Script not found&quot;</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">fi</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="nv">file</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>my_script.py<span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span>python<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="k">else</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Script not found&quot;</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+</code></pre></div>
 <h4 id="scenario-3-alias-creation">Scenario 3: Alias Creation</h4>
 <p>Create quick aliases in <code>.bashrc</code> or <code>.zshrc</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Find and open Python files</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">pycat</span><span class="o">=</span><span class="s1">&#39;cat $(fx fff .py)&#39;</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">pyvim</span><span class="o">=</span><span class="s1">&#39;vim $(fx fff .py)&#39;</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Find and open config files</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">confcat</span><span class="o">=</span><span class="s1">&#39;cat $(fx fff config)&#39;</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">confvim</span><span class="o">=</span><span class="s1">&#39;vim $(fx fff config)&#39;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find and open Python files</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">pycat</span><span class="o">=</span><span class="s1">&#39;cat $(fx fff .py)&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">pyvim</span><span class="o">=</span><span class="s1">&#39;vim $(fx fff .py)&#39;</span>
+
+<span class="c1"># Find and open config files</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">confcat</span><span class="o">=</span><span class="s1">&#39;cat $(fx fff config)&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">confvim</span><span class="o">=</span><span class="s1">&#39;vim $(fx fff config)&#39;</span>
+</code></pre></div>
 <h4 id="scenario-4-command-chain-integration">Scenario 4: Command Chain Integration</h4>
 <p>Find and grep first matching file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>fx<span class="w"> </span>fff<span class="w"> </span>api<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>grep<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;endpoint&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>fff<span class="w"> </span>api<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>grep<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;endpoint&quot;</span>
+</code></pre></div>
 <p>Find and analyze first matching file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>fx<span class="w"> </span>fff<span class="w"> </span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>fff<span class="w"> </span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size
+</code></pre></div>
 <h4 id="scenario-5-service-discovery">Scenario 5: Service Discovery</h4>
 <p>Find and display first service file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cat<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>service<span class="k">)</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>cat<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>service<span class="k">)</span>
+</code></pre></div>
 <p>Find and copy first model file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>cp<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>model<span class="k">)</span><span class="w"> </span>/backup/
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>cp<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>model<span class="k">)</span><span class="w"> </span>/backup/
+</code></pre></div>
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="shell-script-best-practices">Shell Script Best Practices</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Safe file lookup with error handling</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nv">file</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>my_file<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: File not found&quot;</span>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="k">fi</span>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Use the file</span>
-</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Safe file lookup with error handling</span>
+<span class="nv">file</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>my_file<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: File not found&quot;</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="c1"># Use the file</span>
+cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+</code></pre></div>
 <h3 id="combining-with-other-commands">Combining with Other Commands</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Find and open</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>vim<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>README<span class="k">)</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Find and grep</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>fx<span class="w"> </span>fff<span class="w"> </span>api<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;endpoint&quot;</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Find and backup</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>fx<span class="w"> </span>fff<span class="w"> </span>important.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>backup
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Find and count</span>
-</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>wc<span class="w"> </span>-l<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>.py<span class="k">)</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find and open</span>
+vim<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>README<span class="k">)</span>
+
+<span class="c1"># Find and grep</span>
+fx<span class="w"> </span>fff<span class="w"> </span>api<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;endpoint&quot;</span>
+
+<span class="c1"># Find and backup</span>
+fx<span class="w"> </span>fff<span class="w"> </span>important.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>backup
+
+<span class="c1"># Find and count</span>
+wc<span class="w"> </span>-l<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>.py<span class="k">)</span>
+</code></pre></div>
 <h3 id="creating-aliases">Creating Aliases</h3>
 <p>Add to <code>.bashrc</code> or <code>.zshrc</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Quick file operations</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">fxcat</span><span class="o">=</span><span class="s1">&#39;cat $(fx fff)&#39;</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">fxvim</span><span class="o">=</span><span class="s1">&#39;vim $(fx fff)&#39;</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">fxdiff</span><span class="o">=</span><span class="s1">&#39;git diff $(fx fff)&#39;</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Language-specific</span>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">pyfind</span><span class="o">=</span><span class="s1">&#39;fx fff .py&#39;</span>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">jsfind</span><span class="o">=</span><span class="s1">&#39;fx fff .js&#39;</span>
-</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">mdfind</span><span class="o">=</span><span class="s1">&#39;fx fff .md&#39;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Quick file operations</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">fxcat</span><span class="o">=</span><span class="s1">&#39;cat $(fx fff)&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">fxvim</span><span class="o">=</span><span class="s1">&#39;vim $(fx fff)&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">fxdiff</span><span class="o">=</span><span class="s1">&#39;git diff $(fx fff)&#39;</span>
+
+<span class="c1"># Language-specific</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">pyfind</span><span class="o">=</span><span class="s1">&#39;fx fff .py&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">jsfind</span><span class="o">=</span><span class="s1">&#39;fx fff .js&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">mdfind</span><span class="o">=</span><span class="s1">&#39;fx fff .md&#39;</span>
+</code></pre></div>
 <h3 id="error-handling-in-scripts">Error Handling in Scripts</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Check if file exists before using</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="nv">file</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>my_file<span class="k">)</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: File &#39;</span><span class="nv">$file</span><span class="s2">&#39; not found&quot;</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="k">fi</span>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># File exists, proceed</span>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Check if file exists before using</span>
+<span class="nv">file</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>my_file<span class="k">)</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: File &#39;</span><span class="nv">$file</span><span class="s2">&#39; not found&quot;</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="c1"># File exists, proceed</span>
+cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+</code></pre></div>
 <h2 id="performance-notes">Performance Notes</h2>
 <ul>
 <li><strong>Speed</strong>: Returns immediately after first match (no full traversal)</li>
@@ -1604,27 +1604,27 @@
 </ul>
 <h2 id="common-issues">Common Issues</h2>
 <h3 id="no-results-found">No Results Found</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check if file exists</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>fx<span class="w"> </span>fff<span class="w"> </span>my_file
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Try broader search</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>my_file<span class="w">  </span><span class="c1"># Uses full search</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check if file exists</span>
+fx<span class="w"> </span>fff<span class="w"> </span>my_file
+
+<span class="c1"># Try broader search</span>
+fx<span class="w"> </span>ff<span class="w"> </span>my_file<span class="w">  </span><span class="c1"># Uses full search</span>
+</code></pre></div>
 <h3 id="wrong-file-returned">Wrong File Returned</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Be more specific with keyword</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>fx<span class="w"> </span>fff<span class="w"> </span><span class="s2">&quot;api_v1_user&quot;</span><span class="w">  </span><span class="c1"># Instead of &quot;api&quot;</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Check what files match</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>fx<span class="w"> </span>ff<span class="w"> </span>my_file<span class="w">  </span><span class="c1"># See all matches</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Be more specific with keyword</span>
+fx<span class="w"> </span>fff<span class="w"> </span><span class="s2">&quot;api_v1_user&quot;</span><span class="w">  </span><span class="c1"># Instead of &quot;api&quot;</span>
+
+<span class="c1"># Check what files match</span>
+fx<span class="w"> </span>ff<span class="w"> </span>my_file<span class="w">  </span><span class="c1"># See all matches</span>
+</code></pre></div>
 <h3 id="script-errors">Script Errors</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Always check if file exists</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nv">file</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>my_file<span class="k">)</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;File not found&quot;</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="k">fi</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Always check if file exists</span>
+<span class="nv">file</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>fff<span class="w"> </span>my_file<span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;File not found&quot;</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+</code></pre></div>
 <h2 id="comparison-with-fx-ff">Comparison with fx ff</h2>
 <table>
 <thead>

@@ -1837,8 +1837,8 @@
 - 🔍 Dry-run preview mode
 - ⚡ Smart file processing</p>
 <h2 id="usage">Usage</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>fx<span class="w"> </span>organize<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span><span class="nb">source</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span><span class="nb">source</span>
+</code></pre></div>
 <h2 id="parameters">Parameters</h2>
 <table>
 <thead>
@@ -2004,371 +2004,371 @@
 <h2 id="examples">Examples</h2>
 <h3 id="basic-usage">Basic Usage</h3>
 <p>Organize photos by date:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Photos
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Photos
+</code></pre></div>
 <p>Organize with custom output directory:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-o<span class="w"> </span>~/Sorted
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-o<span class="w"> </span>~/Sorted
+</code></pre></div>
 <h3 id="dry-run-preview">Dry-Run Preview</h3>
 <p>Preview changes without executing:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--dry-run
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--dry-run
+</code></pre></div>
 <h3 id="custom-depth">Custom Depth</h3>
 <p>Use 2-level depth (year/day):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
 <p>Use 1-level depth (day only):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
 <h3 id="filtering">Filtering</h3>
 <p>Organize only images:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.gif&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.gif&quot;</span>
+</code></pre></div>
 <p>Organize excluding hidden files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.*&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.*&quot;</span>
+</code></pre></div>
 <p>Organize only PDF and Word documents:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Documents<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.pdf&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.docx&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Documents<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.pdf&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.docx&quot;</span>
+</code></pre></div>
 <h3 id="conflict-handling">Conflict Handling</h3>
 <p>Skip conflicting files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--on-conflict<span class="w"> </span>skip
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--on-conflict<span class="w"> </span>skip
+</code></pre></div>
 <p>Overwrite existing files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--on-conflict<span class="w"> </span>overwrite
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--on-conflict<span class="w"> </span>overwrite
+</code></pre></div>
 <h3 id="date-source">Date Source</h3>
 <p>Use modification time instead of creation:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--date-source<span class="w"> </span>modified
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--date-source<span class="w"> </span>modified
+</code></pre></div>
 <h3 id="real-world-scenarios">Real-World Scenarios</h3>
 <h4 id="scenario-1-photo-organization">Scenario 1: Photo Organization</h4>
 <p>Organize photos by creation date:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Organize all photos</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpeg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.gif&quot;</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># With dry-run preview</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>--dry-run
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># With custom depth (year/day)</span>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize all photos</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpeg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.gif&quot;</span>
+
+<span class="c1"># With dry-run preview</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>--dry-run
+
+<span class="c1"># With custom depth (year/day)</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
 <h4 id="scenario-2-download-sorting">Scenario 2: Download Sorting</h4>
 <p>Organize downloads by type:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Organize images</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Downloads/Images
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Organize documents</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.pdf&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.docx&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Downloads/Documents
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Organize code</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.js&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Downloads/Code
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize images</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Downloads/Images
+
+<span class="c1"># Organize documents</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.pdf&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.docx&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Downloads/Documents
+
+<span class="c1"># Organize code</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.js&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Downloads/Code
+</code></pre></div>
 <h4 id="scenario-3-dataset-management">Scenario 3: Dataset Management</h4>
 <p>Organize datasets with filtering:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Organize CSV files</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>--recursive<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Organize all data files</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.json&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.xml&quot;</span><span class="w"> </span>--recursive
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize CSV files</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>--recursive<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
+
+<span class="c1"># Organize all data files</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.json&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.xml&quot;</span><span class="w"> </span>--recursive
+</code></pre></div>
 <h4 id="scenario-4-cleanup-organization">Scenario 4: Cleanup Organization</h4>
 <p>Organize with conflict handling:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Preview organization</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--dry-run
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Skip existing files</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--on-conflict<span class="w"> </span>skip
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Overwrite with confirmation</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--on-conflict<span class="w"> </span>ask
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Preview organization</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--dry-run
+
+<span class="c1"># Skip existing files</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--on-conflict<span class="w"> </span>skip
+
+<span class="c1"># Overwrite with confirmation</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--on-conflict<span class="w"> </span>ask
+</code></pre></div>
 <h4 id="scenario-5-archive-organization">Scenario 5: Archive Organization</h4>
 <p>Organize archives by date:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Organize all archives</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Archives<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.zip&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.tar&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.gz&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.rar&quot;</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Use modification time for archives</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Archives<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.zip&quot;</span><span class="w"> </span>--date-source<span class="w"> </span>modified
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize all archives</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Archives<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.zip&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.tar&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.gz&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.rar&quot;</span>
+
+<span class="c1"># Use modification time for archives</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Archives<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.zip&quot;</span><span class="w"> </span>--date-source<span class="w"> </span>modified
+</code></pre></div>
 <h4 id="scenario-6-backup-before-organization">Scenario 6: Backup Before Organization</h4>
 <p>Create backup before organizing:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Backup source directory</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>~/Downloads<span class="w"> </span>--compress
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Organize with dry-run</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--dry-run
-</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
-</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># If preview looks good, organize</span>
-</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup source directory</span>
+fx<span class="w"> </span>backup<span class="w"> </span>~/Downloads<span class="w"> </span>--compress
+
+<span class="c1"># Organize with dry-run</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--dry-run
+
+<span class="c1"># If preview looks good, organize</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads
+</code></pre></div>
 <h4 id="scenario-7-multiple-source-organization">Scenario 7: Multiple Source Organization</h4>
 <p>Organize multiple sources:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Organize each source</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Photos1<span class="w"> </span>-o<span class="w"> </span>~/Photos
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Photos2<span class="w"> </span>-o<span class="w"> </span>~/Photos
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Photos3<span class="w"> </span>-o<span class="w"> </span>~/Photos
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize each source</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Photos1<span class="w"> </span>-o<span class="w"> </span>~/Photos
+fx<span class="w"> </span>organize<span class="w"> </span>~/Photos2<span class="w"> </span>-o<span class="w"> </span>~/Photos
+fx<span class="w"> </span>organize<span class="w"> </span>~/Photos3<span class="w"> </span>-o<span class="w"> </span>~/Photos
+</code></pre></div>
 <h4 id="scenario-8-large-directory-organization">Scenario 8: Large Directory Organization</h4>
 <p>Optimize for large directories:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Use verbose to track progress</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>--verbose
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Use fail-fast to stop on first error</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>--fail-fast
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Use quiet to suppress output</span>
-</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>--quiet
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use verbose to track progress</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>--verbose
+
+<span class="c1"># Use fail-fast to stop on first error</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>--fail-fast
+
+<span class="c1"># Use quiet to suppress output</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>--quiet
+</code></pre></div>
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="pattern-matching">Pattern Matching</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Include patterns (repeatable)</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.js&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.ts&quot;</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Exclude patterns (repeatable)</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;__pycache__&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.*&quot;</span>
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Combine include and exclude</span>
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*test*&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*spec*&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Include patterns (repeatable)</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.js&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.ts&quot;</span>
+
+<span class="c1"># Exclude patterns (repeatable)</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;__pycache__&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.*&quot;</span>
+
+<span class="c1"># Combine include and exclude</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*test*&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*spec*&quot;</span>
+</code></pre></div>
 <h3 id="recursive-processing">Recursive Processing</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Process all subdirectories</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--recursive
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># With filtering</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--recursive<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span>
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
-</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Clean up empty directories</span>
-</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--recursive<span class="w"> </span>--clean-empty
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Process all subdirectories</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--recursive
+
+<span class="c1"># With filtering</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--recursive<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span>
+
+<span class="c1"># Clean up empty directories</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--recursive<span class="w"> </span>--clean-empty
+</code></pre></div>
 <h3 id="automation">Automation</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># Automated organization script</span>
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Backup source</span>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>fx<span class="w"> </span>backup<span class="w"> </span>~/Downloads<span class="w"> </span>--compress
-</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
-</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Preview changes</span>
-</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--dry-run
-</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>
-</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="c1"># If preview looks good, organize</span>
-</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="w">  </span>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--yes
-</span><span id="__span-22-13"><a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="k">fi</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Automated organization script</span>
+
+<span class="c1"># Backup source</span>
+fx<span class="w"> </span>backup<span class="w"> </span>~/Downloads<span class="w"> </span>--compress
+
+<span class="c1"># Preview changes</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--dry-run
+
+<span class="c1"># If preview looks good, organize</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--yes
+<span class="k">fi</span>
+</code></pre></div>
 <h3 id="scheduled-organization">Scheduled Organization</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Add to cron for automatic organization</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># Example: Organize downloads daily at 3 AM</span>
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="c1"># 0 3 * * * fx organize ~/Downloads --yes --quiet</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Add to cron for automatic organization</span>
+<span class="c1"># Example: Organize downloads daily at 3 AM</span>
+<span class="c1"># 0 3 * * * fx organize ~/Downloads --yes --quiet</span>
+</code></pre></div>
 <h3 id="batch-processing">Batch Processing</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Organize multiple directories</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>Downloads1<span class="w"> </span>Downloads2<span class="w"> </span>Downloads3<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span>fx<span class="w"> </span>organize<span class="w"> </span>~/<span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span><span class="w"> </span>--yes<span class="w"> </span>--quiet
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="k">done</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize multiple directories</span>
+<span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>Downloads1<span class="w"> </span>Downloads2<span class="w"> </span>Downloads3<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span>fx<span class="w"> </span>organize<span class="w"> </span>~/<span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span><span class="w"> </span>--yes<span class="w"> </span>--quiet
+<span class="k">done</span>
+</code></pre></div>
 <h2 id="advanced-usage">Advanced Usage</h2>
 <h3 id="conflict-resolution-strategies">Conflict Resolution Strategies</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Rename conflicting files (default)</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>rename
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Skip conflicting files</span>
-</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>skip
-</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
-</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Overwrite existing files (use with caution)</span>
-</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>overwrite
-</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>
-</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="c1"># Interactive conflict resolution</span>
-</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>ask
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Rename conflicting files (default)</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>rename
+
+<span class="c1"># Skip conflicting files</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>skip
+
+<span class="c1"># Overwrite existing files (use with caution)</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>overwrite
+
+<span class="c1"># Interactive conflict resolution</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>ask
+</code></pre></div>
 <h3 id="date-source-selection">Date Source Selection</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Use creation time (default)</span>
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>created
-</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
-</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Use modification time</span>
-</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>modified
-</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
-</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Comparison: Different date sources</span>
-</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>created<span class="w"> </span>--dry-run
-</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>modified<span class="w"> </span>--dry-run
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use creation time (default)</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>created
+
+<span class="c1"># Use modification time</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>modified
+
+<span class="c1"># Comparison: Different date sources</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>created<span class="w"> </span>--dry-run
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>modified<span class="w"> </span>--dry-run
+</code></pre></div>
 <h3 id="depth-configuration">Depth Configuration</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Depth 1: output/20260110/</span>
-</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span>
-</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
-</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># Depth 2: output/2026/20260110/</span>
-</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
-</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
-</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="c1"># Depth 3: output/2026/202601/20260110/ (default)</span>
-</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--depth<span class="w"> </span><span class="m">3</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Depth 1: output/20260110/</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span>
+
+<span class="c1"># Depth 2: output/2026/20260110/</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
+
+<span class="c1"># Depth 3: output/2026/202601/20260110/ (default)</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--depth<span class="w"> </span><span class="m">3</span>
+</code></pre></div>
 <h3 id="clean-empty-directories">Clean Empty Directories</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Clean up empty source directories</span>
-</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--recursive<span class="w"> </span>--clean-empty
-</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
-</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Combine with other options</span>
-</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--recursive<span class="w"> </span>--clean-empty<span class="w"> </span>--yes<span class="w"> </span>--quiet
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Clean up empty source directories</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--recursive<span class="w"> </span>--clean-empty
+
+<span class="c1"># Combine with other options</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--recursive<span class="w"> </span>--clean-empty<span class="w"> </span>--yes<span class="w"> </span>--quiet
+</code></pre></div>
 <h2 id="performance-optimization">Performance Optimization</h2>
 <h3 id="for-large-directories">For Large Directories</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Use quiet mode to reduce output</span>
-</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>--quiet
-</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
-</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="c1"># Use fail-fast to stop on errors</span>
-</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>--fail-fast
-</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>
-</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="c1"># Use specific patterns to limit scope</span>
-</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use quiet mode to reduce output</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>--quiet
+
+<span class="c1"># Use fail-fast to stop on errors</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>--fail-fast
+
+<span class="c1"># Use specific patterns to limit scope</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span>
+</code></pre></div>
 <h3 id="for-many-files">For Many Files</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Use verbose to monitor progress</span>
-</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/ManyFiles<span class="w"> </span>--verbose
-</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
-</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Process in batches</span>
-</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Batch1<span class="w"> </span>--yes
-</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Batch2<span class="w"> </span>--yes
-</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Batch3<span class="w"> </span>--yes
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use verbose to monitor progress</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/ManyFiles<span class="w"> </span>--verbose
+
+<span class="c1"># Process in batches</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Batch1<span class="w"> </span>--yes
+fx<span class="w"> </span>organize<span class="w"> </span>~/Batch2<span class="w"> </span>--yes
+fx<span class="w"> </span>organize<span class="w"> </span>~/Batch3<span class="w"> </span>--yes
+</code></pre></div>
 <h3 id="preview-before-execution">Preview Before Execution</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Always use dry-run first</span>
-</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--dry-run
-</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
-</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="c1"># Review preview</span>
-</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="c1"># Then execute</span>
-</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--yes
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Always use dry-run first</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--dry-run
+
+<span class="c1"># Review preview</span>
+<span class="c1"># Then execute</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--yes
+</code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="always-use-dry-run-first">Always Use Dry-Run First</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Preview changes</span>
-</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--dry-run
-</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
-</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># Review output</span>
-</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="c1"># Then execute</span>
-</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--yes
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Preview changes</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--dry-run
+
+<span class="c1"># Review output</span>
+<span class="c1"># Then execute</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--yes
+</code></pre></div>
 <h3 id="backup-before-organization">Backup Before Organization</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Create backup</span>
-</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>src/<span class="w"> </span>--compress
-</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
-</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># Organize</span>
-</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/
-</span><span id="__span-33-6"><a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>
-</span><span id="__span-33-7"><a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="c1"># If issues, restore from backup</span>
-</span><span id="__span-33-8"><a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>tar<span class="w"> </span>-xf<span class="w"> </span>src_*.tar.xz
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create backup</span>
+fx<span class="w"> </span>backup<span class="w"> </span>src/<span class="w"> </span>--compress
+
+<span class="c1"># Organize</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/
+
+<span class="c1"># If issues, restore from backup</span>
+tar<span class="w"> </span>-xf<span class="w"> </span>src_*.tar.xz
+</code></pre></div>
 <h3 id="use-appropriate-conflict-mode">Use Appropriate Conflict Mode</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Safe default: rename</span>
-</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>rename
-</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
-</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># Preserve existing: skip</span>
-</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>skip
-</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>
-</span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="c1"># Latest version: overwrite (use carefully)</span>
-</span><span id="__span-34-8"><a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>overwrite
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Safe default: rename</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>rename
+
+<span class="c1"># Preserve existing: skip</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>skip
+
+<span class="c1"># Latest version: overwrite (use carefully)</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>overwrite
+</code></pre></div>
 <h3 id="choose-right-depth">Choose Right Depth</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># Many files, short period: depth 1</span>
-</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span>
-</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>
-</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="c1"># Moderate files, long period: depth 2</span>
-</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
-</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>
-</span><span id="__span-35-7"><a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="c1"># Few files, very long period: depth 3</span>
-</span><span id="__span-35-8"><a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Archive<span class="w"> </span>--depth<span class="w"> </span><span class="m">3</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Many files, short period: depth 1</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span>
+
+<span class="c1"># Moderate files, long period: depth 2</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
+
+<span class="c1"># Few files, very long period: depth 3</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Archive<span class="w"> </span>--depth<span class="w"> </span><span class="m">3</span>
+</code></pre></div>
 <h3 id="filter-appropriately">Filter Appropriately</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Include specific types</span>
-</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span>
-</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>
-</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="c1"># Exclude unwanted files</span>
-</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;__pycache__&quot;</span>
-</span><span id="__span-36-6"><a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>
-</span><span id="__span-36-7"><a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="c1"># Combine for precise control</span>
-</span><span id="__span-36-8"><a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*test*&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Include specific types</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span>
+
+<span class="c1"># Exclude unwanted files</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;__pycache__&quot;</span>
+
+<span class="c1"># Combine for precise control</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*test*&quot;</span>
+</code></pre></div>
 <h2 id="common-issues">Common Issues</h2>
 <h3 id="permission-denied">Permission Denied</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1"># Error: Permission denied</span>
-</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>/protected/path
-</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>
-</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="c1"># Solution: Use sudo (not recommended)</span>
-</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>sudo<span class="w"> </span>fx<span class="w"> </span>organize<span class="w"> </span>/protected/path
-</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>
-</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="c1"># Or fix permissions</span>
-</span><span id="__span-37-8"><a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a>chmod<span class="w"> </span>+r<span class="w"> </span>/path/to/directory
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Error: Permission denied</span>
+fx<span class="w"> </span>organize<span class="w"> </span>/protected/path
+
+<span class="c1"># Solution: Use sudo (not recommended)</span>
+sudo<span class="w"> </span>fx<span class="w"> </span>organize<span class="w"> </span>/protected/path
+
+<span class="c1"># Or fix permissions</span>
+chmod<span class="w"> </span>+r<span class="w"> </span>/path/to/directory
+</code></pre></div>
 <h3 id="disk-space-issues">Disk Space Issues</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># Error: No space left on device</span>
-</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/
-</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>
-</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="c1"># Solution: Check disk space</span>
-</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>df<span class="w"> </span>-h
-</span><span id="__span-38-6"><a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>
-</span><span id="__span-38-7"><a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="c1"># Clean up or use different output</span>
-</span><span id="__span-38-8"><a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-o<span class="w"> </span>/external/drive/organized
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Error: No space left on device</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/
+
+<span class="c1"># Solution: Check disk space</span>
+df<span class="w"> </span>-h
+
+<span class="c1"># Clean up or use different output</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-o<span class="w"> </span>/external/drive/organized
+</code></pre></div>
 <h3 id="conflicts-not-resolved">Conflicts Not Resolved</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># Files with conflicts may be skipped</span>
-</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>skip
-</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>
-</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="c1"># Solution: Check output</span>
-</span><span id="__span-39-5"><a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>fx<span class="w"> </span>size<span class="w"> </span>src/organized/
-</span><span id="__span-39-6"><a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>
-</span><span id="__span-39-7"><a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="c1"># Or use rename mode</span>
-</span><span id="__span-39-8"><a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>rename
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Files with conflicts may be skipped</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>skip
+
+<span class="c1"># Solution: Check output</span>
+fx<span class="w"> </span>size<span class="w"> </span>src/organized/
+
+<span class="c1"># Or use rename mode</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>rename
+</code></pre></div>
 <h3 id="date-issues">Date Issues</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Files with no creation date may use modification</span>
-</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>created
-</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
-</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># Or explicitly use modification time</span>
-</span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>modified
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Files with no creation date may use modification</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>created
+
+<span class="c1"># Or explicitly use modification time</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>modified
+</code></pre></div>
 <h3 id="pattern-matching-issues">Pattern Matching Issues</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="c1"># Patterns not matching as expected</span>
-</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
-</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>
-</span><span id="__span-41-4"><a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a><span class="c1"># Solution: Test pattern first</span>
-</span><span id="__span-41-5"><a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>ls<span class="w"> </span>*.py
-</span><span id="__span-41-6"><a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a>
-</span><span id="__span-41-7"><a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a><span class="c1"># Use correct glob syntax</span>
-</span><span id="__span-41-8"><a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Patterns not matching as expected</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+
+<span class="c1"># Solution: Test pattern first</span>
+ls<span class="w"> </span>*.py
+
+<span class="c1"># Use correct glob syntax</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="no-files-organized">No Files Organized</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># Check if files match patterns</span>
-</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--dry-run
-</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>
-</span><span id="__span-42-4"><a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="c1"># Check source directory</span>
-</span><span id="__span-42-5"><a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>ls<span class="w"> </span>src/
-</span><span id="__span-42-6"><a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a>
-</span><span id="__span-42-7"><a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a><span class="c1"># Check permissions</span>
-</span><span id="__span-42-8"><a id="__codelineno-42-8" name="__codelineno-42-8" href="#__codelineno-42-8"></a>ls<span class="w"> </span>-la<span class="w"> </span>src/
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check if files match patterns</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--dry-run
+
+<span class="c1"># Check source directory</span>
+ls<span class="w"> </span>src/
+
+<span class="c1"># Check permissions</span>
+ls<span class="w"> </span>-la<span class="w"> </span>src/
+</code></pre></div>
 <h3 id="wrong-dates">Wrong Dates</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="c1"># Check file dates</span>
-</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>stat<span class="w"> </span>filename
-</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>
-</span><span id="__span-43-4"><a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="c1"># Use modification time instead</span>
-</span><span id="__span-43-5"><a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>modified
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check file dates</span>
+stat<span class="w"> </span>filename
+
+<span class="c1"># Use modification time instead</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--date-source<span class="w"> </span>modified
+</code></pre></div>
 <h3 id="duplicate-files">Duplicate Files</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># Use rename mode to keep all</span>
-</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>rename
-</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>
-</span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="c1"># Or skip mode to preserve existing</span>
-</span><span id="__span-44-5"><a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>skip
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use rename mode to keep all</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>rename
+
+<span class="c1"># Or skip mode to preserve existing</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--on-conflict<span class="w"> </span>skip
+</code></pre></div>
 <h3 id="organization-too-slow">Organization Too Slow</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="c1"># Use quiet mode</span>
-</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--quiet
-</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>
-</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="c1"># Limit file types</span>
-</span><span id="__span-45-5"><a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span>
-</span><span id="__span-45-6"><a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>
-</span><span id="__span-45-7"><a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a><span class="c1"># Process in batches</span>
-</span><span id="__span-45-8"><a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--fail-fast
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use quiet mode</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--quiet
+
+<span class="c1"># Limit file types</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span>
+
+<span class="c1"># Process in batches</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--fail-fast
+</code></pre></div>
 <h2 id="see-also">See Also</h2>
 <ul>
 <li><a href="../backup/"><code>fx backup</code></a> - Create timestamped backups</li>

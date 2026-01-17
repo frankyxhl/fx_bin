@@ -1476,84 +1476,84 @@
 <h2 id="installation">Installation</h2>
 <h3 id="method-1-pip-recommended">Method 1: pip (Recommended)</h3>
 <p>The easiest way to install fx-bin:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
+</code></pre></div>
 <p>Upgrade to the latest version:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>fx-bin
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>fx-bin
+</code></pre></div>
 <h3 id="method-2-pipx-isolated-installation">Method 2: pipx (Isolated Installation)</h3>
 <p>For a clean, isolated environment:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>fx-bin
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>fx-bin
+</code></pre></div>
 <p>Upgrade to the latest version:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pipx<span class="w"> </span>upgrade<span class="w"> </span>fx-bin
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>pipx<span class="w"> </span>upgrade<span class="w"> </span>fx-bin
+</code></pre></div>
 <h3 id="method-3-from-source">Method 3: From Source</h3>
 <p>For development or testing:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Clone the repository</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/frankyxhl/fx_bin.git
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Navigate to the directory</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">cd</span><span class="w"> </span>fx_bin
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Install using Poetry</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>poetry<span class="w"> </span>install<span class="w"> </span>--with<span class="w"> </span>dev
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Run fx commands</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>poetry<span class="w"> </span>run<span class="w"> </span>fx<span class="w"> </span>--help
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Clone the repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/frankyxhl/fx_bin.git
+
+<span class="c1"># Navigate to the directory</span>
+<span class="nb">cd</span><span class="w"> </span>fx_bin
+
+<span class="c1"># Install using Poetry</span>
+poetry<span class="w"> </span>install<span class="w"> </span>--with<span class="w"> </span>dev
+
+<span class="c1"># Run fx commands</span>
+poetry<span class="w"> </span>run<span class="w"> </span>fx<span class="w"> </span>--help
+</code></pre></div>
 <h3 id="verify-installation">Verify Installation</h3>
 <p>Check that fx-bin is installed correctly:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fx<span class="w"> </span>--version
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>--version
+</code></pre></div>
 <p>You should see output like:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>FX-Bin v2.4.0
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Repository: https://github.com/frankyxhl/fx_bin
-</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>FX-Bin v2.4.0
+Repository: https://github.com/frankyxhl/fx_bin
+</code></pre></div>
 <hr />
 <h2 id="your-first-commands">Your First Commands</h2>
 <h3 id="explore-available-commands">Explore Available Commands</h3>
 <p>List all available fx commands:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>fx<span class="w"> </span>list
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>list
+</code></pre></div>
 <p>Get help for the fx CLI:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>fx<span class="w"> </span>--help
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>--help
+</code></pre></div>
 <h3 id="count-files">Count Files</h3>
 <p>Count files in the current directory:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>fx<span class="w"> </span>files<span class="w"> </span>.
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.
+</code></pre></div>
 <p>Count only Python files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+</code></pre></div>
 <h3 id="analyze-sizes">Analyze Sizes</h3>
 <p>Show file sizes in the current directory:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>.
+</code></pre></div>
 <p>Show the 10 largest files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span>--unit<span class="w"> </span>MB
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span>--unit<span class="w"> </span>MB
+</code></pre></div>
 <h3 id="find-files">Find Files</h3>
 <p>Find files containing "config" in their name:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>config
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>config
+</code></pre></div>
 <p>Find Python files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>fx<span class="w"> </span>ff<span class="w"> </span>.py
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>.py
+</code></pre></div>
 <h3 id="filter-by-extension">Filter by Extension</h3>
 <p>Find all Python files, sorted by modification time:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
+</code></pre></div>
 <p>Find multiple file types:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;jpg,png,gif&quot;</span><span class="w"> </span>--format<span class="w"> </span>detailed
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;jpg,png,gif&quot;</span><span class="w"> </span>--format<span class="w"> </span>detailed
+</code></pre></div>
 <h3 id="replace-text">Replace Text</h3>
 <p>Replace "old" with "new" in a file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>file.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>file.txt
+</code></pre></div>
 <p>Replace text in multiple files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;v1.0&quot;</span><span class="w"> </span><span class="s2">&quot;v2.0&quot;</span><span class="w"> </span>*.py
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;v1.0&quot;</span><span class="w"> </span><span class="s2">&quot;v2.0&quot;</span><span class="w"> </span>*.py
+</code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p><strong>Safety First</strong>: <code>fx replace</code> uses atomic writes with automatic backup. If the replacement fails, the original file is automatically restored.</p>
@@ -1561,43 +1561,43 @@
 <hr />
 <h2 id="common-workflows">Common Workflows</h2>
 <h3 id="daily-development-setup">Daily Development Setup</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Navigate to today&#39;s workspace</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>fx<span class="w"> </span>today
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Count project files</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Find recently modified files</span>
-</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;py,js,ts&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
-</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># Locate TODO markers</span>
-</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>fx<span class="w"> </span>ff<span class="w"> </span>TODO<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Navigate to today&#39;s workspace</span>
+fx<span class="w"> </span>today
+
+<span class="c1"># Count project files</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive
+
+<span class="c1"># Find recently modified files</span>
+fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;py,js,ts&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+
+<span class="c1"># Locate TODO markers</span>
+fx<span class="w"> </span>ff<span class="w"> </span>TODO<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
+</code></pre></div>
 <h3 id="project-analysis">Project Analysis</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Analyze file sizes</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Count files by type</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.js&quot;</span>
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.md&quot;</span>
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
-</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># Find configuration files</span>
-</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--exclude<span class="w"> </span>backup
-</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
-</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="c1"># Identify largest directories</span>
-</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--sort<span class="w"> </span>desc
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Analyze file sizes</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
+
+<span class="c1"># Count files by type</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.js&quot;</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.md&quot;</span>
+
+<span class="c1"># Find configuration files</span>
+fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span>--exclude<span class="w"> </span>backup
+
+<span class="c1"># Identify largest directories</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--sort<span class="w"> </span>desc
+</code></pre></div>
 <h3 id="file-organization">File Organization</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Create a backup before organizing</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>my_project<span class="w"> </span>--compress
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Organize files by date (preview)</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>my_project<span class="w"> </span>--date-source<span class="w"> </span>created<span class="w"> </span>--depth<span class="w"> </span><span class="m">3</span><span class="w"> </span>--dry-run
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
-</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Execute organization</span>
-</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>my_project<span class="w"> </span>--date-source<span class="w"> </span>created<span class="w"> </span>--depth<span class="w"> </span><span class="m">3</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create a backup before organizing</span>
+fx<span class="w"> </span>backup<span class="w"> </span>my_project<span class="w"> </span>--compress
+
+<span class="c1"># Organize files by date (preview)</span>
+fx<span class="w"> </span>organize<span class="w"> </span>my_project<span class="w"> </span>--date-source<span class="w"> </span>created<span class="w"> </span>--depth<span class="w"> </span><span class="m">3</span><span class="w"> </span>--dry-run
+
+<span class="c1"># Execute organization</span>
+fx<span class="w"> </span>organize<span class="w"> </span>my_project<span class="w"> </span>--date-source<span class="w"> </span>created<span class="w"> </span>--depth<span class="w"> </span><span class="m">3</span>
+</code></pre></div>
 <hr />
 <h2 id="command-reference">Command Reference</h2>
 <p>For detailed information about each command, see:</p>
@@ -1617,46 +1617,46 @@
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="command-not-found">Command Not Found</h3>
 <p>If you see "command not found: fx":</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Check Python installation</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>python<span class="w"> </span>--version
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Reinstall with pip</span>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>pip<span class="w"> </span>uninstall<span class="w"> </span>fx-bin
-</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
-</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
-</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="c1"># Or with pipx</span>
-</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>pipx<span class="w"> </span>uninstall<span class="w"> </span>fx-bin
-</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>pipx<span class="w"> </span>install<span class="w"> </span>fx-bin
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check Python installation</span>
+python<span class="w"> </span>--version
+
+<span class="c1"># Reinstall with pip</span>
+pip<span class="w"> </span>uninstall<span class="w"> </span>fx-bin
+pip<span class="w"> </span>install<span class="w"> </span>fx-bin
+
+<span class="c1"># Or with pipx</span>
+pipx<span class="w"> </span>uninstall<span class="w"> </span>fx-bin
+pipx<span class="w"> </span>install<span class="w"> </span>fx-bin
+</code></pre></div>
 <h3 id="permission-denied">Permission Denied</h3>
 <p>If you see "Permission denied" errors:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># macOS/Linux: Use sudo</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>sudo<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Or use a virtual environment</span>
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
-</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># macOS/Linux: Use sudo</span>
+sudo<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
+
+<span class="c1"># Or use a virtual environment</span>
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>fx-bin
+</code></pre></div>
 <h3 id="module-not-found">Module Not Found</h3>
 <p>If you see "ModuleNotFoundError":</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Reinstall with all dependencies</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>pip<span class="w"> </span>install<span class="w"> </span>--force-reinstall<span class="w"> </span>fx-bin
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Or upgrade pip first</span>
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
-</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>fx-bin
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Reinstall with all dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>--force-reinstall<span class="w"> </span>fx-bin
+
+<span class="c1"># Or upgrade pip first</span>
+pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
+pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>fx-bin
+</code></pre></div>
 <h3 id="version-conflicts">Version Conflicts</h3>
 <p>If you have multiple Python versions:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Specify Python version</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>python3.11<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Or use pyenv/pyenv-win to manage Python versions</span>
-</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>pyenv<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.11.0
-</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>pyenv<span class="w"> </span>global<span class="w"> </span><span class="m">3</span>.11.0
-</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Specify Python version</span>
+python3.11<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>fx-bin
+
+<span class="c1"># Or use pyenv/pyenv-win to manage Python versions</span>
+pyenv<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.11.0
+pyenv<span class="w"> </span>global<span class="w"> </span><span class="m">3</span>.11.0
+pip<span class="w"> </span>install<span class="w"> </span>fx-bin
+</code></pre></div>
 <hr />
 <h2 id="next-steps">Next Steps</h2>
 <ol>

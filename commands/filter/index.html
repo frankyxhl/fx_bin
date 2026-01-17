@@ -1548,8 +1548,8 @@
 - 📊 Show relative paths or full paths
 - 🔢 Limit results for targeted analysis</p>
 <h2 id="usage">Usage</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>EXTENSION<span class="w"> </span><span class="o">[</span>PATHS...<span class="o">]</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>EXTENSION<span class="w"> </span><span class="o">[</span>PATHS...<span class="o">]</span>
+</code></pre></div>
 <h2 id="parameters">Parameters</h2>
 <table>
 <thead>
@@ -1614,134 +1614,134 @@
 <h2 id="examples">Examples</h2>
 <h3 id="basic-usage">Basic Usage</h3>
 <p>Find Python files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py
+</code></pre></div>
 <p>Find multiple extensions:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;jpg,png,gif&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;jpg,png,gif&quot;</span>
+</code></pre></div>
 <h3 id="sorting-by-time">Sorting by Time</h3>
 <p>Find Python files sorted by modification time:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified
+</code></pre></div>
 <p>Find newest Python files first:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
+</code></pre></div>
 <p>Find files sorted by creation time:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>created
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>created
+</code></pre></div>
 <h3 id="output-formats">Output Formats</h3>
 <p>Simple output (just filenames):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--format<span class="w"> </span>simple
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--format<span class="w"> </span>simple
+</code></pre></div>
 <p>Detailed output (timestamp, size, relative time):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--format<span class="w"> </span>detailed
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--format<span class="w"> </span>detailed
+</code></pre></div>
 <h3 id="path-display">Path Display</h3>
 <p>Show relative file paths:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--show-path
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--show-path
+</code></pre></div>
 <h3 id="limiting-results">Limiting Results</h3>
 <p>Show only 10 most recent Python files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <h3 id="recursive-vs-non-recursive">Recursive vs Non-Recursive</h3>
 <p>Search recursively (default):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--recursive
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--recursive
+</code></pre></div>
 <p>Search only in current directory:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--no-recursive
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--no-recursive
+</code></pre></div>
 <h3 id="real-world-scenarios">Real-World Scenarios</h3>
 <h4 id="scenario-1-recent-code-changes">Scenario 1: Recent Code Changes</h4>
 <p>Find recently modified Python files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <p>Find recently modified JavaScript files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;js,jsx,ts,tsx&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;js,jsx,ts,tsx&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <h4 id="scenario-2-data-analysis">Scenario 2: Data Analysis</h4>
 <p>Find recently created CSV files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>csv<span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>csv<span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <p>Find recent JSON data files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>json<span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>json<span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <h4 id="scenario-3-document-management">Scenario 3: Document Management</h4>
 <p>Find recent Markdown documents:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>md<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>md<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
+</code></pre></div>
 <p>Find recent PDF documents:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;pdf,docx&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;pdf,docx&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse
+</code></pre></div>
 <h4 id="scenario-4-log-analysis">Scenario 4: Log Analysis</h4>
 <p>Find recent log files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>log<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>log<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
+</code></pre></div>
 <p>Find recent log files with paths:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>log<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--show-path<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>log<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--show-path<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
+</code></pre></div>
 <h4 id="scenario-5-image-management">Scenario 5: Image Management</h4>
 <p>Find recent images:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;jpg,jpeg,png,gif,webp&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">50</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;jpg,jpeg,png,gif,webp&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">50</span>
+</code></pre></div>
 <p>Find recent screenshots:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;png,jpg&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span>--show-path
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;png,jpg&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span>--show-path
+</code></pre></div>
 <h4 id="scenario-6-configuration-discovery">Scenario 6: Configuration Discovery</h4>
 <p>Find recent config files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;yaml,yml,json,toml&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;yaml,yml,json,toml&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
+</code></pre></div>
 <p>Find recent environment files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>fx<span class="w"> </span>filter<span class="w"> </span>env<span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>env<span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse
+</code></pre></div>
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="combining-with-other-commands">Combining with Other Commands</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Find recent Python files and count lines</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>wc<span class="w"> </span>-l
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Find recent logs and analyze</span>
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>fx<span class="w"> </span>filter<span class="w"> </span>log<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size
-</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
-</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># Find recent files and grep</span>
-</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;TODO&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find recent Python files and count lines</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>wc<span class="w"> </span>-l
+
+<span class="c1"># Find recent logs and analyze</span>
+fx<span class="w"> </span>filter<span class="w"> </span>log<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>size
+
+<span class="c1"># Find recent files and grep</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;TODO&quot;</span>
+</code></pre></div>
 <h3 id="time-based-workflows">Time-Based Workflows</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Find files modified in last 24 hours</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Find files created this week</span>
-</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;jpg,png&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
-</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
-</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Daily review of changes</span>
-</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;py,js,md&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">30</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find files modified in last 24 hours</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+
+<span class="c1"># Find files created this week</span>
+fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;jpg,png&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+
+<span class="c1"># Daily review of changes</span>
+fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;py,js,md&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">30</span>
+</code></pre></div>
 <h3 id="multi-type-filtering">Multi-Type Filtering</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Find all source code files</span>
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;py,js,ts,java,cpp&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
-</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
-</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Find all documentation</span>
-</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;md,txt,rst&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse
-</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
-</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Find all configuration files</span>
-</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;yaml,yml,json,toml,ini&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find all source code files</span>
+fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;py,js,ts,java,cpp&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
+
+<span class="c1"># Find all documentation</span>
+fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;md,txt,rst&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>created<span class="w"> </span>--reverse
+
+<span class="c1"># Find all configuration files</span>
+fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;yaml,yml,json,toml,ini&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
+</code></pre></div>
 <h3 id="path-specific-filtering">Path-Specific Filtering</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Filter specific directories</span>
-</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>src/<span class="w"> </span>tests/<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
-</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
-</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># Filter multiple directories</span>
-</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>fx<span class="w"> </span>filter<span class="w"> </span>log<span class="w"> </span>~/logs/<span class="w"> </span>/var/log/<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--show-path
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Filter specific directories</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>src/<span class="w"> </span>tests/<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
+
+<span class="c1"># Filter multiple directories</span>
+fx<span class="w"> </span>filter<span class="w"> </span>log<span class="w"> </span>~/logs/<span class="w"> </span>/var/log/<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--show-path
+</code></pre></div>
 <h3 id="script-integration">Script Integration</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1"># Find and process recent files</span>
-</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="nv">files</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span>--format<span class="w"> </span>simple<span class="k">)</span>
-</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>
-</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$files</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Processing: </span><span class="nv">$file</span><span class="s2">&quot;</span>
-</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">  </span>python<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
-</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="k">done</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Find and process recent files</span>
+<span class="nv">files</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span>--format<span class="w"> </span>simple<span class="k">)</span>
+
+<span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$files</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Processing: </span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="w">  </span>python<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
 <h2 id="performance-notes">Performance Notes</h2>
 <ul>
 <li><strong>Large directories</strong>: Efficiently handles directories with thousands of files</li>
@@ -1751,39 +1751,39 @@
 </ul>
 <h2 id="common-issues">Common Issues</h2>
 <h3 id="no-results-found">No Results Found</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Check extension spelling</span>
-</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>fx<span class="w"> </span>filter<span class="w"> </span>python<span class="w">  </span><span class="c1"># Should be &quot;py&quot;</span>
-</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
-</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="c1"># Try with paths</span>
-</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>~/my_project/
-</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>
-</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="c1"># Check if files exist</span>
-</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>ls<span class="w"> </span>-la<span class="w"> </span>*.py
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check extension spelling</span>
+fx<span class="w"> </span>filter<span class="w"> </span>python<span class="w">  </span><span class="c1"># Should be &quot;py&quot;</span>
+
+<span class="c1"># Try with paths</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>~/my_project/
+
+<span class="c1"># Check if files exist</span>
+ls<span class="w"> </span>-la<span class="w"> </span>*.py
+</code></pre></div>
 <h3 id="too-many-results">Too Many Results</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Limit results</span>
-</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
-</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
-</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Add path to narrow scope</span>
-</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>src/<span class="w"> </span>tests/
-</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>
-</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="c1"># Use more specific extensions</span>
-</span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;py&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Limit results</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
+
+<span class="c1"># Add path to narrow scope</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>src/<span class="w"> </span>tests/
+
+<span class="c1"># Use more specific extensions</span>
+fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;py&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <h3 id="sorting-not-working">Sorting Not Working</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Make sure to specify sort type</span>
-</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified
-</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
-</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="c1"># Use reverse for newest first</span>
-</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Make sure to specify sort type</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified
+
+<span class="c1"># Use reverse for newest first</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
+</code></pre></div>
 <h3 id="path-display-issues">Path Display Issues</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Show relative paths</span>
-</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--show-path
-</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
-</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># Use absolute paths with cd</span>
-</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="nb">cd</span><span class="w"> </span>/path/to/dir<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--show-path
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Show relative paths</span>
+fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--show-path
+
+<span class="c1"># Use absolute paths with cd</span>
+<span class="nb">cd</span><span class="w"> </span>/path/to/dir<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--show-path
+</code></pre></div>
 <h2 id="see-also">See Also</h2>
 <ul>
 <li><a href="../files/"><code>fx files</code></a> - Count files in directories</li>

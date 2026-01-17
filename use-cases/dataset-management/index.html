@@ -1405,160 +1405,160 @@
 <h2 id="dataset-organization-workflow">Dataset Organization Workflow</h2>
 <h3 id="1-preview-organization-plan">1. Preview Organization Plan</h3>
 <p>Always preview before organizing:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Preview organization with dry-run</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--dry-run
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Output shows plan without moving files</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Review to ensure correct behavior</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Preview organization with dry-run</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--dry-run
+
+<span class="c1"># Output shows plan without moving files</span>
+<span class="c1"># Review to ensure correct behavior</span>
+</code></pre></div>
 <h3 id="2-organize-by-creation-date">2. Organize by Creation Date</h3>
 <p>Organize datasets by creation time:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Basic organization</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Output directory: ~/Data/organized/</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Structure: organized/2026/202601/20260110/</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Basic organization</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data
+
+<span class="c1"># Output directory: ~/Data/organized/</span>
+<span class="c1"># Structure: organized/2026/202601/20260110/</span>
+</code></pre></div>
 <h3 id="3-filter-by-file-type">3. Filter by File Type</h3>
 <p>Organize only specific dataset types:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Organize only CSV files</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>--recursive
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Organize only JSON datasets</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.json&quot;</span><span class="w"> </span>--recursive
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Organize multiple types</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.json&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.parquet&quot;</span><span class="w"> </span>--recursive
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize only CSV files</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>--recursive
+
+<span class="c1"># Organize only JSON datasets</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.json&quot;</span><span class="w"> </span>--recursive
+
+<span class="c1"># Organize multiple types</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.json&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.parquet&quot;</span><span class="w"> </span>--recursive
+</code></pre></div>
 <h3 id="4-custom-depth-and-output">4. Custom Depth and Output</h3>
 <p>Configure organization structure:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Use 2-level depth (year/day)</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span><span class="w"> </span>-o<span class="w"> </span>~/Data/Organized
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Use 1-level depth (day only)</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-o<span class="w"> </span>~/Data/Simple
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use 2-level depth (year/day)</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span><span class="w"> </span>-o<span class="w"> </span>~/Data/Organized
+
+<span class="c1"># Use 1-level depth (day only)</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-o<span class="w"> </span>~/Data/Simple
+</code></pre></div>
 <h3 id="5-clean-up-empty-directories">5. Clean Up Empty Directories</h3>
 <p>Remove empty source directories after organization:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Organize and clean empty directories</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--recursive<span class="w"> </span>--clean-empty
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize and clean empty directories</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--recursive<span class="w"> </span>--clean-empty
+</code></pre></div>
 <h2 id="real-world-scenarios">Real-World Scenarios</h2>
 <h3 id="scenario-1-research-data-organization">Scenario 1: Research Data Organization</h3>
 <p>Organize research datasets by date:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Preview organization</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Research/Data<span class="w"> </span>--dry-run<span class="w"> </span>-o<span class="w"> </span>~/Research/Organized
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Execute organization</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Research/Data<span class="w"> </span>--recursive<span class="w"> </span>-o<span class="w"> </span>~/Research/Organized
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Preview organization</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Research/Data<span class="w"> </span>--dry-run<span class="w"> </span>-o<span class="w"> </span>~/Research/Organized
+
+<span class="c1"># Execute organization</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Research/Data<span class="w"> </span>--recursive<span class="w"> </span>-o<span class="w"> </span>~/Research/Organized
+</code></pre></div>
 <h3 id="scenario-2-ml-training-data">Scenario 2: ML Training Data</h3>
 <p>Organize machine learning training data:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Organize by file type</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/ML/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.parquet&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.json&quot;</span><span class="w"> </span>--recursive
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Use creation time</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/ML/Data<span class="w"> </span>--date-source<span class="w"> </span>created<span class="w"> </span>--recursive
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize by file type</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/ML/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.parquet&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.json&quot;</span><span class="w"> </span>--recursive
+
+<span class="c1"># Use creation time</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/ML/Data<span class="w"> </span>--date-source<span class="w"> </span>created<span class="w"> </span>--recursive
+</code></pre></div>
 <h3 id="scenario-3-sensor-data-management">Scenario 3: Sensor Data Management</h3>
 <p>Organize time-series sensor data:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Organize sensor data by date</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Sensors<span class="w"> </span>--recursive<span class="w"> </span>--date-source<span class="w"> </span>modified
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Clean up empty directories</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Sensors<span class="w"> </span>--recursive<span class="w"> </span>--clean-empty
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize sensor data by date</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Sensors<span class="w"> </span>--recursive<span class="w"> </span>--date-source<span class="w"> </span>modified
+
+<span class="c1"># Clean up empty directories</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Sensors<span class="w"> </span>--recursive<span class="w"> </span>--clean-empty
+</code></pre></div>
 <h3 id="scenario-4-archive-management">Scenario 4: Archive Management</h3>
 <p>Organize archived datasets:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Organize archives with custom depth</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Archives<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span><span class="w"> </span>-o<span class="w"> </span>~/Archives/Sorted
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Use specific patterns</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Archives<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.tar&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.zip&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.gz&quot;</span><span class="w"> </span>--recursive
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize archives with custom depth</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Archives<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span><span class="w"> </span>-o<span class="w"> </span>~/Archives/Sorted
+
+<span class="c1"># Use specific patterns</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Archives<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.tar&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.zip&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.gz&quot;</span><span class="w"> </span>--recursive
+</code></pre></div>
 <h2 id="dataset-organization-script">Dataset Organization Script</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># organize_datasets.sh</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nb">set</span><span class="w"> </span>-e
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nv">DATA_DIR</span><span class="o">=</span><span class="nv">$1</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Usage: organize_datasets.sh DATA_DIR&quot;</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Example: organize_datasets.sh ~/Data&quot;</span>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="k">fi</span>
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Dataset Organization ===&quot;</span>
-</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Source: </span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span>
-</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
-</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1"># 1. Preview organization</span>
-</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1. Previewing organization plan...&quot;</span>
-</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>fx<span class="w"> </span>organize<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="w"> </span>--dry-run<span class="w"> </span>--recursive
-</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
-</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="c1"># 2. Confirm organization</span>
-</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="nb">read</span><span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Proceed with organization? (y/n) &quot;</span><span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>-r
-</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>
-</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$REPLY</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span>^<span class="o">[</span>Yy<span class="o">]</span>$<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. Organizing datasets...&quot;</span>
-</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>
-</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="w">  </span><span class="c1"># Execute organization</span>
-</span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="w">  </span>fx<span class="w"> </span>organize<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="w"> </span>--recursive<span class="w"> </span>--clean-empty<span class="w"> </span>--yes<span class="w"> </span>--quiet
-</span><span id="__span-9-32"><a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>
-</span><span id="__span-9-33"><a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Organization complete&quot;</span>
-</span><span id="__span-9-34"><a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-9-35"><a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a><span class="k">else</span>
-</span><span id="__span-9-36"><a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. Organization cancelled&quot;</span>
-</span><span id="__span-9-37"><a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-9-38"><a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
-</span><span id="__span-9-39"><a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a><span class="k">fi</span>
-</span><span id="__span-9-40"><a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>
-</span><span id="__span-9-41"><a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a><span class="c1"># 3. Summary</span>
-</span><span id="__span-9-42"><a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;3. Summary...&quot;</span>
-</span><span id="__span-9-43"><a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a><span class="nv">OUTPUT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">/organized&quot;</span>
-</span><span id="__span-9-44"><a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Output directory: </span><span class="nv">$OUTPUT_DIR</span><span class="s2">&quot;</span>
-</span><span id="__span-9-45"><a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a>
-</span><span id="__span-9-46"><a id="__codelineno-9-46" name="__codelineno-9-46" href="#__codelineno-9-46"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_DIR</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-9-47"><a id="__codelineno-9-47" name="__codelineno-9-47" href="#__codelineno-9-47"></a><span class="w">  </span><span class="nv">FILE_COUNT</span><span class="o">=</span><span class="k">$(</span>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_DIR</span><span class="s2">&quot;</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span>
-</span><span id="__span-9-48"><a id="__codelineno-9-48" name="__codelineno-9-48" href="#__codelineno-9-48"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Files organized: </span><span class="nv">$FILE_COUNT</span><span class="s2">&quot;</span>
-</span><span id="__span-9-49"><a id="__codelineno-9-49" name="__codelineno-9-49" href="#__codelineno-9-49"></a><span class="k">fi</span>
-</span><span id="__span-9-50"><a id="__codelineno-9-50" name="__codelineno-9-50" href="#__codelineno-9-50"></a>
-</span><span id="__span-9-51"><a id="__codelineno-9-51" name="__codelineno-9-51" href="#__codelineno-9-51"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Organization Complete ===&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># organize_datasets.sh</span>
+
+<span class="nb">set</span><span class="w"> </span>-e
+
+<span class="nv">DATA_DIR</span><span class="o">=</span><span class="nv">$1</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Usage: organize_datasets.sh DATA_DIR&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Example: organize_datasets.sh ~/Data&quot;</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Dataset Organization ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Source: </span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># 1. Preview organization</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1. Previewing organization plan...&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="w"> </span>--dry-run<span class="w"> </span>--recursive
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># 2. Confirm organization</span>
+<span class="nb">read</span><span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Proceed with organization? (y/n) &quot;</span><span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>-r
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$REPLY</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span>^<span class="o">[</span>Yy<span class="o">]</span>$<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. Organizing datasets...&quot;</span>
+
+<span class="w">  </span><span class="c1"># Execute organization</span>
+<span class="w">  </span>fx<span class="w"> </span>organize<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="w"> </span>--recursive<span class="w"> </span>--clean-empty<span class="w"> </span>--yes<span class="w"> </span>--quiet
+
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Organization complete&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="k">else</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. Organization cancelled&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<span class="k">fi</span>
+
+<span class="c1"># 3. Summary</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;3. Summary...&quot;</span>
+<span class="nv">OUTPUT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">/organized&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Output directory: </span><span class="nv">$OUTPUT_DIR</span><span class="s2">&quot;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_DIR</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nv">FILE_COUNT</span><span class="o">=</span><span class="k">$(</span>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_DIR</span><span class="s2">&quot;</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Files organized: </span><span class="nv">$FILE_COUNT</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Organization Complete ===&quot;</span>
+</code></pre></div>
 <h2 id="advanced-dataset-management">Advanced Dataset Management</h2>
 <h3 id="organize-by-data-type">Organize by Data Type</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Organize CSVs</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Data/CSV
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Organize JSON</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.json&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Data/JSON
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Organize Parquet</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.parquet&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Data/Parquet
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize CSVs</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Data/CSV
+
+<span class="c1"># Organize JSON</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.json&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Data/JSON
+
+<span class="c1"># Organize Parquet</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.parquet&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Data/Parquet
+</code></pre></div>
 <h3 id="conflict-handling">Conflict Handling</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Skip conflicting datasets</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--on-conflict<span class="w"> </span>skip<span class="w"> </span>--recursive
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Rename conflicting datasets</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--on-conflict<span class="w"> </span>rename<span class="w"> </span>--recursive
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Overwrite old datasets (use carefully)</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--on-conflict<span class="w"> </span>overwrite<span class="w"> </span>--recursive
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Skip conflicting datasets</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--on-conflict<span class="w"> </span>skip<span class="w"> </span>--recursive
+
+<span class="c1"># Rename conflicting datasets</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--on-conflict<span class="w"> </span>rename<span class="w"> </span>--recursive
+
+<span class="c1"># Overwrite old datasets (use carefully)</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--on-conflict<span class="w"> </span>overwrite<span class="w"> </span>--recursive
+</code></pre></div>
 <h3 id="verification">Verification</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Verify organization</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Organized datasets:&quot;</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>find<span class="w"> </span>~/Data/organized<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Check for missing datasets</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Unorganized datasets:&quot;</span>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>find<span class="w"> </span>~/Data<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Verify organization</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Organized datasets:&quot;</span>
+find<span class="w"> </span>~/Data/organized<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+
+<span class="c1"># Check for missing datasets</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Unorganized datasets:&quot;</span>
+find<span class="w"> </span>~/Data<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+</code></pre></div>
 <h2 id="related-commands">Related Commands</h2>
 <ul>
 <li><a href="../../commands/organize/"><code>fx organize</code></a> - Organize files by date</li>

@@ -1592,8 +1592,8 @@
 - 📝 Support for multiple files
 - ⚡ Fast processing for large files</p>
 <h2 id="usage">Usage</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>fx<span class="w"> </span>replace<span class="w"> </span>search_text<span class="w"> </span>replace_text<span class="w"> </span><span class="o">[</span>filenames...<span class="o">]</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>replace<span class="w"> </span>search_text<span class="w"> </span>replace_text<span class="w"> </span><span class="o">[</span>filenames...<span class="o">]</span>
+</code></pre></div>
 <h2 id="parameters">Parameters</h2>
 <table>
 <thead>
@@ -1628,93 +1628,93 @@
 <h2 id="examples">Examples</h2>
 <h3 id="basic-usage">Basic Usage</h3>
 <p>Replace text in a single file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>file.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>file.txt
+</code></pre></div>
 <p>Replace text in multiple files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.txt
+</code></pre></div>
 <h3 id="real-world-scenarios">Real-World Scenarios</h3>
 <h4 id="scenario-1-version-updates">Scenario 1: Version Updates</h4>
 <p>Update version strings across multiple files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Update version from 1.0.0 to 2.0.0</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;version=&#39;1.0.0&#39;&quot;</span><span class="w"> </span><span class="s2">&quot;version=&#39;2.0.0&#39;&quot;</span><span class="w"> </span>*.py
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Update __version__ variables</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;__version__ = &#39;1.0.0&#39;&quot;</span><span class="w"> </span><span class="s2">&quot;__version__ = &#39;2.0.0&#39;&quot;</span><span class="w"> </span>*.py
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Update version from 1.0.0 to 2.0.0</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;version=&#39;1.0.0&#39;&quot;</span><span class="w"> </span><span class="s2">&quot;version=&#39;2.0.0&#39;&quot;</span><span class="w"> </span>*.py
+
+<span class="c1"># Update __version__ variables</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;__version__ = &#39;1.0.0&#39;&quot;</span><span class="w"> </span><span class="s2">&quot;__version__ = &#39;2.0.0&#39;&quot;</span><span class="w"> </span>*.py
+</code></pre></div>
 <h4 id="scenario-2-refactoring">Scenario 2: Refactoring</h4>
 <p>Update function names across codebase:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Rename function</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old_function_name&quot;</span><span class="w"> </span><span class="s2">&quot;new_function_name&quot;</span><span class="w"> </span>*.py
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Update class names</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;OldClassName&quot;</span><span class="w"> </span><span class="s2">&quot;NewClassName&quot;</span><span class="w"> </span>*.py
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Rename function</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old_function_name&quot;</span><span class="w"> </span><span class="s2">&quot;new_function_name&quot;</span><span class="w"> </span>*.py
+
+<span class="c1"># Update class names</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;OldClassName&quot;</span><span class="w"> </span><span class="s2">&quot;NewClassName&quot;</span><span class="w"> </span>*.py
+</code></pre></div>
 <h4 id="scenario-3-configuration-updates">Scenario 3: Configuration Updates</h4>
 <p>Update configuration settings:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Update database URL</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old_database_url&quot;</span><span class="w"> </span><span class="s2">&quot;new_database_url&quot;</span><span class="w"> </span>config.yaml
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Update API endpoints</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;api.example.com&quot;</span><span class="w"> </span><span class="s2">&quot;api.newdomain.com&quot;</span><span class="w"> </span>config.json
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Update database URL</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old_database_url&quot;</span><span class="w"> </span><span class="s2">&quot;new_database_url&quot;</span><span class="w"> </span>config.yaml
+
+<span class="c1"># Update API endpoints</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;api.example.com&quot;</span><span class="w"> </span><span class="s2">&quot;api.newdomain.com&quot;</span><span class="w"> </span>config.json
+</code></pre></div>
 <h4 id="scenario-4-text-processing">Scenario 4: Text Processing</h4>
 <p>Standardize text formatting:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Replace tabs with spaces</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;\t&quot;</span><span class="w"> </span><span class="s2">&quot;    &quot;</span><span class="w"> </span>file.txt
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Remove trailing spaces</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;  &quot;</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>file.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Replace tabs with spaces</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;\t&quot;</span><span class="w"> </span><span class="s2">&quot;    &quot;</span><span class="w"> </span>file.txt
+
+<span class="c1"># Remove trailing spaces</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;  &quot;</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>file.txt
+</code></pre></div>
 <h4 id="scenario-5-path-updates">Scenario 5: Path Updates</h4>
 <p>Update file paths in code:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Update import paths</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;from old.module&quot;</span><span class="w"> </span><span class="s2">&quot;from new.module&quot;</span><span class="w"> </span>*.py
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Update include paths</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;#include &lt;old.h&gt;&quot;</span><span class="w"> </span><span class="s2">&quot;#include &lt;new.h&gt;&quot;</span><span class="w"> </span>*.c
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Update import paths</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;from old.module&quot;</span><span class="w"> </span><span class="s2">&quot;from new.module&quot;</span><span class="w"> </span>*.py
+
+<span class="c1"># Update include paths</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;#include &lt;old.h&gt;&quot;</span><span class="w"> </span><span class="s2">&quot;#include &lt;new.h&gt;&quot;</span><span class="w"> </span>*.c
+</code></pre></div>
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="combining-with-other-commands">Combining with Other Commands</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Find files and replace text</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Count files before replacement</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Files to update: </span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>__version__<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span><span class="s2">&quot;</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Replace and verify</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find files and replace text</span>
+fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span>
+
+<span class="c1"># Count files before replacement</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Files to update: </span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>__version__<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span><span class="s2">&quot;</span>
+
+<span class="c1"># Replace and verify</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span>
+</code></pre></div>
 <h3 id="batch-replacement-with-multiple-patterns">Batch Replacement with Multiple Patterns</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Multiple replacements (run sequentially)</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern1&quot;</span><span class="w"> </span><span class="s2">&quot;replacement1&quot;</span><span class="w"> </span>*.py
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern2&quot;</span><span class="w"> </span><span class="s2">&quot;replacement2&quot;</span><span class="w"> </span>*.py
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern3&quot;</span><span class="w"> </span><span class="s2">&quot;replacement3&quot;</span><span class="w"> </span>*.py
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Multiple replacements (run sequentially)</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern1&quot;</span><span class="w"> </span><span class="s2">&quot;replacement1&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern2&quot;</span><span class="w"> </span><span class="s2">&quot;replacement2&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern3&quot;</span><span class="w"> </span><span class="s2">&quot;replacement3&quot;</span><span class="w"> </span>*.py
+</code></pre></div>
 <h3 id="safe-replacement-workflow">Safe Replacement Workflow</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Safe replacement workflow</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 1. Create backup</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>fx<span class="w"> </span>backup<span class="w"> </span>project_dir<span class="w"> </span>--compress
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># 2. Perform replacements</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 3. Verify changes</span>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># 4. Test the code</span>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>pytest
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Safe replacement workflow</span>
+
+<span class="c1"># 1. Create backup</span>
+fx<span class="w"> </span>backup<span class="w"> </span>project_dir<span class="w"> </span>--compress
+
+<span class="c1"># 2. Perform replacements</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
+
+<span class="c1"># 3. Verify changes</span>
+grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
+
+<span class="c1"># 4. Test the code</span>
+pytest
+</code></pre></div>
 <h3 id="handling-special-characters">Handling Special Characters</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Quote strings with special characters</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old@domain.com&quot;</span><span class="w"> </span><span class="s2">&quot;new@domain.com&quot;</span><span class="w"> </span>file.txt
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Replace with newline (advanced)</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Note: This may require escape sequences depending on shell</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span><span class="s2">&quot;replacement\nnewline&quot;</span><span class="w"> </span>file.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Quote strings with special characters</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old@domain.com&quot;</span><span class="w"> </span><span class="s2">&quot;new@domain.com&quot;</span><span class="w"> </span>file.txt
+
+<span class="c1"># Replace with newline (advanced)</span>
+<span class="c1"># Note: This may require escape sequences depending on shell</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span><span class="s2">&quot;replacement\nnewline&quot;</span><span class="w"> </span>file.txt
+</code></pre></div>
 <h2 id="safety-features">Safety Features</h2>
 <h3 id="atomic-writes">Atomic Writes</h3>
 <p><code>fx replace</code> uses atomic write operations:
@@ -1742,93 +1742,93 @@
 <h2 id="common-issues">Common Issues</h2>
 <h3 id="no-changes-made">No Changes Made</h3>
 <p>If replacement seems to have no effect:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check if text exists</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>grep<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span>file.txt
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Check for exact match (case-sensitive)</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span>file.txt
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Try with different quoting</span>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s1">&#39;old&#39;</span><span class="w"> </span><span class="s1">&#39;new&#39;</span><span class="w"> </span>file.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check if text exists</span>
+grep<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span>file.txt
+
+<span class="c1"># Check for exact match (case-sensitive)</span>
+grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span>file.txt
+
+<span class="c1"># Try with different quoting</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s1">&#39;old&#39;</span><span class="w"> </span><span class="s1">&#39;new&#39;</span><span class="w"> </span>file.txt
+</code></pre></div>
 <h3 id="permission-denied">Permission Denied</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check file permissions</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>file.txt
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Make file writable (if allowed)</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>chmod<span class="w"> </span>+w<span class="w"> </span>file.txt
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Or run with sudo (not recommended)</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>sudo<span class="w"> </span>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>file.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check file permissions</span>
+ls<span class="w"> </span>-la<span class="w"> </span>file.txt
+
+<span class="c1"># Make file writable (if allowed)</span>
+chmod<span class="w"> </span>+w<span class="w"> </span>file.txt
+
+<span class="c1"># Or run with sudo (not recommended)</span>
+sudo<span class="w"> </span>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>file.txt
+</code></pre></div>
 <h3 id="binary-file-corruption">Binary File Corruption</h3>
 <p><code>fx replace</code> is not designed for binary files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Do not use on binary files</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span><span class="s2">&quot;replacement&quot;</span><span class="w"> </span>image.jpg<span class="w">  </span><span class="c1"># ❌ CORRUPTION RISK</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Use hex editors or specialized tools for binary files</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Do not use on binary files</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span><span class="s2">&quot;replacement&quot;</span><span class="w"> </span>image.jpg<span class="w">  </span><span class="c1"># ❌ CORRUPTION RISK</span>
+
+<span class="c1"># Use hex editors or specialized tools for binary files</span>
+</code></pre></div>
 <h3 id="special-character-issues">Special Character Issues</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Use single quotes for strings with special characters</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s1">&#39;old@domain&#39;</span><span class="w"> </span><span class="s1">&#39;new@domain&#39;</span><span class="w"> </span>file.txt
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Escape special characters</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old\|new&quot;</span><span class="w"> </span><span class="s2">&quot;replacement&quot;</span><span class="w"> </span>file.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use single quotes for strings with special characters</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s1">&#39;old@domain&#39;</span><span class="w"> </span><span class="s1">&#39;new@domain&#39;</span><span class="w"> </span>file.txt
+
+<span class="c1"># Escape special characters</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old\|new&quot;</span><span class="w"> </span><span class="s2">&quot;replacement&quot;</span><span class="w"> </span>file.txt
+</code></pre></div>
 <h3 id="restore-failed">Restore Failed</h3>
 <p>If automatic restore fails:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check backup directory</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Backups are created by fx backup module</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Look for files with timestamp suffix</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>ls<span class="w"> </span>-la<span class="w"> </span>*_timestamp.*
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Manual restore from backup</span>
-</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>cp<span class="w"> </span>file_timestamp.txt<span class="w"> </span>file.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check backup directory</span>
+<span class="c1"># Backups are created by fx backup module</span>
+<span class="c1"># Look for files with timestamp suffix</span>
+ls<span class="w"> </span>-la<span class="w"> </span>*_timestamp.*
+
+<span class="c1"># Manual restore from backup</span>
+cp<span class="w"> </span>file_timestamp.txt<span class="w"> </span>file.txt
+</code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="always-test-first">Always Test First</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Test replacement on a single file</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>cp<span class="w"> </span>file.txt<span class="w"> </span>file_test.txt
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>file_test.txt
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>cat<span class="w"> </span>file_test.txt
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
-</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># Only then replace in all files</span>
-</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.txt
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Test replacement on a single file</span>
+cp<span class="w"> </span>file.txt<span class="w"> </span>file_test.txt
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>file_test.txt
+cat<span class="w"> </span>file_test.txt
+
+<span class="c1"># Only then replace in all files</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.txt
+</code></pre></div>
 <h3 id="create-backup-before-batch-operations">Create Backup Before Batch Operations</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Always backup before bulk changes</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>fx<span class="w"> </span>backup<span class="w"> </span>project_dir<span class="w"> </span>--compress
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Then perform replacements</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Verify changes</span>
-</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>git<span class="w"> </span>diff
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Always backup before bulk changes</span>
+fx<span class="w"> </span>backup<span class="w"> </span>project_dir<span class="w"> </span>--compress
+
+<span class="c1"># Then perform replacements</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
+
+<span class="c1"># Verify changes</span>
+git<span class="w"> </span>diff
+</code></pre></div>
 <h3 id="use-version-control">Use Version Control</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Before replacement, commit current state</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>git<span class="w"> </span>add<span class="w"> </span>.
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Before replacement&quot;</span>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1"># Perform replacement</span>
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
-</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="c1"># Review changes</span>
-</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>git<span class="w"> </span>diff
-</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>
-</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="c1"># If needed, revert</span>
-</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>git<span class="w"> </span>checkout<span class="w"> </span>.
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Before replacement, commit current state</span>
+git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Before replacement&quot;</span>
+
+<span class="c1"># Perform replacement</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
+
+<span class="c1"># Review changes</span>
+git<span class="w"> </span>diff
+
+<span class="c1"># If needed, revert</span>
+git<span class="w"> </span>checkout<span class="w"> </span>.
+</code></pre></div>
 <h3 id="verify-replacements">Verify Replacements</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Count occurrences after replacement</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;new_text&quot;</span><span class="w"> </span>*.py
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># View replacement context</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>grep<span class="w"> </span>-C<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="s2">&quot;new_text&quot;</span><span class="w"> </span>file.txt
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Ensure no unintended changes</span>
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>grep<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span>file.txt<span class="w">  </span><span class="c1"># Should return nothing</span>
-</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Count occurrences after replacement</span>
+grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;new_text&quot;</span><span class="w"> </span>*.py
+
+<span class="c1"># View replacement context</span>
+grep<span class="w"> </span>-C<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="s2">&quot;new_text&quot;</span><span class="w"> </span>file.txt
+
+<span class="c1"># Ensure no unintended changes</span>
+grep<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span>file.txt<span class="w">  </span><span class="c1"># Should return nothing</span>
+</code></pre></div>
 <h2 id="see-also">See Also</h2>
 <ul>
 <li><a href="../backup/"><code>fx backup</code></a> - Create timestamped backups</li>
