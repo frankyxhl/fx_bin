@@ -1,6 +1,20 @@
 # CHANGELOG
 
 
+## v2.5.5 (2026-01-17)
+
+### Bug Fixes
+
+- Remove custom domain cname from deployment workflow
+  ([`1cc97af`](https://github.com/frankyxhl/fx_bin/commit/1cc97af3da8aba686c9362bce9b27dfc9314d100))
+
+Remove fx-bin.frankxu.me custom domain configuration from GitHub Actions deployment workflow.
+
+This will deploy to default GitHub Pages URL: - https://frankyxhl.github.io/fx_bin/
+
+The CNAME file will also be removed from gh-pages branch to complete the custom domain removal.
+
+
 ## v2.5.4 (2026-01-15)
 
 ### Bug Fixes
