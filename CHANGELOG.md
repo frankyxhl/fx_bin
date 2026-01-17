@@ -1,6 +1,46 @@
 # CHANGELOG
 
 
+## v2.5.6 (2026-01-17)
+
+### Bug Fixes
+
+- Correct archive path to include date prefix per OpenSpec AGENTS.md
+  ([`6ce5a0f`](https://github.com/frankyxhl/fx_bin/commit/6ce5a0f40aab6f7dd6c011da04a2bec9b2b245f3))
+
+Change: Move archive from openspec/changes/archive/fix-docs-directory-urls/ to
+  openspec/changes/archive/2026-01-17-fix-docs-directory-urls/
+
+Reason: OpenSpec archival convention requires YYYY-MM-DD- prefix for consistency and tooling support
+
+Fixes P1 Codex review comment about missing date prefix in archive path.
+
+Per openspec/AGENTS.md: - Archive location must be: openspec/changes/archive/YYYY-MM-DD-[name]/ -
+  Current path lacked date prefix, breaking documented layout - This fixes tooling and reviewer
+  expectations
+
+Impact: No content changes, only directory structure correction
+
+### Chores
+
+- Archive fix-docs-directory-urls OpenSpec plan
+  ([`f8220eb`](https://github.com/frankyxhl/fx_bin/commit/f8220eb236178e051d0f329ebfa96b473ebca0ff))
+
+- Move openspec/changes/fix-docs-directory-urls/ to archive/ - Add IMPLEMENTATION_NOTES.md with
+  lessons learned - Document completed implementation and testing results - Record review feedback
+  about use_directory_urls behavior
+
+This plan is complete: - MkDocs docs_dir configuration fixed - Custom domain CNAME removed -
+  Documentation successfully deployed - All pages accessible via directory URLs
+
+Lessons learned: - Configuration is critical (docs_dir parameter) - Process matters (PR flow vs
+  direct push) - Spec assertions must match implementation - Directory URLs are the default and
+  recommended pattern
+
+Next steps: - No remaining tasks for this plan - Documentation is live at
+  https://frankyxhl.github.io/fx_bin/
+
+
 ## v2.5.5 (2026-01-17)
 
 ### Bug Fixes
