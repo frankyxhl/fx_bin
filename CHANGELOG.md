@@ -1,6 +1,20 @@
 # CHANGELOG
 
 
+## v2.5.7 (2026-01-17)
+
+### Bug Fixes
+
+- **docs**: Disable anchor_linenums to fix code block rendering
+  ([`fe28e42`](https://github.com/frankyxhl/fx_bin/commit/fe28e4279331f303054089bb4929cd284eeaadf3))
+
+The anchor_linenums and line_spans options in pymdownx.highlight were generating visible anchor tags
+  like [](#__codelineno-0-1) in code blocks instead of being hidden by CSS. Disabling these features
+  fixes the documentation rendering on GitHub Pages.
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+
+
 ## v2.5.6 (2026-01-17)
 
 ### Bug Fixes
