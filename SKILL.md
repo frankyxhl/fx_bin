@@ -125,28 +125,13 @@ fx size
 # Analyze specific directory
 fx size /path/to/directory
 
-# Show top 10 largest files
-fx size . --limit 10
-
-# Display sizes in specific unit
-fx size . --unit MB
-
-# Sort ascending (smallest first)
-fx size . --sort asc
-
-# Include hidden files
-fx size . --all
+# Analyze multiple directories
+fx size ~/Downloads ~/Documents ~/Projects
 ```
-
-**Options:**
-- `--limit N`: Show top N results
-- `--unit UNIT`: Display unit (B, KB, MB, GB)
-- `--sort ORDER`: Sort order (asc/desc)
-- `--all`: Include hidden files
 
 **Use Cases:**
 - Disk usage analysis
-- Finding large files for cleanup
+- Finding large directories
 - Storage optimization
 - Directory size comparison
 
@@ -332,25 +317,23 @@ file3.txt: 0 replacements (skipped)
 
 Create timestamped backups of files or directories with optional compression.
 
+Backups are created in the same directory as the source file by default.
+
 ```bash
-# Backup a single file
+# Backup a single file (creates data_20250906_142315.json in same directory)
 fx backup data.json
 
 # Backup a directory
 fx backup my_project
 
-# Backup with compression
+# Backup with compression (creates .tar.xz archive)
 fx backup my_project --compress
-
-# Custom backup directory
-fx backup config.yaml --backup-dir ./archive
 
 # Custom timestamp format
 fx backup important.txt --timestamp-format %Y-%m-%d_%H-%M
 ```
 
 **Options:**
-- `--backup-dir DIR`: Directory to store backups (default: 'backups')
 - `--compress`: Compress directory backup as .tar.xz
 - `--timestamp-format FORMAT`: Custom strftime format (default: %Y%m%d_%H%M%S)
 
@@ -362,8 +345,8 @@ fx backup important.txt --timestamp-format %Y-%m-%d_%H-%M
 
 **Example Output:**
 ```
-Created backup: backups/data_20250906_142315.json
-Created backup: backups/my_project_20250906_142315.tar.xz
+Created backup: ./data_20250906_142315.json
+Created backup: ./my_project_20250906_142315.tar.xz
 ```
 
 ---
@@ -655,8 +638,8 @@ Repository: https://github.com/frankyxhl/fx_bin
 # Count all files in project
 fx files .
 
-# Find large files taking up space
-fx size . --limit 10 --unit MB
+# Find large directories taking up space
+fx size .
 
 # Find old log files
 fx filter log . --sort-by modified --reverse
@@ -696,8 +679,8 @@ fx organize ~/Photos -i "*.jpg" -i "*.png" -i "*.heic"
 # Find recent PDFs
 fx filter pdf ~/Documents --sort-by modified --reverse --limit 10
 
-# Backup important documents
-fx backup ~/Documents/important.xlsx --backup-dir ~/Backups
+# Backup important documents (creates backup in same directory)
+fx backup ~/Documents/important.xlsx
 
 # Create today's workspace for downloads
 fx today --base ~/Downloads
@@ -715,8 +698,8 @@ fx fff config
 # Get absolute path for scripts
 fx realpath ./relative/path/to/script.sh
 
-# End of day: backup work
-fx backup ~/today_work --compress --backup-dir ~/Archives
+# End of day: backup work (creates compressed archive in same directory)
+fx backup ~/today_work --compress
 ```
 
 ### 5. Bulk Operations
@@ -733,7 +716,7 @@ fx filter "py,js,ts,jsx,tsx" . --format simple | wc -l
 
 # Batch backup multiple directories
 for dir in src tests docs; do
-    fx backup "$dir" --backup-dir ./pre_deploy_backup
+    fx backup "$dir" --compress
 done
 ```
 
