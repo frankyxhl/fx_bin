@@ -34,6 +34,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("backup", "Create timestamped backups of files/dirs"),
     ("root", "Find Git project root directory"),
     ("realpath", "Get absolute path of a file or directory"),
+    ("rp", "Get absolute path (alias for realpath)"),
     ("today", "Create/navigate to today's workspace directory"),
     ("organize", "Organize files into date-based directories"),
     ("list", "List all available commands"),
@@ -447,19 +448,8 @@ def root(output_for_cd: bool) -> int:
         ctx.exit(1)
 
 
-@cli.command()
-@click.argument("path", default=".")
-def realpath(path: str) -> int:
-    """Get absolute path of a file or directory.
-
-    Resolves relative paths, symlinks, and ~ to the canonical absolute path.
-    The path must exist.
-
-    Examples:
-        fx realpath .           # Current directory
-        fx realpath ../foo      # Relative path
-        fx realpath ~/Downloads # Home directory
-    """
+def _run_realpath(path: str) -> int:
+    """Shared implementation for realpath and rp commands."""
     from . import realpath as realpath_module
 
     try:
@@ -478,6 +468,38 @@ def realpath(path: str) -> int:
         click.echo(f"Error: Cannot resolve path: {path} ({e})", err=True)
         ctx = click.get_current_context()
         ctx.exit(1)
+
+
+@cli.command()
+@click.argument("path", default=".")
+def realpath(path: str) -> int:
+    """Get absolute path of a file or directory.
+
+    Resolves relative paths, symlinks, and ~ to the canonical absolute path.
+    The path must exist.
+
+    Examples:
+        fx realpath .           # Current directory
+        fx realpath ../foo      # Relative path
+        fx realpath ~/Downloads # Home directory
+    """
+    return _run_realpath(path)
+
+
+@cli.command()
+@click.argument("path", default=".")
+def rp(path: str) -> int:
+    """Get absolute path of a file or directory.
+
+    Alias for `fx realpath`. Resolves relative paths, symlinks, and ~
+    to the canonical absolute path.
+
+    Examples:
+        fx rp .           # Current directory
+        fx rp ../foo      # Relative path
+        fx rp ~/Downloads # Home directory
+    """
+    return _run_realpath(path)
 
 
 @cli.command()
