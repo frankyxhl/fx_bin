@@ -21,6 +21,23 @@ Keep this managed block so 'openspec update' can refresh the instructions.
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Git Workflow Rules (MANDATORY)
+
+**AI assistants MUST follow these rules:**
+
+1. **NEVER merge PRs** - Only human maintainers can merge Pull Requests
+2. **NEVER push directly to main** - Always create a feature branch and PR
+3. **PR workflow**:
+   - Create feature branch (e.g., `docs/add-skill-md`, `fix/some-bug`)
+   - Make changes and commit
+   - Push branch and create PR
+   - **STOP and wait for human to review and merge**
+4. **OpenSpec workflow**:
+   - Create proposal files first (`openspec/changes/<change-id>/`)
+   - Wait for user to run `/openspec-execute <change-id>`
+   - Execute tasks step by step, marking each as done
+   - Create PR and **STOP** - do not merge
+
 ## Project Overview
 
 FX bin is a Python utility collection providing command-line tools for file operations, including file counting, size analysis, finding files, text replacement, and a simple upload server. The project is packaged using Poetry and distributed via PyPI as `fx-bin`.
