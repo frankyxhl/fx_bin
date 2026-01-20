@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v2.6.0 (2026-01-20)
+
+### Features
+
+- **cli**: Add rp alias for realpath command
+  ([`ff8ce1f`](https://github.com/frankyxhl/fx_bin/commit/ff8ce1fc3ce89c1ae85966150b7d5836f10f7d4c))
+
+Add short alias `fx rp` as equivalent to `fx realpath` for faster typing. Follows the same pattern
+  as fff/ff alias.
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+
+
 ## v2.5.8 (2026-01-17)
 
 ### Bug Fixes
