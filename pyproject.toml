@@ -19,7 +19,7 @@ loguru = "^0.7.0"
 returns = "^0.22.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.0.0"
+pytest = ">=8,<10"
 pytest-bdd = "^7.0.0"
 pytest-cov = "^4.1.0"
 pytest-timeout = "^2.2.0"
