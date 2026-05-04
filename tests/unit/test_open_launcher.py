@@ -178,6 +178,19 @@ class TestSelectorResolution(unittest.TestCase):
         self.assertEqual(target.target, "https://docs.example")
         self.assertEqual(target.label, "Configured Readme")
 
+    def test_bare_local_file_with_colon_resolves_as_path(self) -> None:
+        from fx_bin.open_launcher import resolve_launch_target
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            cwd = Path(temp_dir)
+            file_path = cwd / "report:2026.txt"
+            file_path.write_text("report", encoding="utf-8")
+
+            target = resolve_launch_target("report:2026.txt", [], cwd=cwd)
+
+        self.assertEqual(target.target, str(file_path))
+        self.assertEqual(target.label, "report:2026.txt")
+
     def test_index_applies_to_filtered_view(self) -> None:
         from fx_bin.open_launcher import OpenConfig, OpenItem, resolve_launch_target
 
@@ -301,6 +314,24 @@ class TestAddWorkflow(unittest.TestCase):
             item = build_new_item(str(file_path), [])
 
         self.assertEqual(item.target, str(file_path.resolve()))
+
+    def test_build_new_item_normalizes_bare_colon_file(self) -> None:
+        from fx_bin.open_launcher import build_new_item
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            cwd = Path(temp_dir)
+            file_path = cwd / "report:2026.txt"
+            file_path.write_text("report", encoding="utf-8")
+
+            old_cwd = Path.cwd()
+            try:
+                os.chdir(cwd)
+                item = build_new_item("report:2026.txt", [])
+            finally:
+                os.chdir(old_cwd)
+
+        self.assertEqual(item.target, str(file_path.resolve()))
+        self.assertEqual(item.slug, "report-2026")
 
     def test_append_item_writes_valid_toml_with_escaping(self) -> None:
         from fx_bin.open_launcher import OpenItem, append_item, load_config
@@ -508,6 +539,19 @@ class TestAiMetadata(unittest.TestCase):
                 existing_slugs=(),
                 command="echo 'unclosed",
             )
+
+    def test_ai_whitespace_command_returns_open_error(self) -> None:
+        from fx_bin.open_launcher import OpenError, request_ai_metadata
+
+        with patch("fx_bin.open_launcher.subprocess.run") as run:
+            with self.assertRaisesRegex(OpenError, "FX_OPEN_AI_COMMAND"):
+                request_ai_metadata(
+                    "https://example.com",
+                    existing_slugs=(),
+                    command="   ",
+                )
+
+        run.assert_not_called()
 
 
 if __name__ == "__main__":

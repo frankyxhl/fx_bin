@@ -29,6 +29,17 @@ RESERVED_SLUGS = {"add", "remove", "rm", "edit", "list", "delete", "help"}
 ALLOWED_ITEM_KEYS = {"name", "slug", "target", "order", "tags", "browser", "app"}
 AI_ALLOWED_FIELDS = {"name", "slug", "tags"}
 LOCK_STALE_SECONDS = 600
+UNSUPPORTED_TARGET_SCHEMES = {
+    "about",
+    "chrome",
+    "data",
+    "file",
+    "ftp",
+    "javascript",
+    "mailto",
+    "sftp",
+    "ssh",
+}
 BARE_DOMAIN_RE = re.compile(
     r"^[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?\.[A-Za-z]{2,}(?::[0-9]+)?$"
 )
@@ -679,6 +690,8 @@ def request_ai_metadata(
         argv = shlex.split(command)
     except ValueError as exc:
         raise OpenError(f"FX_OPEN_AI_COMMAND cannot be safely split: {exc}") from exc
+    if not argv:
+        raise OpenError("FX_OPEN_AI_COMMAND must include a command")
 
     try:
         # FX_OPEN_AI_COMMAND is parsed with shlex.split above and shell is
@@ -749,11 +762,16 @@ def _is_http_url(value: str) -> bool:
 
 def _has_unsupported_scheme(value: str) -> bool:
     parsed = urlparse(value)
-    if not parsed.scheme:
+    scheme = parsed.scheme.lower()
+    if not scheme:
         return False
     if _is_windows_drive_path(value):
         return False
-    return parsed.scheme not in {"http", "https"}
+    if scheme in {"http", "https"}:
+        return not bool(parsed.netloc)
+    if parsed.netloc:
+        return True
+    return scheme in UNSUPPORTED_TARGET_SCHEMES
 
 
 def _is_windows_drive_path(value: str) -> bool:
