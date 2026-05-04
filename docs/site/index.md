@@ -74,6 +74,9 @@ fx size . --limit 10 --unit MB
 # Find files containing keyword
 fx ff TODO
 
+# Open a saved URL/file target
+fx open cc-usage
+
 # Filter documents by extension
 fx filter ~/Documents "pdf,docx" --format detailed
 
@@ -91,6 +94,7 @@ fx replace "old_text" "new_text" file.txt
 | `fx size` | Analyze file/directory sizes | Disk usage analysis, cleanup planning |
 | `fx ff` | Find files by keyword | Debugging, file discovery |
 | `fx fff` | Find first matching file | Quick file lookup |
+| `fx open` | Open saved URLs/files and direct targets | Link launcher, browser testing |
 | `fx filter` | Filter files by extension | Content analysis, organization |
 | `fx replace` | Replace text in files | Batch updates, refactoring |
 | `fx backup` | Create timestamped backups | Safe file operations |
@@ -137,6 +141,10 @@ fx filter "py,js,ts" --sort-by modified --reverse --limit 10
 
 # Locate TODO markers
 fx ff TODO --exclude node_modules --exclude .git
+
+# Open recurring usage dashboards or docs
+fx open --tag usage
+fx open cc-usage
 ```
 
 ### Project Cleanup

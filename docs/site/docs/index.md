@@ -14,7 +14,7 @@ Complete documentation for fx-bin - your all-in-one file operation CLI.
 
 ## Commands
 
-Complete reference for all 10 fx-bin commands.
+Complete reference for all fx-bin commands.
 
 ### File Operations
 
@@ -29,6 +29,12 @@ Complete reference for all 10 fx-bin commands.
 |----------|-------------|----------------|
 | `fx ff` | Find files by keyword | [`fx ff`](../commands/ff.md) |
 | `fx fff` | Find first matching file | [`fx fff`](../commands/fff.md) |
+
+### Launching
+
+| Command | Description | Documentation |
+|----------|-------------|----------------|
+| `fx open` | Open saved URLs/files and direct targets | [`fx open`](../commands/open.md) |
 
 ### File Filtering
 

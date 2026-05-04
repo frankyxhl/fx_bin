@@ -2,6 +2,7 @@
 """Main CLI entry point for fx commands."""
 
 import click
+import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -29,6 +30,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("size", "Analyze file/directory sizes"),
     ("ff", "Find files by keyword"),
     ("fff", "Find first file matching keyword (alias for ff --first)"),
+    ("open", "Open saved URLs/files and direct targets"),
     ("filter", "Filter files by extension"),
     ("replace", "Replace text in files"),
     ("backup", "Create timestamped backups of files/dirs"),
@@ -564,6 +566,193 @@ def today(
             click.echo(f"Error: {e}", err=True)
         ctx = click.get_current_context()
         ctx.exit(1)
+
+
+@cli.command(
+    name="open",
+    context_settings={"help_option_names": ["-h", "--help"]},
+)
+@click.argument("tokens", nargs=-1)
+@click.option(
+    "--config",
+    "config_path",
+    type=click.Path(dir_okay=False),
+    help="Launcher config path (default: XDG config or ~/.config/fx-bin/open.toml)",
+)
+@click.option(
+    "--tag",
+    "filter_tags",
+    multiple=True,
+    help="Filter saved targets by tag before listing or selecting",
+)
+@click.option(
+    "--browser",
+    help="Open URL target with this browser on macOS, or store for URL add",
+)
+@click.option(
+    "--app",
+    help="Open local target with this app on macOS, or store for local add",
+)
+@click.option("--name", help="Name for fx open add")
+@click.option("--slug", help="Slug for fx open add")
+@click.option(
+    "--entry-tag",
+    "entry_tags",
+    multiple=True,
+    help="Metadata tag for fx open add; repeat for multiple tags",
+)
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    help="Confirm fx open add in non-interactive mode",
+)
+@click.option(
+    "--ai",
+    is_flag=True,
+    help="Use FX_OPEN_AI_COMMAND to propose add metadata",
+)
+def open_command(
+    tokens: Tuple[str, ...],
+    config_path: Optional[str],
+    filter_tags: Tuple[str, ...],
+    browser: Optional[str],
+    app: Optional[str],
+    name: Optional[str],
+    slug: Optional[str],
+    entry_tags: Tuple[str, ...],
+    yes: bool,
+    ai: bool,
+) -> int:
+    """Open saved URLs/files or direct targets.
+
+    \b
+    List and open:
+      fx open                              # List saved targets with indices
+      fx open cc-usage                     # Open by slug
+      fx open 3                            # Open by 1-based index
+      fx open --tag usage 2                # Open index in filtered list
+      fx open https://example.com          # Open direct URL
+      fx open ./diagram.png --app Preview  # Open local file on macOS
+
+    \b
+    Add entries:
+      fx open add yahoo.co.jp
+      fx open add yahoo.co.jp \\
+        --name "Yahoo! JAPAN" --slug yahoo-jp --entry-tag portal --yes
+      fx open add https://example.com --ai --yes
+
+    \b
+    AI metadata:
+      --ai runs the external command in FX_OPEN_AI_COMMAND.
+      The provider receives JSON on stdin and may return name, slug, and tags.
+    """
+    from . import open_launcher
+
+    try:
+        resolved_config = open_launcher.resolve_config_path(config_path)
+        if tokens and tokens[0] == "add":
+            return _run_open_add(
+                tokens,
+                resolved_config,
+                filter_tags,
+                browser,
+                app,
+                name,
+                slug,
+                entry_tags,
+                yes,
+                ai,
+            )
+
+        if name or slug or entry_tags or yes or ai:
+            raise click.ClickException(
+                "--name, --slug, --entry-tag, --yes, and --ai are only valid "
+                "with 'fx open add'"
+            )
+
+        config = open_launcher.load_config(resolved_config)
+        if not tokens:
+            items = open_launcher.filter_items(config.items, filter_tags)
+            click.echo(open_launcher.format_items(items))
+            return 0
+        if len(tokens) != 1:
+            raise click.ClickException("fx open accepts one selector or direct target")
+
+        launch_target = open_launcher.resolve_launch_target(
+            tokens[0],
+            config.items,
+            filter_tags=filter_tags,
+        )
+        plan = open_launcher.build_dispatch_plan(
+            launch_target,
+            browser=browser,
+            app=app,
+        )
+        open_launcher.execute_dispatch_plan(plan)
+        click.echo(f"Opened {launch_target.label}")
+        return 0
+    except open_launcher.OpenError as e:
+        raise click.ClickException(str(e)) from e
+
+
+def _run_open_add(
+    tokens: Tuple[str, ...],
+    config_path: Path,
+    filter_tags: Tuple[str, ...],
+    browser: Optional[str],
+    app: Optional[str],
+    name: Optional[str],
+    slug: Optional[str],
+    entry_tags: Tuple[str, ...],
+    yes: bool,
+    ai: bool,
+) -> int:
+    """Run the fx open add workflow."""
+    from . import open_launcher
+
+    if filter_tags:
+        raise click.ClickException(
+            "--tag filters list/open results. Use --entry-tag for add metadata."
+        )
+    if len(tokens) != 2:
+        raise click.ClickException("Usage is fx open add TARGET")
+    if not yes and not sys.stdin.isatty():
+        raise click.ClickException("fx open add requires --yes in non-interactive mode")
+
+    existing_config = open_launcher.load_config(config_path)
+    target = tokens[1]
+    ai_metadata = None
+    if ai:
+        ai_metadata = open_launcher.request_ai_metadata(
+            target,
+            existing_slugs=tuple(item.slug for item in existing_config.items),
+            command=os.environ.get("FX_OPEN_AI_COMMAND"),
+        )
+
+    item = open_launcher.build_new_item(
+        target,
+        existing_config.items,
+        name=name,
+        slug=slug,
+        tags=entry_tags,
+        browser=browser,
+        app=app,
+        ai_metadata=ai_metadata,
+    )
+
+    if not yes:
+        click.echo(f"Add {item.slug}: {item.name}")
+        click.echo(f"Target: {item.target}")
+        if item.tags:
+            click.echo(f"Tags: {', '.join(item.tags)}")
+        if not click.confirm("Proceed?", default=False):
+            click.echo("Cancelled.")
+            return 0
+
+    written_item = open_launcher.append_item(config_path, item)
+    click.echo(f"Added {written_item.slug}: {written_item.target}")
+    return 0
 
 
 @cli.command(name="list")

@@ -54,6 +54,7 @@ nav:
     - commands/size.md
     - commands/ff.md
     - commands/fff.md
+    - commands/open.md
     - commands/filter.md
     - commands/replace.md
     - commands/backup.md
