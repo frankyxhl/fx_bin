@@ -1,6 +1,42 @@
 # CHANGELOG
 
 
+## v2.7.0 (2026-05-04)
+
+### Bug Fixes
+
+- Address open launcher review comments
+  ([`ea12d6e`](https://github.com/frankyxhl/fx_bin/commit/ea12d6e410af46e6663aa0a9118d2fe6e4f92fca))
+
+- Assign open add order under lock
+  ([`70febf5`](https://github.com/frankyxhl/fx_bin/commit/70febf52540a86890585295e0e2fbac8a234b815))
+
+- Handle mixed-case http schemes
+  ([`0ac0010`](https://github.com/frankyxhl/fx_bin/commit/0ac0010c71e21a9c034a88e286da01d2ce892a1b))
+
+- Ignore saved opener off macos
+  ([`1b44dfd`](https://github.com/frankyxhl/fx_bin/commit/1b44dfd7a9a281790e18a35c40767cb4c4d1fa43))
+
+- Parse ai commands safely on windows
+  ([`e859760`](https://github.com/frankyxhl/fx_bin/commit/e859760777cf5af780b35b41273e331aad1dabd1))
+
+- Satisfy open launcher CI checks
+  ([`786266e`](https://github.com/frankyxhl/fx_bin/commit/786266e260d66027444ed8cc6784932b3152d848))
+
+- Tighten open add validation
+  ([`6f93fce`](https://github.com/frankyxhl/fx_bin/commit/6f93fcebd65ece1c8d9841f036d90570a942b8a1))
+
+### Documentation
+
+- Note claude workflow follow-up
+  ([`230c054`](https://github.com/frankyxhl/fx_bin/commit/230c0547335bb8fe64f8df8e63647fd13b70ce92))
+
+### Features
+
+- Add fx open launcher
+  ([`566fa74`](https://github.com/frankyxhl/fx_bin/commit/566fa74668fe36478149336ed34e0436e784a727))
+
+
 ## v2.6.0 (2026-01-20)
 
 ### Features
