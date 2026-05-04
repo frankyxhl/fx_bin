@@ -29,6 +29,7 @@ RESERVED_SLUGS = {"add", "remove", "rm", "edit", "list", "delete", "help"}
 ALLOWED_ITEM_KEYS = {"name", "slug", "target", "order", "tags", "browser", "app"}
 AI_ALLOWED_FIELDS = {"name", "slug", "tags"}
 LOCK_STALE_SECONDS = 600
+WINDOWS_EXECUTABLE_SUFFIXES = (".exe", ".bat", ".cmd", ".com", ".ps1")
 UNSUPPORTED_TARGET_SCHEMES = {
     "about",
     "chrome",
@@ -678,6 +679,7 @@ def request_ai_metadata(
     target: str,
     existing_slugs: Sequence[str],
     command: Optional[str],
+    platform_name: Optional[str] = None,
 ) -> dict[str, object]:
     """Request optional AI metadata from an external command."""
 
@@ -692,16 +694,13 @@ def request_ai_metadata(
         "allowed_fields": sorted(AI_ALLOWED_FIELDS),
     }
 
-    try:
-        argv = shlex.split(command)
-    except ValueError as exc:
-        raise OpenError(f"FX_OPEN_AI_COMMAND cannot be safely split: {exc}") from exc
+    argv = _split_ai_command(command, platform_name)
     if not argv:
         raise OpenError("FX_OPEN_AI_COMMAND must include a command")
 
     try:
-        # FX_OPEN_AI_COMMAND is parsed with shlex.split above and shell is
-        # disabled, so the provider executes as an argument vector.
+        # FX_OPEN_AI_COMMAND is parsed into an argv vector above and shell is
+        # disabled, so the provider never executes through shell expansion.
         result = subprocess.run(  # nosec B603
             argv,
             input=json.dumps(request),
@@ -731,6 +730,90 @@ def request_ai_metadata(
         raise OpenError("AI metadata provider must return a JSON object")
     _validated_ai_metadata(parsed)
     return parsed
+
+
+def _split_ai_command(command: str, platform_name: Optional[str] = None) -> list[str]:
+    platform_value = platform_name or sys.platform
+    try:
+        if platform_value.startswith("win"):
+            return _split_windows_command(command)
+        return shlex.split(command)
+    except ValueError as exc:
+        raise OpenError(f"FX_OPEN_AI_COMMAND cannot be safely split: {exc}") from exc
+
+
+def _split_windows_command(command: str) -> list[str]:
+    args: list[str] = []
+    current: list[str] = []
+    in_quotes = False
+    arg_started = False
+    backslash_count = 0
+    index = 0
+
+    while index < len(command):
+        char = command[index]
+        if char == "\\":
+            backslash_count += 1
+            index += 1
+            continue
+
+        if char == '"':
+            current.extend("\\" * (backslash_count // 2))
+            if backslash_count % 2:
+                current.append('"')
+            else:
+                in_quotes = not in_quotes
+            arg_started = True
+            backslash_count = 0
+            index += 1
+            continue
+
+        if backslash_count:
+            current.extend("\\" * backslash_count)
+            backslash_count = 0
+
+        if char in {" ", "\t"} and not in_quotes:
+            if arg_started:
+                args.append("".join(current))
+                current = []
+                arg_started = False
+            index += 1
+            continue
+
+        current.append(char)
+        arg_started = True
+        index += 1
+
+    if backslash_count:
+        current.extend("\\" * backslash_count)
+    if in_quotes:
+        raise ValueError("No closing quotation")
+    if arg_started:
+        args.append("".join(current))
+    return _merge_windows_executable_path(args)
+
+
+def _merge_windows_executable_path(args: Sequence[str]) -> list[str]:
+    if len(args) < 2 or not _starts_windows_path(args[0]):
+        return list(args)
+
+    command = args[0]
+    if _ends_windows_executable(command):
+        return list(args)
+
+    for index, arg in enumerate(args[1:], start=1):
+        command = f"{command} {arg}"
+        if _ends_windows_executable(command):
+            return [command, *args[index + 1 :]]
+    return list(args)
+
+
+def _starts_windows_path(value: str) -> bool:
+    return bool(re.match(r"^[A-Za-z]:\\", value)) or value.startswith("\\\\")
+
+
+def _ends_windows_executable(value: str) -> bool:
+    return value.lower().endswith(WINDOWS_EXECUTABLE_SUFFIXES)
 
 
 def classify_target_kind(target: str) -> str:

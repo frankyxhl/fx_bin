@@ -639,6 +639,59 @@ class TestAiMetadata(unittest.TestCase):
 
         run.assert_not_called()
 
+    def test_ai_windows_command_preserves_quoted_program_files_path(self) -> None:
+        from fx_bin.open_launcher import request_ai_metadata
+
+        class Result:
+            returncode = 0
+            stdout = '{"name":"Example"}'
+            stderr = ""
+
+        with patch("fx_bin.open_launcher.subprocess.run", return_value=Result()) as run:
+            request_ai_metadata(
+                "https://example.com",
+                existing_slugs=(),
+                command=(
+                    r'"C:\Program Files\Fx AI\provider.exe" '
+                    r'--mode json --label "two words"'
+                ),
+                platform_name="win32",
+            )
+
+        argv = run.call_args.args[0]
+        self.assertEqual(
+            argv,
+            [
+                r"C:\Program Files\Fx AI\provider.exe",
+                "--mode",
+                "json",
+                "--label",
+                "two words",
+            ],
+        )
+
+    def test_ai_windows_command_merges_unquoted_executable_path(self) -> None:
+        from fx_bin.open_launcher import request_ai_metadata
+
+        class Result:
+            returncode = 0
+            stdout = '{"slug":"example"}'
+            stderr = ""
+
+        with patch("fx_bin.open_launcher.subprocess.run", return_value=Result()) as run:
+            request_ai_metadata(
+                "https://example.com",
+                existing_slugs=(),
+                command=r"C:\Program Files\Fx AI\provider.exe --mode json",
+                platform_name="win32",
+            )
+
+        argv = run.call_args.args[0]
+        self.assertEqual(
+            argv,
+            [r"C:\Program Files\Fx AI\provider.exe", "--mode", "json"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -293,7 +293,9 @@ registry.
 
 **AI metadata:** `fx open add TARGET --ai --yes` can call the external command in
 `FX_OPEN_AI_COMMAND`. The provider may propose `name`, `slug`, and `tags`; normal
-validation still applies.
+validation still applies. The command is split into an argument vector and run
+with shell execution disabled; Windows provider paths with spaces should be
+quoted, such as `"C:\Program Files\Fx AI\provider.exe" --mode json`.
 
 **Options:**
 - `--config PATH`: Use a specific TOML registry

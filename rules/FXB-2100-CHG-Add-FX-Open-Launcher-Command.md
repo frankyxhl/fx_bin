@@ -344,9 +344,11 @@ Rules:
 
 - If `FX_OPEN_AI_COMMAND` is unset and `--ai` is used, exit 1 with setup
   guidance.
-- `FX_OPEN_AI_COMMAND` must be split into an argument vector, for example with
-  `shlex.split`, and executed with `shell=False`; shell evaluation is forbidden.
-  Values that cannot be safely split fail before provider execution.
+- `FX_OPEN_AI_COMMAND` must be split into a platform-aware argument vector and
+  executed with `shell=False`; shell evaluation is forbidden. Values that cannot
+  be safely split fail before provider execution. Windows provider paths with
+  spaces are supported when quoted, for example
+  `"C:\Program Files\Fx AI\provider.exe" --mode json`.
 - Provider execution times out after 10 seconds and exits 1 with a timeout
   message.
 - Provider non-zero exit exits 1 with the provider exit code.
