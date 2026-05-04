@@ -365,7 +365,7 @@ def build_new_item(
         name=final_name,
         slug=final_slug,
         target=normalized_target,
-        order=_next_order(existing_items),
+        order=0,
         tags=tuple(final_tags),
         browser=browser,
         app=app,

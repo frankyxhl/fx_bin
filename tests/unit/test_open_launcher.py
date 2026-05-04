@@ -394,6 +394,27 @@ class TestAddWorkflow(unittest.TestCase):
                     OpenItem(name="Again", slug="one", target="https://again.example"),
                 )
 
+    def test_append_item_assigns_stale_prebuilt_add_order_under_lock(self) -> None:
+        from fx_bin.open_launcher import append_item, build_new_item, load_config
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            first = build_new_item("https://one.example", [])
+            second = build_new_item("https://two.example", [])
+
+            written_first = append_item(config_path, first)
+            written_second = append_item(config_path, second)
+            config = load_config(config_path)
+
+        self.assertEqual(first.order, 0)
+        self.assertEqual(second.order, 0)
+        self.assertEqual(written_first.order, 10)
+        self.assertEqual(written_second.order, 20)
+        self.assertEqual(
+            [(item.slug, item.order) for item in config.items],
+            [("one-example", 10), ("two-example", 20)],
+        )
+
     def test_append_item_rejects_active_lock_without_removing_it(self) -> None:
         from fx_bin.open_launcher import OpenError, OpenItem, append_item
 
