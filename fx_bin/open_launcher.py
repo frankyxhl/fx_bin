@@ -349,6 +349,10 @@ def build_new_item(
         raise OpenError("--app can only be stored for local path targets")
 
     ai_name, ai_slug, ai_tags = _validated_ai_metadata(ai_metadata)
+    if slug == "":
+        raise OpenError("Slug must be non-empty when provided")
+    if name == "":
+        raise OpenError("Name must be non-empty when provided")
     final_slug = slug or ai_slug or generate_slug(normalized_target)
     final_name = name or ai_name or _name_from_slug(final_slug)
     final_tags = tuple(tags) if tags else ai_tags
@@ -795,8 +799,8 @@ def _looks_like_index(token: str) -> bool:
 
 
 def _normalize_local_path(target: str) -> str:
-    path = Path(target).expanduser()
     try:
+        path = Path(target).expanduser()
         resolved = path.resolve(strict=True)
     except (OSError, RuntimeError) as exc:
         raise OpenError(f"Local path cannot be opened: {target}") from exc

@@ -318,6 +318,15 @@ class TestAddWorkflow(unittest.TestCase):
         self.assertEqual(item.target, "HTTPS://example.com/path")
         self.assertEqual(item.slug, "example-com")
 
+    def test_build_new_item_rejects_empty_provided_slug_and_name(self) -> None:
+        from fx_bin.open_launcher import OpenError, build_new_item
+
+        with self.assertRaisesRegex(OpenError, "Slug must be non-empty"):
+            build_new_item("https://example.com", [], slug="")
+
+        with self.assertRaisesRegex(OpenError, "Name must be non-empty"):
+            build_new_item("https://example.com", [], name="")
+
     def test_build_new_item_normalizes_existing_local_file(
         self,
     ) -> None:
@@ -557,6 +566,19 @@ class TestDispatchPlanning(unittest.TestCase):
                 LaunchTarget(label="Local", target="file:///tmp/test.png", slug=None),
                 platform_name="darwin",
             )
+
+    def test_expanduser_failure_returns_open_error(self) -> None:
+        from fx_bin.open_launcher import LaunchTarget, OpenError, build_dispatch_plan
+
+        with patch(
+            "fx_bin.open_launcher.Path.expanduser",
+            side_effect=RuntimeError("Could not determine home directory"),
+        ):
+            with self.assertRaisesRegex(OpenError, "Local path cannot be opened"):
+                build_dispatch_plan(
+                    LaunchTarget(label="Local", target="~/missing.png", slug=None),
+                    platform_name="darwin",
+                )
 
 
 class TestAiMetadata(unittest.TestCase):
