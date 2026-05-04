@@ -457,6 +457,13 @@ flowchart TD
   available.
 
 
+## Follow-up TODO
+
+- [ ] Remove the `@claude` review workflow trigger later. PR #56 review polling
+  showed an `@codex review` comment created a skipped `Claude Code` issue
+  comment run because `.github/workflows/claude.yml` listens for `@claude`.
+
+
 ## Approval
 
 - [ ] Reviewed by: Frank Xu
@@ -499,3 +506,4 @@ flowchart TD
 | 2026-05-04 | Addressed Trinity review: flat Click shape, add metadata `--entry-tag`, XDG config path, deterministic slug generation, TOML escaping, and AI failure modes  | Codex |
 | 2026-05-04 | Addressed Trinity review: macOS browser example, AI `shell=False` argv execution, slug/tag filter mismatch, add-only writer wording, and local-file safety   | Codex |
 | 2026-05-04 | Implemented launcher module, CLI registration, docs, tests, lock-race wrapping, tie-break coverage, 100+ listing coverage, and CLI AI setup failure coverage | Codex |
+| 2026-05-04 | Added follow-up TODO to remove the `@claude` review workflow trigger later                                                               | Codex |
