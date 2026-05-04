@@ -9,11 +9,12 @@ This directory contains the complete fx-bin documentation site ready for GitHub 
 - **docs/index.md** - Documentation navigation hub
 
 ### Command Reference (commands/)
-Complete documentation for all 10 fx-bin commands:
+Complete documentation for all fx-bin commands:
 - `files.md` - Count files in directories
 - `size.md` - Analyze file/directory sizes
 - `ff.md` - Find files by keyword
 - `fff.md` - Find first matching file
+- `open.md` - Open saved URLs/files and direct targets
 - `filter.md` - Filter files by extension
 - `replace.md` - Replace text in files
 - `backup.md` - Create timestamped backups

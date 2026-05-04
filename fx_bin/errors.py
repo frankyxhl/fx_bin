@@ -102,6 +102,12 @@ class FindError(FxBinError):
     pass
 
 
+class OpenError(FxBinError):
+    """Errors during launcher config, selection, or open dispatch."""
+
+    pass
+
+
 class OrganizeError(FileOperationError):
     """Errors during file organization operations.
 
@@ -142,6 +148,7 @@ AppError = Union[
     SizeError,
     FilesError,
     FindError,
+    OpenError,
     OrganizeError,
 ]
 

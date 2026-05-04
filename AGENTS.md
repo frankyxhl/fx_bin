@@ -1,21 +1,48 @@
-<!-- OPENSPEC:START -->
-# OpenSpec Instructions
+# Alfred / AF Workflow Instructions
 
-These instructions are for AI assistants working in this project.
+This project uses Alfred (`af`) runbook documents for planning, proposals,
+change requests, and workflow routing. Do not use OpenSpec for new project work
+unless the user explicitly asks for OpenSpec.
 
-Always open `@/openspec/AGENTS.md` when the request:
-- Mentions planning or proposals (words like proposal, spec, change, plan)
-- Introduces new capabilities, breaking changes, architecture shifts, or big performance/security work
-- Sounds ambiguous and you need the authoritative spec before coding
+## AF Session Routing
 
-Use `@/openspec/AGENTS.md` to learn:
-- How to create and apply change proposals
-- Spec format and conventions
-- Project structure and guidelines
+At the start of a substantial task, run:
 
-Keep this managed block so 'openspec update' can refresh the instructions.
+```bash
+af guide --root .
+```
 
-<!-- OPENSPEC:END -->
+Use the routing output to choose the applicable SOPs. Before executing a routed
+task, run `af plan <SOP_IDS>` to generate the checklist and follow it. Declare
+the active SOP in progress updates when the work depends on an AF SOP.
+
+Core routing rules:
+
+- New feature, tool, command, or capability: create a PRP via `COR-1102`.
+- Change to existing system/config/architecture: create a CHG via `COR-1101`.
+- Execution coordination for approved/in-progress work: create a PLN.
+- Durable decision already made: create an ADR.
+- Code changes: apply the TDD overlay from `COR-1500`.
+- Existing document updates: follow `COR-1300`.
+
+## AF Commands
+
+```bash
+af guide --root .                         # Show routing for this project/session
+af plan COR-1102 COR-1500 --todo          # Generate SOP checklist
+af create prp --prefix FXB --area 21 --title "Feature Name"
+af create chg --prefix FXB --area 21 --title "Change Name"
+af list                                   # List available documents
+af read COR-1102                          # Read an SOP/document
+af validate                               # Validate Alfred documents
+```
+
+Project-layer AF documents should live under `./rules/` when created. If the
+project prefix is unclear, ask the user before creating a PRP/CHG/ADR/PLN.
+
+For a new command like `fx open`, prefer a PRP first because it is a new
+capability. Use a CHG only when modifying an existing approved design or when the
+user explicitly requests a change record for implementation.
 
 # FX-Bin Agent Guidelines
 

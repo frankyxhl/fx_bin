@@ -127,6 +127,21 @@ Find Python files:
 fx ff .py
 ```
 
+### Open Saved URLs and Files
+
+List saved launcher targets:
+
+```bash
+fx open
+```
+
+Add and open a recurring URL:
+
+```bash
+fx open add yahoo.co.jp --name "Yahoo! JAPAN" --slug yahoo-jp --entry-tag portal --yes
+fx open yahoo-jp
+```
+
 ### Filter by Extension
 
 Find all Python files, sorted by modification time:
@@ -176,6 +191,9 @@ fx filter "py,js,ts" --sort-by modified --reverse --limit 10
 
 # Locate TODO markers
 fx ff TODO --exclude node_modules --exclude .git
+
+# Open saved docs and dashboards
+fx open --tag usage
 ```
 
 ### Project Analysis

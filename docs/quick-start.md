@@ -42,6 +42,7 @@ fx files       # Count files in directories
 fx size        # Analyze file/directory sizes  
 fx ff          # Find files by keyword
 fx fff         # Find first file (alias for ff --first)
+fx open        # Open saved URLs/files and direct targets
 fx filter      # Filter files by extension (v1.2.0)
 fx replace     # Replace text in files
 fx root        # Find Git project root (v1.3.6, shell integration v1.3.7+)

@@ -124,6 +124,7 @@ poetry run fx --help
 | `fx files` | Count files in directories | Pattern matching, recursive search, detailed stats |
 | `fx size` | Analyze file/directory sizes | Human-readable units, sorting, limit results |
 | `fx ff` | Find files by keyword | Multiple search modes, content search, regex support |
+| `fx open` | Open saved URLs/files and direct targets | Local TOML registry, tags, browser/app selection |
 | `fx filter` | Filter files by extension | Time-based sorting, multiple formats, recursive search |
 | `fx replace` | Replace text in files | Atomic file operations, safe text replacement |
 | `fx backup` | Create timestamped backups | File/dir backup, compression |
@@ -261,6 +262,47 @@ fx ff test --exclude coverage --exclude .nyc_output
 **Options:**
 - `--include-ignored`: Include `.git`, `.venv`, `node_modules` (default skips these heavy directories)
 - `--exclude NAME`: Exclude names or glob patterns; repeatable for complex filtering
+
+#### 🔗 fx open - URL and File Launcher
+
+Open saved URLs, local files, images, and direct targets without keeping browser
+tabs open.
+
+```bash
+# List saved targets with 1-based indices
+fx open
+
+# Open by slug or index
+fx open cc-usage
+fx open 3
+
+# Filter the list before selecting
+fx open --tag usage 2
+
+# Open direct targets
+fx open https://example.com
+fx open ./diagram.png --app Preview
+
+# Add a new saved target; bare domains are normalized to https URLs
+fx open add yahoo.co.jp --name "Yahoo! JAPAN" --slug yahoo-jp --entry-tag portal --yes
+```
+
+**Config:** `fx open` reads `${XDG_CONFIG_HOME}/fx-bin/open.toml` or
+`~/.config/fx-bin/open.toml` by default. Use `--config ./open.toml` for a custom
+registry.
+
+**AI metadata:** `fx open add TARGET --ai --yes` can call the external command in
+`FX_OPEN_AI_COMMAND`. The provider may propose `name`, `slug`, and `tags`; normal
+validation still applies.
+
+**Options:**
+- `--config PATH`: Use a specific TOML registry
+- `--tag TAG`: Filter saved targets before listing or selecting
+- `--browser NAME`: Open URL targets with a browser on macOS
+- `--app NAME`: Open local files with an app on macOS
+- `--entry-tag TAG`: Add metadata tags in `fx open add`
+- `--ai`: Ask `FX_OPEN_AI_COMMAND` for add metadata
+- `--yes, -y`: Confirm add in non-interactive mode
 
 #### 🔄 fx replace - Text Replacer
 
