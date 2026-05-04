@@ -8,7 +8,9 @@ import os
 import re
 import shlex
 import shutil
-import subprocess
+
+# fx open intentionally runs vetted argv commands with shell disabled.
+import subprocess  # nosec B404
 import sys
 import tempfile
 import time
@@ -679,13 +681,16 @@ def request_ai_metadata(
         raise OpenError(f"FX_OPEN_AI_COMMAND cannot be safely split: {exc}") from exc
 
     try:
-        result = subprocess.run(
+        # FX_OPEN_AI_COMMAND is parsed with shlex.split above and shell is
+        # disabled, so the provider executes as an argument vector.
+        result = subprocess.run(  # nosec B603
             argv,
             input=json.dumps(request),
             text=True,
             capture_output=True,
             timeout=10,
             check=False,
+            shell=False,
         )
     except subprocess.TimeoutExpired as exc:
         raise OpenError("AI metadata provider timed out after 10 seconds") from exc

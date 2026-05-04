@@ -29,9 +29,7 @@ class TestOpenCli(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             config_path = Path(temp_dir) / "missing.toml"
 
-            result = self.runner.invoke(
-                cli, ["open", "--config", str(config_path)]
-            )
+            result = self.runner.invoke(cli, ["open", "--config", str(config_path)])
 
         self.assertEqual(result.exit_code, 0)
         self.assertIn("No saved open targets", result.output)
@@ -52,9 +50,7 @@ tags = ["usage", "claude-code"]
                 encoding="utf-8",
             )
 
-            result = self.runner.invoke(
-                cli, ["open", "--config", str(config_path)]
-            )
+            result = self.runner.invoke(cli, ["open", "--config", str(config_path)])
 
         self.assertEqual(result.exit_code, 0)
         self.assertIn("1.", result.output)
