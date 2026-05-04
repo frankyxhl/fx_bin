@@ -508,6 +508,33 @@ class TestDispatchPlanning(unittest.TestCase):
                 opener_lookup=lambda name: None,
             )
 
+    def test_linux_ignores_saved_browser_for_url_target(self) -> None:
+        from fx_bin.open_launcher import LaunchTarget, build_dispatch_plan
+
+        plan = build_dispatch_plan(
+            LaunchTarget(
+                label="Docs",
+                target="https://example.com",
+                slug="docs",
+                browser="Firefox",
+            ),
+            platform_name="linux",
+            opener_lookup=lambda name: "/usr/bin/xdg-open",
+        )
+
+        self.assertEqual(plan.args, ("/usr/bin/xdg-open", "https://example.com"))
+
+    def test_linux_explicit_browser_override_is_rejected(self) -> None:
+        from fx_bin.open_launcher import LaunchTarget, OpenError, build_dispatch_plan
+
+        with self.assertRaises(OpenError):
+            build_dispatch_plan(
+                LaunchTarget(label="Docs", target="https://example.com", slug="docs"),
+                browser="Firefox",
+                platform_name="linux",
+                opener_lookup=lambda name: "/usr/bin/xdg-open",
+            )
+
     def test_browser_override_rejected_for_local_target(self) -> None:
         from fx_bin.open_launcher import LaunchTarget, OpenError, build_dispatch_plan
 

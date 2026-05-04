@@ -615,8 +615,10 @@ def build_dispatch_plan(
     """Build a safe dispatch plan for a launch target."""
 
     platform_value = platform_name or sys.platform
-    selected_browser = browser or launch_target.browser
-    selected_app = app or launch_target.app
+    persisted_browser = launch_target.browser if platform_value == "darwin" else None
+    persisted_app = launch_target.app if platform_value == "darwin" else None
+    selected_browser = browser or persisted_browser
+    selected_app = app or persisted_app
     _validate_opener_name(selected_browser, "browser")
     _validate_opener_name(selected_app, "app")
 
