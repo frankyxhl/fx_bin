@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -544,6 +544,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#open-saved-urls-and-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Saved URLs and Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#filter-by-extension" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -876,6 +887,34 @@
     
   
     Command: fx fff
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/open/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command: fx open
   
 
     
@@ -1540,6 +1579,14 @@ Repository: https://github.com/frankyxhl/fx_bin
 <p>Find Python files:</p>
 <div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>.py
 </code></pre></div>
+<h3 id="open-saved-urls-and-files">Open Saved URLs and Files</h3>
+<p>List saved launcher targets:</p>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>open
+</code></pre></div>
+<p>Add and open a recurring URL:</p>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>open<span class="w"> </span>add<span class="w"> </span>yahoo.co.jp<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;Yahoo! JAPAN&quot;</span><span class="w"> </span>--slug<span class="w"> </span>yahoo-jp<span class="w"> </span>--entry-tag<span class="w"> </span>portal<span class="w"> </span>--yes
+fx<span class="w"> </span>open<span class="w"> </span>yahoo-jp
+</code></pre></div>
 <h3 id="filter-by-extension">Filter by Extension</h3>
 <p>Find all Python files, sorted by modification time:</p>
 <div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse
@@ -1572,6 +1619,9 @@ fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;p
 
 <span class="c1"># Locate TODO markers</span>
 fx<span class="w"> </span>ff<span class="w"> </span>TODO<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
+
+<span class="c1"># Open saved docs and dashboards</span>
+fx<span class="w"> </span>open<span class="w"> </span>--tag<span class="w"> </span>usage
 </code></pre></div>
 <h3 id="project-analysis">Project Analysis</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Analyze file sizes</span>
