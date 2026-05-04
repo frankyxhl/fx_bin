@@ -757,7 +757,7 @@ def _validate_target_string(target: str) -> None:
 
 def _is_http_url(value: str) -> bool:
     parsed = urlparse(value)
-    return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
+    return parsed.scheme.lower() in {"http", "https"} and bool(parsed.netloc)
 
 
 def _has_unsupported_scheme(value: str) -> bool:

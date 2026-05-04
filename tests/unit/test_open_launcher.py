@@ -178,6 +178,14 @@ class TestSelectorResolution(unittest.TestCase):
         self.assertEqual(target.target, "https://docs.example")
         self.assertEqual(target.label, "Configured Readme")
 
+    def test_mixed_case_https_scheme_resolves_as_url(self) -> None:
+        from fx_bin.open_launcher import resolve_launch_target
+
+        target = resolve_launch_target("HTTPS://example.com/path", [])
+
+        self.assertEqual(target.target, "HTTPS://example.com/path")
+        self.assertEqual(target.label, "HTTPS://example.com/path")
+
     def test_bare_local_file_with_colon_resolves_as_path(self) -> None:
         from fx_bin.open_launcher import resolve_launch_target
 
@@ -301,6 +309,14 @@ class TestAddWorkflow(unittest.TestCase):
 
         self.assertEqual(item.target, "https://yahoo.co.jp")
         self.assertEqual(item.slug, "yahoo-co-jp")
+
+    def test_build_new_item_accepts_mixed_case_https_scheme(self) -> None:
+        from fx_bin.open_launcher import build_new_item
+
+        item = build_new_item("HTTPS://example.com/path", [])
+
+        self.assertEqual(item.target, "HTTPS://example.com/path")
+        self.assertEqual(item.slug, "example-com")
 
     def test_build_new_item_normalizes_existing_local_file(
         self,
