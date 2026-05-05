@@ -27,7 +27,7 @@ from .errors import OpenError
 
 SLUG_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{0,63}$")
 TOML_BARE_KEY_RE = re.compile(r"^[A-Za-z0-9_-]+$")
-NEWLY_RESERVED_SLUGS = {"disable", "enable"}
+NEWLY_RESERVED_SLUGS = {"disable", "enable", "search"}
 RESERVED_SLUGS = {
     "add",
     "remove",
@@ -275,6 +275,7 @@ def _sort_items(items: Sequence[OpenItem]) -> list[OpenItem]:
 def format_items(
     items: Sequence[OpenItem],
     terminal_width: Optional[int] = None,
+    indices: Optional[Sequence[int]] = None,
 ) -> str:
     """Format launcher items for CLI display."""
 
@@ -284,14 +285,24 @@ def format_items(
     width = terminal_width
     if width is None:
         width = shutil.get_terminal_size(fallback=(80, 24)).columns
-    return _format_items_table(items, max(width, 1))
+    return _format_items_table(items, max(width, 1), indices)
 
 
-def _format_items_table(items: Sequence[OpenItem], terminal_width: int) -> str:
+def _format_items_table(
+    items: Sequence[OpenItem],
+    terminal_width: int,
+    indices: Optional[Sequence[int]] = None,
+) -> str:
     include_state = any(item.disabled for item in items)
     columns: list[tuple[str, list[str], int, int]] = []
 
-    index_values = [str(index) for index, _ in enumerate(items, start=1)]
+    if indices is not None and len(indices) != len(items):
+        raise OpenError("Format indices must match item count")
+    index_values = (
+        [str(index) for index in indices]
+        if indices is not None
+        else [str(index) for index, _ in enumerate(items, start=1)]
+    )
     index_width = max(_display_width(value) for value in [*index_values, "#"])
     columns.append(("#", index_values, index_width, index_width))
 
@@ -443,6 +454,52 @@ def filter_items(
         return sorted_items
     tag_set = set(filter_tags)
     return [item for item in sorted_items if tag_set.issubset(set(item.tags))]
+
+
+def search_items(
+    items: Sequence[OpenItem],
+    query: str,
+    filter_tags: Sequence[str] = (),
+    visibility: str = "enabled",
+) -> list[OpenItem]:
+    """Return saved items matching a case-insensitive metadata substring."""
+
+    return [
+        item
+        for _index, item in search_indexed_items(
+            items,
+            query,
+            filter_tags=filter_tags,
+            visibility=visibility,
+        )
+    ]
+
+
+def search_indexed_items(
+    items: Sequence[OpenItem],
+    query: str,
+    filter_tags: Sequence[str] = (),
+    visibility: str = "enabled",
+) -> list[tuple[int, OpenItem]]:
+    """Return matching items with indices from the current visible list."""
+
+    normalized_query = query.casefold()
+    if not normalized_query:
+        return []
+
+    visible_items = filter_items(items, filter_tags, visibility=visibility)
+    return [
+        (index, item)
+        for index, item in enumerate(visible_items, start=1)
+        if _item_matches_search_query(item, normalized_query)
+    ]
+
+
+def _item_matches_search_query(item: OpenItem, normalized_query: str) -> bool:
+    return any(
+        normalized_query in value.casefold()
+        for value in (item.name, item.slug, item.target, *item.tags)
+    )
 
 
 def resolve_launch_target(

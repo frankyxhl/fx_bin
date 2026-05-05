@@ -640,6 +640,8 @@ def open_command(
       fx open                              # List saved targets with indices
       fx open --all                        # List enabled and disabled targets
       fx open --disabled                   # List disabled targets
+      fx open search usage                 # Search name, slug, tags, and target
+      fx open search --tag usage claude    # Search within a tag-filtered list
       fx open cc-usage                     # Open by slug
       fx open 3                            # Open by 1-based index
       fx open --tag usage 2                # Open index in filtered list
@@ -687,6 +689,20 @@ def open_command(
                 tokens,
                 resolved_config,
                 filter_tags,
+                browser,
+                app,
+                name,
+                slug,
+                entry_tags,
+                yes,
+                ai,
+            )
+        if tokens and tokens[0] == "search":
+            return _run_open_search(
+                tokens,
+                resolved_config,
+                filter_tags,
+                visibility,
                 browser,
                 app,
                 name,
@@ -762,6 +778,51 @@ def open_command(
         return 0
     except open_launcher.OpenError as e:
         raise click.ClickException(str(e)) from e
+
+
+def _run_open_search(
+    tokens: Tuple[str, ...],
+    config_path: Path,
+    filter_tags: Tuple[str, ...],
+    visibility: str,
+    browser: Optional[str],
+    app: Optional[str],
+    name: Optional[str],
+    slug: Optional[str],
+    entry_tags: Tuple[str, ...],
+    yes: bool,
+    ai: bool,
+) -> int:
+    """Run the fx open search workflow."""
+    from . import open_launcher
+
+    if browser or app:
+        raise click.ClickException(
+            "--browser and --app are invalid with 'fx open search'"
+        )
+    if name or slug or entry_tags or yes or ai:
+        raise click.ClickException(
+            "--name, --slug, --entry-tag, --yes, and --ai are only valid "
+            "with 'fx open add' or supported mutation commands"
+        )
+    if len(tokens) != 2 or not tokens[1]:
+        raise click.ClickException("Usage is fx open search QUERY")
+
+    query = tokens[1]
+    config = open_launcher.load_config(config_path)
+    matches = open_launcher.search_indexed_items(
+        config.items,
+        query,
+        filter_tags=filter_tags,
+        visibility=visibility,
+    )
+    if not matches:
+        click.echo(f"No saved open targets matched query: {query}")
+        return 0
+    indices = [index for index, _item in matches]
+    items = [item for _index, item in matches]
+    click.echo(open_launcher.format_items(items, indices=indices))
+    return 0
 
 
 def _run_open_add(
