@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import json
 import os
 import re
@@ -17,16 +18,36 @@ import time
 import tomllib
 import unicodedata
 from contextlib import contextmanager
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import Callable, Iterator, Mapping, Optional, Sequence
+from typing import Callable, Iterator, Mapping, Optional, Sequence, TypeGuard
 from urllib.parse import urlparse
 
 from .errors import OpenError
 
 SLUG_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{0,63}$")
-RESERVED_SLUGS = {"add", "remove", "rm", "edit", "list", "delete", "help"}
-ALLOWED_ITEM_KEYS = {"name", "slug", "target", "order", "tags", "browser", "app"}
+TOML_BARE_KEY_RE = re.compile(r"^[A-Za-z0-9_-]+$")
+NEWLY_RESERVED_SLUGS = {"disable", "enable"}
+RESERVED_SLUGS = {
+    "add",
+    "remove",
+    "rm",
+    "edit",
+    "list",
+    "delete",
+    "help",
+    *NEWLY_RESERVED_SLUGS,
+}
+ALLOWED_ITEM_KEYS = {
+    "name",
+    "slug",
+    "target",
+    "order",
+    "tags",
+    "browser",
+    "app",
+    "disabled",
+}
 AI_ALLOWED_FIELDS = {"name", "slug", "tags"}
 LOCK_STALE_SECONDS = 600
 WINDOWS_EXECUTABLE_SUFFIXES = (".exe", ".bat", ".cmd", ".com", ".ps1")
@@ -57,6 +78,7 @@ class OpenItem:
     tags: tuple[str, ...] = ()
     browser: Optional[str] = None
     app: Optional[str] = None
+    disabled: bool = False
 
 
 @dataclass(frozen=True)
@@ -64,6 +86,7 @@ class OpenConfig:
     """Parsed launcher config."""
 
     items: list[OpenItem]
+    extra: Mapping[str, object] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -148,7 +171,8 @@ def _parse_config_text(text: str, config_path: Path) -> OpenConfig:
             raise OpenError(f"Item {index} must be a TOML table")
         items.append(_parse_item(raw_item, index, seen_slugs))
 
-    return OpenConfig(_sort_items(items))
+    extra = {key: value for key, value in raw_config.items() if key != "items"}
+    return OpenConfig(_sort_items(items), extra)
 
 
 def _parse_item(
@@ -168,6 +192,7 @@ def _parse_item(
     tags = _optional_string_tuple(raw_item.get("tags"), "tags", index)
     browser = _optional_string(raw_item.get("browser"), "browser", index)
     app = _optional_string(raw_item.get("app"), "app", index)
+    disabled = _optional_bool(raw_item.get("disabled"), "disabled", index)
 
     validate_slug(slug)
     if slug in seen_slugs:
@@ -192,6 +217,7 @@ def _parse_item(
         tags=tags,
         browser=browser,
         app=app,
+        disabled=disabled,
     )
 
 
@@ -220,6 +246,14 @@ def _optional_non_negative_int(value: object, key: str, index: int) -> int:
     return value
 
 
+def _optional_bool(value: object, key: str, index: int) -> bool:
+    if value is None:
+        return False
+    if type(value) is not bool:
+        raise OpenError(f"Item {index} field '{key}' must be a boolean")
+    return value
+
+
 def _optional_string_tuple(value: object, key: str, index: int) -> tuple[str, ...]:
     if value is None:
         return ()
@@ -238,28 +272,173 @@ def _sort_items(items: Sequence[OpenItem]) -> list[OpenItem]:
     return sorted(items, key=lambda item: (item.order, item.name.lower(), item.slug))
 
 
-def format_items(items: Sequence[OpenItem]) -> str:
+def format_items(
+    items: Sequence[OpenItem],
+    terminal_width: Optional[int] = None,
+) -> str:
     """Format launcher items for CLI display."""
 
     if not items:
         return "No saved open targets. Add one with: fx open add https://example.com"
 
-    lines: list[str] = []
-    for index, item in enumerate(items, start=1):
-        lines.append(f"{index}. {item.name} [{item.slug}]")
-        lines.append(f"   target: {item.target}")
-        if item.tags:
-            lines.append(f"   tags: {', '.join(item.tags)}")
-    return "\n".join(lines)
+    width = terminal_width
+    if width is None:
+        width = shutil.get_terminal_size(fallback=(80, 24)).columns
+    return _format_items_table(items, max(width, 1))
+
+
+def _format_items_table(items: Sequence[OpenItem], terminal_width: int) -> str:
+    include_state = any(item.disabled for item in items)
+    columns: list[tuple[str, list[str], int, int]] = []
+
+    index_values = [str(index) for index, _ in enumerate(items, start=1)]
+    index_width = max(_display_width(value) for value in [*index_values, "#"])
+    columns.append(("#", index_values, index_width, index_width))
+
+    if include_state:
+        state_values = ["disabled" if item.disabled else "" for item in items]
+        columns.append(("State", state_values, 8, 5))
+
+    name_values = [item.name for item in items]
+    slug_values = [item.slug for item in items]
+    tag_values = [", ".join(item.tags) for item in items]
+    target_values = [item.target for item in items]
+    columns.extend(
+        [
+            ("Name", name_values, 24, 4),
+            ("Slug", slug_values, 20, 4),
+            ("Tags", tag_values, 24, 4),
+            ("Target", target_values, 10_000, 6),
+        ]
+    )
+
+    sanitized = [
+        (header, [_sanitize_table_cell(value) for value in values], cap, min_width)
+        for header, values, cap, min_width in columns
+    ]
+    widths = [
+        min(
+            max([_display_width(header), *(_display_width(value) for value in values)]),
+            cap,
+        )
+        for header, values, cap, _min_width in sanitized
+    ]
+    min_widths = [
+        min(max(_display_width(header), min_width), width)
+        for (header, _values, _cap, min_width), width in zip(sanitized, widths)
+    ]
+    widths = _fit_column_widths(widths, min_widths, terminal_width)
+
+    border = _table_border(widths)
+    header = _table_row([header for header, _values, _cap, _min in sanitized], widths)
+    rows = [
+        _table_row([values[index] for _header, values, _cap, _min in sanitized], widths)
+        for index in range(len(items))
+    ]
+    return "\n".join([border, header, border, *rows, border])
+
+
+def _fit_column_widths(
+    widths: list[int],
+    min_widths: list[int],
+    terminal_width: int,
+) -> list[int]:
+    available = terminal_width - (3 * len(widths) + 1)
+    if available < len(widths):
+        available = len(widths)
+        min_widths = [1 for _ in widths]
+
+    result = list(widths)
+    for index in range(len(result) - 2, -1, -1):
+        while sum(result) > available and result[index] > min_widths[index]:
+            result[index] -= 1
+    target_index = len(result) - 1
+    while sum(result) > available and result[target_index] > min_widths[target_index]:
+        result[target_index] -= 1
+    for index in range(len(result) - 2, -1, -1):
+        while sum(result) > available and result[index] > 1:
+            result[index] -= 1
+    while sum(result) > available and result[target_index] > 1:
+        result[target_index] -= 1
+    return result
+
+
+def _table_border(widths: Sequence[int]) -> str:
+    return "+" + "+".join("-" * (width + 2) for width in widths) + "+"
+
+
+def _table_row(values: Sequence[str], widths: Sequence[int]) -> str:
+    cells = [
+        _pad_display(_truncate_display(value, width), width)
+        for value, width in zip(values, widths)
+    ]
+    return "| " + " | ".join(cells) + " |"
+
+
+def _sanitize_table_cell(value: str) -> str:
+    result: list[str] = []
+    previous_space = False
+    for char in value:
+        if unicodedata.category(char) == "Cc":
+            if not previous_space:
+                result.append(" ")
+                previous_space = True
+            continue
+        result.append(char)
+        previous_space = char == " "
+    return "".join(result).strip()
+
+
+def _display_width(value: str) -> int:
+    width = 0
+    for char in value:
+        if unicodedata.combining(char):
+            continue
+        width += 2 if unicodedata.east_asian_width(char) in {"F", "W"} else 1
+    return width
+
+
+def _truncate_display(value: str, width: int) -> str:
+    if width <= 0:
+        return ""
+    if _display_width(value) <= width:
+        return value
+    marker = "..." if width >= 3 else "." * width
+    content_width = width - len(marker)
+    result: list[str] = []
+    current_width = 0
+    for char in value:
+        char_width = (
+            0
+            if unicodedata.combining(char)
+            else (2 if unicodedata.east_asian_width(char) in {"F", "W"} else 1)
+        )
+        if current_width + char_width > content_width:
+            break
+        result.append(char)
+        current_width += char_width
+    return "".join(result) + marker
+
+
+def _pad_display(value: str, width: int) -> str:
+    padding = max(width - _display_width(value), 0)
+    return value + (" " * padding)
 
 
 def filter_items(
     items: Sequence[OpenItem],
     filter_tags: Sequence[str] = (),
+    visibility: str = "enabled",
 ) -> list[OpenItem]:
     """Return sorted items that include all requested tags."""
 
     sorted_items = _sort_items(items)
+    if visibility == "enabled":
+        sorted_items = [item for item in sorted_items if not item.disabled]
+    elif visibility == "disabled":
+        sorted_items = [item for item in sorted_items if item.disabled]
+    elif visibility != "all":
+        raise OpenError(f"Unknown visibility mode: {visibility}")
     if not filter_tags:
         return sorted_items
     tag_set = set(filter_tags)
@@ -314,7 +493,49 @@ def resolve_launch_target(
     if bare_path.exists():
         return LaunchTarget(label=token, target=str(bare_path))
 
+    if any(item.slug == token and item.disabled for item in items):
+        raise OpenError(f"Slug '{token}' is disabled")
+
     raise OpenError(f"Open target not found: {token}. Run 'fx open' to list targets.")
+
+
+def resolve_saved_item_selector(
+    token: str,
+    items: Sequence[OpenItem],
+    filter_tags: Sequence[str] = (),
+    visibility: str = "enabled",
+    action: str = "select",
+) -> OpenItem:
+    """Resolve a saved-item slug or visible index for config mutations."""
+
+    if not token:
+        raise OpenError(f"Missing {action} selector")
+    if _is_http_url(token) or _is_explicit_path_token(token, sys.platform):
+        raise OpenError(f"{action.title()} selector must be a slug or index")
+
+    visible_items = filter_items(items, filter_tags, visibility=visibility)
+    if _looks_like_index(token):
+        index = int(token)
+        if index <= 0:
+            raise OpenError("Index must be a positive 1-based number")
+        if index > len(visible_items):
+            raise OpenError(f"Index {index} is out of range")
+        return visible_items[index - 1]
+
+    for item in visible_items:
+        if item.slug == token:
+            return item
+
+    if filter_tags and any(item.slug == token for item in items):
+        tags = ", ".join(filter_tags)
+        raise OpenError(f"Slug '{token}' does not match filter tag(s): {tags}")
+    if visibility == "enabled" and any(
+        item.slug == token and item.disabled for item in items
+    ):
+        raise OpenError(f"Slug '{token}' is disabled")
+    raise OpenError(
+        f"{action.title()} target not found: {token}. Run 'fx open' to list targets."
+    )
 
 
 def _launch_target_from_item(item: OpenItem) -> LaunchTarget:
@@ -462,6 +683,11 @@ def validate_slug(slug: str, existing_slugs: Optional[set[str]] = None) -> None:
             "Slug must match ^[A-Za-z][A-Za-z0-9_-]{0,63}$. "
             "Provide --slug with a valid value."
         )
+    if slug.lower() in NEWLY_RESERVED_SLUGS:
+        raise OpenError(
+            f"Rename slug '{slug}' before using this fx open version; "
+            f"'{slug}' is reserved for a command."
+        )
     if slug.lower() in RESERVED_SLUGS:
         raise OpenError(f"Slug is reserved: {slug}")
     if existing_slugs is not None and slug in existing_slugs:
@@ -508,6 +734,109 @@ def append_item(config_path: Path, item: OpenItem) -> OpenItem:
             raise OpenError(f"Could not update config {config_path}: {exc}") from exc
 
     return item_to_write
+
+
+def delete_item(
+    config_path: Path,
+    selector: str,
+    filter_tags: Sequence[str] = (),
+    visibility: str = "enabled",
+) -> OpenItem:
+    """Delete a saved item from a TOML config using a lock and atomic replace."""
+
+    with _mutate_config(config_path) as config:
+        deleted = resolve_saved_item_selector(
+            selector,
+            config.items,
+            filter_tags=filter_tags,
+            visibility=visibility,
+            action="delete",
+        )
+        config.items[:] = [item for item in config.items if item.slug != deleted.slug]
+        yield_item = deleted
+    return yield_item
+
+
+def disable_item(
+    config_path: Path,
+    selector: str,
+    filter_tags: Sequence[str] = (),
+) -> OpenItem:
+    """Mark a saved item disabled using a lock and atomic replace."""
+
+    with _mutate_config(config_path) as config:
+        selected = resolve_saved_item_selector(
+            selector,
+            config.items,
+            filter_tags=filter_tags,
+            visibility="enabled",
+            action="disable",
+        )
+        disabled = replace(selected, disabled=True)
+        config.items[:] = [
+            disabled if item.slug == selected.slug else item for item in config.items
+        ]
+        yield_item = disabled
+    return yield_item
+
+
+def enable_item(
+    config_path: Path,
+    selector: str,
+    filter_tags: Sequence[str] = (),
+) -> OpenItem:
+    """Mark a saved item enabled using a lock and atomic replace."""
+
+    with _mutate_config(config_path) as config:
+        selected = resolve_saved_item_selector(
+            selector,
+            config.items,
+            filter_tags=filter_tags,
+            visibility="disabled",
+            action="enable",
+        )
+        enabled = replace(selected, disabled=False)
+        config.items[:] = [
+            enabled if item.slug == selected.slug else item for item in config.items
+        ]
+        yield_item = enabled
+    return yield_item
+
+
+@contextmanager
+def _mutate_config(config_path: Path) -> Iterator[OpenConfig]:
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with _config_lock(config_path):
+        existing_text = ""
+        if config_path.exists():
+            existing_text = config_path.read_text(encoding="utf-8")
+
+        config = _parse_config_text(existing_text, config_path)
+        yield config
+        candidate = _config_to_toml(config)
+        _parse_config_text(candidate, config_path)
+        _atomic_replace_config(config_path, candidate)
+
+
+def _atomic_replace_config(config_path: Path, text: str) -> None:
+    with tempfile.NamedTemporaryFile(
+        "w",
+        encoding="utf-8",
+        dir=str(config_path.parent),
+        delete=False,
+    ) as temp_file:
+        temp_file.write(text)
+        temp_name = temp_file.name
+
+    try:
+        os.replace(temp_name, config_path)
+    except OSError as exc:
+        try:
+            os.unlink(temp_name)
+        except OSError:
+            pass
+        raise OpenError(f"Could not update config {config_path}: {exc}") from exc
 
 
 @contextmanager
@@ -563,6 +892,49 @@ def _append_toml(existing_text: str, item: OpenItem) -> str:
     return "\n\n".join(blocks) + "\n"
 
 
+def _config_to_toml(config: OpenConfig) -> str:
+    blocks: list[str] = []
+    extra_text = _extra_config_to_toml(config.extra)
+    if extra_text:
+        blocks.append(extra_text)
+    items_text = _items_to_toml(config.items).rstrip()
+    if items_text:
+        blocks.append(items_text)
+    if not blocks:
+        return ""
+    return "\n\n".join(blocks) + "\n"
+
+
+def _extra_config_to_toml(extra: Mapping[str, object]) -> str:
+    scalar_lines: list[str] = []
+    table_blocks: list[str] = []
+    for key, value in extra.items():
+        if isinstance(value, dict):
+            table_blocks.extend(
+                _toml_table_blocks(
+                    (key,),
+                    _string_keyed_mapping(value, key),
+                    array_table=False,
+                )
+            )
+        elif _is_array_of_tables(value):
+            table_blocks.extend(_toml_array_table_blocks((key,), value))
+        else:
+            scalar_lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
+
+    blocks: list[str] = []
+    if scalar_lines:
+        blocks.append("\n".join(scalar_lines))
+    blocks.extend(table_blocks)
+    return "\n\n".join(blocks)
+
+
+def _items_to_toml(items: Sequence[OpenItem]) -> str:
+    if not items:
+        return ""
+    return "\n\n".join(_item_to_toml(item) for item in items) + "\n"
+
+
 def _item_to_toml(item: OpenItem) -> str:
     lines = [
         "[[items]]",
@@ -579,7 +951,115 @@ def _item_to_toml(item: OpenItem) -> str:
         lines.append(f"browser = {_toml_basic_string(item.browser)}")
     if item.app:
         lines.append(f"app = {_toml_basic_string(item.app)}")
+    if item.disabled:
+        lines.append("disabled = true")
     return "\n".join(lines)
+
+
+def _toml_table_blocks(
+    path: Sequence[str],
+    table: Mapping[str, object],
+    array_table: bool,
+) -> list[str]:
+    scalar_lines: list[str] = []
+    nested_blocks: list[str] = []
+    for key, value in table.items():
+        child_path = (*path, key)
+        if isinstance(value, dict):
+            nested_blocks.extend(
+                _toml_table_blocks(
+                    child_path,
+                    _string_keyed_mapping(value, _toml_dotted_key(child_path)),
+                    array_table=False,
+                )
+            )
+        elif _is_array_of_tables(value):
+            nested_blocks.extend(_toml_array_table_blocks(child_path, value))
+        else:
+            scalar_lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
+
+    header = (
+        f"[[{_toml_dotted_key(path)}]]"
+        if array_table
+        else f"[{_toml_dotted_key(path)}]"
+    )
+    blocks = [header]
+    if scalar_lines:
+        blocks[0] = "\n".join([header, *scalar_lines])
+    blocks.extend(nested_blocks)
+    return blocks
+
+
+def _toml_array_table_blocks(
+    path: Sequence[str],
+    values: Sequence[object],
+) -> list[str]:
+    blocks: list[str] = []
+    for value in values:
+        if not isinstance(value, dict):
+            raise OpenError(
+                f"TOML array table {_toml_dotted_key(path)} must contain tables"
+            )
+        blocks.extend(
+            _toml_table_blocks(
+                path,
+                _string_keyed_mapping(value, _toml_dotted_key(path)),
+                array_table=True,
+            )
+        )
+    return blocks
+
+
+def _is_array_of_tables(value: object) -> TypeGuard[list[object]]:
+    return (
+        isinstance(value, list)
+        and bool(value)
+        and all(isinstance(item, dict) for item in value)
+    )
+
+
+def _string_keyed_mapping(
+    value: Mapping[object, object],
+    context: str,
+) -> dict[str, object]:
+    result: dict[str, object] = {}
+    for key, item in value.items():
+        if not isinstance(key, str):
+            raise OpenError(f"TOML table {context} contains a non-string key")
+        result[key] = item
+    return result
+
+
+def _toml_dotted_key(path: Sequence[str]) -> str:
+    return ".".join(_toml_key(key) for key in path)
+
+
+def _toml_key(key: str) -> str:
+    if TOML_BARE_KEY_RE.fullmatch(key):
+        return key
+    return _toml_basic_string(key)
+
+
+def _toml_value(value: object) -> str:
+    if isinstance(value, str):
+        return _toml_basic_string(value)
+    if type(value) is bool:
+        return "true" if value else "false"
+    if type(value) is int:
+        return str(value)
+    if isinstance(value, float):
+        return repr(value).lower()
+    if isinstance(value, (dt.datetime, dt.date, dt.time)):
+        return value.isoformat()
+    if isinstance(value, list):
+        return "[" + ", ".join(_toml_value(item) for item in value) + "]"
+    if isinstance(value, dict):
+        table = _string_keyed_mapping(value, "inline")
+        parts = [
+            f"{_toml_key(key)} = {_toml_value(item)}" for key, item in table.items()
+        ]
+        return "{ " + ", ".join(parts) + " }"
+    raise OpenError(f"Unsupported TOML value type: {type(value).__name__}")
 
 
 def _toml_basic_string(value: str) -> str:

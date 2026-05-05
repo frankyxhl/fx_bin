@@ -585,6 +585,13 @@ def today(
     multiple=True,
     help="Filter saved targets by tag before listing or selecting",
 )
+@click.option("--all", "show_all", is_flag=True, help="List all saved targets")
+@click.option(
+    "--disabled",
+    "show_disabled",
+    is_flag=True,
+    help="List disabled saved targets",
+)
 @click.option(
     "--browser",
     help="Open URL target with this browser on macOS, or store for URL add",
@@ -605,7 +612,7 @@ def today(
     "--yes",
     "-y",
     is_flag=True,
-    help="Confirm fx open add in non-interactive mode",
+    help="Confirm fx open mutation commands in non-interactive mode",
 )
 @click.option(
     "--ai",
@@ -616,6 +623,8 @@ def open_command(
     tokens: Tuple[str, ...],
     config_path: Optional[str],
     filter_tags: Tuple[str, ...],
+    show_all: bool,
+    show_disabled: bool,
     browser: Optional[str],
     app: Optional[str],
     name: Optional[str],
@@ -629,18 +638,33 @@ def open_command(
     \b
     List and open:
       fx open                              # List saved targets with indices
+      fx open --all                        # List enabled and disabled targets
+      fx open --disabled                   # List disabled targets
       fx open cc-usage                     # Open by slug
       fx open 3                            # Open by 1-based index
       fx open --tag usage 2                # Open index in filtered list
       fx open https://example.com          # Open direct URL
       fx open ./diagram.png --app Preview  # Open local file on macOS
+      fx open cc-usage --browser Firefox   # Temporary macOS browser override
 
     \b
     Add entries:
       fx open add yahoo.co.jp
       fx open add yahoo.co.jp \\
         --name "Yahoo! JAPAN" --slug yahoo-jp --entry-tag portal --yes
+      fx open add https://example.com --browser Firefox --yes
       fx open add https://example.com --ai --yes
+
+    \b
+    Mutate entries:
+      fx open delete cc-usage --yes
+      fx open disable cc-usage --yes
+      fx open enable 1 --yes               # Index from disabled list
+
+    \b
+    Browser selection:
+      Omit browser for normal URL entries to use the OS default browser.
+      Per-entry browser and --browser overrides are honored on macOS only.
 
     \b
     AI metadata:
@@ -651,7 +675,14 @@ def open_command(
 
     try:
         resolved_config = open_launcher.resolve_config_path(config_path)
+        if show_all and show_disabled:
+            raise click.ClickException("--all and --disabled cannot be combined")
+        visibility = "disabled" if show_disabled else "all" if show_all else "enabled"
         if tokens and tokens[0] == "add":
+            if show_all or show_disabled:
+                raise click.ClickException(
+                    "--all and --disabled are invalid with 'fx open add'"
+                )
             return _run_open_add(
                 tokens,
                 resolved_config,
@@ -664,20 +695,57 @@ def open_command(
                 yes,
                 ai,
             )
+        if tokens and tokens[0] == "delete":
+            return _run_open_delete(
+                tokens,
+                resolved_config,
+                filter_tags,
+                visibility,
+                browser,
+                app,
+                name,
+                slug,
+                entry_tags,
+                yes,
+                ai,
+            )
+        if tokens and tokens[0] in {"disable", "enable"}:
+            return _run_open_toggle(
+                tokens,
+                resolved_config,
+                filter_tags,
+                show_all,
+                show_disabled,
+                browser,
+                app,
+                name,
+                slug,
+                entry_tags,
+                yes,
+                ai,
+            )
 
         if name or slug or entry_tags or yes or ai:
             raise click.ClickException(
                 "--name, --slug, --entry-tag, --yes, and --ai are only valid "
-                "with 'fx open add'"
+                "with 'fx open add' or supported mutation commands"
             )
 
         config = open_launcher.load_config(resolved_config)
         if not tokens:
-            items = open_launcher.filter_items(config.items, filter_tags)
+            items = open_launcher.filter_items(
+                config.items,
+                filter_tags,
+                visibility=visibility,
+            )
             click.echo(open_launcher.format_items(items))
             return 0
         if len(tokens) != 1:
             raise click.ClickException("fx open accepts one selector or direct target")
+        if show_all or show_disabled:
+            raise click.ClickException(
+                "--all and --disabled are only valid when listing or deleting"
+            )
 
         launch_target = open_launcher.resolve_launch_target(
             tokens[0],
@@ -752,6 +820,137 @@ def _run_open_add(
 
     written_item = open_launcher.append_item(config_path, item)
     click.echo(f"Added {written_item.slug}: {written_item.target}")
+    return 0
+
+
+def _run_open_delete(
+    tokens: Tuple[str, ...],
+    config_path: Path,
+    filter_tags: Tuple[str, ...],
+    visibility: str,
+    browser: Optional[str],
+    app: Optional[str],
+    name: Optional[str],
+    slug: Optional[str],
+    entry_tags: Tuple[str, ...],
+    yes: bool,
+    ai: bool,
+) -> int:
+    """Run the fx open delete workflow."""
+    from . import open_launcher
+
+    if browser or app:
+        raise click.ClickException(
+            "--browser and --app are invalid with 'fx open delete'"
+        )
+    if name or slug or entry_tags or ai:
+        raise click.ClickException(
+            "--name, --slug, --entry-tag, and --ai are only valid with 'fx open add'"
+        )
+    if len(tokens) != 2:
+        raise click.ClickException("Usage is fx open delete SELECTOR")
+    if not yes and not sys.stdin.isatty():
+        raise click.ClickException(
+            "fx open delete requires --yes in non-interactive mode"
+        )
+
+    selector = tokens[1]
+    config = open_launcher.load_config(config_path)
+    selected = open_launcher.resolve_saved_item_selector(
+        selector,
+        config.items,
+        filter_tags=filter_tags,
+        visibility=visibility,
+        action="delete",
+    )
+
+    if not yes:
+        click.echo(f"Delete {selected.slug}: {selected.name}")
+        click.echo(f"Target: {selected.target}")
+        if not click.confirm("Proceed?", default=False):
+            click.echo("Cancelled.")
+            return 0
+
+    deleted = open_launcher.delete_item(
+        config_path,
+        selected.slug,
+        filter_tags=filter_tags,
+        visibility=visibility,
+    )
+    click.echo(f"Deleted {deleted.slug}: {deleted.target}")
+    return 0
+
+
+def _run_open_toggle(
+    tokens: Tuple[str, ...],
+    config_path: Path,
+    filter_tags: Tuple[str, ...],
+    show_all: bool,
+    show_disabled: bool,
+    browser: Optional[str],
+    app: Optional[str],
+    name: Optional[str],
+    slug: Optional[str],
+    entry_tags: Tuple[str, ...],
+    yes: bool,
+    ai: bool,
+) -> int:
+    """Run the fx open disable/enable workflow."""
+    from . import open_launcher
+
+    action = tokens[0]
+    if show_all or show_disabled:
+        raise click.ClickException(
+            f"--all and --disabled are invalid with 'fx open {action}'"
+        )
+    if browser or app:
+        raise click.ClickException(
+            f"--browser and --app are invalid with 'fx open {action}'"
+        )
+    if name or slug or entry_tags or ai:
+        raise click.ClickException(
+            "--name, --slug, --entry-tag, and --ai are only valid with 'fx open add'"
+        )
+    if len(tokens) != 2:
+        raise click.ClickException(f"Usage is fx open {action} SELECTOR")
+    if not yes and not sys.stdin.isatty():
+        raise click.ClickException(
+            f"fx open {action} requires --yes in non-interactive mode"
+        )
+
+    selector = tokens[1]
+    config = open_launcher.load_config(config_path)
+    visibility = "enabled" if action == "disable" else "disabled"
+    selected = open_launcher.resolve_saved_item_selector(
+        selector,
+        config.items,
+        filter_tags=filter_tags,
+        visibility=visibility,
+        action=action,
+    )
+
+    if not yes:
+        click.echo(f"{action.title()} {selected.slug}: {selected.name}")
+        click.echo(f"Target: {selected.target}")
+        if not click.confirm("Proceed?", default=False):
+            click.echo("Cancelled.")
+            return 0
+
+    if action == "disable":
+        changed = open_launcher.disable_item(
+            config_path,
+            selected.slug,
+            filter_tags=filter_tags,
+        )
+        click.echo(f"Disabled {changed.slug}: {changed.target}")
+        return 0
+
+    changed = open_launcher.enable_item(
+        config_path,
+        selected.slug,
+        filter_tags=filter_tags,
+    )
+    click.echo(f"Enabled {changed.slug}: {changed.target}")
     return 0
 
 

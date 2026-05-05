@@ -153,6 +153,62 @@ browser = "-Firefox"
             with self.assertRaises(OpenError):
                 load_config(config_path)
 
+    def test_load_config_parses_disabled_field_and_default_filter_hides_it(
+        self,
+    ) -> None:
+        from fx_bin.open_launcher import filter_items, load_config
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Enabled"
+slug = "enabled"
+target = "https://enabled.example"
+
+[[items]]
+name = "Disabled"
+slug = "old"
+target = "https://disabled.example"
+disabled = true
+""".strip(),
+                encoding="utf-8",
+            )
+
+            config = load_config(config_path)
+
+        by_slug = {item.slug: item for item in config.items}
+        self.assertFalse(by_slug["enabled"].disabled)
+        self.assertTrue(by_slug["old"].disabled)
+        self.assertEqual(
+            [item.slug for item in filter_items(config.items)], ["enabled"]
+        )
+        self.assertEqual(
+            [item.slug for item in filter_items(config.items, visibility="disabled")],
+            ["old"],
+        )
+
+    def test_load_config_reports_new_reserved_disable_slug_with_rename_guidance(
+        self,
+    ) -> None:
+        from fx_bin.open_launcher import OpenError, load_config
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Disable"
+slug = "disable"
+target = "https://example.com"
+""".strip(),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(OpenError, "Rename slug 'disable'"):
+                load_config(config_path)
+
 
 class TestSelectorResolution(unittest.TestCase):
     """Test deterministic selector resolution."""
@@ -256,6 +312,46 @@ class TestSelectorResolution(unittest.TestCase):
         with self.assertRaises(OpenError):
             resolve_launch_target("b", config.items, filter_tags=("work",))
 
+    def test_disabled_slug_is_not_opened_by_default(self) -> None:
+        from fx_bin.open_launcher import OpenError, OpenItem, resolve_launch_target
+
+        with self.assertRaisesRegex(OpenError, "disabled"):
+            resolve_launch_target(
+                "old",
+                [
+                    OpenItem(
+                        name="Old",
+                        slug="old",
+                        target="https://old.example",
+                        disabled=True,
+                    )
+                ],
+            )
+
+    def test_disabled_slug_allows_same_named_local_path_fallback(self) -> None:
+        from fx_bin.open_launcher import OpenItem, resolve_launch_target
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            cwd = Path(temp_dir)
+            local_path = cwd / "old"
+            local_path.write_text("local", encoding="utf-8")
+
+            target = resolve_launch_target(
+                "old",
+                [
+                    OpenItem(
+                        name="Old",
+                        slug="old",
+                        target="https://old.example",
+                        disabled=True,
+                    )
+                ],
+                cwd=cwd,
+            )
+
+        self.assertEqual(target.target, str(local_path))
+        self.assertEqual(target.label, "old")
+
     def test_unsupported_scheme_is_rejected(self) -> None:
         from fx_bin.open_launcher import OpenError, resolve_launch_target
 
@@ -285,9 +381,80 @@ class TestSelectorResolution(unittest.TestCase):
         output = format_items(filter_items(items))
         elapsed = time.perf_counter() - start
 
-        self.assertIn("1. Item 001 [item-001]", output)
-        self.assertIn("120. Item 120 [item-120]", output)
+        self.assertIn("| 1   | Item 001", output)
+        self.assertIn("| 120 | Item 120", output)
         self.assertLess(elapsed, 0.5)
+
+    def test_format_items_renders_one_line_ascii_table_rows(self) -> None:
+        from fx_bin.open_launcher import OpenItem, format_items
+
+        output = format_items(
+            [
+                OpenItem(
+                    name="Claude Code usage",
+                    slug="cc-usage",
+                    target="https://example.com/usage",
+                    order=10,
+                    tags=("usage", "claude-code"),
+                ),
+                OpenItem(
+                    name="Yahoo",
+                    slug="yahoo",
+                    target="https://yahoo.co.jp",
+                    order=20,
+                ),
+            ],
+            terminal_width=100,
+        )
+
+        lines = output.splitlines()
+        self.assertTrue(lines[0].startswith("+"))
+        self.assertIn("| # | Name", lines[1])
+        self.assertIn("| Target", lines[1])
+        self.assertEqual(sum("https://" in line for line in lines), 2)
+        self.assertNotIn("target:", output)
+        self.assertNotIn("tags:", output)
+
+    def test_format_items_truncates_long_target_to_terminal_width(self) -> None:
+        from fx_bin.open_launcher import OpenItem, format_items
+
+        output = format_items(
+            [
+                OpenItem(
+                    name="Long target",
+                    slug="long-target",
+                    target="https://example.com/" + "very-long-path/" * 10,
+                    order=10,
+                    tags=("docs",),
+                )
+            ],
+            terminal_width=72,
+        )
+
+        self.assertTrue(all(len(line) <= 72 for line in output.splitlines()))
+        self.assertIn("...", output)
+
+    def test_format_items_sanitizes_control_chars_and_handles_wide_text(self) -> None:
+        from fx_bin.open_launcher import OpenItem, format_items
+
+        output = format_items(
+            [
+                OpenItem(
+                    name="中文文档\nbeta",
+                    slug="zh-docs",
+                    target="https://example.com/中文/文档",
+                    order=10,
+                    tags=("资料\t测试",),
+                )
+            ],
+            terminal_width=80,
+        )
+
+        lines = output.splitlines()
+        self.assertEqual(sum("zh-docs" in line for line in lines), 1)
+        self.assertIn("中文文档 beta", output)
+        self.assertIn("资料 测试", output)
+        self.assertTrue(all(len(line) <= 80 for line in lines))
 
 
 class TestAddWorkflow(unittest.TestCase):
@@ -473,6 +640,210 @@ class TestAddWorkflow(unittest.TestCase):
             config = load_config(config_path)
 
         self.assertEqual(config.items[0].slug, "one")
+
+    def test_delete_item_removes_slug_and_preserves_remaining_item(self) -> None:
+        from fx_bin.open_launcher import OpenItem, append_item, delete_item, load_config
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            append_item(
+                config_path,
+                OpenItem(
+                    name="One",
+                    slug="one",
+                    target="https://one.example",
+                    order=10,
+                    tags=("docs",),
+                    browser="Firefox",
+                ),
+            )
+            append_item(
+                config_path,
+                OpenItem(name="Two", slug="two", target="https://two.example"),
+            )
+
+            deleted = delete_item(config_path, "one")
+            config = load_config(config_path)
+
+        self.assertEqual(deleted.slug, "one")
+        self.assertEqual([item.slug for item in config.items], ["two"])
+        self.assertEqual(config.items[0].target, "https://two.example")
+
+    def test_delete_item_uses_filtered_index_view(self) -> None:
+        from fx_bin.open_launcher import OpenItem, append_item, delete_item, load_config
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            append_item(
+                config_path,
+                OpenItem(
+                    name="A",
+                    slug="a",
+                    target="https://a.example",
+                    order=10,
+                    tags=("work",),
+                ),
+            )
+            append_item(
+                config_path,
+                OpenItem(
+                    name="B",
+                    slug="b",
+                    target="https://b.example",
+                    order=20,
+                    tags=("home",),
+                ),
+            )
+            append_item(
+                config_path,
+                OpenItem(
+                    name="C",
+                    slug="c",
+                    target="https://c.example",
+                    order=30,
+                    tags=("work",),
+                ),
+            )
+
+            deleted = delete_item(config_path, "2", filter_tags=("work",))
+            config = load_config(config_path)
+
+        self.assertEqual(deleted.slug, "c")
+        self.assertEqual([item.slug for item in config.items], ["a", "b"])
+
+    def test_delete_item_writes_empty_config_after_last_item(self) -> None:
+        from fx_bin.open_launcher import OpenItem, append_item, delete_item, load_config
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            append_item(
+                config_path,
+                OpenItem(name="One", slug="one", target="https://one.example"),
+            )
+
+            delete_item(config_path, "one")
+            config = load_config(config_path)
+            content = config_path.read_text(encoding="utf-8")
+
+        self.assertEqual(config.items, [])
+        self.assertEqual(content, "")
+
+    def test_mutation_preserves_non_item_top_level_config(self) -> None:
+        from fx_bin.open_launcher import delete_item, load_config
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+version = 1
+title = "Launcher"
+
+[metadata]
+owner = "Frank"
+active = true
+
+[[items]]
+name = "One"
+slug = "one"
+target = "https://one.example"
+order = 10
+
+[[items]]
+name = "Two"
+slug = "two"
+target = "https://two.example"
+order = 20
+""".strip(),
+                encoding="utf-8",
+            )
+
+            deleted = delete_item(config_path, "one")
+            config = load_config(config_path)
+            content = config_path.read_text(encoding="utf-8")
+
+        self.assertEqual(deleted.slug, "one")
+        self.assertEqual([item.slug for item in config.items], ["two"])
+        self.assertIn("version = 1", content)
+        self.assertIn('title = "Launcher"', content)
+        self.assertIn("[metadata]", content)
+        self.assertIn('owner = "Frank"', content)
+        self.assertIn("active = true", content)
+
+    def test_delete_item_rejects_direct_url_without_changing_config(self) -> None:
+        from fx_bin.open_launcher import OpenError, OpenItem, append_item, delete_item
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            append_item(
+                config_path,
+                OpenItem(name="One", slug="one", target="https://one.example"),
+            )
+            before = config_path.read_text(encoding="utf-8")
+
+            with self.assertRaises(OpenError):
+                delete_item(config_path, "https://one.example")
+
+            after = config_path.read_text(encoding="utf-8")
+
+        self.assertEqual(after, before)
+
+    def test_disable_item_hides_entry_and_enable_restores_it(self) -> None:
+        from fx_bin.open_launcher import (
+            OpenItem,
+            append_item,
+            disable_item,
+            enable_item,
+            filter_items,
+            load_config,
+        )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            append_item(
+                config_path,
+                OpenItem(name="One", slug="one", target="https://one.example"),
+            )
+
+            disabled = disable_item(config_path, "one")
+            disabled_config = load_config(config_path)
+            enabled = enable_item(config_path, "1")
+            enabled_config = load_config(config_path)
+            content = config_path.read_text(encoding="utf-8")
+
+        self.assertEqual(disabled.slug, "one")
+        self.assertTrue(disabled.disabled)
+        self.assertEqual(filter_items(disabled_config.items), [])
+        self.assertEqual(
+            [
+                item.slug
+                for item in filter_items(disabled_config.items, visibility="disabled")
+            ],
+            ["one"],
+        )
+        self.assertEqual(enabled.slug, "one")
+        self.assertFalse(enabled.disabled)
+        self.assertEqual(
+            [item.slug for item in filter_items(enabled_config.items)], ["one"]
+        )
+        self.assertNotIn("disabled = false", content)
+
+    def test_format_items_shows_disabled_state_when_present(self) -> None:
+        from fx_bin.open_launcher import OpenItem, format_items
+
+        output = format_items(
+            [
+                OpenItem(
+                    name="Old",
+                    slug="old",
+                    target="https://old.example",
+                    disabled=True,
+                )
+            ],
+            terminal_width=100,
+        )
+
+        self.assertIn("| # | State", output)
+        self.assertIn("disabled", output)
 
 
 class TestDispatchPlanning(unittest.TestCase):

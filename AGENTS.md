@@ -1,5 +1,7 @@
 # Alfred / AF Workflow Instructions
 
+**Last updated:** 2026-05-05
+
 This project uses Alfred (`af`) runbook documents for planning, proposals,
 change requests, and workflow routing. Do not use OpenSpec for new project work
 unless the user explicitly asks for OpenSpec.
@@ -207,6 +209,16 @@ Format: `feat:`, `fix:`, `chore:`, `docs:`, `test:`, `refactor:`
 
 Before commit: `make check && make test-coverage`
 
+## GitHub PRs
+
+- Create pull requests as ready for review by default, not draft/preview.
+- Use a draft PR only when the user explicitly asks for a draft or preview PR.
+- Rationale: GitHub Codex review/automation does not start on draft PRs.
+- For COR-1612 review polling waits, use visible "timetable sleep": print the
+  current time, target wake time, and elapsed time around `sleep` in Tokyo time
+  (JST, UTC+09:00), then continue the poll immediately when the sleep exits.
+  This makes wait execution auditable in the transcript.
+
 ## CLI Template
 
 ```python
@@ -233,3 +245,11 @@ def safe_op(path: str) -> Result[str, FxBinError]:
         return Failure(ValidationError("Invalid"))
     return Success(process(path))
 ```
+
+## Instruction Change History
+
+| Date | Change | By |
+|------|--------|----|
+| 2026-05-05 | Added PR default rule: ready for review unless draft is explicitly requested | Codex |
+| 2026-05-05 | Added visible timetable sleep rule for COR-1612 PR review polling | Codex |
+| 2026-05-05 | Updated timetable sleep rule to use Tokyo time (JST, UTC+09:00) | Codex |

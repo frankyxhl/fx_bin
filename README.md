@@ -271,6 +271,8 @@ tabs open.
 ```bash
 # List saved targets with 1-based indices
 fx open
+fx open --all
+fx open --disabled
 
 # Open by slug or index
 fx open cc-usage
@@ -283,13 +285,35 @@ fx open --tag usage 2
 fx open https://example.com
 fx open ./diagram.png --app Preview
 
+# Temporarily choose a browser on macOS
+fx open cc-usage --browser Firefox
+
 # Add a new saved target; bare domains are normalized to https URLs
 fx open add yahoo.co.jp --name "Yahoo! JAPAN" --slug yahoo-jp --entry-tag portal --yes
+
+# Remove or temporarily hide saved targets
+fx open delete cc-usage --yes
+fx open disable cc-usage --yes
+fx open enable 1 --yes
 ```
 
 **Config:** `fx open` reads `${XDG_CONFIG_HOME}/fx-bin/open.toml` or
 `~/.config/fx-bin/open.toml` by default. Use `--config ./open.toml` for a custom
 registry.
+
+**Browser selection:** Normal URL entries should omit `browser` and use the
+operating system's default browser. Add `browser = "Firefox"` or another macOS
+application name only for entries that need a dedicated browser, or use
+`--browser` for a one-off override. Explicit browser/app selection is macOS-only
+in v1; Linux and Windows use the OS default opener even if a portable config
+contains a `browser` field.
+
+**Mutation commands:** `fx open delete SELECTOR --yes` permanently removes a
+saved target. `fx open disable SELECTOR --yes` hides a target from normal lists
+and selection without deleting it. `fx open enable SELECTOR --yes` restores a
+disabled target; numeric indices for `enable` come from `fx open --disabled`.
+Mutation commands preserve non-item TOML config semantically, but rewrite the
+registry and may remove comments or custom formatting in v1.
 
 **AI metadata:** `fx open add TARGET --ai --yes` can call the external command in
 `FX_OPEN_AI_COMMAND`. The provider may propose `name`, `slug`, and `tags`; normal
@@ -300,11 +324,13 @@ quoted, such as `"C:\Program Files\Fx AI\provider.exe" --mode json`.
 **Options:**
 - `--config PATH`: Use a specific TOML registry
 - `--tag TAG`: Filter saved targets before listing or selecting
-- `--browser NAME`: Open URL targets with a browser on macOS
-- `--app NAME`: Open local files with an app on macOS
+- `--all`: List enabled and disabled saved targets
+- `--disabled`: List only disabled saved targets
+- `--browser NAME`: Open URL targets with a browser on macOS, or store a macOS browser preference in `fx open add`
+- `--app NAME`: Open local files with an app on macOS, or store a macOS app preference in `fx open add`
 - `--entry-tag TAG`: Add metadata tags in `fx open add`
 - `--ai`: Ask `FX_OPEN_AI_COMMAND` for add metadata
-- `--yes, -y`: Confirm add in non-interactive mode
+- `--yes, -y`: Confirm mutation commands in non-interactive mode
 
 #### 🔄 fx replace - Text Replacer
 

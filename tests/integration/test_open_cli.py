@@ -53,9 +53,10 @@ tags = ["usage", "claude-code"]
             result = self.runner.invoke(cli, ["open", "--config", str(config_path)])
 
         self.assertEqual(result.exit_code, 0)
-        self.assertIn("1.", result.output)
+        self.assertIn("| # | Name", result.output)
         self.assertIn("cc-usage", result.output)
-        self.assertIn("usage, claude-code", result.output)
+        self.assertIn("usage", result.output)
+        self.assertNotIn("target:", result.output)
 
     def test_open_slug_dispatches_without_shell(self) -> None:
         from fx_bin.open_launcher import DispatchPlan
@@ -198,6 +199,371 @@ target = "https://example.com/docs"
 
         self.assertEqual(result.exit_code, 1)
         self.assertIn("FX_OPEN_AI_COMMAND", result.output)
+
+    def test_delete_slug_requires_yes_in_non_interactive_mode(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Docs"
+slug = "docs"
+target = "https://example.com/docs"
+""".strip(),
+                encoding="utf-8",
+            )
+
+            result = self.runner.invoke(
+                cli,
+                ["open", "--config", str(config_path), "delete", "docs"],
+            )
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("--yes", result.output)
+
+    def test_delete_slug_removes_config_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Docs"
+slug = "docs"
+target = "https://example.com/docs"
+
+[[items]]
+name = "Usage"
+slug = "usage"
+target = "https://example.com/usage"
+""".strip(),
+                encoding="utf-8",
+            )
+
+            result = self.runner.invoke(
+                cli,
+                ["open", "--config", str(config_path), "delete", "docs", "--yes"],
+            )
+            content = config_path.read_text(encoding="utf-8")
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("Deleted docs", result.output)
+        self.assertNotIn('slug = "docs"', content)
+        self.assertIn('slug = "usage"', content)
+
+    def test_delete_uses_tag_filtered_index_view(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Personal"
+slug = "personal"
+target = "https://example.com/personal"
+order = 10
+tags = ["personal"]
+
+[[items]]
+name = "Work"
+slug = "work"
+target = "https://example.com/work"
+order = 20
+tags = ["work"]
+""".strip(),
+                encoding="utf-8",
+            )
+
+            result = self.runner.invoke(
+                cli,
+                [
+                    "open",
+                    "--config",
+                    str(config_path),
+                    "--tag",
+                    "work",
+                    "delete",
+                    "1",
+                    "--yes",
+                ],
+            )
+            content = config_path.read_text(encoding="utf-8")
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("Deleted work", result.output)
+        self.assertIn('slug = "personal"', content)
+        self.assertNotIn('slug = "work"', content)
+
+    def test_delete_index_mutation_uses_confirmed_slug(self) -> None:
+        from fx_bin.open_launcher import OpenItem
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "One"
+slug = "one"
+target = "https://example.com/one"
+order = 10
+
+[[items]]
+name = "Two"
+slug = "two"
+target = "https://example.com/two"
+order = 20
+""".strip(),
+                encoding="utf-8",
+            )
+
+            with patch("fx_bin.open_launcher.delete_item") as delete_item:
+                delete_item.return_value = OpenItem(
+                    name="Two",
+                    slug="two",
+                    target="https://example.com/two",
+                )
+                result = self.runner.invoke(
+                    cli,
+                    ["open", "--config", str(config_path), "delete", "2", "--yes"],
+                )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        delete_item.assert_called_once()
+        self.assertEqual(delete_item.call_args.args[1], "two")
+
+    def test_delete_disabled_entry_with_disabled_view(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Current"
+slug = "current"
+target = "https://example.com/current"
+
+[[items]]
+name = "Old"
+slug = "old"
+target = "https://example.com/old"
+disabled = true
+""".strip(),
+                encoding="utf-8",
+            )
+
+            result = self.runner.invoke(
+                cli,
+                [
+                    "open",
+                    "--config",
+                    str(config_path),
+                    "--disabled",
+                    "delete",
+                    "old",
+                    "--yes",
+                ],
+            )
+            content = config_path.read_text(encoding="utf-8")
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("Deleted old", result.output)
+        self.assertIn('slug = "current"', content)
+        self.assertNotIn('slug = "old"', content)
+
+    def test_delete_rejects_add_only_options(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+
+            result = self.runner.invoke(
+                cli,
+                [
+                    "open",
+                    "--config",
+                    str(config_path),
+                    "delete",
+                    "docs",
+                    "--slug",
+                    "custom",
+                    "--yes",
+                ],
+            )
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("only valid with 'fx open add'", result.output)
+
+    def test_disabled_entries_are_hidden_by_default_and_visible_with_flags(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Current"
+slug = "current"
+target = "https://example.com/current"
+
+[[items]]
+name = "Old"
+slug = "old"
+target = "https://example.com/old"
+disabled = true
+""".strip(),
+                encoding="utf-8",
+            )
+
+            default_result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path)]
+            )
+            disabled_result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path), "--disabled"]
+            )
+            all_result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path), "--all"]
+            )
+
+        self.assertEqual(default_result.exit_code, 0, default_result.output)
+        self.assertIn("current", default_result.output)
+        self.assertNotIn("old", default_result.output)
+        self.assertEqual(disabled_result.exit_code, 0, disabled_result.output)
+        self.assertIn("old", disabled_result.output)
+        self.assertNotIn("current", disabled_result.output)
+        self.assertEqual(all_result.exit_code, 0, all_result.output)
+        self.assertIn("current", all_result.output)
+        self.assertIn("old", all_result.output)
+        self.assertIn("disabled", all_result.output)
+
+    def test_disable_and_enable_workflows_toggle_entry_visibility(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Docs"
+slug = "docs"
+target = "https://example.com/docs"
+""".strip(),
+                encoding="utf-8",
+            )
+
+            disable_result = self.runner.invoke(
+                cli,
+                ["open", "--config", str(config_path), "disable", "docs", "--yes"],
+            )
+            hidden_result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path)]
+            )
+            enable_result = self.runner.invoke(
+                cli,
+                ["open", "--config", str(config_path), "enable", "1", "--yes"],
+            )
+            restored_result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path)]
+            )
+            content = config_path.read_text(encoding="utf-8")
+
+        self.assertEqual(disable_result.exit_code, 0, disable_result.output)
+        self.assertIn("Disabled docs", disable_result.output)
+        self.assertNotIn("docs", hidden_result.output)
+        self.assertEqual(enable_result.exit_code, 0, enable_result.output)
+        self.assertIn("Enabled docs", enable_result.output)
+        self.assertIn("docs", restored_result.output)
+        self.assertNotIn("disabled = false", content)
+
+    def test_enable_workflow_accepts_disabled_slug(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Old"
+slug = "old"
+target = "https://example.com/old"
+disabled = true
+""".strip(),
+                encoding="utf-8",
+            )
+
+            result = self.runner.invoke(
+                cli,
+                ["open", "--config", str(config_path), "enable", "old", "--yes"],
+            )
+            restored_result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path)]
+            )
+            content = config_path.read_text(encoding="utf-8")
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("Enabled old", result.output)
+        self.assertIn("old", restored_result.output)
+        self.assertNotIn("disabled = true", content)
+
+    def test_toggle_index_mutation_uses_confirmed_slug(self) -> None:
+        from fx_bin.open_launcher import OpenItem
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "One"
+slug = "one"
+target = "https://example.com/one"
+order = 10
+
+[[items]]
+name = "Two"
+slug = "two"
+target = "https://example.com/two"
+order = 20
+""".strip(),
+                encoding="utf-8",
+            )
+
+            with patch("fx_bin.open_launcher.disable_item") as disable_item:
+                disable_item.return_value = OpenItem(
+                    name="Two",
+                    slug="two",
+                    target="https://example.com/two",
+                    disabled=True,
+                )
+                result = self.runner.invoke(
+                    cli,
+                    ["open", "--config", str(config_path), "disable", "2", "--yes"],
+                )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        disable_item.assert_called_once()
+        self.assertEqual(disable_item.call_args.args[1], "two")
+
+    def test_visibility_flags_are_invalid_for_open_dispatch(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Docs"
+slug = "docs"
+target = "https://example.com/docs"
+""".strip(),
+                encoding="utf-8",
+            )
+
+            result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path), "--all", "docs"]
+            )
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("--all", result.output)
+
+    def test_visibility_flags_are_mutually_exclusive(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+
+            result = self.runner.invoke(
+                cli,
+                ["open", "--config", str(config_path), "--all", "--disabled"],
+            )
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("cannot be combined", result.output)
 
 
 if __name__ == "__main__":
