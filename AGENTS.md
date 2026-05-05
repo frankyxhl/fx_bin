@@ -214,6 +214,10 @@ Before commit: `make check && make test-coverage`
 - Create pull requests as ready for review by default, not draft/preview.
 - Use a draft PR only when the user explicitly asks for a draft or preview PR.
 - Rationale: GitHub Codex review/automation does not start on draft PRs.
+- For COR-1612 review polling waits, use visible "timetable sleep": print the
+  current time, target wake time, and elapsed time around `sleep`, then continue
+  the poll immediately when the sleep exits. This makes wait execution auditable
+  in the transcript.
 
 ## CLI Template
 
@@ -247,3 +251,4 @@ def safe_op(path: str) -> Result[str, FxBinError]:
 | Date | Change | By |
 |------|--------|----|
 | 2026-05-05 | Added PR default rule: ready for review unless draft is explicitly requested | Codex |
+| 2026-05-05 | Added visible timetable sleep rule for COR-1612 PR review polling | Codex |
