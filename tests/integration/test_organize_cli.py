@@ -10,7 +10,6 @@ from click.testing import CliRunner
 
 from fx_bin.cli import cli
 
-
 FIXED_MODIFIED_TS = datetime(2026, 1, 10, 12, 0, 0).timestamp()
 
 

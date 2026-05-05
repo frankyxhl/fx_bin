@@ -283,7 +283,7 @@ class TestRecursiveDirectorySafety(unittest.TestCase):
 
         # Create different types of files
         (mixed_dir / "regular.txt").write_text("regular file")
-        (mixed_dir / "binary.bin").write_bytes(b"\x00\x01\x02\x03\xFF")
+        (mixed_dir / "binary.bin").write_bytes(b"\x00\x01\x02\x03\xff")
         (mixed_dir / "empty.txt").touch()
 
         if os.name != "nt":  # Skip on Windows

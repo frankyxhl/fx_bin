@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """File counting utility."""
+
 import os
 from typing import List
 

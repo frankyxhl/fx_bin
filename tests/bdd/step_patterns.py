@@ -10,7 +10,6 @@ from pathlib import Path
 from dataclasses import dataclass
 from pytest_bdd import parsers
 
-
 # ==============================================================================
 # STEP PATTERN TEMPLATES
 # ==============================================================================
