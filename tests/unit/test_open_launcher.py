@@ -328,6 +328,30 @@ class TestSelectorResolution(unittest.TestCase):
                 ],
             )
 
+    def test_disabled_slug_allows_same_named_local_path_fallback(self) -> None:
+        from fx_bin.open_launcher import OpenItem, resolve_launch_target
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            cwd = Path(temp_dir)
+            local_path = cwd / "old"
+            local_path.write_text("local", encoding="utf-8")
+
+            target = resolve_launch_target(
+                "old",
+                [
+                    OpenItem(
+                        name="Old",
+                        slug="old",
+                        target="https://old.example",
+                        disabled=True,
+                    )
+                ],
+                cwd=cwd,
+            )
+
+        self.assertEqual(target.target, str(local_path))
+        self.assertEqual(target.label, "old")
+
     def test_unsupported_scheme_is_rejected(self) -> None:
         from fx_bin.open_launcher import OpenError, resolve_launch_target
 

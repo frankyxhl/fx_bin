@@ -488,12 +488,13 @@ def resolve_launch_target(
     if filter_tags and any(item.slug == token for item in items):
         tags = ", ".join(filter_tags)
         raise OpenError(f"Slug '{token}' does not match filter tag(s): {tags}")
-    if any(item.slug == token and item.disabled for item in items):
-        raise OpenError(f"Slug '{token}' is disabled")
 
     bare_path = cwd_path / token
     if bare_path.exists():
         return LaunchTarget(label=token, target=str(bare_path))
+
+    if any(item.slug == token and item.disabled for item in items):
+        raise OpenError(f"Slug '{token}' is disabled")
 
     raise OpenError(f"Open target not found: {token}. Run 'fx open' to list targets.")
 
