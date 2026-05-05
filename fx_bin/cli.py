@@ -873,7 +873,7 @@ def _run_open_delete(
 
     deleted = open_launcher.delete_item(
         config_path,
-        selector,
+        selected.slug,
         filter_tags=filter_tags,
         visibility=visibility,
     )
@@ -939,7 +939,7 @@ def _run_open_toggle(
     if action == "disable":
         changed = open_launcher.disable_item(
             config_path,
-            selector,
+            selected.slug,
             filter_tags=filter_tags,
         )
         click.echo(f"Disabled {changed.slug}: {changed.target}")
@@ -947,7 +947,7 @@ def _run_open_toggle(
 
     changed = open_launcher.enable_item(
         config_path,
-        selector,
+        selected.slug,
         filter_tags=filter_tags,
     )
     click.echo(f"Enabled {changed.slug}: {changed.target}")

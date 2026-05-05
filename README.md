@@ -312,8 +312,8 @@ contains a `browser` field.
 saved target. `fx open disable SELECTOR --yes` hides a target from normal lists
 and selection without deleting it. `fx open enable SELECTOR --yes` restores a
 disabled target; numeric indices for `enable` come from `fx open --disabled`.
-Mutation commands rewrite the TOML registry and may remove comments or custom
-formatting in v1.
+Mutation commands preserve non-item TOML config semantically, but rewrite the
+registry and may remove comments or custom formatting in v1.
 
 **AI metadata:** `fx open add TARGET --ai --yes` can call the external command in
 `FX_OPEN_AI_COMMAND`. The provider may propose `name`, `slug`, and `tags`; normal

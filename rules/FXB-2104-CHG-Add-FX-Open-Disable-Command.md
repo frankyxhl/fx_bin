@@ -176,7 +176,9 @@ enabled/disabled numeric selectors resolve against the documented visible view.
 
 COR-1602/COR-1610 implementation review completed on 2026-05-05 with DeepSeek
 PASS and GLM PASS. Additional CLI integration tests were added after review for
-slug-based enable and visibility-flag mutual exclusion.
+slug-based enable and visibility-flag mutual exclusion. GitHub Codex review
+feedback was addressed by preserving non-item TOML config during mutation
+rewrites and using the confirmed slug for index-based mutation writes.
 
 ---
 
@@ -189,3 +191,4 @@ slug-based enable and visibility-flag mutual exclusion.
 | 2026-05-05 | Addressed Trinity review: resolve visibility contract, enable selector semantics, reserved-slug migration, and table state integration | Codex |
 | 2026-05-05 | Implemented disable/enable workflow and related tests | Codex |
 | 2026-05-05 | Completed implementation review with DeepSeek and GLM PASS | Codex |
+| 2026-05-05 | Addressed GitHub Codex review: preserve non-item config and use confirmed slug for mutation | Codex |

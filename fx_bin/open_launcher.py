@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import json
 import os
 import re
@@ -17,14 +18,15 @@ import time
 import tomllib
 import unicodedata
 from contextlib import contextmanager
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import Callable, Iterator, Mapping, Optional, Sequence
+from typing import Callable, Iterator, Mapping, Optional, Sequence, TypeGuard
 from urllib.parse import urlparse
 
 from .errors import OpenError
 
 SLUG_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{0,63}$")
+TOML_BARE_KEY_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 NEWLY_RESERVED_SLUGS = {"disable", "enable"}
 RESERVED_SLUGS = {
     "add",
@@ -84,6 +86,7 @@ class OpenConfig:
     """Parsed launcher config."""
 
     items: list[OpenItem]
+    extra: Mapping[str, object] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -168,7 +171,8 @@ def _parse_config_text(text: str, config_path: Path) -> OpenConfig:
             raise OpenError(f"Item {index} must be a TOML table")
         items.append(_parse_item(raw_item, index, seen_slugs))
 
-    return OpenConfig(_sort_items(items))
+    extra = {key: value for key, value in raw_config.items() if key != "items"}
+    return OpenConfig(_sort_items(items), extra)
 
 
 def _parse_item(
@@ -809,7 +813,7 @@ def _mutate_config(config_path: Path) -> Iterator[OpenConfig]:
 
         config = _parse_config_text(existing_text, config_path)
         yield config
-        candidate = _items_to_toml(config.items)
+        candidate = _config_to_toml(config)
         _parse_config_text(candidate, config_path)
         _atomic_replace_config(config_path, candidate)
 
@@ -887,6 +891,43 @@ def _append_toml(existing_text: str, item: OpenItem) -> str:
     return "\n\n".join(blocks) + "\n"
 
 
+def _config_to_toml(config: OpenConfig) -> str:
+    blocks: list[str] = []
+    extra_text = _extra_config_to_toml(config.extra)
+    if extra_text:
+        blocks.append(extra_text)
+    items_text = _items_to_toml(config.items).rstrip()
+    if items_text:
+        blocks.append(items_text)
+    if not blocks:
+        return ""
+    return "\n\n".join(blocks) + "\n"
+
+
+def _extra_config_to_toml(extra: Mapping[str, object]) -> str:
+    scalar_lines: list[str] = []
+    table_blocks: list[str] = []
+    for key, value in extra.items():
+        if isinstance(value, dict):
+            table_blocks.extend(
+                _toml_table_blocks(
+                    (key,),
+                    _string_keyed_mapping(value, key),
+                    array_table=False,
+                )
+            )
+        elif _is_array_of_tables(value):
+            table_blocks.extend(_toml_array_table_blocks((key,), value))
+        else:
+            scalar_lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
+
+    blocks: list[str] = []
+    if scalar_lines:
+        blocks.append("\n".join(scalar_lines))
+    blocks.extend(table_blocks)
+    return "\n\n".join(blocks)
+
+
 def _items_to_toml(items: Sequence[OpenItem]) -> str:
     if not items:
         return ""
@@ -912,6 +953,112 @@ def _item_to_toml(item: OpenItem) -> str:
     if item.disabled:
         lines.append("disabled = true")
     return "\n".join(lines)
+
+
+def _toml_table_blocks(
+    path: Sequence[str],
+    table: Mapping[str, object],
+    array_table: bool,
+) -> list[str]:
+    scalar_lines: list[str] = []
+    nested_blocks: list[str] = []
+    for key, value in table.items():
+        child_path = (*path, key)
+        if isinstance(value, dict):
+            nested_blocks.extend(
+                _toml_table_blocks(
+                    child_path,
+                    _string_keyed_mapping(value, _toml_dotted_key(child_path)),
+                    array_table=False,
+                )
+            )
+        elif _is_array_of_tables(value):
+            nested_blocks.extend(_toml_array_table_blocks(child_path, value))
+        else:
+            scalar_lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
+
+    header = (
+        f"[[{_toml_dotted_key(path)}]]"
+        if array_table
+        else f"[{_toml_dotted_key(path)}]"
+    )
+    blocks = [header]
+    if scalar_lines:
+        blocks[0] = "\n".join([header, *scalar_lines])
+    blocks.extend(nested_blocks)
+    return blocks
+
+
+def _toml_array_table_blocks(
+    path: Sequence[str],
+    values: Sequence[object],
+) -> list[str]:
+    blocks: list[str] = []
+    for value in values:
+        if not isinstance(value, dict):
+            raise OpenError(
+                f"TOML array table {_toml_dotted_key(path)} must contain tables"
+            )
+        blocks.extend(
+            _toml_table_blocks(
+                path,
+                _string_keyed_mapping(value, _toml_dotted_key(path)),
+                array_table=True,
+            )
+        )
+    return blocks
+
+
+def _is_array_of_tables(value: object) -> TypeGuard[list[object]]:
+    return (
+        isinstance(value, list)
+        and bool(value)
+        and all(isinstance(item, dict) for item in value)
+    )
+
+
+def _string_keyed_mapping(
+    value: Mapping[object, object],
+    context: str,
+) -> dict[str, object]:
+    result: dict[str, object] = {}
+    for key, item in value.items():
+        if not isinstance(key, str):
+            raise OpenError(f"TOML table {context} contains a non-string key")
+        result[key] = item
+    return result
+
+
+def _toml_dotted_key(path: Sequence[str]) -> str:
+    return ".".join(_toml_key(key) for key in path)
+
+
+def _toml_key(key: str) -> str:
+    if TOML_BARE_KEY_RE.fullmatch(key):
+        return key
+    return _toml_basic_string(key)
+
+
+def _toml_value(value: object) -> str:
+    if isinstance(value, str):
+        return _toml_basic_string(value)
+    if type(value) is bool:
+        return "true" if value else "false"
+    if type(value) is int:
+        return str(value)
+    if isinstance(value, float):
+        return repr(value).lower()
+    if isinstance(value, (dt.datetime, dt.date, dt.time)):
+        return value.isoformat()
+    if isinstance(value, list):
+        return "[" + ", ".join(_toml_value(item) for item in value) + "]"
+    if isinstance(value, dict):
+        table = _string_keyed_mapping(value, "inline")
+        parts = [
+            f"{_toml_key(key)} = {_toml_value(item)}" for key, item in table.items()
+        ]
+        return "{ " + ", ".join(parts) + " }"
+    raise OpenError(f"Unsupported TOML value type: {type(value).__name__}")
 
 
 def _toml_basic_string(value: str) -> str:

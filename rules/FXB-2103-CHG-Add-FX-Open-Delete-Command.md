@@ -148,7 +148,9 @@ URL/path selector rejection.
 
 COR-1602/COR-1610 implementation review completed on 2026-05-05 with DeepSeek
 PASS and GLM PASS. Additional CLI integration tests were added after review for
-tag-filtered delete and disabled-view delete.
+tag-filtered delete and disabled-view delete. GitHub Codex review feedback was
+addressed by preserving non-item TOML config during mutation rewrites and using
+the confirmed slug for index-based mutation writes.
 
 ---
 
@@ -161,3 +163,4 @@ tag-filtered delete and disabled-view delete.
 | 2026-05-05 | Addressed Trinity review: add option-guard change, shared TOML rewrite, and comment-loss impact | Codex |
 | 2026-05-05 | Implemented delete workflow and related tests | Codex |
 | 2026-05-05 | Completed implementation review with DeepSeek and GLM PASS | Codex |
+| 2026-05-05 | Addressed GitHub Codex review: preserve non-item config and use confirmed slug for mutation | Codex |

@@ -292,6 +292,43 @@ tags = ["work"]
         self.assertIn('slug = "personal"', content)
         self.assertNotIn('slug = "work"', content)
 
+    def test_delete_index_mutation_uses_confirmed_slug(self) -> None:
+        from fx_bin.open_launcher import OpenItem
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "One"
+slug = "one"
+target = "https://example.com/one"
+order = 10
+
+[[items]]
+name = "Two"
+slug = "two"
+target = "https://example.com/two"
+order = 20
+""".strip(),
+                encoding="utf-8",
+            )
+
+            with patch("fx_bin.open_launcher.delete_item") as delete_item:
+                delete_item.return_value = OpenItem(
+                    name="Two",
+                    slug="two",
+                    target="https://example.com/two",
+                )
+                result = self.runner.invoke(
+                    cli,
+                    ["open", "--config", str(config_path), "delete", "2", "--yes"],
+                )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        delete_item.assert_called_once()
+        self.assertEqual(delete_item.call_args.args[1], "two")
+
     def test_delete_disabled_entry_with_disabled_view(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             config_path = Path(temp_dir) / "open.toml"
@@ -457,6 +494,44 @@ disabled = true
         self.assertIn("Enabled old", result.output)
         self.assertIn("old", restored_result.output)
         self.assertNotIn("disabled = true", content)
+
+    def test_toggle_index_mutation_uses_confirmed_slug(self) -> None:
+        from fx_bin.open_launcher import OpenItem
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "One"
+slug = "one"
+target = "https://example.com/one"
+order = 10
+
+[[items]]
+name = "Two"
+slug = "two"
+target = "https://example.com/two"
+order = 20
+""".strip(),
+                encoding="utf-8",
+            )
+
+            with patch("fx_bin.open_launcher.disable_item") as disable_item:
+                disable_item.return_value = OpenItem(
+                    name="Two",
+                    slug="two",
+                    target="https://example.com/two",
+                    disabled=True,
+                )
+                result = self.runner.invoke(
+                    cli,
+                    ["open", "--config", str(config_path), "disable", "2", "--yes"],
+                )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        disable_item.assert_called_once()
+        self.assertEqual(disable_item.call_args.args[1], "two")
 
     def test_visibility_flags_are_invalid_for_open_dispatch(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

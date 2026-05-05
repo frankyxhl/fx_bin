@@ -704,6 +704,47 @@ class TestAddWorkflow(unittest.TestCase):
         self.assertEqual(config.items, [])
         self.assertEqual(content, "")
 
+    def test_mutation_preserves_non_item_top_level_config(self) -> None:
+        from fx_bin.open_launcher import delete_item, load_config
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+version = 1
+title = "Launcher"
+
+[metadata]
+owner = "Frank"
+active = true
+
+[[items]]
+name = "One"
+slug = "one"
+target = "https://one.example"
+order = 10
+
+[[items]]
+name = "Two"
+slug = "two"
+target = "https://two.example"
+order = 20
+""".strip(),
+                encoding="utf-8",
+            )
+
+            deleted = delete_item(config_path, "one")
+            config = load_config(config_path)
+            content = config_path.read_text(encoding="utf-8")
+
+        self.assertEqual(deleted.slug, "one")
+        self.assertEqual([item.slug for item in config.items], ["two"])
+        self.assertIn("version = 1", content)
+        self.assertIn('title = "Launcher"', content)
+        self.assertIn("[metadata]", content)
+        self.assertIn('owner = "Frank"', content)
+        self.assertIn("active = true", content)
+
     def test_delete_item_rejects_direct_url_without_changing_config(self) -> None:
         from fx_bin.open_launcher import OpenError, OpenItem, append_item, delete_item
 
