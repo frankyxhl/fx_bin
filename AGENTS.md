@@ -1,5 +1,7 @@
 # Alfred / AF Workflow Instructions
 
+**Last updated:** 2026-05-05
+
 This project uses Alfred (`af`) runbook documents for planning, proposals,
 change requests, and workflow routing. Do not use OpenSpec for new project work
 unless the user explicitly asks for OpenSpec.
@@ -207,6 +209,12 @@ Format: `feat:`, `fix:`, `chore:`, `docs:`, `test:`, `refactor:`
 
 Before commit: `make check && make test-coverage`
 
+## GitHub PRs
+
+- Create pull requests as ready for review by default, not draft/preview.
+- Use a draft PR only when the user explicitly asks for a draft or preview PR.
+- Rationale: GitHub Codex review/automation does not start on draft PRs.
+
 ## CLI Template
 
 ```python
@@ -233,3 +241,9 @@ def safe_op(path: str) -> Result[str, FxBinError]:
         return Failure(ValidationError("Invalid"))
     return Success(process(path))
 ```
+
+## Instruction Change History
+
+| Date | Change | By |
+|------|--------|----|
+| 2026-05-05 | Added PR default rule: ready for review unless draft is explicitly requested | Codex |
