@@ -8,6 +8,7 @@ from unittest.mock import patch
 from click.testing import CliRunner
 
 from fx_bin.cli import cli
+from tests.helpers import table_cells
 
 
 class TestOpenCli(unittest.TestCase):
@@ -54,10 +55,46 @@ tags = ["usage", "claude-code"]
             result = self.runner.invoke(cli, ["open", "--config", str(config_path)])
 
         self.assertEqual(result.exit_code, 0)
-        self.assertIn("| # | Name", result.output)
+        self.assertEqual(
+            table_cells(result.output.splitlines()[1])[:3],
+            ["#", "Slug", "Name"],
+        )
         self.assertIn("cc-usage", result.output)
         self.assertIn("usage", result.output)
         self.assertNotIn("target:", result.output)
+
+    def test_tag_filtered_list_uses_slug_second_column_order(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Claude Usage"
+slug = "cl"
+target = "https://claude.ai/settings/usage"
+tags = ["usage", "claude"]
+
+[[items]]
+name = "SportPlus Snooker"
+slug = "sp"
+target = "https://en97.sportplus.live/snooker/"
+tags = ["sports", "live"]
+""".strip(),
+                encoding="utf-8",
+            )
+
+            result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path), "--tag", "sports"]
+            )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertEqual(
+            table_cells(result.output.splitlines()[1])[:3],
+            ["#", "Slug", "Name"],
+        )
+        self.assertIn("| 1 | sp", result.output)
+        self.assertIn("SportPlus Snooker", result.output)
+        self.assertNotIn("Claude Usage", result.output)
 
     def test_search_lists_case_insensitive_keyword_matches(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -84,9 +121,11 @@ tags = ["sports", "live"]
             )
 
         self.assertEqual(result.exit_code, 0, result.output)
-        self.assertIn("| # | Name", result.output)
-        self.assertIn("| 2 | SportPlus Snooker", result.output)
-        self.assertIn("SportPlus Snooker", result.output)
+        self.assertEqual(
+            table_cells(result.output.splitlines()[1])[:3],
+            ["#", "Slug", "Name"],
+        )
+        self.assertIn("| 2 | sportplus-snooker", result.output)
         self.assertIn("https://en97.sportplus.live/snooker/", result.output)
         self.assertNotIn("claude-usage", result.output)
 
@@ -135,7 +174,12 @@ tags = ["deepseek", "usage"]
             )
 
         self.assertEqual(result.exit_code, 0, result.output)
-        self.assertIn("DeepSeek Usage", result.output)
+        self.assertEqual(
+            table_cells(result.output.splitlines()[1])[:3],
+            ["#", "Slug", "Name"],
+        )
+        self.assertIn("deepseek-usage", result.output)
+        self.assertIn("https://platform.deepseek.com/usage", result.output)
         self.assertNotIn("claude-usage", result.output)
 
     def test_search_no_match_outputs_helpful_message(self) -> None:
@@ -440,11 +484,13 @@ order = 20
 name = "Current"
 slug = "current"
 target = "https://example.com/current"
+tags = ["active"]
 
 [[items]]
 name = "Old"
 slug = "old"
 target = "https://example.com/old"
+tags = ["archive"]
 disabled = true
 """.strip(),
                 encoding="utf-8",
@@ -501,11 +547,13 @@ disabled = true
 name = "Current"
 slug = "current"
 target = "https://example.com/current"
+tags = ["active"]
 
 [[items]]
 name = "Old"
 slug = "old"
 target = "https://example.com/old"
+tags = ["archive"]
 disabled = true
 """.strip(),
                 encoding="utf-8",
@@ -520,17 +568,86 @@ disabled = true
             all_result = self.runner.invoke(
                 cli, ["open", "--config", str(config_path), "--all"]
             )
+            tag_all_result = self.runner.invoke(
+                cli,
+                ["open", "--config", str(config_path), "--tag", "archive", "--all"],
+            )
+            tag_disabled_result = self.runner.invoke(
+                cli,
+                [
+                    "open",
+                    "--config",
+                    str(config_path),
+                    "--tag",
+                    "archive",
+                    "--disabled",
+                ],
+            )
 
         self.assertEqual(default_result.exit_code, 0, default_result.output)
+        self.assertEqual(
+            table_cells(default_result.output.splitlines()[1])[:3],
+            ["#", "Slug", "Name"],
+        )
+        self.assertEqual(
+            table_cells(default_result.output.splitlines()[3])[:3],
+            ["1", "current", "Current"],
+        )
         self.assertIn("current", default_result.output)
         self.assertNotIn("old", default_result.output)
         self.assertEqual(disabled_result.exit_code, 0, disabled_result.output)
+        self.assertEqual(
+            table_cells(disabled_result.output.splitlines()[1])[:4],
+            ["#", "Slug", "State", "Name"],
+        )
+        self.assertEqual(
+            table_cells(disabled_result.output.splitlines()[3])[:4],
+            ["1", "old", "disabled", "Old"],
+        )
         self.assertIn("old", disabled_result.output)
         self.assertNotIn("current", disabled_result.output)
         self.assertEqual(all_result.exit_code, 0, all_result.output)
+        self.assertEqual(
+            table_cells(all_result.output.splitlines()[1])[:4],
+            ["#", "Slug", "State", "Name"],
+        )
+        self.assertEqual(
+            table_cells(all_result.output.splitlines()[3])[:4],
+            ["1", "current", "", "Current"],
+        )
+        self.assertEqual(
+            table_cells(all_result.output.splitlines()[4])[:4],
+            ["2", "old", "disabled", "Old"],
+        )
         self.assertIn("current", all_result.output)
         self.assertIn("old", all_result.output)
         self.assertIn("disabled", all_result.output)
+        self.assertEqual(tag_all_result.exit_code, 0, tag_all_result.output)
+        self.assertEqual(
+            table_cells(tag_all_result.output.splitlines()[1])[:4],
+            ["#", "Slug", "State", "Name"],
+        )
+        self.assertEqual(
+            table_cells(tag_all_result.output.splitlines()[3])[:4],
+            ["1", "old", "disabled", "Old"],
+        )
+        self.assertIn("old", tag_all_result.output)
+        self.assertNotIn("current", tag_all_result.output)
+        self.assertEqual(
+            tag_disabled_result.exit_code,
+            0,
+            tag_disabled_result.output,
+        )
+        self.assertEqual(
+            table_cells(tag_disabled_result.output.splitlines()[1])[:4],
+            ["#", "Slug", "State", "Name"],
+        )
+        self.assertEqual(
+            table_cells(tag_disabled_result.output.splitlines()[3])[:4],
+            ["1", "old", "disabled", "Old"],
+        )
+        self.assertIn("old", tag_disabled_result.output)
+        self.assertNotIn("current", tag_disabled_result.output)
 
     def test_disable_and_enable_workflows_toggle_entry_visibility(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

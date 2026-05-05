@@ -7,6 +7,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from tests.helpers import table_cells
+
 
 class TestOpenConfig(unittest.TestCase):
     """Test open launcher config parsing and ordering."""
@@ -507,8 +509,8 @@ class TestSelectorResolution(unittest.TestCase):
         output = format_items(filter_items(items))
         elapsed = time.perf_counter() - start
 
-        self.assertIn("| 1   | Item 001", output)
-        self.assertIn("| 120 | Item 120", output)
+        self.assertIn("| 1   | item-001", output)
+        self.assertIn("| 120 | item-120", output)
         self.assertLess(elapsed, 0.5)
 
     def test_format_items_renders_one_line_ascii_table_rows(self) -> None:
@@ -535,7 +537,7 @@ class TestSelectorResolution(unittest.TestCase):
 
         lines = output.splitlines()
         self.assertTrue(lines[0].startswith("+"))
-        self.assertIn("| # | Name", lines[1])
+        self.assertEqual(table_cells(lines[1])[:3], ["#", "Slug", "Name"])
         self.assertIn("| Target", lines[1])
         self.assertEqual(sum("https://" in line for line in lines), 2)
         self.assertNotIn("target:", output)
@@ -559,6 +561,31 @@ class TestSelectorResolution(unittest.TestCase):
 
         self.assertTrue(all(len(line) <= 72 for line in output.splitlines()))
         self.assertIn("...", output)
+
+    def test_format_items_preserves_slug_second_in_narrow_terminal(self) -> None:
+        from fx_bin.open_launcher import OpenItem, format_items
+
+        output = format_items(
+            [
+                OpenItem(
+                    name="Codex Cloud Analytics",
+                    slug="cx",
+                    target="https://chatgpt.com/codex/cloud/settings/analytics",
+                    tags=("codex", "analytics"),
+                ),
+                OpenItem(
+                    name="SportPlus Snooker",
+                    slug="sp",
+                    target="https://en97.sportplus.live/snooker/",
+                    tags=("sports", "live"),
+                ),
+            ],
+            terminal_width=60,
+        )
+
+        lines = output.splitlines()
+        self.assertEqual(table_cells(lines[1])[:3], ["#", "Slug", "Name"])
+        self.assertTrue(all(len(line) <= 60 for line in lines))
 
     def test_format_items_sanitizes_control_chars_and_handles_wide_text(self) -> None:
         from fx_bin.open_launcher import OpenItem, format_items
@@ -968,7 +995,10 @@ order = 20
             terminal_width=100,
         )
 
-        self.assertIn("| # | State", output)
+        self.assertEqual(
+            table_cells(output.splitlines()[1])[:4],
+            ["#", "Slug", "State", "Name"],
+        )
         self.assertIn("disabled", output)
 
 
