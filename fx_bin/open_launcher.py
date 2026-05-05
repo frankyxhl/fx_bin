@@ -306,18 +306,19 @@ def _format_items_table(
     index_width = max(_display_width(value) for value in [*index_values, "#"])
     columns.append(("#", index_values, index_width, index_width))
 
-    if include_state:
-        state_values = ["disabled" if item.disabled else "" for item in items]
-        columns.append(("State", state_values, 8, 5))
-
     name_values = [item.name for item in items]
     slug_values = [item.slug for item in items]
     tag_values = [", ".join(item.tags) for item in items]
     target_values = [item.target for item in items]
+    columns.append(("Slug", slug_values, 20, 4))
+
+    if include_state:
+        state_values = ["disabled" if item.disabled else "" for item in items]
+        columns.append(("State", state_values, 8, 5))
+
     columns.extend(
         [
             ("Name", name_values, 24, 4),
-            ("Slug", slug_values, 20, 4),
             ("Tags", tag_values, 24, 4),
             ("Target", target_values, 10_000, 6),
         ]
