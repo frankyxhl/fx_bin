@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v2.9.0 (2026-05-05)
+
+### Features
+
+- Add fx open search command
+  ([`b141a51`](https://github.com/frankyxhl/fx_bin/commit/b141a51541649cbd9adcb63a6b524dc17fb3bf26))
+
+
 ## v2.8.0 (2026-05-05)
 
 ### Bug Fixes
