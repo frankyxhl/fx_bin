@@ -209,6 +209,132 @@ target = "https://example.com"
             with self.assertRaisesRegex(OpenError, "Rename slug 'disable'"):
                 load_config(config_path)
 
+    def test_load_config_reports_new_reserved_search_slug_with_rename_guidance(
+        self,
+    ) -> None:
+        from fx_bin.open_launcher import OpenError, load_config
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Search"
+slug = "search"
+target = "https://example.com"
+""".strip(),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(OpenError, "Rename slug 'search'"):
+                load_config(config_path)
+
+
+class TestSearchItems(unittest.TestCase):
+    """Test keyword search over saved launcher entries."""
+
+    def test_search_matches_name_slug_tags_and_target(self) -> None:
+        from fx_bin.open_launcher import OpenItem, search_items
+
+        items = [
+            OpenItem(
+                name="Claude Code Usage",
+                slug="cc-usage",
+                target="https://claude.ai/settings/usage",
+                tags=("claude", "usage"),
+            ),
+            OpenItem(
+                name="SportPlus Snooker",
+                slug="sportplus-snooker",
+                target="https://en97.sportplus.live/snooker/",
+                tags=("sports", "live"),
+            ),
+            OpenItem(
+                name="Yahoo",
+                slug="yahoo-jp",
+                target="https://www.yahoo.co.jp",
+                tags=("portal", "japan"),
+            ),
+        ]
+
+        self.assertEqual(
+            [item.slug for item in search_items(items, "claude")],
+            ["cc-usage"],
+        )
+        self.assertEqual(
+            [item.slug for item in search_items(items, "sportplus")],
+            ["sportplus-snooker"],
+        )
+        self.assertEqual(
+            [item.slug for item in search_items(items, "japan")],
+            ["yahoo-jp"],
+        )
+        self.assertEqual(
+            [item.slug for item in search_items(items, "en97")],
+            ["sportplus-snooker"],
+        )
+
+    def test_search_is_case_insensitive_and_composes_with_tags(self) -> None:
+        from fx_bin.open_launcher import OpenItem, search_items
+
+        items = [
+            OpenItem(
+                name="Claude Usage",
+                slug="claude-usage",
+                target="https://claude.ai/settings/usage",
+                tags=("claude", "usage"),
+            ),
+            OpenItem(
+                name="DeepSeek Usage",
+                slug="deepseek-usage",
+                target="https://platform.deepseek.com/usage",
+                tags=("deepseek", "usage"),
+            ),
+        ]
+
+        self.assertEqual(
+            [item.slug for item in search_items(items, "USAGE")],
+            ["claude-usage", "deepseek-usage"],
+        )
+        self.assertEqual(
+            [item.slug for item in search_items(items, "usage", ("deepseek",))],
+            ["deepseek-usage"],
+        )
+
+    def test_search_respects_visibility_and_returns_no_matches(self) -> None:
+        from fx_bin.open_launcher import OpenItem, search_items
+
+        items = [
+            OpenItem(
+                name="Old Usage",
+                slug="old-usage",
+                target="https://old.example/usage",
+                tags=("usage",),
+                disabled=True,
+            )
+        ]
+
+        self.assertEqual(search_items(items, "usage"), [])
+        self.assertEqual(
+            [item.slug for item in search_items(items, "usage", visibility="all")],
+            ["old-usage"],
+        )
+
+    def test_search_indexed_items_preserves_visible_list_indices(self) -> None:
+        from fx_bin.open_launcher import OpenItem, search_indexed_items
+
+        items = [
+            OpenItem(name="Alpha", slug="alpha", target="https://alpha.example"),
+            OpenItem(name="Beta", slug="beta", target="https://beta.example"),
+            OpenItem(name="Gamma", slug="gamma", target="https://gamma.example"),
+        ]
+
+        matches = search_indexed_items(items, "gamma")
+
+        self.assertEqual(
+            [(index, item.slug) for index, item in matches], [(3, "gamma")]
+        )
+
 
 class TestSelectorResolution(unittest.TestCase):
     """Test deterministic selector resolution."""

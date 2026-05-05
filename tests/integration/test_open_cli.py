@@ -20,6 +20,7 @@ class TestOpenCli(unittest.TestCase):
         result = self.runner.invoke(cli, ["open", "--help"])
 
         self.assertEqual(result.exit_code, 0)
+        self.assertIn("fx open search usage", result.output)
         self.assertIn("fx open add yahoo.co.jp", result.output)
         self.assertIn("--entry-tag", result.output)
         self.assertIn("--ai", result.output)
@@ -57,6 +58,107 @@ tags = ["usage", "claude-code"]
         self.assertIn("cc-usage", result.output)
         self.assertIn("usage", result.output)
         self.assertNotIn("target:", result.output)
+
+    def test_search_lists_case_insensitive_keyword_matches(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Claude Usage"
+slug = "claude-usage"
+target = "https://claude.ai/settings/usage"
+tags = ["claude", "usage"]
+
+[[items]]
+name = "SportPlus Snooker"
+slug = "sportplus-snooker"
+target = "https://en97.sportplus.live/snooker/"
+tags = ["sports", "live"]
+""".strip(),
+                encoding="utf-8",
+            )
+
+            result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path), "search", "SNOOKER"]
+            )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("| # | Name", result.output)
+        self.assertIn("| 2 | SportPlus Snooker", result.output)
+        self.assertIn("SportPlus Snooker", result.output)
+        self.assertIn("https://en97.sportplus.live/snooker/", result.output)
+        self.assertNotIn("claude-usage", result.output)
+
+    def test_search_requires_query(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+
+            result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path), "search"]
+            )
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("Usage is fx open search QUERY", result.output)
+
+    def test_search_composes_with_tag_filter(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Claude Usage"
+slug = "claude-usage"
+target = "https://claude.ai/settings/usage"
+tags = ["claude", "usage"]
+
+[[items]]
+name = "DeepSeek Usage"
+slug = "deepseek-usage"
+target = "https://platform.deepseek.com/usage"
+tags = ["deepseek", "usage"]
+""".strip(),
+                encoding="utf-8",
+            )
+
+            result = self.runner.invoke(
+                cli,
+                [
+                    "open",
+                    "--config",
+                    str(config_path),
+                    "search",
+                    "--tag",
+                    "deepseek",
+                    "usage",
+                ],
+            )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("DeepSeek Usage", result.output)
+        self.assertNotIn("claude-usage", result.output)
+
+    def test_search_no_match_outputs_helpful_message(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            config_path.write_text(
+                """
+[[items]]
+name = "Claude Usage"
+slug = "claude-usage"
+target = "https://claude.ai/settings/usage"
+tags = ["claude", "usage"]
+""".strip(),
+                encoding="utf-8",
+            )
+
+            result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path), "search", "missing"]
+            )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("No saved open targets matched query: missing", result.output)
+        self.assertNotIn("claude-usage", result.output)
 
     def test_open_slug_dispatches_without_shell(self) -> None:
         from fx_bin.open_launcher import DispatchPlan

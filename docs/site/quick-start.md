@@ -194,6 +194,7 @@ fx ff TODO --exclude node_modules --exclude .git
 
 # Open saved docs and dashboards
 fx open --tag usage
+fx open search dashboard
 ```
 
 ### Project Analysis

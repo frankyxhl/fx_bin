@@ -281,6 +281,10 @@ fx open 3
 # Filter the list before selecting
 fx open --tag usage 2
 
+# Search saved targets by name, slug, tags, or target URL
+fx open search usage
+fx open search --tag live snooker
+
 # Open direct targets
 fx open https://example.com
 fx open ./diagram.png --app Preview
@@ -314,6 +318,13 @@ and selection without deleting it. `fx open enable SELECTOR --yes` restores a
 disabled target; numeric indices for `enable` come from `fx open --disabled`.
 Mutation commands preserve non-item TOML config semantically, but rewrite the
 registry and may remove comments or custom formatting in v1.
+
+**Search:** `fx open search QUERY` lists enabled saved targets whose name, slug,
+tags, or target contains `QUERY` as a case-insensitive substring. Combine it
+with `--tag` to search within a tag-filtered list. Search output preserves
+indices from the current visible list, so `fx open <index>` or
+`fx open --tag TAG <index>` can open the matching enabled target. Use `--all` or
+`--disabled` to include or isolate disabled entries.
 
 **AI metadata:** `fx open add TARGET --ai --yes` can call the external command in
 `FX_OPEN_AI_COMMAND`. The provider may propose `name`, `slug`, and `tags`; normal

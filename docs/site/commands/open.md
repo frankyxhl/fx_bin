@@ -13,6 +13,7 @@ can be selected by slug, filtered index, or tag.
 ```bash
 fx open [OPTIONS] [TOKEN...]
 fx open add TARGET [OPTIONS]
+fx open search QUERY [OPTIONS]
 ```
 
 ## Common Commands
@@ -30,6 +31,10 @@ fx open 3
 # Filter before listing or selecting
 fx open --tag usage
 fx open --tag usage 2
+
+# Search by name, slug, tags, or target URL
+fx open search usage
+fx open search --tag live snooker
 
 # Open direct targets
 fx open https://example.com
@@ -109,6 +114,32 @@ fx open ./3         # local path named 3
 Unsupported schemes such as `file://`, `javascript:`, and `data:` are rejected.
 Local paths must resolve to regular files; directories, sockets, devices, and
 symlink loops are rejected.
+
+---
+
+## Search Workflow
+
+```bash
+fx open search QUERY [--tag TAG] [--all | --disabled]
+```
+
+Search lists saved targets whose `name`, `slug`, `tags`, or `target` contains
+`QUERY` as a case-insensitive substring. It uses the same responsive ASCII table
+as `fx open` list output. Result indices are preserved from the current visible
+list, so `fx open <index>` or `fx open --tag TAG <index>` can open a matching
+enabled target.
+
+Examples:
+
+```bash
+fx open search snooker
+fx open search usage
+fx open search --tag usage claude
+fx open search --all old-dashboard
+```
+
+Search is list-only in this version. Use the displayed slug or preserved index
+to open the target.
 
 ---
 
