@@ -665,6 +665,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#search-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#add-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1296,6 +1307,7 @@ can be selected by slug, filtered index, or tag.</p>
 <h2 id="usage">Usage</h2>
 <div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>open<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span><span class="o">[</span>TOKEN...<span class="o">]</span>
 fx<span class="w"> </span>open<span class="w"> </span>add<span class="w"> </span>TARGET<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+fx<span class="w"> </span>open<span class="w"> </span>search<span class="w"> </span>QUERY<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <h2 id="common-commands">Common Commands</h2>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># List saved targets</span>
@@ -1310,6 +1322,10 @@ fx<span class="w"> </span>open<span class="w"> </span><span class="m">3</span>
 <span class="c1"># Filter before listing or selecting</span>
 fx<span class="w"> </span>open<span class="w"> </span>--tag<span class="w"> </span>usage
 fx<span class="w"> </span>open<span class="w"> </span>--tag<span class="w"> </span>usage<span class="w"> </span><span class="m">2</span>
+
+<span class="c1"># Search by name, slug, tags, or target URL</span>
+fx<span class="w"> </span>open<span class="w"> </span>search<span class="w"> </span>usage
+fx<span class="w"> </span>open<span class="w"> </span>search<span class="w"> </span>--tag<span class="w"> </span>live<span class="w"> </span>snooker
 
 <span class="c1"># Open direct targets</span>
 fx<span class="w"> </span>open<span class="w"> </span>https://example.com
@@ -1418,6 +1434,23 @@ fx<span class="w"> </span>open<span class="w"> </span>./3<span class="w">       
 <p>Unsupported schemes such as <code>file://</code>, <code>javascript:</code>, and <code>data:</code> are rejected.
 Local paths must resolve to regular files; directories, sockets, devices, and
 symlink loops are rejected.</p>
+<hr />
+<h2 id="search-workflow">Search Workflow</h2>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>open<span class="w"> </span>search<span class="w"> </span>QUERY<span class="w"> </span><span class="o">[</span>--tag<span class="w"> </span>TAG<span class="o">]</span><span class="w"> </span><span class="o">[</span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>--disabled<span class="o">]</span>
+</code></pre></div>
+<p>Search lists saved targets whose <code>name</code>, <code>slug</code>, <code>tags</code>, or <code>target</code> contains
+<code>QUERY</code> as a case-insensitive substring. It uses the same responsive ASCII table
+as <code>fx open</code> list output. Result indices are preserved from the current visible
+list, so <code>fx open &lt;index&gt;</code> or <code>fx open --tag TAG &lt;index&gt;</code> can open a matching
+enabled target.</p>
+<p>Examples:</p>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>open<span class="w"> </span>search<span class="w"> </span>snooker
+fx<span class="w"> </span>open<span class="w"> </span>search<span class="w"> </span>usage
+fx<span class="w"> </span>open<span class="w"> </span>search<span class="w"> </span>--tag<span class="w"> </span>usage<span class="w"> </span>claude
+fx<span class="w"> </span>open<span class="w"> </span>search<span class="w"> </span>--all<span class="w"> </span>old-dashboard
+</code></pre></div>
+<p>Search is list-only in this version. Use the displayed slug or preserved index
+to open the target.</p>
 <hr />
 <h2 id="add-workflow">Add Workflow</h2>
 <div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>open<span class="w"> </span>add<span class="w"> </span>TARGET<span class="w"> </span><span class="o">[</span>--name<span class="w"> </span>NAME<span class="o">]</span><span class="w"> </span><span class="o">[</span>--slug<span class="w"> </span>SLUG<span class="o">]</span><span class="w"> </span><span class="o">[</span>--entry-tag<span class="w"> </span>TAG<span class="o">]</span><span class="w"> </span><span class="o">[</span>--yes<span class="o">]</span>
