@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v2.10.0 (2026-05-05)
+
+### Features
+
+- Move fx open slug column next to index
+  ([`f5a6a8f`](https://github.com/frankyxhl/fx_bin/commit/f5a6a8f201930e652e376f4decda62650b3e8c09))
+
+
 ## v2.9.0 (2026-05-05)
 
 ### Features
