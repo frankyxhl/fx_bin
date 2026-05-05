@@ -3,7 +3,6 @@
 
 """Tests for `py_fx_bin` package."""
 
-
 import unittest
 from click.testing import CliRunner
 

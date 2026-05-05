@@ -24,7 +24,6 @@ logger.remove()
 
 from fx_bin.replace import work, main
 
-
 # ============================================================================
 # Basic Replacement Tests (formerly TestReplaceWork)
 # ============================================================================
