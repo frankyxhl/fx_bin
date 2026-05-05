@@ -1,6 +1,38 @@
 # CHANGELOG
 
 
+## v2.8.0 (2026-05-05)
+
+### Bug Fixes
+
+- Address fx open review feedback
+  ([`589d2bb`](https://github.com/frankyxhl/fx_bin/commit/589d2bb13d03847e038b92b479f39ddb336d1a30))
+
+- Preserve path fallback for disabled slugs
+  ([`26c1fc9`](https://github.com/frankyxhl/fx_bin/commit/26c1fc97999d07d6be746c4d23c150c46447449d))
+
+### Chores
+
+- Consolidate dependency bumps
+  ([`efa14a3`](https://github.com/frankyxhl/fx_bin/commit/efa14a362a8c4d170e77fcc2d78cf3760fd55d10))
+
+### Documentation
+
+- Record ready PR default
+  ([`f81e89d`](https://github.com/frankyxhl/fx_bin/commit/f81e89d9624403df3b132934ef08e5a662d6bd04))
+
+- Record timetable sleep review polling
+  ([`57471b9`](https://github.com/frankyxhl/fx_bin/commit/57471b91ff40b7e4dffc0d0df6f842fe7e9b4c65))
+
+- Use JST for review polling sleeps
+  ([`de8a427`](https://github.com/frankyxhl/fx_bin/commit/de8a4279eff95bc96cb548de7d82eb52ab467c7c))
+
+### Features
+
+- Enhance fx open launcher management
+  ([`a1dbbb3`](https://github.com/frankyxhl/fx_bin/commit/a1dbbb371d9e0c55453a293bb793d1b8ebf3246a))
+
+
 ## v2.7.0 (2026-05-04)
 
 ### Bug Fixes
