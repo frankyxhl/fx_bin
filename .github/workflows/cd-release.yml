@@ -3,6 +3,7 @@ name: CD Release
 on:
   push:
     branches: [main]
+    tags: ['v*']
 
 # Prevent concurrent releases
 concurrency:
@@ -13,15 +14,12 @@ jobs:
   release:
     # Prevent recursion - CRITICAL for avoiding infinite loops
     if: |
+      github.ref == 'refs/heads/main' &&
       github.actor != 'github-actions[bot]' &&
       !contains(github.event.head_commit.message, 'chore(release):')
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/fx-bin
     permissions:
       contents: write
-      id-token: write  # For trusted publishing
 
     steps:
       - name: Checkout code
@@ -46,18 +44,51 @@ jobs:
           git_committer_name: "github-actions[bot]"
           git_committer_email: "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Get new version
-        if: steps.semantic-release.outputs.version != ''
+      - name: Release status summary
+        if: always()
+        run: |
+          if [[ "${{ steps.semantic-release.outputs.version }}" == "" ]]; then
+            echo "## ℹ️ No Release" >> $GITHUB_STEP_SUMMARY
+            echo "No new version to release (no conventional commits since last release)" >> $GITHUB_STEP_SUMMARY
+          else
+            VERSION="${{ steps.semantic-release.outputs.version }}"
+            echo "📦 New version: $VERSION"
+            echo "## 🎉 New Version Released" >> $GITHUB_STEP_SUMMARY
+            echo "**Version:** $VERSION" >> $GITHUB_STEP_SUMMARY
+            echo "**Next step:** tag workflow \`v$VERSION\` will build and publish to PyPI." >> $GITHUB_STEP_SUMMARY
+          fi
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/fx-bin
+    permissions:
+      contents: write
+      id-token: write  # For trusted publishing
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Get release version
         id: version
         run: |
-          VERSION=${{ steps.semantic-release.outputs.version }}
+          VERSION="${GITHUB_REF_NAME#v}"
           echo "current_version=$VERSION" >> $GITHUB_OUTPUT
-          echo "📦 New version: $VERSION"
-          echo "## 🎉 New Version Released" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Publishing version: $VERSION"
+          echo "## 🚀 Publishing Release" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** $VERSION" >> $GITHUB_STEP_SUMMARY
 
       - name: Check if version exists on PyPI
-        if: steps.semantic-release.outputs.version != ''
         id: pypi_check
         run: |
           VERSION="${{ steps.version.outputs.current_version }}"
@@ -77,6 +108,10 @@ jobs:
             echo "**Status:** Ready to deploy 🚀" >> $GITHUB_STEP_SUMMARY
           fi
 
+      - name: Install Poetry
+        if: steps.pypi_check.outputs.version_exists == 'false'
+        run: pipx install poetry
+
       - name: Install dependencies and build
         if: steps.pypi_check.outputs.version_exists == 'false'
         run: |
@@ -89,7 +124,7 @@ jobs:
       - name: Upload build artifacts to GitHub Release
         if: steps.pypi_check.outputs.version_exists == 'false'
         env:
-          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_PAT }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           VERSION="${{ steps.version.outputs.current_version }}"
           echo "📎 Uploading build artifacts to GitHub Release v$VERSION..."
@@ -163,11 +198,3 @@ jobs:
           pip install fx-bin==$VERSION
           \`\`\`
           EOF
-
-      - name: Deployment status summary
-        if: always()
-        run: |
-          if [[ "${{ steps.semantic-release.outputs.version }}" == "" ]]; then
-            echo "## ℹ️ No Release" >> $GITHUB_STEP_SUMMARY
-            echo "No new version to release (no conventional commits since last release)" >> $GITHUB_STEP_SUMMARY
-          fi
