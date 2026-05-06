@@ -222,7 +222,8 @@ if: |
 | Secret | Purpose | Scope |
 |--------|---------|-------|
 | `SEMANTIC_RELEASE_PAT` | Git operations, GitHub Release creation | `contents: write` |
-| `PYPI_API_TOKEN` | PyPI package upload | PyPI trusted publishing |
+
+No `PYPI_API_TOKEN` GitHub secret is required. PyPI package upload uses Trusted Publishing/OIDC through the `pypi` GitHub environment.
 
 ---
 
@@ -345,12 +346,12 @@ git push
 **Symptom:** Build succeeds but PyPI deployment fails
 
 **Common Causes:**
-1. Invalid `PYPI_API_TOKEN`
+1. PyPI Trusted Publisher configuration does not match this repository/workflow/environment
 2. Package name conflict
 3. Metadata validation errors
 
 **Solution:**
-1. Verify token in GitHub Secrets
+1. Verify the PyPI publisher uses owner `frankyxhl`, repository `fx_bin`, workflow `cd-release.yml`, and environment `pypi`
 2. Check package name availability on PyPI
 3. Review build logs for metadata issues
 
@@ -389,7 +390,7 @@ git push && git push --tags
 
 # 3. Build and upload
 poetry build
-poetry publish  # Requires PyPI token configured
+poetry publish  # Requires PyPI credentials configured locally
 ```
 
 ---
@@ -407,7 +408,7 @@ Recommended settings for `main` branch:
 ### Secrets Management
 
 - `SEMANTIC_RELEASE_PAT`: Fine-grained PAT with minimal scope
-- `PYPI_API_TOKEN`: Use trusted publishing (OIDC) when possible
+- PyPI deployment uses Trusted Publishing/OIDC; do not store a PyPI API token in GitHub Secrets
 - Never log secrets in workflow outputs
 
 ### Dependency Updates
@@ -474,5 +475,5 @@ graph TB
 
 ---
 
-**Last Updated:** 2026-01-05
+**Last Updated:** 2026-05-06
 **Maintained By:** @frankyxhl
