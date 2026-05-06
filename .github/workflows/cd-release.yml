@@ -16,6 +16,9 @@ jobs:
       github.actor != 'github-actions[bot]' &&
       !contains(github.event.head_commit.message, 'chore(release):')
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/fx-bin
     permissions:
       contents: write
       id-token: write  # For trusted publishing
@@ -133,7 +136,6 @@ jobs:
         if: steps.pypi_check.outputs.version_exists == 'false'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
           skip-existing: true
 
       - name: Deployment success
