@@ -26,16 +26,17 @@ The fx_bin project uses a modern CI/CD pipeline built with GitHub Actions, featu
                               │ Merge to main
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                      CD Release (main branch)                    │
+│                  CD Release (main + v* tag)                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  1. Semantic Release (analyze commits)                          │
 │  2. Version bump + Changelog + Git tag                          │
 │  3. Create GitHub Release                                       │
-│  4. Check PyPI (skip if version exists)                         │
-│  5. Build package (wheel + sdist)                               │
-│  6. Upload artifacts to GitHub Release                          │
-│  7. Deploy to PyPI                                              │
+│  4. v* tag workflow starts                                      │
+│  5. Check PyPI (skip if version exists)                         │
+│  6. Build package (wheel + sdist)                               │
+│  7. Upload artifacts to GitHub Release                          │
+│  8. Deploy to PyPI from pypi environment                        │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -162,13 +163,13 @@ This architecture ensures fast PR feedback while still tracking performance tren
 
 ---
 
-## CD Workflow (Main Branch)
+## CD Workflow (Main Branch and Release Tags)
 
 ### CD Release (`.github/workflows/cd-release.yml`)
 
 **Purpose:** Automated semantic versioning and deployment
 
-**Trigger:** Push to `main` branch (typically via merged PR)
+**Triggers:** Push to `main` branch for semantic-release; push to `v*` tags for package build and PyPI deployment.
 
 **Concurrency:**
 ```yaml
@@ -186,28 +187,30 @@ if: |
 
 #### Release Process
 
-**Step 1: Semantic Release**
+**Step 1: Semantic Release (`main` push)**
 - Analyzes conventional commits since last release
 - Determines version bump (major/minor/patch)
 - Generates changelog
 - Creates Git tag
 - Creates GitHub Release
+- Pushes the `v*` tag that triggers the publish path
 
-**Step 2: Version Check**
+**Step 2: Version Check (`v*` tag push)**
 - Queries PyPI API to check if version exists
 - Skips deployment if version already published
 - Adds job summary for visibility
 
-**Step 3: Build Package**
+**Step 3: Build Package (`v*` tag push)**
 - Installs dependencies with Poetry
 - Builds wheel (`.whl`) and source distribution (`.tar.gz`)
 
-**Step 4: Upload to GitHub Release**
+**Step 4: Upload to GitHub Release (`v*` tag push)**
 - Waits for release availability (retry logic: 10 attempts, 3s delay)
 - Uploads all build artifacts with error handling
 - Validates successful upload for each file
 
-**Step 5: Deploy to PyPI**
+**Step 5: Deploy to PyPI (`v*` tag push)**
+- Runs in the dedicated `pypi` GitHub environment
 - Uses trusted publishing (OIDC)
 - Skip-existing flag as backup safety net
 - Only runs if version doesn't exist on PyPI
@@ -217,12 +220,15 @@ if: |
 - Includes package links and installation commands
 - Shows skip reason if applicable
 
+This split keeps the `pypi` environment scoped to deployable tag refs, so the environment can safely restrict deployments to `v*` tags without blocking semantic-release on `main`.
+
 #### Secrets Required
 
 | Secret | Purpose | Scope |
 |--------|---------|-------|
 | `SEMANTIC_RELEASE_PAT` | Git operations, GitHub Release creation | `contents: write` |
-| `PYPI_API_TOKEN` | PyPI package upload | PyPI trusted publishing |
+
+No `PYPI_API_TOKEN` GitHub secret is required. PyPI package upload uses Trusted Publishing/OIDC through the `pypi` GitHub environment.
 
 ---
 
@@ -233,7 +239,7 @@ if: |
 | `ci-test.yml` | PR, develop push | Unit/integration tests | ✅ Yes |
 | `ci-security.yml` | PR, develop push | Security scanning | ✅ Yes |
 | `ci-quality.yml` | PR, develop push | Code quality | ⚠️ Partial (MyPy continues on error) |
-| `cd-release.yml` | main push | Versioning & deployment | N/A |
+| `cd-release.yml` | main push, `v*` tag push | Versioning & deployment | N/A |
 | `codeql.yml` | Schedule, PR | GitHub security analysis | ❌ No |
 | `claude.yml` | Manual | Claude Code integration | ❌ No |
 
@@ -345,14 +351,15 @@ git push
 **Symptom:** Build succeeds but PyPI deployment fails
 
 **Common Causes:**
-1. Invalid `PYPI_API_TOKEN`
+1. PyPI Trusted Publisher configuration does not match this repository/workflow/environment
 2. Package name conflict
 3. Metadata validation errors
 
 **Solution:**
-1. Verify token in GitHub Secrets
-2. Check package name availability on PyPI
-3. Review build logs for metadata issues
+1. Verify the PyPI publisher uses owner `frankyxhl`, repository `fx_bin`, workflow `cd-release.yml`, and environment `pypi`
+2. Verify the GitHub `pypi` environment allows the `v*` tag pattern
+3. Check package name availability on PyPI
+4. Review build logs for metadata issues
 
 ---
 
@@ -389,7 +396,7 @@ git push && git push --tags
 
 # 3. Build and upload
 poetry build
-poetry publish  # Requires PyPI token configured
+poetry publish  # Requires PyPI credentials configured locally
 ```
 
 ---
@@ -407,7 +414,7 @@ Recommended settings for `main` branch:
 ### Secrets Management
 
 - `SEMANTIC_RELEASE_PAT`: Fine-grained PAT with minimal scope
-- `PYPI_API_TOKEN`: Use trusted publishing (OIDC) when possible
+- PyPI deployment uses Trusted Publishing/OIDC; do not store a PyPI API token in GitHub Secrets
 - Never log secrets in workflow outputs
 
 ### Dependency Updates
@@ -464,7 +471,8 @@ graph TB
     J -->|Yes| K[Semantic Release]
     J -->|No| L[No Release]
 
-    K --> M{Version on PyPI?}
+    K --> T[Push v* tag]
+    T --> M{Version on PyPI?}
     M -->|No| N[Build & Deploy]
     M -->|Yes| O[Skip Deployment]
 
@@ -474,5 +482,5 @@ graph TB
 
 ---
 
-**Last Updated:** 2026-01-05
+**Last Updated:** 2026-05-07
 **Maintained By:** @frankyxhl
