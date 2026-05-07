@@ -850,7 +850,9 @@ target = "{resolved_target}"
                 encoding="utf-8",
             )
 
-            with patch("fx_bin.open_launcher.execute_dispatch_plan") as execute:
+            with patch("fx_bin.open_launcher.execute_dispatch_plan") as execute, patch(
+                "sys.platform", "darwin"
+            ):
                 result = self.runner.invoke(
                     cli,
                     ["open", "--config", str(config_path), "src"],

@@ -22,4 +22,5 @@ def resolve_path(path: str) -> Path:
         PermissionError: If path is not accessible
         OSError: For circular symlinks or other path resolution errors
     """
-    return Path(os.path.realpath(os.path.expanduser(path), strict=True))
+    expanded = Path(path).expanduser()
+    return Path(os.path.realpath(expanded, strict=True))
