@@ -671,7 +671,8 @@ def normalize_add_target(target: str) -> str:
         return f"https://{stripped}"
 
     raise OpenError(
-        "Add target must be an http(s) URL, bare domain, or existing local file"
+        "Add target must be an http(s) URL, bare domain, "
+        "or existing local file or directory"
     )
 
 
@@ -1177,6 +1178,9 @@ def build_dispatch_plan(
         dispatch_target = _normalize_local_path(launch_target.target)
         opener_name = selected_app
 
+        if Path(dispatch_target).is_dir() and platform_value != "darwin":
+            raise OpenError("Opening local directories is only supported on macOS")
+
     if platform_value == "darwin":
         if opener_name:
             return DispatchPlan(("open", "-a", opener_name, dispatch_target))
@@ -1425,8 +1429,8 @@ def _normalize_local_path(target: str) -> str:
         resolved = path.resolve(strict=True)
     except (OSError, RuntimeError) as exc:
         raise OpenError(f"Local path cannot be opened: {target}") from exc
-    if not resolved.is_file():
-        raise OpenError(f"Local path is not a regular file: {target}")
+    if not (resolved.is_file() or resolved.is_dir()):
+        raise OpenError(f"Local path is not a regular file or directory: {target}")
     return str(resolved)
 
 

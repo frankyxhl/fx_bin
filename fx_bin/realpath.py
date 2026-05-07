@@ -4,6 +4,7 @@ This module provides functionality to resolve relative paths, symlinks,
 and tilde expansion to absolute canonical paths.
 """
 
+import os
 from pathlib import Path
 
 
@@ -21,4 +22,5 @@ def resolve_path(path: str) -> Path:
         PermissionError: If path is not accessible
         OSError: For circular symlinks or other path resolution errors
     """
-    return Path(path).expanduser().resolve(strict=True)
+    expanded = Path(path).expanduser()
+    return Path(os.path.realpath(expanded, strict=True))
