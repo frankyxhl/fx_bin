@@ -126,4 +126,4 @@ the second position after the index column.
 | 2026-05-05 | Addressed Trinity fast-review advisories | Codex |
 | 2026-05-05 | Added tag-filtered RED coverage and Flake8 verification | Codex |
 | 2026-05-05 | Added Trinity code fast-review gate before verification | Codex |
-| 2026-05-07 | Implementation complete (shipped in v2.11.0) | Claude Code |
+| 2026-05-07 | Implementation complete (shipped in v2.10.0) | Claude Code |

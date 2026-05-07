@@ -4,7 +4,7 @@
 **Last updated:** 2026-05-07
 **Last reviewed:** 2026-05-07
 **Status:** Completed
-**Related:** COR-1101, COR-1500, COR-1615, COR-1612, FXB-2101, FXB-2105, PR #63
+**Related:** COR-1101, COR-1500, COR-1615, COR-1612, FXB-2101, FXB-2105, PR #61
 **Date:** 2026-05-05
 **Requested by:** Frank Xu
 **Priority:** Medium
@@ -145,4 +145,4 @@ selector less prominent even though it is one of the most important fields.
 | 2026-05-05 | Filled change request for moving Slug to column 2 | Codex |
 | 2026-05-05 | Addressed Trinity fast-review advisories | Codex |
 | 2026-05-05 | Added FXB-2101 supersession note and Flake8 verification | Codex |
-| 2026-05-07 | Implemented + merged (PR #63, v2.11.0) | Claude Code |
+| 2026-05-07 | Implemented + merged (PR #61, v2.10.0) | Claude Code |
