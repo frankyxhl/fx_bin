@@ -1108,6 +1108,59 @@ class TestDispatchPlanning(unittest.TestCase):
                 )
 
 
+class TestDirectorySupport(unittest.TestCase):
+    """Test directory target support."""
+
+    def test_normalize_local_path_accepts_directory(self) -> None:
+        from fx_bin.open_launcher import _normalize_local_path
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            result = _normalize_local_path(temp_dir)
+
+        self.assertEqual(result, str(Path(temp_dir).resolve()))
+
+    def test_build_new_item_normalizes_existing_directory(self) -> None:
+        from fx_bin.open_launcher import build_new_item
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            item = build_new_item(str(temp_dir), [])
+
+        self.assertEqual(item.target, str(Path(temp_dir).resolve()))
+
+    def test_build_dispatch_plan_directory_on_macos(self) -> None:
+        from fx_bin.open_launcher import LaunchTarget, build_dispatch_plan
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            plan = build_dispatch_plan(
+                LaunchTarget(label="Dir", target=temp_dir, slug=None),
+                platform_name="darwin",
+            )
+
+        self.assertEqual(plan.args, ("open", str(Path(temp_dir).resolve())))
+        self.assertFalse(plan.shell)
+
+    def test_build_dispatch_plan_directory_rejected_on_linux(self) -> None:
+        from fx_bin.open_launcher import LaunchTarget, OpenError, build_dispatch_plan
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            with self.assertRaisesRegex(
+                OpenError, "Opening local directories is only supported on macOS"
+            ):
+                build_dispatch_plan(
+                    LaunchTarget(label="Dir", target=temp_dir, slug=None),
+                    platform_name="linux",
+                    opener_lookup=lambda name: "/usr/bin/xdg-open",
+                )
+
+    def test_classify_target_kind_returns_path_for_directory(self) -> None:
+        from fx_bin.open_launcher import classify_target_kind
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            kind = classify_target_kind(temp_dir)
+
+        self.assertEqual(kind, "path")
+
+
 class TestAiMetadata(unittest.TestCase):
     """Test optional AI metadata provider handling."""
 

@@ -784,6 +784,85 @@ target = "https://example.com/docs"
         self.assertEqual(result.exit_code, 1)
         self.assertIn("cannot be combined", result.output)
 
+    def test_add_local_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            target_dir = Path(temp_dir) / "my-project"
+            target_dir.mkdir()
+            resolved_target = str(target_dir.resolve())
+
+            result = self.runner.invoke(
+                cli,
+                [
+                    "open",
+                    "--config",
+                    str(config_path),
+                    "add",
+                    str(target_dir),
+                    "--name",
+                    "My Project",
+                    "--slug",
+                    "myprj",
+                    "--yes",
+                ],
+            )
+            content = config_path.read_text(encoding="utf-8")
+
+            self.assertEqual(result.exit_code, 0, result.output)
+            self.assertIn("Added myprj", result.output)
+            self.assertIn('slug = "myprj"', content)
+            self.assertIn(resolved_target, content)
+
+    def test_list_shows_directory_target(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            target_dir = Path(temp_dir) / "src"
+            target_dir.mkdir()
+            config_path.write_text(
+                f"""
+[[items]]
+name = "Source"
+slug = "src"
+target = "{target_dir.resolve()}"
+""".strip(),
+                encoding="utf-8",
+            )
+
+            result = self.runner.invoke(cli, ["open", "--config", str(config_path)])
+
+            self.assertEqual(result.exit_code, 0, result.output)
+            cells = table_cells(result.output.splitlines()[3])
+            self.assertEqual(cells[1], "src")
+
+    def test_open_directory_dispatches_correctly(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "open.toml"
+            target_dir = Path(temp_dir) / "src"
+            target_dir.mkdir()
+            resolved_target = str(target_dir.resolve())
+            config_path.write_text(
+                f"""
+[[items]]
+name = "Source"
+slug = "src"
+target = "{resolved_target}"
+""".strip(),
+                encoding="utf-8",
+            )
+
+            with patch("fx_bin.open_launcher.execute_dispatch_plan") as execute:
+                result = self.runner.invoke(
+                    cli,
+                    ["open", "--config", str(config_path), "src"],
+                )
+
+                self.assertEqual(result.exit_code, 0, result.output)
+                self.assertIn("Opened Source", result.output)
+                execute.assert_called_once()
+                plan = execute.call_args.args[0]
+                self.assertEqual(plan.args[0], "open")
+                self.assertEqual(plan.args[1], resolved_target)
+
 
 if __name__ == "__main__":
     unittest.main()

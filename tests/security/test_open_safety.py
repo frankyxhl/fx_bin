@@ -89,14 +89,23 @@ target = "javascript:alert(1)"
                 platform_name="darwin",
             )
 
-    def test_directory_target_returns_open_error(self) -> None:
+    def test_directory_target_accepted_on_macos_rejected_on_linux(self) -> None:
         from fx_bin.open_launcher import LaunchTarget, OpenError, build_dispatch_plan
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            with self.assertRaises(OpenError):
+            plan = build_dispatch_plan(
+                LaunchTarget(label="Dir", target=temp_dir, slug=None),
+                platform_name="darwin",
+            )
+            self.assertEqual(plan.args, ("open", str(Path(temp_dir).resolve())))
+
+            with self.assertRaisesRegex(
+                OpenError, "Opening local directories is only supported on macOS"
+            ):
                 build_dispatch_plan(
                     LaunchTarget(label="Dir", target=temp_dir, slug=None),
-                    platform_name="darwin",
+                    platform_name="linux",
+                    opener_lookup=lambda name: "/usr/bin/xdg-open",
                 )
 
     def test_symlink_loop_path_returns_open_error(self) -> None:
