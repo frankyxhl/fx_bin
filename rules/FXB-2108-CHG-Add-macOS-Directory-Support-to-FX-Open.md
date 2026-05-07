@@ -3,8 +3,8 @@
 **Applies to:** FXB project
 **Last updated:** 2026-05-07
 **Last reviewed:** 2026-05-07
-**Status:** Proposed
-**Related:** COR-1101, COR-1500, FXB-2100
+**Status:** Completed
+**Related:** COR-1101, COR-1500, FXB-2100, PR #63
 **Date:** 2026-05-07
 **Requested by:** Frank Xu
 **Priority:** Medium
@@ -90,3 +90,4 @@ path strings same as files).
 | Date | Change | By |
 |------|--------|----|
 | 2026-05-07 | Initial proposal | Claude Code |
+| 2026-05-07 | Implemented + merged (PR #63, v2.11.0) | Claude Code |

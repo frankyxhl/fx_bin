@@ -1,8 +1,8 @@
 # PLN-2107: Implement FX Open Slug Column Order
 
 **Applies to:** FXB project
-**Last updated:** 2026-05-05
-**Last reviewed:** 2026-05-05
+**Last updated:** 2026-05-07
+**Last reviewed:** 2026-05-07
 **Status:** Active
 **Related:** FXB-2106, COR-1202, COR-1500, COR-1615, COR-1612
 
@@ -27,14 +27,14 @@ the second position after the index column.
 
 | # | Milestone | Target Date | Status |
 |---|-----------|-------------|--------|
-| 1 | Planning and branch setup | 2026-05-05 | Pending |
-| 2 | Trinity fast-review approval gate | 2026-05-05 | Pending |
-| 3 | RED tests for column order | 2026-05-05 | Pending |
-| 4 | GREEN formatter update | 2026-05-05 | Pending |
-| 5 | REFACTOR and Trinity code fast-review | 2026-05-05 | Pending |
-| 6 | Verification | 2026-05-05 | Pending |
-| 7 | Ready PR, CI, and COR-1615 review loop | 2026-05-05 | Pending |
-| 8 | Merge and release verification | 2026-05-05 | Pending |
+| 1 | Planning and branch setup | 2026-05-05 | Complete |
+| 2 | Trinity fast-review approval gate | 2026-05-05 | Complete |
+| 3 | RED tests for column order | 2026-05-05 | Complete |
+| 4 | GREEN formatter update | 2026-05-05 | Complete |
+| 5 | REFACTOR and Trinity code fast-review | 2026-05-05 | Complete |
+| 6 | Verification | 2026-05-05 | Complete |
+| 7 | Ready PR, CI, and COR-1615 review loop | 2026-05-05 | Complete |
+| 8 | Merge and release verification | 2026-05-05 | Complete |
 
 ---
 
@@ -126,3 +126,4 @@ the second position after the index column.
 | 2026-05-05 | Addressed Trinity fast-review advisories | Codex |
 | 2026-05-05 | Added tag-filtered RED coverage and Flake8 verification | Codex |
 | 2026-05-05 | Added Trinity code fast-review gate before verification | Codex |
+| 2026-05-07 | Implementation complete (shipped in v2.11.0) | Claude Code |
