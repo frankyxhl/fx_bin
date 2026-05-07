@@ -3,7 +3,7 @@
 **Applies to:** FXB project
 **Last updated:** 2026-05-07
 **Last reviewed:** 2026-05-07
-**Status:** Active
+**Status:** Completed
 **Related:** COR-1101, COR-1500, FXB-2100, PR #63
 **Date:** 2026-05-07
 **Requested by:** Frank Xu
