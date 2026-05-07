@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fx-bin"
-version = "2.10.0"
+version = "2.11.0"
 description = "A common bin collection for my own usage"
 authors = ["Frank Xu <frank@frankxu.me>"]
 readme = "README.md"

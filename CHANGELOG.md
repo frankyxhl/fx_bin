@@ -1,6 +1,55 @@
 # CHANGELOG
 
 
+## v2.11.0 (2026-05-07)
+
+### Bug Fixes
+
+- Address Codex review — CI platform mock and ~user semantics
+  ([`71e6b6b`](https://github.com/frankyxhl/fx_bin/commit/71e6b6bceb0084a1b8638616c034ae983b2004ac))
+
+- Patch sys.platform to darwin in integration test so it passes on Ubuntu CI - Keep
+  Path.expanduser() for proper ~user expansion before os.path.realpath
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+
+### Chores
+
+- Fix black formatting for CI
+  ([`49f8784`](https://github.com/frankyxhl/fx_bin/commit/49f878497cce230c88e189d63cc17a7e284d3104))
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+
+### Continuous Integration
+
+- Publish PyPI from release tags
+  ([`bb93548`](https://github.com/frankyxhl/fx_bin/commit/bb93548f0fda77e6bd5e3030b49fe07198c8e3cf))
+
+- Use PyPI trusted publishing
+  ([`3837b72`](https://github.com/frankyxhl/fx_bin/commit/3837b727ff71798ba265d4a73e957384b2d7008b))
+
+### Documentation
+
+- Clarify tag-based PyPI publishing
+  ([`f6a2bfb`](https://github.com/frankyxhl/fx_bin/commit/f6a2bfb1283a3d549ab6f25921ca3c9e707382f7))
+
+- Document PyPI trusted publishing
+  ([`2791f07`](https://github.com/frankyxhl/fx_bin/commit/2791f079397f5aa95613724f5a611589c3c97bce))
+
+### Features
+
+- Support opening local directories with fx open on macOS
+  ([`49f0bf3`](https://github.com/frankyxhl/fx_bin/commit/49f0bf3c41e0fc17c69d9cef331685244467913a))
+
+Allow fx open to open local directories via macOS open command. Also fixes a pre-existing
+  symlink-loop test failure caused by a CPython 3.12 bug where Path.resolve() wraps ELOOP OSError
+  into RuntimeError.
+
+CHG: FXB-2108
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+
+
 ## v2.10.0 (2026-05-05)
 
 ### Features
