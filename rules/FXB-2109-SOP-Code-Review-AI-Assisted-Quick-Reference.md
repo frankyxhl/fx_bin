@@ -65,7 +65,7 @@ Per COR-1705 REF: **G** = Gate (tool/CI), **A** = Automated (should be tool-enfo
 - [ ] H-2.4 New behavior has tests; edge cases considered (including Windows paths where relevant). [P1]
 - [ ] H-2.5 No breaking changes without communication. CLI interface changes documented. [P0]
 - [ ] H-2.6 Dependencies added are necessary and safe — `poetry run safety check` passes. [P1]
-- [ ] H-2.7 Logging and error handling use `loguru` consistently. Errors use the project error hierarchy (`FileOperationError` and subtypes). [P1]
+- [ ] H-2.7 Logging and error handling use `loguru` consistently. Errors use the project error hierarchy (`FxBinError` root; file-operation errors extend `FileOperationError`, non-file errors extend `FxBinError` directly). [P1]
 - [ ] H-2.8 Performance impact is negligible or explicitly documented. [P2]
 
 ### 3. Project Tooling Configuration
@@ -140,7 +140,7 @@ Reviewers must verify AI-generated code respects these FXB conventions (document
 - [ ] H-4.1 **Pure vs IO separation**: IO functions return `IOResult[T, Error]` — either via `@impure_safe` (auto-catches exceptions) or by constructing `IOResult` directly with explicit try/except. Pure functions have no side effects. [P1]
 - [ ] H-4.2 **Railway-oriented programming**: pipelines use `flow()`, `bind()`, `lash()` from `returns.pipeline` / `returns.pointfree` — no bare try/except for control flow. [P1]
 - [ ] H-4.3 **RequiresContext pattern**: IO functions that need shared context use `RequiresContext[IOResult[T, Error], ContextType]` to make dependencies explicit, not global state or closures. [P1]
-- [ ] H-4.4 **Immutable data classes**: all `@dataclass` use `frozen=True`. Mutations create new instances. [P1]
+- [ ] H-4.4 **Immutable data classes**: data classes representing state or configuration use `frozen=True`. Value objects with `__slots__` (e.g., `SizeEntry`, `FileCountEntry`) may omit `frozen`. [P1]
 - [ ] H-4.5 **Type annotations**: function parameters accepting sequences use `Sequence[T]`, not `Tuple[T, ...]`. Return types use `List[T]` for mutable lists. [P1]
 - [ ] H-4.6 **Partial over lambda**: `functools.partial` is used to bind parameters instead of inline lambdas in pipeline chains. [P2]
 - [ ] H-4.7 **Shared types**: common types (`EntryType`, `FileBackup`, `FolderContext`) are imported from `fx_bin.shared_types`, not duplicated. [P1]
