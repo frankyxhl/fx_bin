@@ -137,15 +137,15 @@ poetry run black --check fx_bin/ tests/ && \
 
 Reviewers must verify AI-generated code respects these FXB conventions (documented in `CLAUDE.md`):
 
-- [ ] H-4.1 **Pure vs IO separation**: functions that touch the filesystem are decorated with `@impure_safe` and return `IOResult[T, Error]`. Pure functions have no side effects. [P1]
+- [ ] H-4.1 **Pure vs IO separation**: IO functions return `IOResult[T, Error]` — either via `@impure_safe` (auto-catches exceptions) or by constructing `IOResult` directly with explicit try/except. Pure functions have no side effects. [P1]
 - [ ] H-4.2 **Railway-oriented programming**: pipelines use `flow()`, `bind()`, `lash()` from `returns.pipeline` / `returns.pointfree` — no bare try/except for control flow. [P1]
 - [ ] H-4.3 **RequiresContext pattern**: IO functions that need shared context use `RequiresContext[IOResult[T, Error], ContextType]` to make dependencies explicit, not global state or closures. [P1]
 - [ ] H-4.4 **Immutable data classes**: all `@dataclass` use `frozen=True`. Mutations create new instances. [P1]
 - [ ] H-4.5 **Type annotations**: function parameters accepting sequences use `Sequence[T]`, not `Tuple[T, ...]`. Return types use `List[T]` for mutable lists. [P1]
 - [ ] H-4.6 **Partial over lambda**: `functools.partial` is used to bind parameters instead of inline lambdas in pipeline chains. [P2]
 - [ ] H-4.7 **Shared types**: common types (`EntryType`, `FileBackup`, `FolderContext`) are imported from `fx_bin.shared_types`, not duplicated. [P1]
-- [ ] H-4.8 **Error hierarchy**: custom errors extend `FileOperationError` (base) or its subtypes (`ReplaceError`, `IOError`, `SecurityError`). No bare `Exception` raises. [P1]
-- [ ] H-4.9 **CLI patterns**: `main()` entry point uses Click decorators. Registered in `pyproject.toml` under `[tool.poetry.scripts]`. [P1]
+- [ ] H-4.8 **Error hierarchy**: custom errors extend `FxBinError` (root). File-operation errors extend `FileOperationError` (`IOError`, `ReplaceError`); non-file errors (`SecurityError`, `ValidationError`, `SizeError`, `FindError`, `OpenError`) extend `FxBinError` directly. `except FileOperationError` does NOT catch security violations. No bare `Exception` raises. [P1]
+- [ ] H-4.9 **CLI patterns**: Top-level entry point `fx = "fx_bin.cli:main"` registered in `[tool.poetry.scripts]`. Subcommands are added via `@cli.command()` decorators on the Click group — they do NOT need individual `[tool.poetry.scripts]` entries. [P1]
 
 ---
 
