@@ -5,6 +5,8 @@
 **Last reviewed:** 2026-05-10
 **Status:** Active
 **Related:** COR-1709, COR-1706, COR-1707, COR-1708, COR-1602, COR-1705
+**Depends on:** COR-1709
+**Task tags:** [review, code-review, ai-code, checklist, quick-reference]
 
 ---
 
@@ -68,7 +70,7 @@ Per COR-1705 REF: **G** = Gate (tool/CI), **A** = Automated (should be tool-enfo
 
 ### 3. Project Tooling Configuration
 
-All values below are the authoritative configuration from `pyproject.toml`.
+Key settings extracted from `pyproject.toml` — see `pyproject.toml` for the full authoritative config.
 
 #### Black (formatter)
 
@@ -137,12 +139,13 @@ Reviewers must verify AI-generated code respects these FXB conventions (document
 
 - [ ] H-4.1 **Pure vs IO separation**: functions that touch the filesystem are decorated with `@impure_safe` and return `IOResult[T, Error]`. Pure functions have no side effects. [P1]
 - [ ] H-4.2 **Railway-oriented programming**: pipelines use `flow()`, `bind()`, `lash()` from `returns.pipeline` / `returns.pointfree` — no bare try/except for control flow. [P1]
-- [ ] H-4.3 **Immutable data classes**: all `@dataclass` use `frozen=True`. Mutations create new instances. [P1]
-- [ ] H-4.4 **Type annotations**: function parameters accepting sequences use `Sequence[T]`, not `Tuple[T, ...]`. Return types use `List[T]` for mutable lists. [P1]
-- [ ] H-4.5 **Partial over lambda**: `functools.partial` is used to bind parameters instead of inline lambdas in pipeline chains. [P2]
-- [ ] H-4.6 **Shared types**: common types (`EntryType`, `FileBackup`, `FolderContext`) are imported from `fx_bin.shared_types`, not duplicated. [P1]
-- [ ] H-4.7 **Error hierarchy**: custom errors extend `FileOperationError` (base) or its subtypes (`ReplaceError`, `IOError`, `SecurityError`). No bare `Exception` raises. [P1]
-- [ ] H-4.8 **CLI patterns**: `main()` entry point uses Click decorators. Registered in `pyproject.toml` under `[tool.poetry.scripts]`. [P1]
+- [ ] H-4.3 **RequiresContext pattern**: IO functions that need shared context use `RequiresContext[IOResult[T, Error], ContextType]` to make dependencies explicit, not global state or closures. [P1]
+- [ ] H-4.4 **Immutable data classes**: all `@dataclass` use `frozen=True`. Mutations create new instances. [P1]
+- [ ] H-4.5 **Type annotations**: function parameters accepting sequences use `Sequence[T]`, not `Tuple[T, ...]`. Return types use `List[T]` for mutable lists. [P1]
+- [ ] H-4.6 **Partial over lambda**: `functools.partial` is used to bind parameters instead of inline lambdas in pipeline chains. [P2]
+- [ ] H-4.7 **Shared types**: common types (`EntryType`, `FileBackup`, `FolderContext`) are imported from `fx_bin.shared_types`, not duplicated. [P1]
+- [ ] H-4.8 **Error hierarchy**: custom errors extend `FileOperationError` (base) or its subtypes (`ReplaceError`, `IOError`, `SecurityError`). No bare `Exception` raises. [P1]
+- [ ] H-4.9 **CLI patterns**: `main()` entry point uses Click decorators. Registered in `pyproject.toml` under `[tool.poetry.scripts]`. [P1]
 
 ---
 
