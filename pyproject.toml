@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fx-bin"
-version = "2.11.0"
+version = "2.11.1"
 description = "A common bin collection for my own usage"
 authors = ["Frank Xu <frank@frankxu.me>"]
 readme = "README.md"
@@ -38,9 +38,6 @@ hypothesis = "^6.100.0"
 # Unified CLI command
 fx = "fx_bin.cli:main"
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -93,6 +90,7 @@ markers = [
 timeout = 300
 bdd_features_base_dir = "features"
 
+
 [tool.coverage.run]
 source = ["fx_bin"]
 omit = [
@@ -110,6 +108,7 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "@abstract",
 ]
+
 
 [tool.black]
 line-length = 88
@@ -153,12 +152,14 @@ module = [
 ]
 ignore_missing_imports = true
 
+
 [tool.bandit]
 exclude_dirs = ["tests"]
 skips = ["B101"]  # Skip assert_used test
 
 [tool.bandit.assert_used]
 skips = ["**/test_*.py", "**/tests/*"]
+
 
 [tool.semantic_release]
 tag_format = "v{version}"
@@ -184,3 +185,8 @@ patch_tags = ["fix", "perf"]
 
 [tool.semantic_release.changelog.default_templates]
 changelog_file = "CHANGELOG.md"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+

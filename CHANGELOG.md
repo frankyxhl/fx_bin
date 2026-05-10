@@ -1,6 +1,109 @@
 # CHANGELOG
 
 
+## v2.11.1 (2026-05-10)
+
+### Bug Fixes
+
+- **open**: Shrink Target column before Slug/Name/Tags
+  ([#68](https://github.com/frankyxhl/fx_bin/pull/68),
+  [`620e41d`](https://github.com/frankyxhl/fx_bin/commit/620e41d3522411b807964fe9f5181669f0c24a69))
+
+`_fit_column_widths` previously protected the rightmost column (Target/URL) and shrank Slug, Name,
+  and Tags first, so on narrow terminals the URL stayed wide while entry identifiers were truncated
+  to unreadability.
+
+Invert the priority: shrink Target down to its min_width first, then fall back to right-to-left
+  shrinking of the other columns, then truncate Target down to 1 if still too wide.
+
+Adds a regression test confirming Slug/Name/Tags keep their natural width while Target gets the
+  "..." truncation on a narrow terminal with a long URL.
+
+Closes #68
+
+Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+### Chores
+
+- Fix PR/version attribution for CHG-2106 and PLN-2107
+  ([`aaea77a`](https://github.com/frankyxhl/fx_bin/commit/aaea77ab253b83025a38d1ae8edebe632d7c61a3))
+
+CHG-2106 (slug column order) shipped in PR #61, v2.10.0, not PR #63. PR #63 was directory support
+  which shipped in v2.11.0.
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+
+- Update CHG-2106/2108 status to Completed, mark PLN-2107 done
+  ([`8afd671`](https://github.com/frankyxhl/fx_bin/commit/8afd671e3d18361c108f1803bf3ccbaf558205e7))
+
+All shipped in v2.11.0.
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+
+- Update CHG-2108 status to Active post-merge
+  ([`f85a35a`](https://github.com/frankyxhl/fx_bin/commit/f85a35a91dff372fccbc48e376f13d7d58c12b10))
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+
+- **deps-dev**: Bump mako from 1.3.11 to 1.3.12
+  ([`ce5898d`](https://github.com/frankyxhl/fx_bin/commit/ce5898db42df445cb892af300083cbbc7860a719))
+
+Bumps [mako](https://github.com/sqlalchemy/mako) from 1.3.11 to 1.3.12. - [Release
+  notes](https://github.com/sqlalchemy/mako/releases) -
+  [Changelog](https://github.com/sqlalchemy/mako/blob/main/CHANGES) -
+  [Commits](https://github.com/sqlalchemy/mako/commits)
+
+--- updated-dependencies: - dependency-name: mako dependency-version: 1.3.12
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+### Documentation
+
+- Add PRJ-level code review quick-reference SOP (FXB-2109)
+  ([`842f671`](https://github.com/frankyxhl/fx_bin/commit/842f6714b78e282d9cc4b1e1dc83cede961da0ac))
+
+Adapt COR-1709 for FXB project with actual tooling configs from pyproject.toml and project-specific
+  convention checks.
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+
+- Address multi-model review feedback for FXB-2109
+  ([`42b4118`](https://github.com/frankyxhl/fx_bin/commit/42b4118aecf1737dcfff8d757bc541dc65a39179))
+
+- Reword §3 line 71: "authoritative configuration" → "extracted from" - Add H-4.3 RequiresContext
+  convention check (§4) - Add Depends on and Task tags header metadata
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+
+- Correct Codex-flagged inaccuracies in FXB-2109
+  ([`25589ab`](https://github.com/frankyxhl/fx_bin/commit/25589abba9c622fe2a406fdbea4ac1ee58f25406))
+
+- H-4.1: IO functions return IOResult via @impure_safe OR direct construction - H-4.8: SecurityError
+  extends FxBinError, not FileOperationError - H-4.9: only top-level entry in [tool.poetry.scripts];
+  subcommands use @cli.command()
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+
+- Fix two more Codex-flagged over-generalizations in FXB-2109
+  ([`4ec6044`](https://github.com/frankyxhl/fx_bin/commit/4ec60442d39f8ed3f886a99ca5b00aa0b3d878f0))
+
+- H-2.7: reference FxBinError root, not just FileOperationError + subtypes - H-4.4: scope
+  frozen=True to state/config dataclasses; allow __slots__ value objects
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+
+- Scope H-4.1 IOResult rule to functional modules (FXB-2109)
+  ([`1c2cd02`](https://github.com/frankyxhl/fx_bin/commit/1c2cd020089f60caa739cb01f7b716543ecd8da3))
+
+Codex flagged H-4.1 as too broad: imperative helpers like fx_bin/filter.py::find_files_by_extension
+  and fx_bin/open_launcher.py::load_config legitimately use plain returns / typed exceptions. Narrow
+  the rule to functional/railway-oriented modules and explicitly carve out imperative modules.
+
+Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+
 ## v2.11.0 (2026-05-07)
 
 ### Bug Fixes
