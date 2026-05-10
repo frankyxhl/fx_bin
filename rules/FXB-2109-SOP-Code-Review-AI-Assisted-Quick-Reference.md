@@ -137,7 +137,7 @@ poetry run black --check fx_bin/ tests/ && \
 
 Reviewers must verify AI-generated code respects these FXB conventions (documented in `CLAUDE.md`):
 
-- [ ] H-4.1 **Pure vs IO separation**: IO functions return `IOResult[T, Error]` — either via `@impure_safe` (auto-catches exceptions) or by constructing `IOResult` directly with explicit try/except. Pure functions have no side effects. [P1]
+- [ ] H-4.1 **Pure vs IO separation**: in functional/railway-oriented modules (e.g., `*_functional.py`, `backup_utils.py`), IO functions return `IOResult[T, Error]` — either via `@impure_safe` or by constructing `IOResult` directly with explicit try/except. Pure functions have no side effects. Imperative modules (e.g., `filter.py`, `open_launcher.py`) may use normal returns and raise typed errors (`OpenError`, etc.); do not flag them for not returning `IOResult`. [P1]
 - [ ] H-4.2 **Railway-oriented programming**: pipelines use `flow()`, `bind()`, `lash()` from `returns.pipeline` / `returns.pointfree` — no bare try/except for control flow. [P1]
 - [ ] H-4.3 **RequiresContext pattern**: IO functions that need shared context use `RequiresContext[IOResult[T, Error], ContextType]` to make dependencies explicit, not global state or closures. [P1]
 - [ ] H-4.4 **Immutable data classes**: data classes representing state or configuration use `frozen=True`. Value objects with `__slots__` (e.g., `SizeEntry`, `FileCountEntry`) may omit `frozen`. [P1]
