@@ -361,17 +361,17 @@ def _fit_column_widths(
         min_widths = [1 for _ in widths]
 
     result = list(widths)
-    for index in range(len(result) - 2, -1, -1):
-        while sum(result) > available and result[index] > min_widths[index]:
-            result[index] -= 1
     target_index = len(result) - 1
     while sum(result) > available and result[target_index] > min_widths[target_index]:
         result[target_index] -= 1
     for index in range(len(result) - 2, -1, -1):
-        while sum(result) > available and result[index] > 1:
+        while sum(result) > available and result[index] > min_widths[index]:
             result[index] -= 1
     while sum(result) > available and result[target_index] > 1:
         result[target_index] -= 1
+    for index in range(len(result) - 2, -1, -1):
+        while sum(result) > available and result[index] > 1:
+            result[index] -= 1
     return result
 
 
