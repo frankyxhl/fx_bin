@@ -587,6 +587,37 @@ class TestSelectorResolution(unittest.TestCase):
         self.assertEqual(table_cells(lines[1])[:3], ["#", "Slug", "Name"])
         self.assertTrue(all(len(line) <= 60 for line in lines))
 
+    def test_format_items_shrinks_target_before_slug_name_tags(self) -> None:
+        """Regression for #68: narrow terminal + long URL must keep Slug/Name/Tags
+        at natural width and truncate Target instead."""
+        from fx_bin.open_launcher import OpenItem, format_items
+
+        items = [
+            OpenItem(
+                name="Codex Cloud Analytics",
+                slug="codex-analytics",
+                target="https://chatgpt.com/codex/cloud/settings/analytics/very/long/path",
+                tags=("codex", "analytics"),
+            ),
+        ]
+        output = format_items(items, terminal_width=80)
+
+        lines = output.splitlines()
+        cells = [table_cells(line) for line in lines if line.startswith("|")]
+        header_cells = cells[0]
+        row_cells = cells[1]
+
+        slug_col = header_cells.index("Slug")
+        name_col = header_cells.index("Name")
+        tags_col = header_cells.index("Tags")
+        target_col = header_cells.index("Target")
+
+        self.assertEqual(row_cells[slug_col], "codex-analytics")
+        self.assertEqual(row_cells[name_col], "Codex Cloud Analytics")
+        self.assertEqual(row_cells[tags_col], "codex, analytics")
+        self.assertTrue(row_cells[target_col].endswith("..."))
+        self.assertTrue(all(len(line) <= 80 for line in lines))
+
     def test_format_items_sanitizes_control_chars_and_handles_wide_text(self) -> None:
         from fx_bin.open_launcher import OpenItem, format_items
 
