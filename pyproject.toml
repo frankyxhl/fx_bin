@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fx-bin"
-version = "2.11.1"
+version = "2.11.2"
 description = "A common bin collection for my own usage"
 authors = ["Frank Xu <frank@frankxu.me>"]
 readme = "README.md"
@@ -194,6 +194,7 @@ patch_tags = ["fix", "perf"]
 
 [tool.semantic_release.changelog.default_templates]
 changelog_file = "CHANGELOG.md"
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

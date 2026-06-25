@@ -1,6 +1,79 @@
 # CHANGELOG
 
 
+## v2.11.2 (2026-06-25)
+
+### Bug Fixes
+
+- **make**: Install security group in scan/test targets
+  ([`0de15b1`](https://github.com/frankyxhl/fx_bin/commit/0de15b1df1ab5ae98ab6e1b6108c8bf9fe8ed963))
+
+Address Codex P2: after moving bandit/safety to the optional security group, `make security-scan`
+  (and `make check` which calls it) hard-failed in the default `--with dev` env because `poetry run
+  bandit` was missing. The `test`/`test-github-actions` targets degraded silently (|| true).
+
+Make the security-running targets self-sufficient by running `poetry install --with security` before
+  invoking the scanners, so the local quality gate works without manual setup and mirrors CI.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+- **tox**: Install security group in bandit/safety/security envs
+  ([`22c2764`](https://github.com/frankyxhl/fx_bin/commit/22c2764f080f5b7a4dc2898ef0751b694a89069b))
+
+Address Codex P2 (round 2): tox security envs inherit the base `commands_pre = poetry install --with
+  dev`, which no longer installs bandit/safety after the group move. `tox -e bandit`, `tox -e
+  safety`, `tox -e security`, and the default envlist would fail with missing commands. Override
+  commands_pre in those three envs to also install `--with security`.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+### Chores
+
+- **deps**: Move bandit/safety to optional security group
+  ([`7863409`](https://github.com/frankyxhl/fx_bin/commit/7863409de585aaadb110d8268ab378bc53c76a8f))
+
+Slim the default local dev environment by moving the two security scanners (bandit, safety) out of
+  [group.dev] into a new optional [group.security]. These are CI gate tools, not part of the local
+  inner loop — safety alone pulls ~37 transitive deps (authlib, cryptography, pydantic, nltk, httpx,
+  requests, ...).
+
+- `poetry install --with dev` now installs 36 packages (was 77, -53%) - CI security scan job
+  installs `--with security` so bandit/safety still run; `poetry run safety check` works there as
+  before - Run locally on demand with `poetry install --with security` - tests/security/ are pytest
+  cases on the app's own safety features, unrelated to the `safety` package — unaffected (49
+  collected)
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+- **deps-dev**: Bump authlib from 1.6.11 to 1.6.12
+  ([`a39a426`](https://github.com/frankyxhl/fx_bin/commit/a39a426e2237aa2f6260cfd300d6b42455c60e24))
+
+Bumps [authlib](https://github.com/authlib/authlib) from 1.6.11 to 1.6.12. - [Release
+  notes](https://github.com/authlib/authlib/releases) -
+  [Changelog](https://github.com/authlib/authlib/blob/1.6.12/docs/changelog.rst) -
+  [Commits](https://github.com/authlib/authlib/compare/v1.6.11...1.6.12)
+
+--- updated-dependencies: - dependency-name: authlib dependency-version: 1.6.12
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump urllib3 from 2.6.3 to 2.7.0
+  ([`65eb063`](https://github.com/frankyxhl/fx_bin/commit/65eb0639a88d860e2ef3a6f6a656124d84eddc46))
+
+Bumps [urllib3](https://github.com/urllib3/urllib3) from 2.6.3 to 2.7.0. - [Release
+  notes](https://github.com/urllib3/urllib3/releases) -
+  [Changelog](https://github.com/urllib3/urllib3/blob/main/CHANGES.rst) -
+  [Commits](https://github.com/urllib3/urllib3/compare/2.6.3...2.7.0)
+
+--- updated-dependencies: - dependency-name: urllib3 dependency-version: 2.7.0
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+
 ## v2.11.1 (2026-05-10)
 
 ### Bug Fixes
