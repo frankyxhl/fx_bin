@@ -28,11 +28,20 @@ pytest-xdist = "^3.5.0"
 flake8 = "^7.0.0"
 black = ">=24.3,<27.0"
 mypy = "^1.8.0"
-bandit = "^1.7.5"
-safety = "^3.0.0"
 psutil = "^5.9.0"
 pytest-forked = "^1.6.0"
 hypothesis = "^6.100.0"
+
+# Security scanners — gate tools, not part of the local inner loop.
+# Optional group so `poetry install --with dev` stays slim; CI installs
+# them with `poetry install --with security` (see .github/workflows/ci-security.yml).
+# Run locally on demand with: poetry install --with security
+[tool.poetry.group.security]
+optional = true
+
+[tool.poetry.group.security.dependencies]
+bandit = "^1.7.5"
+safety = "^3.0.0"
 
 [tool.poetry.scripts]
 # Unified CLI command
