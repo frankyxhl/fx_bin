@@ -532,7 +532,7 @@ poetry run flake8 fx_bin/
 # Type checking
 poetry run mypy fx_bin/
 
-# Security scan
+# Security scan (needs the optional security group: poetry install --with security)
 poetry run bandit -r fx_bin/
 ```
 
@@ -594,8 +594,10 @@ poetry run pytest -m performance
 
 ### Security Testing
 
+> `bandit` and `safety` are in the optional `security` dependency group (not installed by `poetry install --with dev`). Install them first: `poetry install --with security`.
+
 ```bash
-# Run security test suite
+# Run security test suite (no extra deps needed)
 poetry run pytest tests/test_*security*.py -v
 
 # Static security analysis

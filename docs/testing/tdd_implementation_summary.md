@@ -138,7 +138,8 @@ poetry run pytest tests/test_*security*.py -v
 # Run all tests with coverage
 poetry run pytest --cov=fx_bin --cov-report=html
 
-# Run security analysis
+# Run security analysis (install the optional security group first:
+# poetry install --with security)
 poetry run bandit -r fx_bin/
 poetry run safety check
 
