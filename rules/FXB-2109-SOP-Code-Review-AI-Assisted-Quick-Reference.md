@@ -124,6 +124,8 @@ skips = ["B101"]  # assert_used
 
 #### Unified Check Command
 
+> `bandit`/`safety` are in the optional `security` group — run `poetry install --with security` once before the command below. (Note: `make check` is **not** a substitute here; it only runs lint/format/type + Bandit, skipping `safety check` and the test suite.)
+
 ```bash
 poetry run black --check fx_bin/ tests/ && \
   poetry run mypy fx_bin/ && \

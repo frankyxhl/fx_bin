@@ -116,6 +116,9 @@ poetry run black --check fx_bin/ tests/
 ```
 
 ### Security Testing
+
+> `bandit` and `safety` live in the optional `security` dependency group (not in the default `--with dev` env). Install them first: `poetry install --with security`. The `make security-scan` / `tox -e security` targets do this automatically.
+
 ```bash
 # Run security analysis with bandit
 poetry run bandit -r fx_bin/

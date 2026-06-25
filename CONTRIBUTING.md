@@ -92,7 +92,8 @@ Ready to contribute? Here's how to set up `fx_bin` for local development.
     poetry run flake8 fx_bin/
     poetry run mypy fx_bin/
     
-    # Run security checks
+    # Run security checks (bandit/safety are in the optional `security` group;
+    # install them first with: poetry install --with security)
     poetry run bandit -r fx_bin/
     poetry run safety check
     ```

@@ -801,7 +801,8 @@ poetry run flake8 fx_bin/
 # Type checking with mypy
 poetry run mypy fx_bin/
 
-# Security scan with bandit
+# Security scan with bandit (bandit/safety are in the optional security group:
+# run `poetry install --with security` first)
 poetry run bandit -r fx_bin/
 
 # Check dependency vulnerabilities

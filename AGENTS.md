@@ -190,7 +190,8 @@ class SizeEntry:
 
 ```bash
 make test-security
-make security-scan
+make security-scan            # auto-installs the optional `security` group
+# Bare scanner calls need that group first: poetry install --with security
 poetry run safety check
 ```
 
