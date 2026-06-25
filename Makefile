@@ -16,6 +16,7 @@ test:  ## 🚀 Run ALL tests (GitHub Actions simulation + everything)
 	@echo "🔒 Running CRITICAL security tests - these MUST pass!"
 	@echo ""
 	@echo "🔍 Running security analysis..."
+	poetry install --with security
 	poetry run bandit -r fx_bin/ || true
 	@echo ""
 	@echo "📋 Checking dependencies for known vulnerabilities..."
@@ -73,6 +74,7 @@ test-github-actions:  ## 🚀 Simulate complete GitHub Actions TDD Test Suite lo
 	@echo "=== 🔒 CRITICAL Security Tests ==="
 	@echo "🔒 Running CRITICAL security tests - these MUST pass!"
 	@echo "🔍 Running security analysis..."
+	poetry install --with security
 	poetry run bandit -r fx_bin/ || true
 	@echo ""
 	@echo "📋 Checking dependencies for known vulnerabilities..."
@@ -127,7 +129,8 @@ format-check:  ## Check code formatting without changes
 type-check:  ## Run type checking with mypy
 	poetry run mypy fx_bin/
 
-security-scan:  ## Run security scan with bandit
+security-scan:  ## Run security scan with bandit (installs optional security group)
+	poetry install --with security
 	poetry run bandit -r fx_bin/
 
 check:  ## Run all checks (lint, format, type, security)
