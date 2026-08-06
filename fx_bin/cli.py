@@ -31,6 +31,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("ff", "Find files by keyword"),
     ("fff", "Find first file matching keyword (alias for ff --first)"),
     ("open", "Open saved URLs/files and direct targets"),
+    ("o", "Open saved URLs/files (alias for open)"),
     ("filter", "Filter files by extension"),
     ("replace", "Replace text in files"),
     ("backup", "Create timestamped backups of files/dirs"),
@@ -648,6 +649,7 @@ def open_command(
       fx open https://example.com          # Open direct URL
       fx open ./diagram.png --app Preview  # Open local file on macOS
       fx open cc-usage --browser Firefox   # Temporary macOS browser override
+      fx o cc-usage                        # 'o' is an alias for 'open'
 
     \b
     Add entries:
@@ -778,6 +780,9 @@ def open_command(
         return 0
     except open_launcher.OpenError as e:
         raise click.ClickException(str(e)) from e
+
+
+cli.add_command(open_command, "o")
 
 
 def _run_open_search(

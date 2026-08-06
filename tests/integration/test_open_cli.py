@@ -867,5 +867,86 @@ target = "{resolved_target}"
                 self.assertEqual(plan.args[1], resolved_target)
 
 
+class TestOpenAlias(unittest.TestCase):
+    """Test the fx o alias for fx open."""
+
+    CONFIG = """
+[[items]]
+name = "Claude Usage"
+slug = "cc-usage"
+target = "https://claude.ai/settings/usage"
+tags = ["usage"]
+
+[[items]]
+name = "SportPlus Snooker"
+slug = "sp"
+target = "https://en97.sportplus.live/snooker/"
+tags = ["sports"]
+""".strip()
+
+    def setUp(self) -> None:
+        self.runner = CliRunner()
+
+    def _config(self, temp_dir: str) -> Path:
+        config_path = Path(temp_dir) / "open.toml"
+        config_path.write_text(self.CONFIG, encoding="utf-8")
+        return config_path
+
+    def test_o_alias_lists_same_as_open(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            aliased = self.runner.invoke(cli, ["o", "--config", str(config_path)])
+            full = self.runner.invoke(cli, ["open", "--config", str(config_path)])
+
+        self.assertEqual(aliased.exit_code, 0, aliased.output)
+        self.assertEqual(aliased.output, full.output)
+
+    def test_o_alias_opens_target(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            with patch("fx_bin.open_launcher.execute_dispatch_plan") as execute:
+                result = self.runner.invoke(
+                    cli, ["o", "--config", str(config_path), "cc-usage"]
+                )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("Opened Claude Usage", result.output)
+        execute.assert_called_once()
+
+    def test_o_alias_honors_tag_filter(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            result = self.runner.invoke(
+                cli, ["o", "--config", str(config_path), "--tag", "sports"]
+            )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("SportPlus Snooker", result.output)
+        self.assertNotIn("Claude Usage", result.output)
+
+    def test_o_alias_reports_errors_like_open(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            aliased = self.runner.invoke(
+                cli, ["o", "--config", str(config_path), "nope"]
+            )
+            full = self.runner.invoke(
+                cli, ["open", "--config", str(config_path), "nope"]
+            )
+
+        self.assertEqual(aliased.exit_code, 1)
+        self.assertEqual(aliased.output, full.output)
+
+    def test_list_command_documents_alias(self) -> None:
+        result = self.runner.invoke(cli, ["list"])
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("alias for open", result.output)
+
+
 if __name__ == "__main__":
     unittest.main()
