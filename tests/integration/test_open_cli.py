@@ -1044,6 +1044,41 @@ tags = ["sports"]
         self.assertEqual(result.exit_code, 0, result.output)
         execute.assert_not_called()
 
+    def test_copy_rejects_target_with_control_characters(self) -> None:
+        """A newline in a direct target could forge a second 'Copied ...' line."""
+        injected = "https://example.com\nCopied https://evil.test"
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            with patch("fx_bin.open_launcher.copy_to_clipboard") as copy:
+                result = self.runner.invoke(
+                    cli, ["open", "--config", str(config_path), "copy", injected]
+                )
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("control characters", result.output)
+        self.assertNotIn("evil.test", result.output)
+        copy.assert_not_called()
+
+    def test_copy_and_open_reject_the_same_bad_target(self) -> None:
+        injected = "https://example.com\nCopied https://evil.test"
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            with (
+                patch("fx_bin.open_launcher.copy_to_clipboard"),
+                patch("fx_bin.open_launcher.execute_dispatch_plan"),
+            ):
+                copied = self.runner.invoke(
+                    cli, ["open", "--config", str(config_path), "copy", injected]
+                )
+                opened = self.runner.invoke(
+                    cli, ["open", "--config", str(config_path), injected]
+                )
+
+        self.assertEqual(copied.exit_code, opened.exit_code)
+        self.assertEqual(copied.output, opened.output)
+
     def test_copy_requires_selector(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             config_path = self._config(temp_dir)

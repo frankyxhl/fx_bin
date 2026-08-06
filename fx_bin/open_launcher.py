@@ -519,14 +519,14 @@ def resolve_launch_target(
     cwd_path = cwd or Path.cwd()
 
     if _is_http_url(token):
-        return LaunchTarget(label=token, target=token)
+        return _direct_launch_target(token)
 
     if _has_unsupported_scheme(token):
         scheme = urlparse(token).scheme
         raise OpenError(f"Unsupported target scheme: {scheme}")
 
     if _is_explicit_path_token(token, platform_value):
-        return LaunchTarget(label=token, target=token)
+        return _direct_launch_target(token)
 
     visible_items = filter_items(items, filter_tags)
 
@@ -549,6 +549,7 @@ def resolve_launch_target(
 
     bare_path = cwd_path / token
     if bare_path.exists():
+        _validate_target_string(str(bare_path))
         return LaunchTarget(label=token, target=str(bare_path))
 
     if any(item.slug == token and item.disabled for item in items):
@@ -594,6 +595,19 @@ def resolve_saved_item_selector(
     raise OpenError(
         f"{action.title()} target not found: {token}. Run 'fx open' to list targets."
     )
+
+
+def _direct_launch_target(token: str) -> LaunchTarget:
+    """Build a launch target from a raw token.
+
+    Targets read from config are validated at load time by `_parse_item`, but a
+    token typed on the command line has never been through that gate. Validate
+    it here so every consumer of a resolved `LaunchTarget` — `fx open`,
+    `fx open copy`, and anything added later — can trust the target string.
+    """
+
+    _validate_target_string(token)
+    return LaunchTarget(label=token, target=token)
 
 
 def _launch_target_from_item(item: OpenItem) -> LaunchTarget:

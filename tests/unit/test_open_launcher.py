@@ -341,6 +341,29 @@ class TestSearchItems(unittest.TestCase):
 class TestSelectorResolution(unittest.TestCase):
     """Test deterministic selector resolution."""
 
+    def test_direct_url_with_control_character_is_rejected(self) -> None:
+        """Direct targets skip config-load validation, so resolve must apply it."""
+        from fx_bin.open_launcher import OpenError, resolve_launch_target
+
+        with self.assertRaisesRegex(OpenError, "control characters"):
+            resolve_launch_target(
+                "https://example.com\nCopied https://evil.test",
+                [],
+            )
+
+    def test_direct_path_with_control_character_is_rejected(self) -> None:
+        from fx_bin.open_launcher import OpenError, resolve_launch_target
+
+        with self.assertRaisesRegex(OpenError, "control characters"):
+            resolve_launch_target("./notes\nCopied elsewhere.txt", [])
+
+    def test_clean_direct_url_still_resolves(self) -> None:
+        from fx_bin.open_launcher import resolve_launch_target
+
+        target = resolve_launch_target("https://example.com", [])
+
+        self.assertEqual(target.target, "https://example.com")
+
     def test_exact_slug_wins_over_bare_local_file(self) -> None:
         from fx_bin.open_launcher import OpenConfig, OpenItem, resolve_launch_target
 

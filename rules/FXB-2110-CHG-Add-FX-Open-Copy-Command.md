@@ -61,6 +61,13 @@ the selector resolution that already exists.
   display server, so Linux selection is driven by `WAYLAND_DISPLAY` rather than
   by whichever binary is installed (`wl-clipboard` ships as a dependency on many
   X11 installs).
+- **Security risk:** direct URL/path selectors never pass through the
+  config-load validation that saved entries get. `fx open` happened to catch
+  malformed targets downstream via `classify_target_kind`, but a copy path that
+  skips dispatch would not — a target containing a newline would forge a second
+  `Copied ...` line in the output and place a control character on the
+  clipboard. Validation therefore belongs in `resolve_launch_target`, so every
+  consumer of a resolved `LaunchTarget` inherits it.
 - **Out of scope:** reading from the clipboard, copying entry metadata other
   than the target, a `--copy` flag on plain `fx open`, and adding a
   third-party clipboard dependency such as `pyperclip`.
@@ -98,6 +105,8 @@ the selector resolution that already exists.
 - `fx open --tag <tag> copy <index>` composes both filters.
 - A saved entry with `slug = "copy"` fails at config load with rename guidance.
 - Clipboard dispatch runs with `shell=False`.
+- A direct target containing control characters is rejected identically by
+  `fx open` and `fx open copy`, and nothing is written to the clipboard.
 - `--help` and README document the new command.
 
 ## Testing / Verification
@@ -133,3 +142,4 @@ Verification completed with:
 | Date | Change | By |
 |------|--------|----|
 | 2026-08-07 | Initial version — recorded during PR #82 review response (COR-1612) after the AI reviewer flagged the missing AF artifact | Claude Code |
+| 2026-08-07 | Added direct-target validation risk + acceptance criterion after the round-2 review finding | Claude Code |
