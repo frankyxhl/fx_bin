@@ -998,6 +998,18 @@ tags = ["sports"]
         self.assertEqual(result.exit_code, 0, result.output)
         copy.assert_called_once_with("https://en97.sportplus.live/snooker/")
 
+    def test_copy_works_through_the_o_alias(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            with patch("fx_bin.open_launcher.copy_to_clipboard") as copy:
+                result = self.runner.invoke(
+                    cli, ["o", "--config", str(config_path), "copy", "cc-usage"]
+                )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        copy.assert_called_once_with("https://claude.ai/settings/usage")
+
     def test_copy_direct_url_needs_no_saved_entry(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             config_path = Path(temp_dir) / "missing.toml"
