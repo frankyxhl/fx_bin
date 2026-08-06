@@ -124,7 +124,7 @@ poetry run fx --help
 | `fx files` | Count files in directories | Pattern matching, recursive search, detailed stats |
 | `fx size` | Analyze file/directory sizes | Human-readable units, sorting, limit results |
 | `fx ff` | Find files by keyword | Multiple search modes, content search, regex support |
-| `fx open` | Open saved URLs/files and direct targets | Local TOML registry, tags, browser/app selection |
+| `fx open` (`fx o`) | Open saved URLs/files and direct targets | Local TOML registry, tags, browser/app selection |
 | `fx filter` | Filter files by extension | Time-based sorting, multiple formats, recursive search |
 | `fx replace` | Replace text in files | Atomic file operations, safe text replacement |
 | `fx backup` | Create timestamped backups | File/dir backup, compression |
@@ -274,9 +274,10 @@ fx open
 fx open --all
 fx open --disabled
 
-# Open by slug or index
+# Open by slug or index ('o' is a shorthand alias for 'open')
 fx open cc-usage
 fx open 3
+fx o cc-usage
 
 # Filter the list before selecting
 fx open --tag usage 2
