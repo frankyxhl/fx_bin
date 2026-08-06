@@ -27,7 +27,7 @@ from .errors import OpenError
 
 SLUG_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{0,63}$")
 TOML_BARE_KEY_RE = re.compile(r"^[A-Za-z0-9_-]+$")
-NEWLY_RESERVED_SLUGS = {"disable", "enable", "search"}
+NEWLY_RESERVED_SLUGS = {"copy", "disable", "enable", "search"}
 RESERVED_SLUGS = {
     "add",
     "remove",
@@ -1215,6 +1215,43 @@ def execute_dispatch_plan(plan: DispatchPlan) -> None:
     result = subprocess.run(plan.args, shell=False, check=False)  # nosec B603
     if result.returncode != 0:
         raise OpenError(f"Open command failed with exit code {result.returncode}")
+
+
+def build_clipboard_plan(
+    platform_name: Optional[str] = None,
+    opener_lookup: Callable[[str], Optional[str]] = shutil.which,
+) -> DispatchPlan:
+    """Build the clipboard-write command for this platform."""
+
+    platform_value = platform_name or sys.platform
+    if platform_value == "darwin":
+        return DispatchPlan(("pbcopy",))
+    if platform_value.startswith("win"):
+        return DispatchPlan(("clip",))
+    if platform_value.startswith("linux"):
+        for name, extra_args in (
+            ("wl-copy", ()),
+            ("xclip", ("-selection", "clipboard")),
+        ):
+            found = opener_lookup(name)
+            if found:
+                return DispatchPlan((found, *extra_args))
+        raise OpenError("No clipboard tool found. Install wl-clipboard or xclip.")
+    raise OpenError(f"Unsupported platform for fx open copy: {platform_value}")
+
+
+def copy_to_clipboard(text: str, plan: Optional[DispatchPlan] = None) -> None:
+    """Write text to the system clipboard."""
+
+    resolved = plan or build_clipboard_plan()
+    result = subprocess.run(  # nosec B603
+        resolved.args,
+        input=text.encode(),
+        shell=False,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise OpenError(f"Clipboard command failed with exit code {result.returncode}")
 
 
 def request_ai_metadata(

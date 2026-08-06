@@ -1304,5 +1304,88 @@ class TestAiMetadata(unittest.TestCase):
         )
 
 
+class TestClipboard(unittest.TestCase):
+    """Test clipboard command selection and execution."""
+
+    def test_darwin_uses_pbcopy(self) -> None:
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(platform_name="darwin")
+
+        self.assertEqual(plan.args, ("pbcopy",))
+
+    def test_windows_uses_clip(self) -> None:
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(platform_name="win32")
+
+        self.assertEqual(plan.args, ("clip",))
+
+    def test_linux_prefers_wl_copy(self) -> None:
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(
+            platform_name="linux",
+            opener_lookup=lambda name: (
+                "/usr/bin/wl-copy" if name == "wl-copy" else None
+            ),
+        )
+
+        self.assertEqual(plan.args, ("/usr/bin/wl-copy",))
+
+    def test_linux_falls_back_to_xclip(self) -> None:
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(
+            platform_name="linux",
+            opener_lookup=lambda name: "/usr/bin/xclip" if name == "xclip" else None,
+        )
+
+        self.assertEqual(plan.args, ("/usr/bin/xclip", "-selection", "clipboard"))
+
+    def test_linux_without_clipboard_tool_errors(self) -> None:
+        from fx_bin.open_launcher import OpenError, build_clipboard_plan
+
+        with self.assertRaises(OpenError) as ctx:
+            build_clipboard_plan(platform_name="linux", opener_lookup=lambda _: None)
+
+        self.assertIn("wl-clipboard or xclip", str(ctx.exception))
+
+    def test_unsupported_platform_errors(self) -> None:
+        from fx_bin.open_launcher import OpenError, build_clipboard_plan
+
+        with self.assertRaises(OpenError):
+            build_clipboard_plan(platform_name="freebsd12")
+
+    def test_copy_writes_text_to_stdin_without_shell(self) -> None:
+        from fx_bin.open_launcher import DispatchPlan, copy_to_clipboard
+
+        class Result:
+            returncode = 0
+
+        with patch("fx_bin.open_launcher.subprocess.run", return_value=Result()) as run:
+            copy_to_clipboard("https://example.com", DispatchPlan(("pbcopy",)))
+
+        self.assertEqual(run.call_args.args[0], ("pbcopy",))
+        self.assertEqual(run.call_args.kwargs["input"], b"https://example.com")
+        self.assertFalse(run.call_args.kwargs["shell"])
+
+    def test_copy_failure_raises(self) -> None:
+        from fx_bin.open_launcher import DispatchPlan, OpenError, copy_to_clipboard
+
+        class Result:
+            returncode = 1
+
+        with patch("fx_bin.open_launcher.subprocess.run", return_value=Result()):
+            with self.assertRaises(OpenError):
+                copy_to_clipboard("x", DispatchPlan(("pbcopy",)))
+
+    def test_copy_is_a_newly_reserved_slug(self) -> None:
+        from fx_bin.open_launcher import OpenError, validate_slug
+
+        with self.assertRaisesRegex(OpenError, "Rename slug 'copy'"):
+            validate_slug("copy")
+
+
 if __name__ == "__main__":
     unittest.main()

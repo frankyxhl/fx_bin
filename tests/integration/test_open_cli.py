@@ -948,5 +948,170 @@ tags = ["sports"]
         self.assertIn("alias for open", result.output)
 
 
+class TestOpenCopy(unittest.TestCase):
+    """Test the fx open copy subcommand."""
+
+    CONFIG = """
+[[items]]
+name = "Claude Usage"
+slug = "cc-usage"
+target = "https://claude.ai/settings/usage"
+tags = ["usage"]
+
+[[items]]
+name = "SportPlus Snooker"
+slug = "sp"
+target = "https://en97.sportplus.live/snooker/"
+tags = ["sports"]
+""".strip()
+
+    def setUp(self) -> None:
+        self.runner = CliRunner()
+
+    def _config(self, temp_dir: str) -> Path:
+        config_path = Path(temp_dir) / "open.toml"
+        config_path.write_text(self.CONFIG, encoding="utf-8")
+        return config_path
+
+    def test_copy_by_slug(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            with patch("fx_bin.open_launcher.copy_to_clipboard") as copy:
+                result = self.runner.invoke(
+                    cli, ["open", "--config", str(config_path), "copy", "cc-usage"]
+                )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        copy.assert_called_once_with("https://claude.ai/settings/usage")
+        self.assertIn("Copied https://claude.ai/settings/usage", result.output)
+
+    def test_copy_by_index(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            with patch("fx_bin.open_launcher.copy_to_clipboard") as copy:
+                result = self.runner.invoke(
+                    cli, ["open", "--config", str(config_path), "copy", "2"]
+                )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        copy.assert_called_once_with("https://en97.sportplus.live/snooker/")
+
+    def test_copy_direct_url_needs_no_saved_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "missing.toml"
+
+            with patch("fx_bin.open_launcher.copy_to_clipboard") as copy:
+                result = self.runner.invoke(
+                    cli,
+                    [
+                        "open",
+                        "--config",
+                        str(config_path),
+                        "copy",
+                        "https://example.com",
+                    ],
+                )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        copy.assert_called_once_with("https://example.com")
+
+    def test_copy_does_not_open(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            with (
+                patch("fx_bin.open_launcher.copy_to_clipboard"),
+                patch("fx_bin.open_launcher.execute_dispatch_plan") as execute,
+            ):
+                result = self.runner.invoke(
+                    cli, ["open", "--config", str(config_path), "copy", "cc-usage"]
+                )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        execute.assert_not_called()
+
+    def test_copy_requires_selector(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path), "copy"]
+            )
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("Usage is fx open copy SELECTOR", result.output)
+
+    def test_copy_rejects_unknown_selector(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path), "copy", "nope"]
+            )
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("Open target not found: nope", result.output)
+
+    def test_copy_rejects_browser_option(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            result = self.runner.invoke(
+                cli,
+                [
+                    "open",
+                    "--config",
+                    str(config_path),
+                    "--browser",
+                    "Firefox",
+                    "copy",
+                    "cc-usage",
+                ],
+            )
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("--browser and --app are invalid", result.output)
+
+    def test_copy_rejects_all_flag(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            result = self.runner.invoke(
+                cli, ["open", "--config", str(config_path), "--all", "copy", "cc-usage"]
+            )
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("--all and --disabled are invalid", result.output)
+
+    def test_copy_composes_with_tag_filter(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = self._config(temp_dir)
+
+            with patch("fx_bin.open_launcher.copy_to_clipboard") as copy:
+                result = self.runner.invoke(
+                    cli,
+                    [
+                        "open",
+                        "--config",
+                        str(config_path),
+                        "--tag",
+                        "sports",
+                        "copy",
+                        "1",
+                    ],
+                )
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        copy.assert_called_once_with("https://en97.sportplus.live/snooker/")
+
+    def test_help_documents_copy(self) -> None:
+        result = self.runner.invoke(cli, ["open", "--help"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("fx open copy cc-usage", result.output)
+
+
 if __name__ == "__main__":
     unittest.main()
