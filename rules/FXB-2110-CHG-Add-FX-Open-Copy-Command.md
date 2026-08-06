@@ -107,6 +107,10 @@ the selector resolution that already exists.
 - Clipboard dispatch runs with `shell=False`.
 - A direct target containing control characters is rejected identically by
   `fx open` and `fx open copy`, and nothing is written to the clipboard.
+- `fx open copy` puts the same concrete target on the clipboard that
+  `fx open` would dispatch: URLs verbatim, local paths with `~` expanded and
+  symlinks resolved, and a non-existent path rejected with the same error and
+  exit code as `fx open`.
 - `--help` and README document the new command.
 
 ## Testing / Verification
@@ -143,3 +147,4 @@ Verification completed with:
 |------|--------|----|
 | 2026-08-07 | Initial version — recorded during PR #82 review response (COR-1612) after the AI reviewer flagged the missing AF artifact | Claude Code |
 | 2026-08-07 | Added direct-target validation risk + acceptance criterion after the round-2 review finding | Claude Code |
+| 2026-08-07 | Added target-normalization acceptance criterion after the round-3 review finding; target preparation extracted so dispatch and copy share one implementation | Claude Code |

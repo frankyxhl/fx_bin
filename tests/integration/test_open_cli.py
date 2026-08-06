@@ -1,5 +1,6 @@
 """Integration tests for the fx open CLI."""
 
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -1078,6 +1079,63 @@ tags = ["sports"]
 
         self.assertEqual(copied.exit_code, opened.exit_code)
         self.assertEqual(copied.output, opened.output)
+
+    def test_copy_local_path_copies_the_normalized_absolute_path(self) -> None:
+        """A relative path on the clipboard is useless once pasted elsewhere."""
+        with self.runner.isolated_filesystem() as work_dir:
+            config_path = self._config(work_dir)
+            Path(work_dir, "file.txt").write_text("hi", encoding="utf-8")
+            expected = str(Path(work_dir).resolve() / "file.txt")
+
+            with patch("fx_bin.open_launcher.copy_to_clipboard") as copy:
+                result = self.runner.invoke(
+                    cli, ["open", "--config", str(config_path), "copy", "./file.txt"]
+                )
+
+            self.assertEqual(result.exit_code, 0, result.output)
+            copy.assert_called_once_with(expected)
+
+    def test_copy_rejects_missing_local_path_like_open_does(self) -> None:
+        with self.runner.isolated_filesystem() as work_dir:
+            config_path = self._config(work_dir)
+
+            with (
+                patch("fx_bin.open_launcher.copy_to_clipboard") as copy,
+                patch("fx_bin.open_launcher.execute_dispatch_plan"),
+            ):
+                copied = self.runner.invoke(
+                    cli, ["open", "--config", str(config_path), "copy", "./typo"]
+                )
+                opened = self.runner.invoke(
+                    cli, ["open", "--config", str(config_path), "./typo"]
+                )
+
+            self.assertEqual(copied.exit_code, 1)
+            self.assertEqual(copied.exit_code, opened.exit_code)
+            self.assertEqual(copied.output, opened.output)
+            copy.assert_not_called()
+
+    def test_copy_expands_tilde_in_a_saved_entry_target(self) -> None:
+        with self.runner.isolated_filesystem() as work_dir:
+            home = Path(work_dir).resolve()
+            Path(home, "probe.txt").write_text("hi", encoding="utf-8")
+            config_path = Path(work_dir) / "local.toml"
+            config_path.write_text(
+                '[[items]]\nname = "Probe"\nslug = "probe"\n'
+                'target = "~/probe.txt"\n',
+                encoding="utf-8",
+            )
+
+            with (
+                patch.dict(os.environ, {"HOME": str(home)}),
+                patch("fx_bin.open_launcher.copy_to_clipboard") as copy,
+            ):
+                result = self.runner.invoke(
+                    cli, ["open", "--config", str(config_path), "copy", "probe"]
+                )
+
+            self.assertEqual(result.exit_code, 0, result.output)
+            copy.assert_called_once_with(str(home / "probe.txt"))
 
     def test_copy_requires_selector(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

@@ -890,8 +890,9 @@ def _run_open_copy(
         config.items,
         filter_tags=filter_tags,
     )
-    open_launcher.copy_to_clipboard(launch_target.target)
-    click.echo(f"Copied {launch_target.target}")
+    target = open_launcher.resolve_concrete_target(launch_target)
+    open_launcher.copy_to_clipboard(target)
+    click.echo(f"Copied {target}")
     return 0
 
 

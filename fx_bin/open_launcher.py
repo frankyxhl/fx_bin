@@ -1184,14 +1184,17 @@ def build_dispatch_plan(
     if target_kind == "url":
         if selected_app:
             raise OpenError("--app can only be used with local path targets")
-        dispatch_target = launch_target.target
         opener_name = selected_browser
     else:
         if selected_browser:
             raise OpenError("--browser can only be used with URL targets")
-        dispatch_target = _normalize_local_path(launch_target.target)
         opener_name = selected_app
 
+    # Resolved after the flag checks so a mismatched --browser/--app still
+    # reports the flag error rather than a path error.
+    dispatch_target = _concrete_target(launch_target.target, target_kind)
+
+    if target_kind != "url":
         if Path(dispatch_target).is_dir() and platform_value != "darwin":
             raise OpenError("Opening local directories is only supported on macOS")
 
@@ -1233,6 +1236,34 @@ def execute_dispatch_plan(plan: DispatchPlan) -> None:
 
 WAYLAND_CLIPBOARD = ("wl-copy", ())
 X11_CLIPBOARD = ("xclip", ("-selection", "clipboard"))
+
+
+def _concrete_target(target: str, target_kind: str) -> str:
+    """Turn a stored/typed target into the exact string to act on.
+
+    URLs are used verbatim; local paths get `~` expanded, symlinks resolved,
+    and existence checked.
+    """
+
+    if target_kind == "url":
+        return target
+    return _normalize_local_path(target)
+
+
+def resolve_concrete_target(launch_target: LaunchTarget) -> str:
+    """Return the concrete target `fx open` would dispatch.
+
+    Shared by dispatch and by `fx open copy` so the two cannot disagree about
+    what a selector actually points at — copying `./notes.txt` or `~/notes.txt`
+    verbatim would put a string on the clipboard that means something different
+    wherever it is pasted, and would report success for a path `fx open`
+    rejects.
+    """
+
+    return _concrete_target(
+        launch_target.target,
+        classify_target_kind(launch_target.target),
+    )
 
 
 def build_clipboard_plan(
