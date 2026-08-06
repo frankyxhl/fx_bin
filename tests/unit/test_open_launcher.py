@@ -341,6 +341,29 @@ class TestSearchItems(unittest.TestCase):
 class TestSelectorResolution(unittest.TestCase):
     """Test deterministic selector resolution."""
 
+    def test_direct_url_with_control_character_is_rejected(self) -> None:
+        """Direct targets skip config-load validation, so resolve must apply it."""
+        from fx_bin.open_launcher import OpenError, resolve_launch_target
+
+        with self.assertRaisesRegex(OpenError, "control characters"):
+            resolve_launch_target(
+                "https://example.com\nCopied https://evil.test",
+                [],
+            )
+
+    def test_direct_path_with_control_character_is_rejected(self) -> None:
+        from fx_bin.open_launcher import OpenError, resolve_launch_target
+
+        with self.assertRaisesRegex(OpenError, "control characters"):
+            resolve_launch_target("./notes\nCopied elsewhere.txt", [])
+
+    def test_clean_direct_url_still_resolves(self) -> None:
+        from fx_bin.open_launcher import resolve_launch_target
+
+        target = resolve_launch_target("https://example.com", [])
+
+        self.assertEqual(target.target, "https://example.com")
+
     def test_exact_slug_wins_over_bare_local_file(self) -> None:
         from fx_bin.open_launcher import OpenConfig, OpenItem, resolve_launch_target
 
@@ -1302,6 +1325,128 @@ class TestAiMetadata(unittest.TestCase):
             argv,
             [r"C:\Program Files\Fx AI\provider.exe", "--mode", "json"],
         )
+
+
+class TestClipboard(unittest.TestCase):
+    """Test clipboard command selection and execution."""
+
+    def test_darwin_uses_pbcopy(self) -> None:
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(platform_name="darwin")
+
+        self.assertEqual(plan.args, ("pbcopy",))
+
+    def test_windows_uses_clip(self) -> None:
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(platform_name="win32")
+
+        self.assertEqual(plan.args, ("clip",))
+
+    @staticmethod
+    def _both_installed(name: str) -> str:
+        return f"/usr/bin/{name}"
+
+    def test_linux_wayland_session_prefers_wl_copy(self) -> None:
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(
+            platform_name="linux",
+            opener_lookup=self._both_installed,
+            environ={"WAYLAND_DISPLAY": "wayland-0"},
+        )
+
+        self.assertEqual(plan.args, ("/usr/bin/wl-copy",))
+
+    def test_linux_x11_session_prefers_xclip_even_when_wl_copy_installed(self) -> None:
+        """wl-copy is commonly installed on X11 systems but cannot talk to X."""
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(
+            platform_name="linux",
+            opener_lookup=self._both_installed,
+            environ={"DISPLAY": ":0"},
+        )
+
+        self.assertEqual(plan.args, ("/usr/bin/xclip", "-selection", "clipboard"))
+
+    def test_linux_wayland_session_falls_back_when_wl_copy_missing(self) -> None:
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(
+            platform_name="linux",
+            opener_lookup=lambda name: "/usr/bin/xclip" if name == "xclip" else None,
+            environ={"WAYLAND_DISPLAY": "wayland-0"},
+        )
+
+        self.assertEqual(plan.args, ("/usr/bin/xclip", "-selection", "clipboard"))
+
+    def test_linux_x11_session_falls_back_when_xclip_missing(self) -> None:
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(
+            platform_name="linux",
+            opener_lookup=lambda name: (
+                "/usr/bin/wl-copy" if name == "wl-copy" else None
+            ),
+            environ={"DISPLAY": ":0"},
+        )
+
+        self.assertEqual(plan.args, ("/usr/bin/wl-copy",))
+
+    def test_linux_falls_back_to_xclip(self) -> None:
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(
+            platform_name="linux",
+            opener_lookup=lambda name: "/usr/bin/xclip" if name == "xclip" else None,
+        )
+
+        self.assertEqual(plan.args, ("/usr/bin/xclip", "-selection", "clipboard"))
+
+    def test_linux_without_clipboard_tool_errors(self) -> None:
+        from fx_bin.open_launcher import OpenError, build_clipboard_plan
+
+        with self.assertRaises(OpenError) as ctx:
+            build_clipboard_plan(platform_name="linux", opener_lookup=lambda _: None)
+
+        self.assertIn("wl-clipboard or xclip", str(ctx.exception))
+
+    def test_unsupported_platform_errors(self) -> None:
+        from fx_bin.open_launcher import OpenError, build_clipboard_plan
+
+        with self.assertRaises(OpenError):
+            build_clipboard_plan(platform_name="freebsd12")
+
+    def test_copy_writes_text_to_stdin_without_shell(self) -> None:
+        from fx_bin.open_launcher import DispatchPlan, copy_to_clipboard
+
+        class Result:
+            returncode = 0
+
+        with patch("fx_bin.open_launcher.subprocess.run", return_value=Result()) as run:
+            copy_to_clipboard("https://example.com", DispatchPlan(("pbcopy",)))
+
+        self.assertEqual(run.call_args.args[0], ("pbcopy",))
+        self.assertEqual(run.call_args.kwargs["input"], b"https://example.com")
+        self.assertFalse(run.call_args.kwargs["shell"])
+
+    def test_copy_failure_raises(self) -> None:
+        from fx_bin.open_launcher import DispatchPlan, OpenError, copy_to_clipboard
+
+        class Result:
+            returncode = 1
+
+        with patch("fx_bin.open_launcher.subprocess.run", return_value=Result()):
+            with self.assertRaises(OpenError):
+                copy_to_clipboard("x", DispatchPlan(("pbcopy",)))
+
+    def test_copy_is_a_newly_reserved_slug(self) -> None:
+        from fx_bin.open_launcher import OpenError, validate_slug
+
+        with self.assertRaisesRegex(OpenError, "Rename slug 'copy'"):
+            validate_slug("copy")
 
 
 if __name__ == "__main__":

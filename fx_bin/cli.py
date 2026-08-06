@@ -652,6 +652,12 @@ def open_command(
       fx o cc-usage                        # 'o' is an alias for 'open'
 
     \b
+    Copy target to clipboard:
+      fx open copy cc-usage                # Copy a saved target by slug
+      fx open copy 3                       # Copy by 1-based index
+      fx open copy https://example.com     # Copy a direct target
+
+    \b
     Add entries:
       fx open add yahoo.co.jp
       fx open add yahoo.co.jp \\
@@ -705,6 +711,21 @@ def open_command(
                 resolved_config,
                 filter_tags,
                 visibility,
+                browser,
+                app,
+                name,
+                slug,
+                entry_tags,
+                yes,
+                ai,
+            )
+        if tokens and tokens[0] == "copy":
+            return _run_open_copy(
+                tokens,
+                resolved_config,
+                filter_tags,
+                show_all,
+                show_disabled,
                 browser,
                 app,
                 name,
@@ -827,6 +848,51 @@ def _run_open_search(
     indices = [index for index, _item in matches]
     items = [item for _index, item in matches]
     click.echo(open_launcher.format_items(items, indices=indices))
+    return 0
+
+
+def _run_open_copy(
+    tokens: Tuple[str, ...],
+    config_path: Path,
+    filter_tags: Tuple[str, ...],
+    show_all: bool,
+    show_disabled: bool,
+    browser: Optional[str],
+    app: Optional[str],
+    name: Optional[str],
+    slug: Optional[str],
+    entry_tags: Tuple[str, ...],
+    yes: bool,
+    ai: bool,
+) -> int:
+    """Run the fx open copy workflow."""
+    from . import open_launcher
+
+    if show_all or show_disabled:
+        raise click.ClickException(
+            "--all and --disabled are invalid with 'fx open copy'"
+        )
+    if browser or app:
+        raise click.ClickException(
+            "--browser and --app are invalid with 'fx open copy'"
+        )
+    if name or slug or entry_tags or yes or ai:
+        raise click.ClickException(
+            "--name, --slug, --entry-tag, --yes, and --ai are only valid "
+            "with 'fx open add' or supported mutation commands"
+        )
+    if len(tokens) != 2 or not tokens[1]:
+        raise click.ClickException("Usage is fx open copy SELECTOR")
+
+    config = open_launcher.load_config(config_path)
+    launch_target = open_launcher.resolve_launch_target(
+        tokens[1],
+        config.items,
+        filter_tags=filter_tags,
+    )
+    target = open_launcher.resolve_concrete_target(launch_target)
+    open_launcher.copy_to_clipboard(target)
+    click.echo(f"Copied {target}")
     return 0
 
 

@@ -27,7 +27,7 @@ from .errors import OpenError
 
 SLUG_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{0,63}$")
 TOML_BARE_KEY_RE = re.compile(r"^[A-Za-z0-9_-]+$")
-NEWLY_RESERVED_SLUGS = {"disable", "enable", "search"}
+NEWLY_RESERVED_SLUGS = {"copy", "disable", "enable", "search"}
 RESERVED_SLUGS = {
     "add",
     "remove",
@@ -519,14 +519,14 @@ def resolve_launch_target(
     cwd_path = cwd or Path.cwd()
 
     if _is_http_url(token):
-        return LaunchTarget(label=token, target=token)
+        return _direct_launch_target(token)
 
     if _has_unsupported_scheme(token):
         scheme = urlparse(token).scheme
         raise OpenError(f"Unsupported target scheme: {scheme}")
 
     if _is_explicit_path_token(token, platform_value):
-        return LaunchTarget(label=token, target=token)
+        return _direct_launch_target(token)
 
     visible_items = filter_items(items, filter_tags)
 
@@ -549,6 +549,7 @@ def resolve_launch_target(
 
     bare_path = cwd_path / token
     if bare_path.exists():
+        _validate_target_string(str(bare_path))
         return LaunchTarget(label=token, target=str(bare_path))
 
     if any(item.slug == token and item.disabled for item in items):
@@ -594,6 +595,19 @@ def resolve_saved_item_selector(
     raise OpenError(
         f"{action.title()} target not found: {token}. Run 'fx open' to list targets."
     )
+
+
+def _direct_launch_target(token: str) -> LaunchTarget:
+    """Build a launch target from a raw token.
+
+    Targets read from config are validated at load time by `_parse_item`, but a
+    token typed on the command line has never been through that gate. Validate
+    it here so every consumer of a resolved `LaunchTarget` — `fx open`,
+    `fx open copy`, and anything added later — can trust the target string.
+    """
+
+    _validate_target_string(token)
+    return LaunchTarget(label=token, target=token)
 
 
 def _launch_target_from_item(item: OpenItem) -> LaunchTarget:
@@ -1170,14 +1184,17 @@ def build_dispatch_plan(
     if target_kind == "url":
         if selected_app:
             raise OpenError("--app can only be used with local path targets")
-        dispatch_target = launch_target.target
         opener_name = selected_browser
     else:
         if selected_browser:
             raise OpenError("--browser can only be used with URL targets")
-        dispatch_target = _normalize_local_path(launch_target.target)
         opener_name = selected_app
 
+    # Resolved after the flag checks so a mismatched --browser/--app still
+    # reports the flag error rather than a path error.
+    dispatch_target = _concrete_target(launch_target.target, target_kind)
+
+    if target_kind != "url":
         if Path(dispatch_target).is_dir() and platform_value != "darwin":
             raise OpenError("Opening local directories is only supported on macOS")
 
@@ -1215,6 +1232,84 @@ def execute_dispatch_plan(plan: DispatchPlan) -> None:
     result = subprocess.run(plan.args, shell=False, check=False)  # nosec B603
     if result.returncode != 0:
         raise OpenError(f"Open command failed with exit code {result.returncode}")
+
+
+WAYLAND_CLIPBOARD = ("wl-copy", ())
+X11_CLIPBOARD = ("xclip", ("-selection", "clipboard"))
+
+
+def _concrete_target(target: str, target_kind: str) -> str:
+    """Turn a stored/typed target into the exact string to act on.
+
+    URLs are used verbatim; local paths get `~` expanded, symlinks resolved,
+    and existence checked.
+    """
+
+    if target_kind == "url":
+        return target
+    return _normalize_local_path(target)
+
+
+def resolve_concrete_target(launch_target: LaunchTarget) -> str:
+    """Return the concrete target `fx open` would dispatch.
+
+    Shared by dispatch and by `fx open copy` so the two cannot disagree about
+    what a selector actually points at — copying `./notes.txt` or `~/notes.txt`
+    verbatim would put a string on the clipboard that means something different
+    wherever it is pasted, and would report success for a path `fx open`
+    rejects.
+    """
+
+    return _concrete_target(
+        launch_target.target,
+        classify_target_kind(launch_target.target),
+    )
+
+
+def build_clipboard_plan(
+    platform_name: Optional[str] = None,
+    opener_lookup: Callable[[str], Optional[str]] = shutil.which,
+    environ: Optional[Mapping[str, str]] = None,
+) -> DispatchPlan:
+    """Build the clipboard-write command for this platform."""
+
+    platform_value = platform_name or sys.platform
+    if platform_value == "darwin":
+        return DispatchPlan(("pbcopy",))
+    if platform_value.startswith("win"):
+        return DispatchPlan(("clip",))
+    if platform_value.startswith("linux"):
+        env = environ if environ is not None else os.environ
+        # Wayland and X11 have separate clipboards and each tool only talks to
+        # its own display server. wl-clipboard is pulled in as a dependency on
+        # many X11 installs, so order by session type rather than by whichever
+        # binary happens to be present; fall back to the other when the
+        # preferred one is not installed.
+        candidates = (
+            (WAYLAND_CLIPBOARD, X11_CLIPBOARD)
+            if env.get("WAYLAND_DISPLAY")
+            else (X11_CLIPBOARD, WAYLAND_CLIPBOARD)
+        )
+        for name, extra_args in candidates:
+            found = opener_lookup(name)
+            if found:
+                return DispatchPlan((found, *extra_args))
+        raise OpenError("No clipboard tool found. Install wl-clipboard or xclip.")
+    raise OpenError(f"Unsupported platform for fx open copy: {platform_value}")
+
+
+def copy_to_clipboard(text: str, plan: Optional[DispatchPlan] = None) -> None:
+    """Write text to the system clipboard."""
+
+    resolved = plan or build_clipboard_plan()
+    result = subprocess.run(  # nosec B603
+        resolved.args,
+        input=text.encode(),
+        shell=False,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise OpenError(f"Clipboard command failed with exit code {result.returncode}")
 
 
 def request_ai_metadata(

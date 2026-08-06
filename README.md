@@ -282,6 +282,11 @@ fx o cc-usage
 # Filter the list before selecting
 fx open --tag usage 2
 
+# Copy a target to the clipboard instead of opening it
+fx open copy cc-usage
+fx open copy 3
+fx open copy https://example.com
+
 # Search saved targets by name, slug, tags, or target URL
 fx open search usage
 fx open search --tag live snooker
@@ -326,6 +331,15 @@ with `--tag` to search within a tag-filtered list. Search output preserves
 indices from the current visible list, so `fx open <index>` or
 `fx open --tag TAG <index>` can open the matching enabled target. Use `--all` or
 `--disabled` to include or isolate disabled entries.
+
+**Copy:** `fx open copy SELECTOR` writes the resolved target to the system
+clipboard instead of opening it. It accepts the same selectors as `fx open`
+(slug, 1-based index, or a direct URL/path) and honors `--tag` filtering.
+Clipboard backend: `pbcopy` on macOS and `clip` on Windows. On Linux the tool
+is chosen by session type — `wl-copy` when `WAYLAND_DISPLAY` is set, otherwise
+`xclip` — because Wayland and X11 keep separate clipboards and neither tool can
+reach the other's display server. If the preferred tool is not installed the
+other one is used; install `wl-clipboard` or `xclip` if neither is present.
 
 **AI metadata:** `fx open add TARGET --ai --yes` can call the external command in
 `FX_OPEN_AI_COMMAND`. The provider may propose `name`, `slug`, and `tags`; normal
