@@ -1321,7 +1321,45 @@ class TestClipboard(unittest.TestCase):
 
         self.assertEqual(plan.args, ("clip",))
 
-    def test_linux_prefers_wl_copy(self) -> None:
+    @staticmethod
+    def _both_installed(name: str) -> str:
+        return f"/usr/bin/{name}"
+
+    def test_linux_wayland_session_prefers_wl_copy(self) -> None:
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(
+            platform_name="linux",
+            opener_lookup=self._both_installed,
+            environ={"WAYLAND_DISPLAY": "wayland-0"},
+        )
+
+        self.assertEqual(plan.args, ("/usr/bin/wl-copy",))
+
+    def test_linux_x11_session_prefers_xclip_even_when_wl_copy_installed(self) -> None:
+        """wl-copy is commonly installed on X11 systems but cannot talk to X."""
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(
+            platform_name="linux",
+            opener_lookup=self._both_installed,
+            environ={"DISPLAY": ":0"},
+        )
+
+        self.assertEqual(plan.args, ("/usr/bin/xclip", "-selection", "clipboard"))
+
+    def test_linux_wayland_session_falls_back_when_wl_copy_missing(self) -> None:
+        from fx_bin.open_launcher import build_clipboard_plan
+
+        plan = build_clipboard_plan(
+            platform_name="linux",
+            opener_lookup=lambda name: "/usr/bin/xclip" if name == "xclip" else None,
+            environ={"WAYLAND_DISPLAY": "wayland-0"},
+        )
+
+        self.assertEqual(plan.args, ("/usr/bin/xclip", "-selection", "clipboard"))
+
+    def test_linux_x11_session_falls_back_when_xclip_missing(self) -> None:
         from fx_bin.open_launcher import build_clipboard_plan
 
         plan = build_clipboard_plan(
@@ -1329,6 +1367,7 @@ class TestClipboard(unittest.TestCase):
             opener_lookup=lambda name: (
                 "/usr/bin/wl-copy" if name == "wl-copy" else None
             ),
+            environ={"DISPLAY": ":0"},
         )
 
         self.assertEqual(plan.args, ("/usr/bin/wl-copy",))

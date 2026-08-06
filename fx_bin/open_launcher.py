@@ -1217,9 +1217,14 @@ def execute_dispatch_plan(plan: DispatchPlan) -> None:
         raise OpenError(f"Open command failed with exit code {result.returncode}")
 
 
+WAYLAND_CLIPBOARD = ("wl-copy", ())
+X11_CLIPBOARD = ("xclip", ("-selection", "clipboard"))
+
+
 def build_clipboard_plan(
     platform_name: Optional[str] = None,
     opener_lookup: Callable[[str], Optional[str]] = shutil.which,
+    environ: Optional[Mapping[str, str]] = None,
 ) -> DispatchPlan:
     """Build the clipboard-write command for this platform."""
 
@@ -1229,10 +1234,18 @@ def build_clipboard_plan(
     if platform_value.startswith("win"):
         return DispatchPlan(("clip",))
     if platform_value.startswith("linux"):
-        for name, extra_args in (
-            ("wl-copy", ()),
-            ("xclip", ("-selection", "clipboard")),
-        ):
+        env = environ if environ is not None else os.environ
+        # Wayland and X11 have separate clipboards and each tool only talks to
+        # its own display server. wl-clipboard is pulled in as a dependency on
+        # many X11 installs, so order by session type rather than by whichever
+        # binary happens to be present; fall back to the other when the
+        # preferred one is not installed.
+        candidates = (
+            (WAYLAND_CLIPBOARD, X11_CLIPBOARD)
+            if env.get("WAYLAND_DISPLAY")
+            else (X11_CLIPBOARD, WAYLAND_CLIPBOARD)
+        )
+        for name, extra_args in candidates:
             found = opener_lookup(name)
             if found:
                 return DispatchPlan((found, *extra_args))
