@@ -1,6 +1,151 @@
 # CHANGELOG
 
 
+## v2.12.0 (2026-08-07)
+
+### Bug Fixes
+
+- Address PR review comments ([#82](https://github.com/frankyxhl/fx_bin/pull/82),
+  [`7e6783c`](https://github.com/frankyxhl/fx_bin/commit/7e6783cfbcfd8e7d347b8688aeede08fae5555d1))
+
+Codex review finding 1 (open_launcher.py) — Linux clipboard backend was chosen by "first installed
+  binary wins", so an X11 session with wl-clipboard installed (a common dependency pull-in) always
+  selected wl-copy, which cannot reach an X display; copy_to_clipboard then raised on its non-zero
+  exit and never tried the usable xclip. Selection is now driven by WAYLAND_DISPLAY, falling back to
+  the other tool when the preferred one is absent. Four RED-first tests cover both session types in
+  both installed/missing combinations.
+
+Codex review finding 2 (missing AF artifact) — adds rules/FXB-2110-CHG-Add-FX-Open-Copy-Command.md
+  and regenerates the document index. Filed as a CHG rather than the suggested PRP: every sibling fx
+  open subcommand (FXB-2103 delete, FXB-2104 disable, FXB-2105 search) is recorded as a CHG under
+  the FXB-2100 launcher design, and this follows that precedent.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- Share target preparation between open and copy
+  ([#82](https://github.com/frankyxhl/fx_bin/pull/82),
+  [`fc30ee4`](https://github.com/frankyxhl/fx_bin/commit/fc30ee4bbaab791d6aadbc9d39a6b7eb907af5b6))
+
+Codex round-3 finding: local-path selectors still diverged. fx open normalized them inside
+  build_dispatch_plan via _normalize_local_path (expand ~, resolve, check existence), but fx open
+  copy never reaches dispatch, so it copied the raw token.
+
+Repro before the fix:
+
+$ fx open copy ./file.txt -> Copied ./file.txt (exit 0) $ fx open copy ./typo -> Copied ./typo (exit
+  0) $ fx open ./typo -> Error: Local path cannot be opened
+
+Saved entries had the same split: a target of "~/probe.txt" was copied unexpanded while fx open
+  opened the real file.
+
+The previous round put validation in resolve_launch_target, which fixed the control-character half
+  but left target *preparation* living inside build_dispatch_plan, where only dispatching callers
+  could reach it. That is the same defect one layer down, so this extracts _concrete_target() and
+  exposes resolve_concrete_target(); build_dispatch_plan and the copy path are now its only two
+  callers and cannot drift apart again.
+
+Normalization runs after the --browser/--app checks so a mismatched flag still reports the flag
+  error rather than a path error.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- Validate direct targets in resolve_launch_target
+  ([#82](https://github.com/frankyxhl/fx_bin/pull/82),
+  [`c7555ea`](https://github.com/frankyxhl/fx_bin/commit/c7555ea3c21f278f3c64ad29134b5bd17e66af8f))
+
+Codex round-2 finding: resolve_launch_target() returned raw tokens for direct URL/path selectors
+  without running _validate_target_string(). fx open happened to catch those downstream via
+  classify_target_kind() inside build_dispatch_plan(), but fx open copy never reaches dispatch, so a
+  target containing a newline was reported as copied, forged a second "Copied ..." line in the
+  output, and landed on the clipboard with the control character intact.
+
+Repro before the fix:
+
+$ fx open copy $'https://example.com\nCopied https://evil.test' Copied https://example.com Copied
+  https://evil.test exit=0
+
+Guarding the caller would leave the same trap for the next consumer of resolve_launch_target(), so
+  the validation goes in the resolver itself, via a _direct_launch_target() helper for the two
+  raw-token branches plus the bare-path branch. fx open behaviour is unchanged — it raises the
+  identical OpenError, only sooner.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+### Documentation
+
+- Fix misleading make check reference in FXB-2109 note
+  ([`9182cd6`](https://github.com/frankyxhl/fx_bin/commit/9182cd6cc86cbdb9a8da2642ce56e0054f678fce))
+
+Address Codex P2: the security-group note presented `make check` as an alternative, but `make check`
+  only runs lint/format/type + bandit — it skips `safety check` and pytest. For this SOP's
+  H-1.6/H-2.6 security gates that would silently drop the dependency vulnerability check and tests.
+  Replace with just `poetry install --with security` and an explicit caveat that `make check` is not
+  a substitute.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+- Note optional security group for bandit/safety commands
+  ([`eaab92f`](https://github.com/frankyxhl/fx_bin/commit/eaab92f95154de6fffcd8d6d9f808f15a0acf785))
+
+Follow-up to #76, which moved bandit/safety into the optional `security` dependency group. Update
+  the live instructional docs so the documented `poetry run bandit` / `poetry run safety check`
+  commands don't fail with "command not found" in the default `--with dev` env — each security block
+  now notes `poetry install --with security` is required first.
+
+Touched only current/live docs (README, CONTRIBUTING, CLAUDE.md, SKILL.md, AGENTS.md, the FXB-2109
+  review SOP, and the docs/testing guide). Historical records (changelog, session logs, completed
+  plans, openspec archive, decision-log) are point-in-time snapshots and left unchanged.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+### Features
+
+- **open**: Add 'fx o' as a shorthand alias for 'fx open'
+  ([`1714ebd`](https://github.com/frankyxhl/fx_bin/commit/1714ebd3863fb7a23314cf5ca88a53ff06542706))
+
+Register the existing open_command under a second name instead of declaring a duplicate command, so
+  all 15 options, the token subcommands (add/search/delete/disable/enable) and the help text stay in
+  exactly one place.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **open**: Add 'fx open copy SELECTOR' to copy a target to the clipboard
+  ([`0435f66`](https://github.com/frankyxhl/fx_bin/commit/0435f661b1fe21bdd678a9a700f42099edcae2f7))
+
+Resolves the selector through the existing resolve_launch_target, so slugs, 1-based indices, direct
+  URLs and local paths all work and --tag filtering still applies. Writes via the platform clipboard
+  tool with shell execution disabled: pbcopy on macOS, clip on Windows, wl-copy with an xclip
+  fallback on Linux.
+
+'copy' joins NEWLY_RESERVED_SLUGS so an existing saved entry named 'copy' fails with rename guidance
+  instead of silently shadowing the subcommand.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+### Testing
+
+- **open**: Cover 'fx o copy' now that the alias is on main
+  ([`7cf8254`](https://github.com/frankyxhl/fx_bin/commit/7cf8254692a1bb5baa16f175c348678937662b40))
+
+The o alias (#81) and copy (#82) were developed as independent branches, so neither could test the
+  combination. After rebasing onto the merged alias, 'fx o copy SELECTOR' is a real supported
+  invocation with no coverage; this pins it.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+
 ## v2.11.2 (2026-06-25)
 
 ### Bug Fixes
