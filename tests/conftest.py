@@ -9,6 +9,7 @@ import shutil
 from pathlib import Path
 import pytest
 from loguru import logger
+from tests.helpers import ExecvGuardViolation
 
 
 @pytest.fixture
@@ -168,7 +169,7 @@ def block_exec_shell(monkeypatch):
     """
 
     def _blocked(*args, **kwargs):
-        raise AssertionError(
+        raise ExecvGuardViolation(
             "os.execv called during a test — this would replace the pytest "
             "process and silently truncate the run. Pass --no-exec, or patch "
             "os.execv in the test."
