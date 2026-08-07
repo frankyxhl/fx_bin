@@ -117,18 +117,19 @@ tags = ["sports", "live"]
                 encoding="utf-8",
             )
 
-            result = self.runner.invoke(
-                cli, ["open", "--config", str(config_path), "search", "SNOOKER"]
-            )
+            with patch.dict(os.environ, {"COLUMNS": "200"}):
+                result = self.runner.invoke(
+                    cli, ["open", "--config", str(config_path), "search", "SNOOKER"]
+                )
 
-        self.assertEqual(result.exit_code, 0, result.output)
-        self.assertEqual(
-            table_cells(result.output.splitlines()[1])[:3],
-            ["#", "Slug", "Name"],
-        )
-        self.assertIn("| 2 | sportplus-snooker", result.output)
-        self.assertIn("https://en97.sportplus.live/snooker/", result.output)
-        self.assertNotIn("claude-usage", result.output)
+            self.assertEqual(result.exit_code, 0, result.output)
+            self.assertEqual(
+                table_cells(result.output.splitlines()[1])[:3],
+                ["#", "Slug", "Name"],
+            )
+            self.assertIn("| 2 | sportplus-snooker", result.output)
+            self.assertIn("https://en97.sportplus.live/snooker/", result.output)
+            self.assertNotIn("claude-usage", result.output)
 
     def test_search_requires_query(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -161,27 +162,28 @@ tags = ["deepseek", "usage"]
                 encoding="utf-8",
             )
 
-            result = self.runner.invoke(
-                cli,
-                [
-                    "open",
-                    "--config",
-                    str(config_path),
-                    "search",
-                    "--tag",
-                    "deepseek",
-                    "usage",
-                ],
-            )
+            with patch.dict(os.environ, {"COLUMNS": "200"}):
+                result = self.runner.invoke(
+                    cli,
+                    [
+                        "open",
+                        "--config",
+                        str(config_path),
+                        "search",
+                        "--tag",
+                        "deepseek",
+                        "usage",
+                    ],
+                )
 
-        self.assertEqual(result.exit_code, 0, result.output)
-        self.assertEqual(
-            table_cells(result.output.splitlines()[1])[:3],
-            ["#", "Slug", "Name"],
-        )
-        self.assertIn("deepseek-usage", result.output)
-        self.assertIn("https://platform.deepseek.com/usage", result.output)
-        self.assertNotIn("claude-usage", result.output)
+            self.assertEqual(result.exit_code, 0, result.output)
+            self.assertEqual(
+                table_cells(result.output.splitlines()[1])[:3],
+                ["#", "Slug", "Name"],
+            )
+            self.assertIn("deepseek-usage", result.output)
+            self.assertIn("https://platform.deepseek.com/usage", result.output)
+            self.assertNotIn("claude-usage", result.output)
 
     def test_search_no_match_outputs_helpful_message(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
