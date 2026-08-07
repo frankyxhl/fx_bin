@@ -1,7 +1,7 @@
 """Tests for backup_utils module.
 
 This module tests shared backup functionality that can be used
-across different modules (replace.py, replace_functional.py, etc.).
+across different modules (replace.py, etc.).
 """
 
 import os
