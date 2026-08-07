@@ -72,6 +72,10 @@ def test_property_replace_idempotent(temp_test_dir, search, replace, content):
     # Skip binary content
     assume("\x00" not in search and "\x00" not in replace and "\x00" not in content)
 
+    # Idempotency only holds when the replacement cannot reintroduce the
+    # search text (e.g. search='0', replace='00' doubles on every pass).
+    assume(search not in replace)
+
     # Create test file
     test_file = temp_test_dir / "test.txt"
     test_file.write_text(content)
