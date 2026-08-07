@@ -35,17 +35,7 @@ The system SHALL organize modules to avoid circular imports by extracting shared
 - **WHEN** organizing imports
 - **THEN** the function resides in a utilities module importable by all dependent modules
 
-### Requirement: Path Boundary Validation
+### Requirement: Path Boundary Validation (Retired 2026-08-08)
 
-File operation functions that accept user-provided paths SHALL support optional boundary validation to prevent path traversal attacks.
-
-#### Scenario: Path within allowed boundary
-- **GIVEN** `validate_file_access` with `allowed_base="/safe/dir"`
-- **WHEN** validating path `/safe/dir/subdir/file.txt`
-- **THEN** validation succeeds
-
-#### Scenario: Path traversal attempt blocked
-- **GIVEN** `validate_file_access` with `allowed_base="/safe/dir"`
-- **WHEN** validating path `/safe/dir/../../../etc/passwd`
-- **THEN** validation fails with `SecurityError`
+Retired with FXB-2112: the only implementation (`validate_file_access` in `replace_functional.py`) was unreachable from the CLI and removed. fx-bin is a local CLI operating on paths the user names explicitly; there is no server-style trust boundary requiring `allowed_base` confinement. If a network-facing or sandboxed mode is ever added, reintroduce boundary validation with it.
 
