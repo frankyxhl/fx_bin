@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Unit test package for py_fx_bin."""
+"""Test package for fx_bin."""
 
 import os
 import sys
