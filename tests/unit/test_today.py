@@ -608,9 +608,25 @@ class TestExecGuard(unittest.TestCase):
 
     def test_unpatched_execv_raises_instead_of_replacing_pytest(self):
         import os
+        from tests.helpers import ExecvGuardViolation
 
-        with self.assertRaisesRegex(AssertionError, "would replace the pytest"):
+        with self.assertRaisesRegex(ExecvGuardViolation, "would replace the pytest"):
             os.execv("/bin/echo", ["/bin/echo"])
+
+    def test_guard_escapes_the_cli_exception_handler(self):
+        """fx today wraps execv in `except Exception`; the guard must escape it."""
+        from click.testing import CliRunner
+        from fx_bin.cli import cli
+        from tests.helpers import ExecvGuardViolation
+        from pathlib import Path
+
+        runner = CliRunner()
+        with self.assertRaises(ExecvGuardViolation):
+            with runner.isolated_filesystem():
+                Path("testbase").mkdir()
+                runner.invoke(
+                    cli, ["today", "--base", "testbase"], catch_exceptions=False
+                )
 
 
 if __name__ == "__main__":
