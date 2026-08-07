@@ -603,5 +603,15 @@ class TestMainFunction(unittest.TestCase):
                 self.assertIn("Would create:", call_args)
 
 
+class TestExecGuard(unittest.TestCase):
+    """The autouse block_exec_shell fixture must fail any unpatched execv."""
+
+    def test_unpatched_execv_raises_instead_of_replacing_pytest(self):
+        import os
+
+        with self.assertRaisesRegex(AssertionError, "would replace the pytest"):
+            os.execv("/bin/echo", ["/bin/echo"])
+
+
 if __name__ == "__main__":
     unittest.main()

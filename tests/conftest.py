@@ -151,3 +151,27 @@ def mock_backup_operations(restore_fails=False, cleanup_fails=False):
             mock_unlink.side_effect = OSError("Cleanup failed")
 
         yield {"move": mock_move, "exists": mock_exists, "unlink": mock_unlink}
+
+
+@pytest.fixture(autouse=True)
+def block_exec_shell(monkeypatch):
+    """Fail loudly if a test reaches os.execv instead of replacing the runner.
+
+    `fx today` ends by calling os.execv to hand the user an interactive shell.
+    A test that invokes it without --no-exec (or without patching os.execv)
+    replaces the pytest process with a shell that exits 0, so the rest of the
+    suite never runs and the runner still reports success. Turning that into
+    an explicit failure keeps the gate honest.
+
+    Tests that intentionally exercise the exec path patch os.execv themselves;
+    that inner patch wins over this fixture.
+    """
+
+    def _blocked(*args, **kwargs):
+        raise AssertionError(
+            "os.execv called during a test — this would replace the pytest "
+            "process and silently truncate the run. Pass --no-exec, or patch "
+            "os.execv in the test."
+        )
+
+    monkeypatch.setattr("os.execv", _blocked)
