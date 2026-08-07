@@ -606,7 +606,17 @@ class TestMainFunction(unittest.TestCase):
 class TestExecGuard(unittest.TestCase):
     """The autouse block_exec_shell fixture must fail any unpatched execv."""
 
+    def _require_guard(self):
+        import os
+
+        if getattr(os.execv, "__name__", "") != "_blocked":
+            self.skipTest(
+                "block_exec_shell guard not active — direct unittest run "
+                "does not load tests/conftest.py; run under pytest"
+            )
+
     def test_unpatched_execv_raises_instead_of_replacing_pytest(self):
+        self._require_guard()
         import os
         from tests.helpers import ExecvGuardViolation
 
@@ -615,6 +625,7 @@ class TestExecGuard(unittest.TestCase):
 
     def test_guard_escapes_the_cli_exception_handler(self):
         """fx today wraps execv in `except Exception`; the guard must escape it."""
+        self._require_guard()
         from click.testing import CliRunner
         from fx_bin.cli import cli
         from tests.helpers import ExecvGuardViolation
