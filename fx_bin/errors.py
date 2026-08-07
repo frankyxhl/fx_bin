@@ -78,12 +78,6 @@ class FolderError(FxBinError):
     pass
 
 
-class UploadError(SecurityError):
-    """Errors during file upload operations."""
-
-    pass
-
-
 class SizeError(FxBinError):
     """Errors during size calculation."""
 
@@ -144,7 +138,6 @@ AppError = Union[
     PermissionError,
     ReplaceError,
     FolderError,
-    UploadError,
     SizeError,
     FilesError,
     FindError,
@@ -156,7 +149,6 @@ AppError = Union[
 # Note: FileOperationError covers both ReplaceError and IOError
 ReplaceErrors = Union[ReplaceError, IOError, PermissionError, FileOperationError]
 CommonErrors = Union[FolderError, IOError, PermissionError, FileOperationError]
-UploadErrors = Union[UploadError, SecurityError, ValidationError]
 OrganizeErrors = Union[
     OrganizeError,
     DateReadError,
