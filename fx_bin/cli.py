@@ -689,10 +689,7 @@ def open_command(
             raise click.ClickException("--all and --disabled cannot be combined")
         visibility = "disabled" if show_disabled else "all" if show_all else "enabled"
         if tokens and tokens[0] == "add":
-            if show_all or show_disabled:
-                raise click.ClickException(
-                    "--all and --disabled are invalid with 'fx open add'"
-                )
+            _reject_open_all_disabled("add", show_all, show_disabled)
             return _run_open_add(
                 tokens,
                 resolved_config,
@@ -764,11 +761,7 @@ def open_command(
                 ai,
             )
 
-        if name or slug or entry_tags or yes or ai:
-            raise click.ClickException(
-                "--name, --slug, --entry-tag, --yes, and --ai are only valid "
-                "with 'fx open add' or supported mutation commands"
-            )
+        _reject_open_metadata_flags(name, slug, entry_tags, yes, ai)
 
         config = open_launcher.load_config(resolved_config)
         if not tokens:
@@ -806,6 +799,43 @@ def open_command(
 cli.add_command(open_command, "o")
 
 
+def _reject_open_all_disabled(action: str, show_all: bool, show_disabled: bool) -> None:
+    if show_all or show_disabled:
+        raise click.ClickException(
+            f"--all and --disabled are invalid with 'fx open {action}'"
+        )
+
+
+def _reject_open_browser_app(
+    action: str, browser: Optional[str], app: Optional[str]
+) -> None:
+    if browser or app:
+        raise click.ClickException(
+            f"--browser and --app are invalid with 'fx open {action}'"
+        )
+
+
+def _reject_open_metadata_flags(
+    name: Optional[str],
+    slug: Optional[str],
+    entry_tags: Tuple[str, ...],
+    yes: bool = False,
+    ai: bool = False,
+    yes_allowed: bool = False,
+) -> None:
+    if yes_allowed:
+        if name or slug or entry_tags or ai:
+            raise click.ClickException(
+                "--name, --slug, --entry-tag, and --ai are only valid "
+                "with 'fx open add'"
+            )
+    elif name or slug or entry_tags or yes or ai:
+        raise click.ClickException(
+            "--name, --slug, --entry-tag, --yes, and --ai are only valid "
+            "with 'fx open add' or supported mutation commands"
+        )
+
+
 def _run_open_search(
     tokens: Tuple[str, ...],
     config_path: Path,
@@ -822,15 +852,8 @@ def _run_open_search(
     """Run the fx open search workflow."""
     from . import open_launcher
 
-    if browser or app:
-        raise click.ClickException(
-            "--browser and --app are invalid with 'fx open search'"
-        )
-    if name or slug or entry_tags or yes or ai:
-        raise click.ClickException(
-            "--name, --slug, --entry-tag, --yes, and --ai are only valid "
-            "with 'fx open add' or supported mutation commands"
-        )
+    _reject_open_browser_app("search", browser, app)
+    _reject_open_metadata_flags(name, slug, entry_tags, yes, ai)
     if len(tokens) != 2 or not tokens[1]:
         raise click.ClickException("Usage is fx open search QUERY")
 
@@ -868,19 +891,9 @@ def _run_open_copy(
     """Run the fx open copy workflow."""
     from . import open_launcher
 
-    if show_all or show_disabled:
-        raise click.ClickException(
-            "--all and --disabled are invalid with 'fx open copy'"
-        )
-    if browser or app:
-        raise click.ClickException(
-            "--browser and --app are invalid with 'fx open copy'"
-        )
-    if name or slug or entry_tags or yes or ai:
-        raise click.ClickException(
-            "--name, --slug, --entry-tag, --yes, and --ai are only valid "
-            "with 'fx open add' or supported mutation commands"
-        )
+    _reject_open_all_disabled("copy", show_all, show_disabled)
+    _reject_open_browser_app("copy", browser, app)
+    _reject_open_metadata_flags(name, slug, entry_tags, yes, ai)
     if len(tokens) != 2 or not tokens[1]:
         raise click.ClickException("Usage is fx open copy SELECTOR")
 
@@ -971,14 +984,8 @@ def _run_open_delete(
     """Run the fx open delete workflow."""
     from . import open_launcher
 
-    if browser or app:
-        raise click.ClickException(
-            "--browser and --app are invalid with 'fx open delete'"
-        )
-    if name or slug or entry_tags or ai:
-        raise click.ClickException(
-            "--name, --slug, --entry-tag, and --ai are only valid with 'fx open add'"
-        )
+    _reject_open_browser_app("delete", browser, app)
+    _reject_open_metadata_flags(name, slug, entry_tags, ai=ai, yes_allowed=True)
     if len(tokens) != 2:
         raise click.ClickException("Usage is fx open delete SELECTOR")
     if not yes and not sys.stdin.isatty():
@@ -1031,18 +1038,9 @@ def _run_open_toggle(
     from . import open_launcher
 
     action = tokens[0]
-    if show_all or show_disabled:
-        raise click.ClickException(
-            f"--all and --disabled are invalid with 'fx open {action}'"
-        )
-    if browser or app:
-        raise click.ClickException(
-            f"--browser and --app are invalid with 'fx open {action}'"
-        )
-    if name or slug or entry_tags or ai:
-        raise click.ClickException(
-            "--name, --slug, --entry-tag, and --ai are only valid with 'fx open add'"
-        )
+    _reject_open_all_disabled(action, show_all, show_disabled)
+    _reject_open_browser_app(action, browser, app)
+    _reject_open_metadata_flags(name, slug, entry_tags, ai=ai, yes_allowed=True)
     if len(tokens) != 2:
         raise click.ClickException(f"Usage is fx open {action} SELECTOR")
     if not yes and not sys.stdin.isatty():
