@@ -134,7 +134,7 @@ class TestTodayCLI(unittest.TestCase):
         mock_datetime.strftime = datetime.strftime
 
         with self.runner.isolated_filesystem():
-            result = self.runner.invoke(cli, ["today", "--verbose"])
+            result = self.runner.invoke(cli, ["today", "--verbose", "--no-exec"])
 
             self.assertEqual(result.exit_code, 0)
             self.assertIn("Creating directory:", result.output)
@@ -250,7 +250,7 @@ class TestTodayCommandShortOptions(unittest.TestCase):
         mock_datetime.strftime = datetime.strftime
 
         with self.runner.isolated_filesystem():
-            result = self.runner.invoke(cli, ["today", "-v"])
+            result = self.runner.invoke(cli, ["today", "-v", "--no-exec"])
 
             self.assertEqual(result.exit_code, 0)
             self.assertIn("Creating directory:", result.output)
