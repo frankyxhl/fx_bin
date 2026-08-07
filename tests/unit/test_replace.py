@@ -7,6 +7,7 @@ Uses pytest fixtures for better test isolation and readability.
 import os
 from pathlib import Path
 from unittest.mock import patch, MagicMock
+import click
 import pytest
 from click.testing import CliRunner
 
@@ -22,7 +23,7 @@ from loguru import logger
 
 logger.remove()
 
-from fx_bin.replace import work, main
+from fx_bin.replace import work, main, replace_files
 
 # ============================================================================
 # Basic Replacement Tests (formerly TestReplaceWork)
@@ -398,3 +399,72 @@ def test_given_nonexistent_file_when_check_binary_then_treated_as_binary(temp_te
 
     # THEN treated as binary (safe default for unreadable files)
     assert is_binary is True
+
+
+# ============================================================================
+# Non-UTF-8 Text File Tests
+# ============================================================================
+
+
+def test_replace_files_reports_non_utf8_file_cleanly(temp_test_dir):
+    """Test that a latin-1 text file (passes null-byte binary check but
+    fails UTF-8 decoding) is reported as a clean ClickException naming the
+    file, instead of a raw UnicodeDecodeError."""
+    # GIVEN a latin-1 encoded text file (not valid UTF-8)
+    bad_file = temp_test_dir / "bad.txt"
+    original_bytes = b"caf\xe9 latin-1 caf\xe9"
+    bad_file.write_bytes(original_bytes)
+
+    # WHEN replacing text across it
+    with pytest.raises(click.ClickException) as exc_info:
+        replace_files("caf", "bar", [str(bad_file)])
+
+    # THEN the error names the file and mentions UTF-8
+    message = str(exc_info.value)
+    assert str(bad_file) in message
+    assert "UTF-8" in message
+
+    # THEN the file's bytes are unchanged
+    assert bad_file.read_bytes() == original_bytes
+
+    # THEN no leftover backup or temp files remain
+    leftovers = list(temp_test_dir.glob("*.backup"))
+    leftovers += list(temp_test_dir.glob("*.transaction_backup"))
+    leftovers += list(temp_test_dir.glob(".tmp_replace_*"))
+    assert leftovers == []
+
+
+def test_replace_files_transaction_rolls_back_good_file_on_non_utf8_sibling(
+    temp_test_dir,
+):
+    """Test that a good UTF-8 file processed before a non-UTF-8 sibling is
+    rolled back to its original content via the transaction backup."""
+    # GIVEN a good UTF-8 file and a latin-1 sibling, both containing the search text
+    good_file = temp_test_dir / "good.txt"
+    good_original = "caf latte"
+    good_file.write_text(good_original)
+
+    bad_file = temp_test_dir / "bad.txt"
+    bad_original_bytes = b"caf\xe9 latin-1 caf\xe9"
+    bad_file.write_bytes(bad_original_bytes)
+
+    # WHEN replacing text across both (good file processed first)
+    with pytest.raises(click.ClickException) as exc_info:
+        replace_files("caf", "bar", [str(good_file), str(bad_file)])
+
+    # THEN the error names the bad file and mentions UTF-8
+    message = str(exc_info.value)
+    assert str(bad_file) in message
+    assert "UTF-8" in message
+
+    # THEN the good file was rolled back to its original content
+    assert good_file.read_text() == good_original
+
+    # THEN the bad file's bytes are unchanged
+    assert bad_file.read_bytes() == bad_original_bytes
+
+    # THEN no leftover backup or temp files remain for either file
+    leftovers = list(temp_test_dir.glob("*.backup"))
+    leftovers += list(temp_test_dir.glob("*.transaction_backup"))
+    leftovers += list(temp_test_dir.glob(".tmp_replace_*"))
+    assert leftovers == []

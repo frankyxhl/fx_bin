@@ -247,6 +247,20 @@ class TestReplaceCommand(unittest.TestCase):
             self.assertEqual(args[1], "new")
             self.assertIn("test.txt", args[2])
 
+    def test_replace_command_with_non_utf8_file_reports_clean_error(self):
+        """Test 'fx replace' on a non-UTF-8 (latin-1) text file reports a
+        clean error naming the file, not a raw traceback."""
+        with self.runner.isolated_filesystem():
+            with open("bad.txt", "wb") as f:
+                f.write(b"caf\xe9 latin-1 caf\xe9")
+
+            result = self.runner.invoke(cli, ["replace", "caf", "bar", "bad.txt"])
+
+            self.assertNotEqual(result.exit_code, 0)
+            self.assertIn("UTF-8", result.output)
+            self.assertIn("bad.txt", result.output)
+            self.assertNotIn("Traceback", result.output)
+
 
 class TestCommandHelp(unittest.TestCase):
     """Test help messages for each command."""

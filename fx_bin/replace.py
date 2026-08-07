@@ -141,7 +141,14 @@ def replace_files(search_text: str, replace_text: str, filenames: Sequence[str])
         # Phase 3: Process all files
         for f in filenames:
             L.debug(f"Replacing {search_text} with {replace_text} in {f}")
-            work(search_text, replace_text, f)
+            try:
+                work(search_text, replace_text, f)
+            except UnicodeDecodeError as e:
+                msg = (
+                    f"{f} is not valid UTF-8 text (fx replace only handles UTF-8): {e}"
+                )
+                L.error(msg)
+                raise click.ClickException(msg) from e
 
         # Phase 4: Success - remove all transaction backups
         for backup_path in backups.values():
