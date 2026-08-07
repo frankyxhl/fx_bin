@@ -246,10 +246,18 @@ def test_property_replace_line_count_preserved(temp_test_dir, search, replace, c
 @pytest.mark.hypothesis
 @given(
     search=st.text(
-        alphabet=st.characters(blacklist_characters="\r\n\x00"), min_size=1, max_size=10
+        alphabet=st.characters(
+            blacklist_characters="\r\n\x00", blacklist_categories=("Cs",)
+        ),
+        min_size=1,
+        max_size=10,
     ),
     content=st.text(
-        alphabet=st.characters(blacklist_characters="\r\x00"), min_size=10, max_size=100
+        alphabet=st.characters(
+            blacklist_characters="\r\x00", blacklist_categories=("Cs",)
+        ),
+        min_size=10,
+        max_size=100,
     ),
 )
 @settings(max_examples=50, suppress_health_check=[HealthCheck.function_scoped_fixture])
