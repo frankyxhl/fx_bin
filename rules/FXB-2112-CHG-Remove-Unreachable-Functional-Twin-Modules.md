@@ -88,7 +88,10 @@ verifying stale instructions.
   `tests/` (4 files deleted, 1 directory removed, 3 files trimmed/edited),
   `CLAUDE.md` (paths, runner list, unittest examples, ROP example),
   `benchmarks/` (entire directory deleted — comparison harness had nothing
-  left to compare).
+  left to compare), `openspec/specs/code-structure/spec.md` (the "Path
+  Boundary Validation" requirement, whose only implementation was
+  `replace_functional.validate_file_access`, marked Retired rather than
+  silently removed).
 - **User-facing behavior:** none — none of the deleted code was reachable
   from the `fx` CLI.
 - **Compatibility risk:** none. No public API surface depended on the
