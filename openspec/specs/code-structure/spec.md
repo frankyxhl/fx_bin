@@ -35,7 +35,8 @@ The system SHALL organize modules to avoid circular imports by extracting shared
 - **WHEN** organizing imports
 - **THEN** the function resides in a utilities module importable by all dependent modules
 
-### Requirement: Path Boundary Validation (Retired 2026-08-08)
+## Retired Requirements
+
+### Path Boundary Validation (retired 2026-08-08)
 
 Retired with FXB-2112: the only implementation (`validate_file_access` in `replace_functional.py`) was unreachable from the CLI and removed. fx-bin is a local CLI operating on paths the user names explicitly; there is no server-style trust boundary requiring `allowed_base` confinement. If a network-facing or sandboxed mode is ever added, reintroduce boundary validation with it.
-
