@@ -72,10 +72,6 @@ def test_property_replace_idempotent(temp_test_dir, search, replace, content):
     # Skip binary content
     assume("\x00" not in search and "\x00" not in replace and "\x00" not in content)
 
-    # Idempotency only holds when the replacement cannot reintroduce the
-    # search text (e.g. search='0', replace='00' doubles on every pass).
-    assume(search not in replace)
-
     # Create test file
     test_file = temp_test_dir / "test.txt"
     test_file.write_text(content)
@@ -83,6 +79,11 @@ def test_property_replace_idempotent(temp_test_dir, search, replace, content):
     # First replacement
     work(search, replace, str(test_file))
     result_once = test_file.read_text()
+
+    # Idempotency is only guaranteed when the first pass eliminated every
+    # occurrence: a replacement can reintroduce the search text ('0'->'00')
+    # or leave an overlapping occurrence behind ('aa'->'a' on 'aaa').
+    assume(search not in result_once)
 
     # Second replacement (on already replaced content)
     test_file.write_text(result_once)
