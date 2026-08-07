@@ -8,8 +8,7 @@ import sys
 import tempfile
 import shutil
 import os
-from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from datetime import datetime
 from click.testing import CliRunner
 
@@ -154,9 +153,7 @@ class TestTodayCLI(unittest.TestCase):
             self.assertIn("Would create:", result.output)
             self.assertIn("Downloads/20250906", result.output)
 
-            # Verify directory was NOT created
-            downloads_path = Path.home() / "Downloads" / "20250906"
-            # We can't actually check if it was created in isolated filesystem
+            # We can't actually check if directory was created in isolated filesystem
             # but the dry-run logic is tested in unit tests
 
     @patch("fx_bin.today.datetime")
@@ -281,8 +278,8 @@ class TestTodayCommandErrorHandling(unittest.TestCase):
             "",  # Empty string is definitely invalid
         ]
 
-        # Note: '%Z%Q' is technically valid (produces 'Q' as %Q passes through literally)
-        # so it's not included in invalid formats
+        # Note: '%Z%Q' is technically valid (produces 'Q' as %Q passes
+        # through literally) so it's not included in invalid formats
 
         for fmt in invalid_formats:
             with self.subTest(format=fmt):
@@ -290,7 +287,10 @@ class TestTodayCommandErrorHandling(unittest.TestCase):
                 self.assertNotEqual(result.exit_code, 0)
 
     def test_security_malicious_date_formats_rejected(self):
-        """Test that CLI rejects malicious date formats that could cause path traversal."""
+        """Test that CLI rejects malicious date formats.
+
+        Malicious formats could cause path traversal.
+        """
         malicious_formats = [
             "%Y../../..",  # Basic traversal
             "%Y/%m/../..",  # Multiple level traversal
@@ -354,7 +354,7 @@ class TestTodayExecShell(unittest.TestCase):
                 patch("fx_bin.today.ensure_directory_exists", return_value=True),
                 patch("fx_bin.today.detect_shell_executable", return_value="/bin/zsh"),
                 patch("os.chdir"),
-                patch("os.execv", side_effect=SystemExit(0)) as mock_execv,
+                patch("os.execv", side_effect=SystemExit(0)),
             ):  # Mock execution
 
                 # Test default behavior - should try to exec shell
@@ -367,8 +367,9 @@ class TestTodayExecShell(unittest.TestCase):
                     # This is expected if execv is called
                     pass
 
-                # The key is that detect_shell_executable should be called for default behavior
-                # (This indicates shell execution path was taken)
+                # The key is that detect_shell_executable should be called
+                # for default behavior (This indicates shell execution path was
+                # taken)
 
     def test_today_no_exec_flag(self):
         """Test fx today --no-exec doesn't start shell."""
