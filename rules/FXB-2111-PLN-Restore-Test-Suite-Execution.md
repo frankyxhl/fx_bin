@@ -333,7 +333,7 @@ Each of these is an independent subsystem and gets its own plan when scheduled:
 
 ## Status
 
-Tasks 2, 3, and 4 are complete on branch fix/test-suite-truncation (PR #83). Task 2's audit fixed a second test (`test_short_verbose_flag`). An unplanned fix excluded Unicode surrogates from custom hypothesis alphabets in `tests/test_property_based.py`. Tasks 1 and 5 remain open.
+Tasks 2, 3, and 4 are complete on branch fix/test-suite-truncation (PR #83). Task 2's audit fixed a second test (`test_short_verbose_flag`). An unplanned fix excluded Unicode surrogates from custom hypothesis alphabets in `tests/test_property_based.py`. Task 1 is now complete on this branch: guard fixture `block_exec_shell` added to `conftest.py` with self-test in `TestExecGuard`, and pre-existing flake8 debt cleared in `test_today_cli.py`. Task 5 remains open.
 
 ---
 
@@ -341,4 +341,5 @@ Tasks 2, 3, and 4 are complete on branch fix/test-suite-truncation (PR #83). Tas
 
 | Date | Change | By |
 |------|--------|----|
+| 2026-08-07 | Task 1 complete: block_exec_shell guard + self-test; flake8 debt cleared in test_today_cli | Claude Code |
 | 2026-08-07 | Converted from docs/superpowers plan per PR #83 review — repo planning docs belong in AF rules/ | Claude Code |
