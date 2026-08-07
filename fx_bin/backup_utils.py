@@ -1,7 +1,7 @@
 """Shared backup utilities for file operations.
 
 This module provides reusable backup functionality that can be used
-across different modules (replace.py, replace_functional.py, etc.).
+across different modules (replace.py, etc.).
 
 Functions follow functional patterns with IOResult for error handling.
 """
