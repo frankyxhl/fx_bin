@@ -23,7 +23,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-FX bin is a Python utility collection providing command-line tools for file operations, including file counting, size analysis, finding files, text replacement, and a simple upload server. The project is packaged using Poetry and distributed via PyPI as `fx-bin`.
+FX bin is a Python utility collection providing command-line tools for file operations, including file counting, size analysis, finding files, text replacement, and file organization. The project is packaged using Poetry and distributed via PyPI as `fx-bin`.
 
 ## Development Commands
 
@@ -54,17 +54,17 @@ poetry run pytest --no-cov
 poetry run pytest --cov=fx_bin --cov-report=html --cov-report=term-missing
 
 # Run only passing core tests
-poetry run pytest tests/test_size.py tests/test_files.py tests/test_find_files.py tests/test_replace.py -v
+poetry run pytest tests/unit/test_size.py tests/unit/test_files.py tests/unit/test_find_files.py tests/unit/test_replace.py -v
 
 # Run security tests only (CRITICAL - must pass)
-poetry run pytest tests/test_*security*.py -v --no-cov
+poetry run pytest tests/security/ -v --no-cov
 
 # Run specific test file
-poetry run pytest tests/test_replace_safety.py -v --no-cov
-poetry run pytest tests/test_filter.py -v --no-cov
+poetry run pytest tests/security/test_replace_safety.py -v --no-cov
+poetry run pytest tests/unit/test_filter.py -v --no-cov
 
 # Run specific test
-poetry run pytest tests/test_upload_server_security.py::TestUploadServerSecurity::test_path_traversal_attack_blocked -v
+poetry run pytest tests/security/test_replace_safety.py::TestMainFunctionErrorHandling::test_main_function_exception_handling -v
 
 # Run tests in parallel
 poetry run pytest -n auto --no-cov
@@ -91,10 +91,13 @@ python tests/runners/run_tdd_tests.py
 
 # Using unittest via Poetry
 poetry run python -m unittest discover tests
-poetry run python -m unittest tests.test_size
+poetry run python -m unittest tests.unit.test_size
+# Note: `unittest discover tests` fails at collection because tests/bdd/* uses
+# pytest_bdd's scenarios(), which requires pytest's config stack. pytest is the
+# supported runner.
 
 # Quick test for basic functionality
-poetry run python -m unittest tests.test_size tests.test_files tests.test_replace tests.test_find_files -v
+poetry run python -m unittest tests.unit.test_size tests.unit.test_files tests.unit.test_replace tests.unit.test_find_files -v
 ```
 
 ### Code Quality
@@ -286,27 +289,17 @@ Railway-Oriented Programming treats success and failure as two parallel "tracks"
 - `bind()`: Continue on success track, short-circuit on failure
 - `lash()`: Error recovery - handle failures and potentially return to success track
 
-**Example from replace_functional.py:**
+**Illustrative example** (generic pipeline shape; not tied to a specific module):
 ```python
 from returns.pipeline import flow
 from returns.pointfree import bind, lash
 
-def work_functional(search_text: str, replace_text: str, filename: str) -> IOResult[None, ReplaceError]:
-    """Replace text with automatic backup/restore on failure."""
-    # Pure validation first
-    validation = validate_file_access(filename)
-    if isinstance(validation, Failure):
-        return IOResult.from_failure(validation.failure())
-
-    real_path = validation.unwrap()
-    context = ReplaceContext(search_text, replace_text)
-
-    # Functional pipeline: create backup -> perform replacement -> cleanup
-    replacement_pipeline = _make_replacement_pipeline(context)
-
+def do_something(input_path: str) -> IOResult[None, SomeError]:
+    """Illustrative use of flow/bind/lash to compose an operation with recovery."""
     return flow(
-        create_backup(real_path),          # Create backup (IOResult)
-        bind(replacement_pipeline),        # Replace on success, auto-restore on failure
+        read_input(input_path),      # IOResult[Data, SomeError]
+        bind(process),               # Continue on success track
+        lash(recover_from_error),    # Recover on failure track
     )
 ```
 

@@ -5,7 +5,7 @@ TBD - created by archiving change refactor-functional-and-testing. Update Purpos
 ## Requirements
 ### Requirement: Shared Backup Utilities
 
-The system SHALL provide a `backup_utils` module with reusable backup operations (`create_backup`, `restore_backup`, `cleanup_backup`) to eliminate duplication between `replace.py` and `replace_functional.py`.
+The system SHALL provide a `backup_utils` module with reusable backup operations (`create_backup`, `restore_backup`, `cleanup_backup`) providing shared backup/restore helpers used by `replace.py`.
 
 #### Scenario: Creating a backup before modification
 - **GIVEN** a file path to modify
