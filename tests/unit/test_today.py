@@ -303,15 +303,16 @@ class TestDetectShell(unittest.TestCase):
         from unittest.mock import patch
 
         with patch.dict(os.environ, {}, clear=True):
-            with patch("os.path.isfile") as mock_isfile:
-                # Mock that zsh exists but bash doesn't
-                def side_effect(path):
-                    return path == "/bin/zsh"
+            with patch("shutil.which", return_value=None):
+                with patch("os.path.isfile") as mock_isfile:
+                    # Mock that zsh exists but bash doesn't
+                    def side_effect(path):
+                        return path == "/bin/zsh"
 
-                mock_isfile.side_effect = side_effect
+                    mock_isfile.side_effect = side_effect
 
-                result = detect_shell_executable()
-                self.assertEqual(result, "/bin/zsh")
+                    result = detect_shell_executable()
+                    self.assertEqual(result, "/bin/zsh")
 
     def test_detect_shell_windows(self):
         """Test Windows shell detection."""
