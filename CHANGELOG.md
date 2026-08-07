@@ -1,6 +1,184 @@
 # CHANGELOG
 
 
+## v2.12.1 (2026-08-07)
+
+### Bug Fixes
+
+- **replace**: Report non-UTF-8 files cleanly instead of raw UnicodeDecodeError
+  ([`6d04f71`](https://github.com/frankyxhl/fx_bin/commit/6d04f7119c448d3bbf299f43e69e11b74c2611c0))
+
+_is_binary_file only detects null bytes, so text in other encodings (e.g. latin-1) passed the check
+  and crashed the read loop with a bare codec error naming neither the file nor the actual problem.
+  The Phase 3 loop now converts UnicodeDecodeError to the same click.ClickException style Phase 1
+  validation uses, naming the file; all existing rollback paths (per-file backup and transaction
+  restore) are unchanged and covered by the new tests.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+### Chores
+
+- **tests**: Clear pre-existing flake8 debt in test_today_cli
+  ([`fc304ce`](https://github.com/frankyxhl/fx_bin/commit/fc304ce1e79f639d355454803891268fee9112fc))
+
+Fix 6 violations: - F401: Remove unused MagicMock import - F401/F811: Remove unused top-level Path
+  import - F841 (line 158): Remove unused downloads_path assignment - F841 (line 357): Remove unused
+  mock_execv capture - E501 (3 lines): Wrap long comments and docstring
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+### Documentation
+
+- Add plan to restore full test-suite execution
+  ([`069a01c`](https://github.com/frankyxhl/fx_bin/commit/069a01c9474b54a5488c2b5e7d8700d6d61501d7))
+
+The suite silently exits at ~39%: fx today execs a shell in test_today_command_verbose_mode,
+  replacing the pytest process with one that returns 0, so CI reports green with most tests never
+  run.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- Move test-suite plan into AF rules as FXB-2111
+  ([#83](https://github.com/frankyxhl/fx_bin/pull/83),
+  [`786c982`](https://github.com/frankyxhl/fx_bin/commit/786c9820b11f278fae082b00d4f6b4a7bf201106))
+
+Review finding on PR #83: planning documents route through the Alfred system in this repo
+  (AGENTS.md); a docs/superpowers plan introduces a parallel planning surface. Converted verbatim,
+  with a status section recording what is already complete.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **FXB-2111**: Record Task 1 completion
+  ([`b9d1ecb`](https://github.com/frankyxhl/fx_bin/commit/b9d1ecb560fedc27178ecd872b7e72eddea09353))
+
+Task 1 is now complete: block_exec_shell guard fixture added to conftest.py with permanent self-test
+  in TestExecGuard to verify the guard works. Also cleared pre-existing flake8 debt in
+  test_today_cli.py (F401, F841, E501).
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+### Testing
+
+- Fail loudly when a test reaches os.execv
+  ([`f15a7b4`](https://github.com/frankyxhl/fx_bin/commit/f15a7b4e0d10a7a9d6dd9b5adbbf2ace79aa528e))
+
+fx today execs a shell as its final step. A test invoking it without --no-exec replaced the pytest
+  process with a shell that exits 0, so the rest of the suite never ran and pytest still reported
+  success. This autouse fixture turns that silent truncation into an explicit failure.
+
+Also add self-test in TestExecGuard to verify the guard blocks unpatched execv calls with the
+  expected error message.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- Guard raises BaseException so CLI handlers cannot swallow it
+  ([`722f7eb`](https://github.com/frankyxhl/fx_bin/commit/722f7ebe42f561300ff8b215c5dbedd9b552f6f6))
+
+fx_bin/today.py wraps os.execv in `except Exception`, which caught the guard's AssertionError and
+  converted it to exit code 1 — an offending test that ignores exit codes would still pass.
+  ExecvGuardViolation derives from BaseException, escaping both the CLI handler and CliRunner, so
+  the test errors loudly. Second self-test proves the end-to-end escape through the real `fx today`
+  code path.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- Skip exec-guard self-tests when conftest guard is absent
+  ([`0909f59`](https://github.com/frankyxhl/fx_bin/commit/0909f59a82dbd42821e9929e5afa0fc5d1e05f52))
+
+Direct unittest runs (python -m unittest, documented in CLAUDE.md) never load tests/conftest.py, so
+  both TestExecGuard self-tests called the real os.execv — the CLI one replaced the unittest process
+  with an actual shell exiting 0, reintroducing silent truncation on that path. Both tests now skip
+  unless the guard's _blocked function is installed.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **open**: Pin terminal width in the search table tests
+  ([`2c9c0cb`](https://github.com/frankyxhl/fx_bin/commit/2c9c0cbbf999929bb80a0b9797d33c165f2ce0c5))
+
+Both tests assert on a full URL that _fit_column_widths truncates below about 120 columns, so they
+  passed or failed depending on the developer's window size.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **property**: Assume on the intermediate result, not the inputs
+  ([`a2a8df8`](https://github.com/frankyxhl/fx_bin/commit/a2a8df8372868844aa4e6fc1673aa57f19bd9ca7))
+
+The input-side filter `search not in replace` missed overlapping occurrences:
+  'aaa'.replace('aa','a') leaves 'aa', which a second pass still rewrites. The necessary and
+  sufficient condition for idempotency is that the first pass eliminated every occurrence, so assume
+  on result_once instead.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **property**: Exclude surrogates from custom hypothesis alphabets
+  ([`6225253`](https://github.com/frankyxhl/fx_bin/commit/622525375a69e5ec11e0fc2d313952517a60eed8))
+
+Bare st.text() excludes the Cs category by default, but this test's custom st.characters alphabets
+  did not, so hypothesis generated a lone surrogate (\ud800) that write_text() cannot encode to
+  UTF-8 — the test crashed on its own input before ever calling fx_bin code. This failure was never
+  seen before because the file sorts after tests/integration/test_today_cli.py, where the suite
+  previously died.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **property**: Idempotency only holds when replace cannot reintroduce search
+  ([`ebcfd1a`](https://github.com/frankyxhl/fx_bin/commit/ebcfd1ab63fc1576d9b71055a9da10f12564a910))
+
+The invariant replace(replace(x)) == replace(x) is false whenever the replacement contains the
+  search text — '0'→'00' doubles on every pass. Hypothesis found the counterexample once the suite
+  actually ran this file (it sorts after the old truncation point). Filter it with assume, alongside
+  the existing null-byte assume.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **today**: Mock shutil.which in shell-fallback detection tests
+  ([`52e4c40`](https://github.com/frankyxhl/fx_bin/commit/52e4c40b7e54b30eedc6904b3b4b222a9bd6b72e))
+
+The test cleared env and mocked os.path.isfile to exercise the fixed-path fallback, but
+  detect_shell_executable tries shutil.which first — unmocked, so the result depended on which
+  shells the host has: zsh on macOS made it pass coincidentally, Ubuntu CI returned bash and failed.
+  Never seen before because tests/unit sorts after the file where the suite previously died.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **today**: Pass --no-exec so the verbose test stops killing the run
+  ([`7acdb7a`](https://github.com/frankyxhl/fx_bin/commit/7acdb7a381be54a8c6b6757348255d30e985abe0))
+
+test_today_command_verbose_mode invoked 'fx today --verbose' with no --no-exec and no os.execv
+  patch, so exec_shell stayed True and the pytest process was replaced at test 10 of 29. The test
+  only asserts on verbose output, so --no-exec is sufficient.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+
 ## v2.12.0 (2026-08-07)
 
 ### Bug Fixes
