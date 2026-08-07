@@ -20,6 +20,7 @@
 | 2108 | CHG | Add macOS Directory Support to FX Open | Completed |
 | 2109 | SOP | Code Review AI Assisted Quick Reference | Active |
 | 2110 | CHG | Add FX Open Copy Command | Completed |
+| 2111 | PLN | Restore Test Suite Execution | In Progress |
 
 ---
 

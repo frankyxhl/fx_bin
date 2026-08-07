@@ -1,6 +1,13 @@
-# Restore Test Suite Execution Implementation Plan
+# PLN-2111: Restore Test Suite Execution
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+**Applies to:** FXB project
+**Last updated:** 2026-08-07
+**Last reviewed:** 2026-08-07
+**Status:** Active
+**Related:** COR-1500, GitHub PR #83
+**Requested by:** Frank Xu
+
+---
 
 **Goal:** Make `pytest` run the whole suite to completion instead of silently exiting at ~39%, and make the two environment-dependent tests deterministic, so CI's green tick means something.
 
@@ -321,3 +328,17 @@ Each of these is an independent subsystem and gets its own plan when scheduled:
 3. **Functional/imperative twin modules** — establish which of `replace.py` / `replace_functional.py`, `common.py` / `common_functional.py` are reachable from the CLI, and delete or document the rest.
 4. **Stale `CLAUDE.md` test paths** — the documented commands reference `tests/test_size.py`; the files live in `tests/unit/`.
 5. **Release pipeline cannot push to `main`** — three active rulesets (`protect main`, `main-pr-gates`, `main-owner-merge-only`) all have empty bypass lists; either add bypasses or restructure the release so it never pushes to `main`.
+
+---
+
+## Status
+
+Tasks 2, 3, and 4 are complete on branch fix/test-suite-truncation (PR #83). Task 2's audit fixed a second test (`test_short_verbose_flag`). An unplanned fix excluded Unicode surrogates from custom hypothesis alphabets in `tests/test_property_based.py`. Tasks 1 and 5 remain open.
+
+---
+
+## Change History
+
+| Date | Change | By |
+|------|--------|----|
+| 2026-08-07 | Converted from docs/superpowers plan per PR #83 review — repo planning docs belong in AF rules/ | Claude Code |
