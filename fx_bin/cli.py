@@ -1332,9 +1332,6 @@ def organize(
         # --yes flag: auto-confirm
         if not quiet:
             click.echo(f"Organizing files from {source} to {context.output_dir}...")
-    elif not sys.stdin.isatty():
-        # Non-TTY stdin: auto-confirm (piped input)
-        pass
 
     # Handle ASK mode: check for disk conflicts and prompt before execution
     import os as os_module

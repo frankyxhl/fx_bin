@@ -352,6 +352,57 @@ class TestAskModeInCLI(unittest.TestCase):
             self.assertTrue(source_file.exists())
             self.assertEqual((conflict_dir / "photo.jpg").read_text(), "existing photo")
 
+    def test_given_ask_mode_and_non_tty_when_disk_conflict_then_scans_once(self):
+        """Test that ASK mode with a disk conflict scans the source exactly once.
+
+        Pins the PLN-2113 Task 3 guarantee: the plan used for conflict
+        detection is reused for execution instead of re-scanning, so
+        scan_files() runs exactly once for the whole invocation.
+        """
+        from fx_bin.organize_functional import scan_files as real_scan_files
+
+        with self.runner.isolated_filesystem():
+            source_dir = Path("source")
+            source_dir.mkdir()
+            source_file = source_dir / "photo.jpg"
+            source_file.write_text("source photo")
+            os.utime(source_file, (FIXED_MODIFIED_TS, FIXED_MODIFIED_TS))
+
+            output_dir = Path("output")
+            output_dir.mkdir()
+            conflict_dir = output_dir / "2026" / "202601" / "20260110"
+            conflict_dir.mkdir(parents=True)
+            (conflict_dir / "photo.jpg").write_text("existing photo")
+
+            with (
+                patch(
+                    "fx_bin.organize_functional.scan_files", side_effect=real_scan_files
+                ) as mock_scan_files,
+                patch("fx_bin.cli.sys.stdin.isatty", return_value=False),
+            ):
+                result = self.runner.invoke(
+                    cli,
+                    [
+                        "organize",
+                        str(source_dir),
+                        "--output",
+                        str(output_dir),
+                        "--date-source",
+                        "modified",
+                        "--on-conflict",
+                        "ask",
+                        "--yes",  # Skip initial confirmation
+                    ],
+                )
+
+            self.assertEqual(result.exit_code, 0)
+            mock_scan_files.assert_called_once()
+            self.assertIn("Skipping (non-interactive mode)", result.output)
+            self.assertIn("Summary:", result.output)
+            self.assertIn("1 skipped", result.output)
+            self.assertTrue(source_file.exists())
+            self.assertEqual((conflict_dir / "photo.jpg").read_text(), "existing photo")
+
 
 class TestQuietMode(unittest.TestCase):
     """Test cases for --quiet mode (Phase 4)."""
