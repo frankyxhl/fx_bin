@@ -123,12 +123,18 @@ poetry run fx --help
 |---------|-------------|--------------|
 | `fx files` | Count files in directories | Pattern matching, recursive search, detailed stats |
 | `fx size` | Analyze file/directory sizes | Human-readable units, sorting, limit results |
-| `fx ff` | Find files by keyword | Multiple search modes, content search, regex support |
+| `fx ff` | Find files by keyword | Path-segment matching (`dir/file`), clipboard copy by default, smart exclusions |
+| `fx fff` | Find first file matching keyword | Alias for `fx ff --first`, fast single lookup |
 | `fx open` (`fx o`) | Open saved URLs/files and direct targets | Local TOML registry, tags, browser/app selection |
 | `fx filter` | Filter files by extension | Time-based sorting, multiple formats, recursive search |
 | `fx replace` | Replace text in files | Atomic file operations, safe text replacement |
 | `fx backup` | Create timestamped backups | File/dir backup, compression |
+| `fx root` | Find Git project root directory | `cd $(fx root)`, script integration |
+| `fx realpath` (`fx rp`) | Get absolute path of a file/directory | Resolves `~`, symlinks, relative paths |
+| `fx today` | Create/navigate to today's workspace | Date-based daily directories |
+| `fx organize` | Organize files into date-based directories | Photo sorting, dataset management |
 | `fx list` | List all available commands | Help and usage information |
+| `fx version` | Show version and system information | Diagnostics |
 
 ### Detailed Command Documentation
 
@@ -210,10 +216,20 @@ fx filter txt --no-recursive
 #### 🔍 fx ff - File Finder
 
 Find files whose names contain a keyword, with powerful filtering options and smart exclusions.
+Results are printed as absolute paths and copied to the clipboard by default when run
+interactively (v2.13.0+), so you can paste them straight into another command or app.
 
 ```bash
 # Basic usage: Find files containing "test" in their names
 fx ff test
+
+# Path-segment matching (v2.13.0+): a keyword containing "/" matches the
+# relative path, not just the file name
+fx ff docs/setup
+fx ff frank_maintain/file-organizer.md
+
+# Skip the clipboard copy
+fx ff report --no-copy
 
 # Find configuration files
 fx ff config
@@ -262,6 +278,8 @@ fx ff test --exclude coverage --exclude .nyc_output
 **Options:**
 - `--include-ignored`: Include `.git`, `.venv`, `node_modules` (default skips these heavy directories)
 - `--exclude NAME`: Exclude names or glob patterns; repeatable for complex filtering
+- `--first`: Stop after the first match (same as `fx fff`)
+- `--no-copy`: Do not copy results to the clipboard (piped/scripted output never touches the clipboard)
 
 #### 🔗 fx open - URL and File Launcher
 
@@ -449,6 +467,38 @@ $ ft  # Short alias for fx today
 ```
 
 See [fx-today-setup.md](docs/fx-today-setup.md) for shell integration setup.
+
+#### 🧭 fx root - Git Project Root
+
+Find the Git project root by searching upward for a `.git` directory.
+
+```bash
+fx root              # Show root directory
+cd $(fx root --cd)   # Jump to project root in scripts
+```
+
+See [fx-root-setup.md](docs/fx-root-setup.md) for shell integration setup.
+
+#### 📍 fx realpath / fx rp - Absolute Path
+
+Resolve a relative path, `~`, or symlink to its canonical absolute path (the path must exist).
+
+```bash
+fx realpath .            # Current directory
+fx rp ../foo             # Relative path (alias)
+fx rp ~/Downloads        # Home directory
+```
+
+#### 🗂️ fx organize - Date-Based File Organizer
+
+Organize files from a source directory into date-based folders (e.g. `2026/202601/20260110/`).
+
+```bash
+fx organize ~/Photos                    # Organize photos by date
+fx organize ~/Downloads -o ~/Sorted     # Custom output directory
+fx organize . --dry-run                 # Preview without changes
+fx organize . -i "*.jpg" -i "*.png"     # Only images
+```
 
 ## 📚 Usage Examples
 

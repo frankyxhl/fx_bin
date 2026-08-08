@@ -100,6 +100,7 @@ fx replace "old_text" "new_text" file.txt
 | `fx backup` | Create timestamped backups | Safe file operations |
 | `fx organize` | Organize files by date | Photo sorting, dataset management |
 | `fx root` | Find Git project root | Navigation, script integration |
+| `fx realpath` (`fx rp`) | Get absolute path of a file/directory | Resolves `~`, symlinks, relative paths |
 | `fx today` | Daily workspace manager | Daily work organization |
 
 ---

@@ -11,6 +11,8 @@ Find first file matching KEYWORD. Returns only the first match and exits immedia
 - 🎯 Perfect for shell scripts and aliases
 - 🔄 Returns single result immediately
 - 📝 Uses smart exclusions (.git, .venv, node_modules)
+- 🛤️ Path-segment matching when KEYWORD contains `/` (v2.13.0+)
+- 📋 Copies the match to the clipboard in interactive use; `--no-copy` disables (v2.13.0+)
 
 ## Usage
 
