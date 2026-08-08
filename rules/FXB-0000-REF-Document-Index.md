@@ -22,7 +22,7 @@
 | 2110 | CHG | Add FX Open Copy Command | Completed |
 | 2111 | PLN | Restore Test Suite Execution | Active |
 | 2112 | CHG | Remove Unreachable Functional Twin Modules | Completed |
-| 2113 | PLN | Decompose Organize Command | In Progress |
+| 2113 | PLN | Decompose Organize Command | Active |
 
 ---
 

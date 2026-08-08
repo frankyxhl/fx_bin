@@ -13,7 +13,7 @@
 
 **Goal:** Decompose the ~520-line `organize()` command (`fx_bin/cli.py:1192-1711`) into a thin orchestration shell over module-level functions, computing the scan+plan exactly once per run, with zero observable behavior change except one documented semantic tightening.
 
-**Architecture:** Six inner closures move to a new `fx_bin/organize_cli.py` as module-level functions with explicit parameters. The two copy-paste 11-field `OrganizeContext` rebuilds become `dataclasses.replace`. A single `prepare_organize_plan()` produces `(files, dates, plan)` consumed by the preview/confirm step, ASK-mode conflict detection, and execution alike — replacing three separate `scan_files` + `generate_organize_plan` passes.
+**Architecture:** Six inner closures move to a new `fx_bin/organize_cli.py` as module-level functions with explicit parameters. The two copy-paste 11-field `OrganizeContext` rebuilds become `dataclasses.replace`. A single `prepare_organize_plan()` takes an already-obtained `scan_result` plus `context`, returning `(files, dates, plan, date_failures)` consumed by the preview/confirm step, ASK-mode conflict detection, and execution alike — replacing three separate `scan_files` + `generate_organize_plan` passes.
 
 **Regression net:** 122 existing organize tests (16 in `tests/integration/test_organize_cli.py`, 56 in `tests/integration/test_organize_io.py`, 50 in `tests/bdd/test_organize_steps.py`). No test may be edited to make the refactor pass.
 
@@ -51,7 +51,7 @@ The two 11-field `OrganizeContext(...)` reconstructions (originally `cli.py:1469
 
 **Files:** `fx_bin/organize_cli.py`, `fx_bin/cli.py` (organize body).
 
-Add `prepare_organize_plan(source, context) -> tuple[list[str], dict[str, datetime], list[FileOrganizeResult]]` wrapping the scan → dates → `generate_organize_plan` sequence (the try/except date-skip semantics of the current preview block, including its `fail_fast` variant for ASK mode, must be preserved — read all three current call sites and reconcile their differences explicitly before writing it). The preview/confirm step, ASK-mode disk-conflict detection, and ASK execution all consume one result. The non-ASK path (`execute_organize`) keeps its own internal scan — do not modify `organize_functional.py`.
+Add `prepare_organize_plan(scan_result, context) -> tuple[list[str], dict[str, datetime], list[FileOrganizeResult], list[tuple[str, Exception]]]` wrapping the scan → dates → `generate_organize_plan` sequence (the try/except date-skip semantics of the current preview block, including its `fail_fast` variant for ASK mode, must be preserved — read all three current call sites and reconcile their differences explicitly before writing it). The preview/confirm step, ASK-mode disk-conflict detection, and ASK execution all consume one result. The scan call stays at the cli.py call sites to preserve the exception boundary; the function receives the already-obtained `scan_result` and derives files, dates, plan, and date_failures. The non-ASK path (`execute_organize`) keeps its own internal scan — do not modify `organize_functional.py`.
 
 - Verify: full suite green; manual smoke: `fx organize` a temp dir with a conflict in ASK mode and in dry-run, outputs identical to main's.
 - Commit: `refactor(organize): compute the organize plan once per run`

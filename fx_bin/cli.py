@@ -5,9 +5,12 @@ import click
 import os
 import sys
 from pathlib import Path
-from typing import List, Tuple, Optional, Any, Sequence
+from typing import List, Tuple, Optional, Any, Sequence, TYPE_CHECKING
 
 import importlib.metadata
+
+if TYPE_CHECKING:
+    from .organize import FileOrganizeResult
 
 
 def get_version_info() -> str:
@@ -1337,9 +1340,9 @@ def organize(
     import os as os_module
 
     ask_user_choices: dict[str, str] = {}  # Map source file -> 'overwrite' or 'skip'
-    ask_plan: List[Any] = []
+    ask_plan: List["FileOrganizeResult"] = []
     ask_files_count = 0
-    ask_date_failures: List[Any] = []
+    ask_date_failures: List[Tuple[str, Exception]] = []
 
     if conflict_mode_enum == ConflictMode.ASK and not dry_run:
         # Scan files and generate plan to identify disk conflicts. Kept
