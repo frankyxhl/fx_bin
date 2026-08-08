@@ -21,7 +21,7 @@
 
 - Behavior-preserving except the one documented change in Task 3 (see below). Error strings, exit codes, summary formats, prompt texts: byte-identical.
 - `.venv/bin/python` for all commands (Poetry not on PATH). black 88 / flake8 zero / mypy strict.
-- Conventional Commits; every commit leaves the full suite green: `COLUMNS=200 .venv/bin/python -m pytest tests/ --ignore=tests/runners --ignore=tests/performance --no-cov -q` → 702 passed, 1 skipped (plus Task 4's one new test).
+- Conventional Commits; every commit leaves the full suite green: `COLUMNS=200 .venv/bin/python -m pytest tests/ --ignore=tests/runners --ignore=tests/performance --no-cov -q` → 693 passed, 1 skipped (plus Task 4's one new test).
 
 ## Accepted semantic change (decided 2026-08-08)
 
@@ -35,7 +35,7 @@ ASK mode currently re-scans the disk between the confirmation prompt and executi
 
 The closures at `cli.py:1285-1500` (`_confirm_with_user`, `_execute_move_with_tracking`, `_read_file_dates_for_ask_mode`, `_execute_ask_plan_item`, `_execute_ask_mode_with_choices`, `_handle_disk_conflicts_interactively`) become module-level functions in `organize_cli.py`, bodies unchanged except: captured variables (`source`, `context`, `conflict_mode`, `ask_user_choices`) become explicit parameters; imports move to the new module's top (no lazy imports needed there). `organize()` in cli.py imports them lazily (`from .organize_cli import ...`, matching the command's existing lazy-import style) and passes the arguments the closures used to capture. Keep the existing loguru configuration block and click option declarations in cli.py.
 
-- Verify: full suite green; `wc -l fx_bin/cli.py` drops by roughly 300+; mypy strict passes on the new module (it inherits `disallow_untyped_defs`).
+- Verify: full suite green; `wc -l fx_bin/cli.py` drops by the measured 207; mypy strict passes on the new module (it inherits `disallow_untyped_defs`).
 - Commit: `refactor(organize): move organize closures to organize_cli module`
 
 ### Task 2: `dataclasses.replace` for context rebuilds
@@ -69,10 +69,11 @@ Remove the no-op `elif not sys.stdin.isatty(): pass` branch and any similar dead
 
 ## Status
 
-Tasks pending. Implemented via subagent-driven development on branch `refactor/organize-decomposition`; PR to follow after all tasks and per-task reviews complete.
+All four tasks complete on branch `refactor/organize-decomposition`. Task 3 required one fix round after review: fail-fast ordering was corrected, and the scan boundary was restored to byte-identical against the pre-refactor call sites. Task 1 additionally parameterized `is_tty` on the moved closures instead of re-deriving it internally. PR to follow.
 
 ## Change History
 
 | Date | Change | By |
 |------|--------|----|
 | 2026-08-08 | Initial plan; single-scan semantic tightening approved by owner | Claude Code |
+| 2026-08-08 | Tasks 1-4 implemented; T3 required one fix round (fail-fast ordering, scan boundary); baseline count corrected | Claude Code |

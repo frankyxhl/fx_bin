@@ -162,8 +162,6 @@ def _execute_ask_mode_with_choices(
                 processed += proc_delta
                 skipped += skip_delta
                 errors += err_delta
-                if err_delta and context.fail_fast:
-                    raise
 
             case "skipped":
                 skipped += 1
