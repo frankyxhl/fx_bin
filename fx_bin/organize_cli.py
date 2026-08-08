@@ -96,7 +96,7 @@ def prepare_organize_plan(
         date_result = get_file_date(file_path, context.date_source)
         try:
             dates[file_path] = unsafe_ioresult_unwrap(date_result)
-        except Exception as e:  # nosec B110 - collected, not silently dropped
+        except Exception as e:
             date_failures.append((file_path, e))
 
     plan = generate_organize_plan(files, dates, context)
