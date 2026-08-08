@@ -55,6 +55,18 @@ class TestClipboardModule(unittest.TestCase):
             with self.assertRaises(ClipboardError):
                 copy_to_clipboard("x", DispatchPlan(("pbcopy",)))
 
+    def test_missing_tool_oserror_raises_clipboard_error(self):
+        """Codex PR#89: a vanished/missing tool raises OSError, not returncode."""
+        from fx_bin.clipboard import DispatchPlan, copy_to_clipboard
+        from fx_bin.errors import ClipboardError
+
+        with patch(
+            "fx_bin.clipboard.subprocess.run",
+            side_effect=FileNotFoundError("pbcopy"),
+        ):
+            with self.assertRaises(ClipboardError):
+                copy_to_clipboard("x", DispatchPlan(("pbcopy",)))
+
 
 if __name__ == "__main__":
     unittest.main()

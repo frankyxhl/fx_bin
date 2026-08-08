@@ -56,12 +56,17 @@ def copy_to_clipboard(text: str, plan: Optional[DispatchPlan] = None) -> None:
     """Write text to the system clipboard."""
 
     resolved = plan or build_clipboard_plan()
-    result = subprocess.run(  # nosec B603
-        resolved.args,
-        input=text.encode(),
-        shell=False,
-        check=False,
-    )
+    try:
+        result = subprocess.run(  # nosec B603
+            resolved.args,
+            input=text.encode(),
+            shell=False,
+            check=False,
+        )
+    except OSError as exc:
+        # Tool missing/vanished or not executable raises instead of
+        # returning a non-zero code; callers only handle ClipboardError.
+        raise ClipboardError(f"Clipboard command failed: {exc}") from exc
     if result.returncode != 0:
         raise ClipboardError(
             f"Clipboard command failed with exit code {result.returncode}"

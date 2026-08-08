@@ -23,7 +23,10 @@ def find_files(
     - Returns the matched absolute paths in print order.
     """
     cwd = os.getcwd()
-    match_path = os.sep in keyword
+    # Accept '/' on every platform (the documented form) plus the native
+    # separator, and normalize both sides to '/' so Windows paths match.
+    match_path = "/" in keyword or os.sep in keyword
+    needle = keyword.replace(os.sep, "/")
     matches: List[str] = []
     ignored = set() if include_ignored else set(DEFAULT_IGNORED_DIRS)
     patterns = list(exclude or [])
@@ -46,8 +49,10 @@ def find_files(
             if is_excluded(name):
                 continue
             path = os.path.join(root, name)
-            target = os.path.relpath(path, cwd) if match_path else name
-            if keyword in target:
+            target = (
+                os.path.relpath(path, cwd).replace(os.sep, "/") if match_path else name
+            )
+            if needle in target:
                 click.echo(path)
                 matches.append(path)
                 if first:
