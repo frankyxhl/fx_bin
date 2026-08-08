@@ -403,6 +403,62 @@ class TestAskModeInCLI(unittest.TestCase):
             self.assertTrue(source_file.exists())
             self.assertEqual((conflict_dir / "photo.jpg").read_text(), "existing photo")
 
+    def test_given_ask_mode_disk_conflict_and_intra_run_duplicate_then_duplicate_is_skipped_not_renamed(  # noqa: E501
+        self,
+    ):
+        """Test intra-run duplicates are skipped (not renamed) after the
+        non-TTY SKIP fallback swap.
+
+        Regression for the plan-regeneration bug: the SKIP swap from
+        `_handle_disk_conflicts_interactively` must be reflected in the plan
+        used for execution, or an intra-run duplicate that was renamed under
+        the original ASK plan gets moved as `*_1.*` instead of skipped.
+        """
+        with self.runner.isolated_filesystem():
+            source_dir = Path("source")
+            (source_dir / "a").mkdir(parents=True)
+            (source_dir / "b").mkdir(parents=True)
+
+            file_a = source_dir / "a" / "photo.jpg"
+            file_a.write_text("a photo")
+            os.utime(file_a, (FIXED_MODIFIED_TS, FIXED_MODIFIED_TS))
+
+            file_b = source_dir / "b" / "photo.jpg"
+            file_b.write_text("b photo")
+            os.utime(file_b, (FIXED_MODIFIED_TS, FIXED_MODIFIED_TS))
+
+            output_dir = Path("output")
+            output_dir.mkdir()
+            conflict_dir = output_dir / "2026" / "202601" / "20260110"
+            conflict_dir.mkdir(parents=True)
+            (conflict_dir / "photo.jpg").write_text("existing photo")
+
+            with patch("fx_bin.cli.sys.stdin.isatty", return_value=False):
+                result = self.runner.invoke(
+                    cli,
+                    [
+                        "organize",
+                        str(source_dir),
+                        "--output",
+                        str(output_dir),
+                        "--date-source",
+                        "modified",
+                        "--on-conflict",
+                        "ask",
+                        "--yes",  # Skip initial confirmation
+                        "--recursive",
+                    ],
+                )
+
+            self.assertEqual(result.exit_code, 0)
+            self.assertIn("Skipping (non-interactive mode)", result.output)
+            self.assertIn("Summary: 2 files, 0 processed, 2 skipped", result.output)
+            # Neither source file was moved; no renamed duplicate appeared.
+            self.assertTrue(file_a.exists())
+            self.assertTrue(file_b.exists())
+            self.assertEqual((conflict_dir / "photo.jpg").read_text(), "existing photo")
+            self.assertFalse((conflict_dir / "photo_1.jpg").exists())
+
 
 class TestQuietMode(unittest.TestCase):
     """Test cases for --quiet mode (Phase 4)."""
