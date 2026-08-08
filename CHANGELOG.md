@@ -1,6 +1,42 @@
 # CHANGELOG
 
 
+## v2.13.0 (2026-08-08)
+
+### Bug Fixes
+
+- **ff**: Address Codex review — Windows separators + clipboard OSError
+  ([`5c8e7ec`](https://github.com/frankyxhl/fx_bin/commit/5c8e7ecfad2d83cee919fd2d525e0ec942d82a17))
+
+- find_files: enter path-mode on '/' or os.sep, normalize keyword and relative path to '/' before
+  matching so 'fx ff docs/setup' and 'docs\setup' both work on Windows (Codex P2, find_files.py). -
+  clipboard: wrap subprocess OSError (missing/vanished tool) as ClipboardError so fx ff prints the
+  promised warning instead of crashing (Codex P2, clipboard.py).
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_01PQcFrofPTcsnEtrVDUDZNG
+
+### Features
+
+- **ff**: Match path segments and copy results to clipboard by default
+  ([`1c57525`](https://github.com/frankyxhl/fx_bin/commit/1c57525912d4cc2eb85af29337b720488c818346))
+
+CHG-2114: a KEYWORD containing '/' now matches the path relative to the search root instead of the
+  basename, so 'fx ff dir/file.md' works; plain keywords keep exact basename-only behavior.
+
+CHG-2115: fx ff / fx fff copy their printed results to the clipboard by default when stdout is a TTY
+  (the paths are the deliverable — they exist to be pasted elsewhere). --no-copy opts out;
+  pipes/scripts/CI never touch the clipboard; clipboard failure warns on stderr without failing the
+  search. Clipboard logic is extracted from open_launcher into a shared fx_bin.clipboard module
+  (DispatchPlan moves to shared_types; new ClipboardError subclasses OpenError so fx open copy
+  callers are unaffected; open_launcher re-exports all moved names).
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_01PQcFrofPTcsnEtrVDUDZNG
+
+
 ## v2.12.2 (2026-08-08)
 
 ### Bug Fixes
