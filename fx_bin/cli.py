@@ -1365,7 +1365,9 @@ def organize(
             # tightening, PLN-2113 Task 3). date_failures is consumed just
             # before execution, replicating the old ASK-mode execution
             # fail-fast behavior at the point it used to run.
-            files, _, plan, date_failures = prepare_organize_plan(scan_result, context)
+            files, dates, plan, date_failures = prepare_organize_plan(
+                scan_result, context
+            )
             ask_plan = plan
             ask_files_count = len(files)
             ask_date_failures = date_failures
@@ -1382,6 +1384,15 @@ def organize(
                 ask_user_choices, context = _handle_disk_conflicts_interactively(
                     disk_conflicts, context, sys.stdin.isatty()
                 )
+                # The handler may have swapped conflict_mode to SKIP (non-TTY
+                # fallback). Regenerate the plan under the (possibly new)
+                # context so intra-run duplicates are re-evaluated under
+                # SKIP instead of staying renamed from the original ASK
+                # plan -- matches the pre-refactor 3rd generate_organize_plan
+                # pass. Pure function of (files, dates, context): no rescan.
+                from .organize import generate_organize_plan
+
+                ask_plan = generate_organize_plan(files, dates, context)
         except Exception as e:
             # If scanning fails, fall back to SKIP mode for safety
             click.echo(
