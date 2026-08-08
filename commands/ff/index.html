@@ -621,6 +621,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#path-segment-matching-v2130" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path-Segment Matching (v2.13.0+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clipboard-copy-v2130" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clipboard Copy (v2.13.0+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#first-match-only" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1147,6 +1169,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../realpath/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command: fx realpath (fx rp)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../today/" class="md-nav__link">
         
   
@@ -1586,7 +1636,9 @@
 <h2 id="overview">Overview</h2>
 <p><code>fx ff</code> provides fast file discovery with keyword matching, flexible exclusion patterns, and smart default settings. Perfect for debugging, code navigation, and project analysis.</p>
 <p><strong>Key Features:</strong>
-- 🔍 Keyword and pattern-based file finding
+- 🔍 Substring keyword matching on file/directory names
+- 🛤️ Path-segment matching: a keyword containing <code>/</code> matches the relative path (v2.13.0+)
+- 📋 Results copied to the clipboard by default in interactive use (v2.13.0+)
 - 🚀 First-match mode for quick lookups (<code>--first</code>)
 - 🎯 Smart exclusions (.git, .venv, node_modules)
 - 📝 Multiple exclusion patterns (repeatable)
@@ -1609,7 +1661,7 @@
 <td><code>KEYWORD</code></td>
 <td>string</td>
 <td>-</td>
-<td>Keyword or pattern to search for (required)</td>
+<td>Substring to search for; contains <code>/</code> → matched against the relative path (required)</td>
 </tr>
 <tr>
 <td><code>--first</code></td>
@@ -1629,6 +1681,12 @@
 <td>-</td>
 <td>Exclude names or glob patterns (repeatable)</td>
 </tr>
+<tr>
+<td><code>--no-copy</code></td>
+<td>flag</td>
+<td>False</td>
+<td>Do not copy results to the clipboard</td>
+</tr>
 </tbody>
 </table>
 <h2 id="examples">Examples</h2>
@@ -1642,6 +1700,26 @@
 <p>Find all Python files (using partial match):</p>
 <div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>.py
 </code></pre></div>
+<h3 id="path-segment-matching-v2130">Path-Segment Matching (v2.13.0+)</h3>
+<p>A keyword containing <code>/</code> is matched against the path relative to the current
+directory instead of the file name alone, so you can pin a match to a
+directory:</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Only matches file-organizer.md inside frank_maintain/</span>
+fx<span class="w"> </span>ff<span class="w"> </span>frank_maintain/file-organizer.md
+
+<span class="c1"># Any path containing &quot;docs/setup&quot;</span>
+fx<span class="w"> </span>ff<span class="w"> </span>docs/setup
+</code></pre></div>
+<p>On Windows both <code>/</code> and <code>\</code> work.</p>
+<h3 id="clipboard-copy-v2130">Clipboard Copy (v2.13.0+)</h3>
+<p>When run interactively (stdout is a terminal), the printed absolute paths are
+also copied to the clipboard — the result exists to be pasted somewhere else.</p>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>report<span class="w">            </span><span class="c1"># Results printed AND on the clipboard</span>
+fx<span class="w"> </span>ff<span class="w"> </span>report<span class="w"> </span>--no-copy<span class="w">  </span><span class="c1"># Skip the clipboard</span>
+fx<span class="w"> </span>ff<span class="w"> </span>report<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w">    </span><span class="c1"># Piped output never touches the clipboard</span>
+</code></pre></div>
+<p>If no clipboard tool is available (e.g. headless Linux without wl-clipboard or
+xclip), <code>fx ff</code> prints a warning to stderr and still exits successfully.</p>
 <h3 id="first-match-only">First Match Only</h3>
 <p>Return only the first match (faster):</p>
 <div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--first
@@ -1725,14 +1803,14 @@
 <div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>model<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
 </code></pre></div>
 <h4 id="scenario-7-test-discovery">Scenario 7: Test Discovery</h4>
-<p>Find unit tests:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;*unit*test*&quot;</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
+<p>Find unit tests (KEYWORD is a substring, not a glob — use <code>tests/</code> path matching or a distinctive fragment):</p>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>unit_test<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
 </code></pre></div>
 <p>Find integration tests:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;*integration*test*&quot;</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>tests/integration
 </code></pre></div>
 <p>Find e2e tests:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;*e2e*test*&quot;</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>ff<span class="w"> </span>e2e<span class="w"> </span>--exclude<span class="w"> </span>node_modules
 </code></pre></div>
 <h4 id="scenario-8-code-review">Scenario 8: Code Review</h4>
 <p>Find implementation files:</p>
