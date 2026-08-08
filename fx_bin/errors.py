@@ -102,6 +102,16 @@ class OpenError(FxBinError):
     pass
 
 
+class ClipboardError(OpenError):
+    """Errors writing to the system clipboard.
+
+    Subclasses OpenError so existing `fx open copy` callers that catch
+    OpenError keep working after the clipboard logic moved to fx_bin.clipboard.
+    """
+
+    pass
+
+
 class OrganizeError(FileOperationError):
     """Errors during file organization operations.
 

@@ -23,7 +23,14 @@ from pathlib import Path
 from typing import Callable, Iterator, Mapping, Optional, Sequence, TypeGuard
 from urllib.parse import urlparse
 
+from .clipboard import (  # noqa: F401  (re-exported for backward compatibility)
+    WAYLAND_CLIPBOARD,
+    X11_CLIPBOARD,
+    build_clipboard_plan,
+    copy_to_clipboard,
+)
 from .errors import OpenError
+from .shared_types import DispatchPlan  # noqa: F401  (re-exported)
 
 SLUG_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{0,63}$")
 TOML_BARE_KEY_RE = re.compile(r"^[A-Za-z0-9_-]+$")
@@ -98,15 +105,6 @@ class LaunchTarget:
     slug: Optional[str] = None
     browser: Optional[str] = None
     app: Optional[str] = None
-
-
-@dataclass(frozen=True)
-class DispatchPlan:
-    """A safe opener dispatch plan."""
-
-    args: tuple[str, ...]
-    method: str = "subprocess"
-    shell: bool = False
 
 
 def default_config_path(
@@ -1234,10 +1232,6 @@ def execute_dispatch_plan(plan: DispatchPlan) -> None:
         raise OpenError(f"Open command failed with exit code {result.returncode}")
 
 
-WAYLAND_CLIPBOARD = ("wl-copy", ())
-X11_CLIPBOARD = ("xclip", ("-selection", "clipboard"))
-
-
 def _concrete_target(target: str, target_kind: str) -> str:
     """Turn a stored/typed target into the exact string to act on.
 
@@ -1264,52 +1258,6 @@ def resolve_concrete_target(launch_target: LaunchTarget) -> str:
         launch_target.target,
         classify_target_kind(launch_target.target),
     )
-
-
-def build_clipboard_plan(
-    platform_name: Optional[str] = None,
-    opener_lookup: Callable[[str], Optional[str]] = shutil.which,
-    environ: Optional[Mapping[str, str]] = None,
-) -> DispatchPlan:
-    """Build the clipboard-write command for this platform."""
-
-    platform_value = platform_name or sys.platform
-    if platform_value == "darwin":
-        return DispatchPlan(("pbcopy",))
-    if platform_value.startswith("win"):
-        return DispatchPlan(("clip",))
-    if platform_value.startswith("linux"):
-        env = environ if environ is not None else os.environ
-        # Wayland and X11 have separate clipboards and each tool only talks to
-        # its own display server. wl-clipboard is pulled in as a dependency on
-        # many X11 installs, so order by session type rather than by whichever
-        # binary happens to be present; fall back to the other when the
-        # preferred one is not installed.
-        candidates = (
-            (WAYLAND_CLIPBOARD, X11_CLIPBOARD)
-            if env.get("WAYLAND_DISPLAY")
-            else (X11_CLIPBOARD, WAYLAND_CLIPBOARD)
-        )
-        for name, extra_args in candidates:
-            found = opener_lookup(name)
-            if found:
-                return DispatchPlan((found, *extra_args))
-        raise OpenError("No clipboard tool found. Install wl-clipboard or xclip.")
-    raise OpenError(f"Unsupported platform for fx open copy: {platform_value}")
-
-
-def copy_to_clipboard(text: str, plan: Optional[DispatchPlan] = None) -> None:
-    """Write text to the system clipboard."""
-
-    resolved = plan or build_clipboard_plan()
-    result = subprocess.run(  # nosec B603
-        resolved.args,
-        input=text.encode(),
-        shell=False,
-        check=False,
-    )
-    if result.returncode != 0:
-        raise OpenError(f"Clipboard command failed with exit code {result.returncode}")
 
 
 def request_ai_metadata(

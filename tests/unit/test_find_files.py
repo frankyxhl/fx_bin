@@ -309,5 +309,143 @@ class TestFFFirst(unittest.TestCase):
             shutil.rmtree(tmp, ignore_errors=True)
 
 
+class TestPathSegmentMatching(unittest.TestCase):
+    """CHG-2114: keywords containing a separator match the relative path."""
+
+    def setUp(self):
+        self.test_dir = tempfile.mkdtemp()
+        self.test_path = Path(self.test_dir)
+        self.original_cwd = os.getcwd()
+        subdir = self.test_path / "frank_maintain"
+        subdir.mkdir()
+        (subdir / "file-organizer.md").touch()
+        (self.test_path / "file-organizer.md").touch()
+        (self.test_path / "src").mkdir()
+        (self.test_path / "src" / "main.py").touch()
+        (self.test_path / "src" / "test_main.py").touch()
+        os.chdir(self.test_dir)
+
+    def tearDown(self):
+        os.chdir(self.original_cwd)
+        shutil.rmtree(self.test_dir, ignore_errors=True)
+
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_path_keyword_matches_relative_path(self, mock_stdout):
+        find_files("frank_maintain/file-organizer.md")
+        output = mock_stdout.getvalue()
+        self.assertIn(os.path.join("frank_maintain", "file-organizer.md"), output)
+        # The top-level file of the same name must NOT match a path keyword
+        lines = [line for line in output.splitlines() if line]
+        self.assertEqual(len(lines), 1)
+
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_path_keyword_is_substring_of_relative_path(self, mock_stdout):
+        find_files("src/main")
+        output = mock_stdout.getvalue()
+        self.assertIn(os.path.join("src", "main.py"), output)
+        self.assertNotIn("test_main.py", output)
+
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_plain_keyword_still_matches_basename_only(self, mock_stdout):
+        find_files("file-organizer.md")
+        output = mock_stdout.getvalue()
+        lines = [line for line in output.splitlines() if line]
+        self.assertEqual(len(lines), 2)
+
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_find_files_returns_matches(self, mock_stdout):
+        matches = find_files("main.py")
+        self.assertEqual(len(matches), 2)
+        for m in matches:
+            self.assertTrue(os.path.isabs(m))
+
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_first_with_path_keyword(self, mock_stdout):
+        matches = find_files("src/main", first=True)
+        self.assertEqual(len(matches), 1)
+
+
+class TestFFClipboardCopy(unittest.TestCase):
+    """CHG-2115: fx ff copies results to the clipboard by default (TTY only)."""
+
+    def setUp(self):
+        self.test_dir = tempfile.mkdtemp()
+        self.test_path = Path(self.test_dir)
+        self.original_cwd = os.getcwd()
+        (self.test_path / "alpha.txt").touch()
+        (self.test_path / "alpha_two.txt").touch()
+        os.chdir(self.test_dir)
+
+    def tearDown(self):
+        os.chdir(self.original_cwd)
+        shutil.rmtree(self.test_dir, ignore_errors=True)
+
+    def _invoke_ff(self, args, tty=True):
+        from click.testing import CliRunner
+        from fx_bin.cli import cli
+
+        with (
+            patch("fx_bin.cli._stdout_is_tty", return_value=tty),
+            patch("fx_bin.clipboard.copy_to_clipboard") as mock_copy,
+        ):
+            result = CliRunner().invoke(cli, ["ff"] + list(args))
+        return result, mock_copy
+
+    def test_copies_matches_by_default_on_tty(self):
+        result, mock_copy = self._invoke_ff(["alpha"])
+        self.assertEqual(result.exit_code, 0)
+        mock_copy.assert_called_once()
+        copied = mock_copy.call_args[0][0]
+        lines = copied.split("\n")
+        self.assertEqual(len(lines), 2)
+        for line in lines:
+            self.assertTrue(os.path.isabs(line))
+
+    def test_no_copy_flag_disables_copy(self):
+        result, mock_copy = self._invoke_ff(["alpha", "--no-copy"])
+        self.assertEqual(result.exit_code, 0)
+        mock_copy.assert_not_called()
+
+    def test_no_copy_when_stdout_not_tty(self):
+        result, mock_copy = self._invoke_ff(["alpha"], tty=False)
+        self.assertEqual(result.exit_code, 0)
+        mock_copy.assert_not_called()
+
+    def test_no_copy_when_no_matches(self):
+        result, mock_copy = self._invoke_ff(["zzz_nothing"])
+        self.assertEqual(result.exit_code, 0)
+        mock_copy.assert_not_called()
+
+    def test_clipboard_failure_warns_but_exits_zero(self):
+        from click.testing import CliRunner
+        from fx_bin.cli import cli
+        from fx_bin.errors import ClipboardError
+
+        with (
+            patch("fx_bin.cli._stdout_is_tty", return_value=True),
+            patch(
+                "fx_bin.clipboard.copy_to_clipboard",
+                side_effect=ClipboardError("no tool"),
+            ),
+        ):
+            result = CliRunner(mix_stderr=False).invoke(cli, ["ff", "alpha"])
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("alpha.txt", result.stdout)
+        self.assertIn("clipboard", result.stderr.lower())
+
+    def test_fff_copies_single_match_on_tty(self):
+        from click.testing import CliRunner
+        from fx_bin.cli import cli
+
+        with (
+            patch("fx_bin.cli._stdout_is_tty", return_value=True),
+            patch("fx_bin.clipboard.copy_to_clipboard") as mock_copy,
+        ):
+            result = CliRunner().invoke(cli, ["fff", "alpha"])
+        self.assertEqual(result.exit_code, 0)
+        mock_copy.assert_called_once()
+        self.assertNotIn("\n", mock_copy.call_args[0][0])
+
+
 if __name__ == "__main__":
     unittest.main()
