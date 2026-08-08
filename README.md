@@ -129,7 +129,7 @@ poetry run fx --help
 | `fx filter` | Filter files by extension | Time-based sorting, multiple formats, recursive search |
 | `fx replace` | Replace text in files | Atomic file operations, safe text replacement |
 | `fx backup` | Create timestamped backups | File/dir backup, compression |
-| `fx root` | Find Git project root directory | `cd $(fx root)`, script integration |
+| `fx root` | Find Git project root directory | `cd "$(fx root --cd)"`, script integration |
 | `fx realpath` (`fx rp`) | Get absolute path of a file/directory | Resolves `~`, symlinks, relative paths |
 | `fx today` | Create/navigate to today's workspace | Date-based daily directories |
 | `fx organize` | Organize files into date-based directories | Photo sorting, dataset management |
@@ -473,8 +473,8 @@ See [fx-today-setup.md](docs/fx-today-setup.md) for shell integration setup.
 Find the Git project root by searching upward for a `.git` directory.
 
 ```bash
-fx root              # Show root directory
-cd $(fx root --cd)   # Jump to project root in scripts
+fx root                  # Show root directory (with description)
+cd "$(fx root --cd)"     # Jump to project root in scripts
 ```
 
 See [fx-root-setup.md](docs/fx-root-setup.md) for shell integration setup.
