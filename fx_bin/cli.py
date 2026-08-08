@@ -1296,11 +1296,24 @@ def organize(
 
     # For non-dry-run mode, show preview and get confirmation
     if not dry_run and not yes:
+        # First, scan to get file count for confirmation. Kept outside the
+        # try below so a raw scan_files() failure (not just an unwrap
+        # failure) propagates the same way it did pre-refactor.
+        from .organize_functional import scan_files
+
+        scan_result = scan_files(
+            source,
+            recursive=context.recursive,
+            follow_symlinks=False,
+            max_depth=100,
+            output_dir=context.output_dir,
+        )
+
         try:
-            # fail_fast_dates=False: preview always shows an accurate count,
-            # even if individual files' dates can't be read (matches the
-            # historical preview behavior, independent of --fail-fast).
-            _, _, plan = prepare_organize_plan(source, context, fail_fast_dates=False)
+            # Date-read errors are always swallowed here (matches the
+            # historical preview behavior, independent of --fail-fast);
+            # date_failures is unused by preview.
+            _, _, plan, _ = prepare_organize_plan(scan_result, context)
             actual_count = sum(1 for p in plan if p.action == "moved")
 
             click.echo(f"\nWill organize {actual_count} file(s) from {source}")
@@ -1329,18 +1342,33 @@ def organize(
     ask_user_choices: dict[str, str] = {}  # Map source file -> 'overwrite' or 'skip'
     ask_plan: List[Any] = []
     ask_files_count = 0
+    ask_date_failures: List[Any] = []
 
     if conflict_mode_enum == ConflictMode.ASK and not dry_run:
+        # Scan files and generate plan to identify disk conflicts. Kept
+        # outside the try below so a raw scan_files() failure propagates
+        # the same way it did pre-refactor (only the unwrap failure is
+        # caught by the except below).
+        from .organize_functional import scan_files
+
+        scan_result = scan_files(
+            source,
+            recursive=context.recursive,
+            follow_symlinks=False,
+            max_depth=100,
+            output_dir=context.output_dir,
+        )
+
         try:
-            # fail_fast_dates=context.fail_fast: matches the historical
-            # ASK-mode execution behavior. This same plan is reused below
-            # for execution -- no re-scan between the conflict prompt and
-            # execution (accepted semantic tightening, PLN-2113 Task 3).
-            files, _, plan = prepare_organize_plan(
-                source, context, fail_fast_dates=context.fail_fast
-            )
+            # This same plan is reused below for execution -- no re-scan
+            # between the conflict prompt and execution (accepted semantic
+            # tightening, PLN-2113 Task 3). date_failures is consumed just
+            # before execution, replicating the old ASK-mode execution
+            # fail-fast behavior at the point it used to run.
+            files, _, plan, date_failures = prepare_organize_plan(scan_result, context)
             ask_plan = plan
             ask_files_count = len(files)
+            ask_date_failures = date_failures
 
             # Find disk conflicts (target files that already exist)
             disk_conflicts = [
@@ -1365,6 +1393,17 @@ def organize(
     # For ASK mode with user choices, we need custom execution logic
     # Otherwise use standard execute_organize
     if ask_user_choices and conflict_mode_enum == ConflictMode.ASK:
+        # Replicates the old _read_file_dates_for_ask_mode fail-fast check,
+        # which used to run at this point (after conflict prompts, before
+        # any file is moved): report the first date-read failure and stop.
+        if context.fail_fast and ask_date_failures:
+            failed_path, failed_err = ask_date_failures[0]
+            click.echo(
+                f"Error: Failed to read date for {failed_path}: {failed_err}",
+                err=True,
+            )
+            return 1
+
         # Execute with custom logic, reusing the plan computed above during
         # conflict detection instead of re-scanning.
         try:

@@ -5,15 +5,12 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Tuple
 
 import click
+from returns.io import IOResult
 
+from .errors import OrganizeError
 from .lib import unsafe_ioresult_unwrap
 from .organize import ConflictMode, OrganizeContext, generate_organize_plan
-from .organize_functional import (
-    get_file_date,
-    move_file_safe,
-    remove_empty_dirs,
-    scan_files,
-)
+from .organize_functional import get_file_date, move_file_safe, remove_empty_dirs
 
 if TYPE_CHECKING:
     from .organize import FileOrganizeResult
@@ -67,50 +64,43 @@ def _execute_move_with_tracking(
 
 
 def prepare_organize_plan(
-    source: str,
+    scan_result: "IOResult[list[str], OrganizeError]",
     context: "OrganizeContext",
-    fail_fast_dates: bool,
-) -> "tuple[list[str], dict[str, datetime], list[FileOrganizeResult]]":
-    """Scan the source, read file dates, and generate the organize plan.
+) -> "tuple[list[str], dict[str, datetime], list[FileOrganizeResult], list[tuple[str, Exception]]]":  # noqa: E501
+    """Unwrap a scan result, read file dates, and generate the organize plan.
 
-    Runs the scan -> date-read -> plan sequence exactly once, so callers
-    (preview/confirm, ASK-mode conflict detection, ASK-mode execution) can
-    share a single result instead of each re-scanning the disk.
+    The caller obtains `scan_result` itself by calling `scan_files(...)`
+    (kept outside this function) so the exception boundary matches the
+    pre-refactor structure: a raw scan failure propagates from the
+    caller's `scan_files()` call, while a scan *failure result* (unwrap
+    raising) is caught by whatever try/except the caller wraps this call
+    in -- mirroring the old per-call-site boundary exactly.
 
-    Args:
-        source: Source directory to scan
-        context: Organization configuration context
-        fail_fast_dates: If True, echo and re-raise on the first per-file
-            date-read error (matches the historical ASK-mode execution
-            behavior). If False, silently skip files whose date can't be
-            read; such files surface later as a plan item with action
-            "error" (matches the historical preview/confirm behavior).
+    Per-file date-read errors are never raised here -- this matches the
+    historical swallow-always behavior of the preview and ASK-mode
+    conflict-detection scans (`# nosec B110`-equivalent). Failures are
+    collected in `date_failures`, in encounter order, so a caller that
+    needs the old ASK-mode *execution* fail-fast behavior (raise/report on
+    the first date-read failure) can replicate it itself, at the point in
+    the flow where that used to happen.
 
     Returns:
-        Tuple of (scanned files, file->date mapping, organize plan)
+        Tuple of (scanned files, file->date mapping, organize plan,
+        date_failures as (file_path, exception) pairs in encounter order)
     """
-    scan_result = scan_files(
-        source,
-        recursive=context.recursive,
-        follow_symlinks=False,
-        max_depth=100,
-        output_dir=context.output_dir,
-    )
     files = unsafe_ioresult_unwrap(scan_result)
 
     dates: "dict[str, datetime]" = {}
+    date_failures: "list[tuple[str, Exception]]" = []
     for file_path in files:
         date_result = get_file_date(file_path, context.date_source)
         try:
             dates[file_path] = unsafe_ioresult_unwrap(date_result)
-        except Exception as e:
-            if fail_fast_dates:
-                click.echo(f"Error: Failed to read date for {file_path}: {e}", err=True)
-                raise
-            # else: nosec B110 - Intentionally skip files with date errors
+        except Exception as e:  # nosec B110 - collected, not silently dropped
+            date_failures.append((file_path, e))
 
     plan = generate_organize_plan(files, dates, context)
-    return files, dates, plan
+    return files, dates, plan, date_failures
 
 
 def _execute_ask_plan_item(
