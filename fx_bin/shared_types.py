@@ -52,3 +52,15 @@ class FolderContext:
 
     visited_inodes: Set[Tuple[int, int]]
     max_depth: int = 100
+
+
+@dataclass(frozen=True)
+class DispatchPlan:
+    """A safe external-command plan (opener or clipboard dispatch).
+
+    Shared by fx_bin.open_launcher and fx_bin.clipboard.
+    """
+
+    args: Tuple[str, ...]
+    method: str = "subprocess"
+    shell: bool = False

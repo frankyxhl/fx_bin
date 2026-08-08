@@ -13,13 +13,18 @@ def find_files(
     include_ignored: bool = False,
     exclude: Optional[List[str]] = None,
     first: bool = False,
-) -> None:
+) -> List[str]:
     """Print files/dirs under CWD whose names contain keyword.
 
     - By default, skips common heavy dirs: .git, .venv, node_modules.
     - Set include_ignored=True to include those directories.
+    - If keyword contains a path separator, it is matched against the
+      path relative to CWD instead of the basename (CHG-2114).
+    - Returns the matched absolute paths in print order.
     """
     cwd = os.getcwd()
+    match_path = os.sep in keyword
+    matches: List[str] = []
     ignored = set() if include_ignored else set(DEFAULT_IGNORED_DIRS)
     patterns = list(exclude or [])
 
@@ -38,10 +43,16 @@ def find_files(
             dirs[:] = [d for d in dirs if not is_excluded(d)]
 
         for name in dirs + files:
-            if keyword in name and not is_excluded(name):
-                click.echo(os.path.join(root, name))
+            if is_excluded(name):
+                continue
+            path = os.path.join(root, name)
+            target = os.path.relpath(path, cwd) if match_path else name
+            if keyword in target:
+                click.echo(path)
+                matches.append(path)
                 if first:
-                    return
+                    return matches
+    return matches
 
 
 @click.command()

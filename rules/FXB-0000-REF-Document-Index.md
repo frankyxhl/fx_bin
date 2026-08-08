@@ -23,6 +23,8 @@
 | 2111 | PLN | Restore Test Suite Execution | Active |
 | 2112 | CHG | Remove Unreachable Functional Twin Modules | Completed |
 | 2113 | PLN | Decompose Organize Command | Active |
+| 2114 | CHG | Add Path Segment Matching to FX FF | Proposed |
+| 2115 | CHG | Copy FX FF Results to Clipboard by Default | Proposed |
 
 ---
 

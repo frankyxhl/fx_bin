@@ -123,25 +123,39 @@ def size(paths: Tuple[str, ...]) -> int:
     return 0
 
 
+def _stdout_is_tty() -> bool:
+    """Separate helper so tests can force the interactive-copy path."""
+    return sys.stdout.isatty()
+
+
 def _run_ff(
     keyword: str,
     include_ignored: bool,
     excludes: tuple,
     first: bool,
+    no_copy: bool = False,
 ) -> int:
     """Shared implementation for ff and fff commands."""
-    from . import find_files
+    from . import clipboard, find_files
 
     if not keyword or keyword.strip() == "":
         click.echo("Please type text to search. For example: fx ff bar", err=True)
         click.echo("Usage: fx ff KEYWORD", err=True)
         return 1
-    find_files.find_files(
+    matches = find_files.find_files(
         keyword,
         include_ignored=include_ignored,
         exclude=list(excludes),
         first=first,
     )
+    # The printed paths ARE the deliverable (CHG-2115): copy them so they can
+    # be pasted elsewhere immediately. Skip when piped/scripted (non-TTY) so
+    # pipelines and CI never touch the clipboard.
+    if matches and not no_copy and _stdout_is_tty():
+        try:
+            clipboard.copy_to_clipboard("\n".join(matches))
+        except clipboard.ClipboardError as exc:
+            click.echo(f"Warning: could not copy to clipboard: {exc}", err=True)
     return 0
 
 
@@ -168,10 +182,25 @@ def _run_ff(
         "--exclude build --exclude '*.log'"
     ),
 )
+@click.option(
+    "--no-copy",
+    is_flag=True,
+    default=False,
+    help="Do not copy results to the clipboard",
+)
 def ff(
-    keyword: str, first: bool, include_ignored: bool, excludes: Tuple[str, ...]
+    keyword: str,
+    first: bool,
+    include_ignored: bool,
+    excludes: Tuple[str, ...],
+    no_copy: bool,
 ) -> int:
     """Find files whose names contain KEYWORD.
+
+    Results are copied to the clipboard by default when run interactively
+    (disable with --no-copy; piped output never touches the clipboard).
+    If KEYWORD contains '/', it matches the relative path instead of the
+    name only, e.g. `fx ff docs/setup`.
 
     \b
     Basic Examples:
@@ -180,6 +209,8 @@ def ff(
       fx ff .py                         # Find Python files
       fx ff api --exclude build         # Find 'api' files, skip build dirs
       fx ff test --first                # Find first match only
+      fx ff docs/setup                  # Match against relative path
+      fx ff report --no-copy            # Skip the clipboard copy
 
     \b
     Real-World Use Cases:
@@ -200,16 +231,23 @@ def ff(
     By default, skips heavy directories: .git, .venv, node_modules
     Use --include-ignored to search these directories too.
     """
-    return _run_ff(keyword, include_ignored, excludes, first)
+    return _run_ff(keyword, include_ignored, excludes, first, no_copy=no_copy)
 
 
 @cli.command()
 @click.argument("keyword")
-def fff(keyword: str) -> int:
+@click.option(
+    "--no-copy",
+    is_flag=True,
+    default=False,
+    help="Do not copy the result to the clipboard",
+)
+def fff(keyword: str, no_copy: bool) -> int:
     """Find first file matching KEYWORD.
 
     Alias for `fx ff KEYWORD --first`. Returns only the first match
-    and exits immediately for speed.
+    and exits immediately for speed. The match is copied to the clipboard
+    by default when run interactively (disable with --no-copy).
 
     \b
     Examples:
@@ -217,7 +255,9 @@ def fff(keyword: str) -> int:
       fx fff config    # Find first config file
       fx fff .py       # Find first Python file
     """
-    return _run_ff(keyword, include_ignored=False, excludes=(), first=True)
+    return _run_ff(
+        keyword, include_ignored=False, excludes=(), first=True, no_copy=no_copy
+    )
 
 
 @cli.command()
