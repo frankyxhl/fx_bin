@@ -1,6 +1,218 @@
 # CHANGELOG
 
 
+## v2.12.2 (2026-08-08)
+
+### Bug Fixes
+
+- **organize**: Re-plan after the non-TTY ASK->SKIP swap
+  ([`cbdc9d7`](https://github.com/frankyxhl/fx_bin/commit/cbdc9d7da96cc02b1092fdca4cdcac685d896770))
+
+generate_organize_plan treats intra-run duplicates per conflict_mode (SKIP plans them skipped; ASK
+  renames). The old third pass regenerated the plan after _handle_disk_conflicts_interactively
+  swapped the context to SKIP; the single-scan refactor reused the ASK-generated plan, so a non-TTY
+  run with a disk conflict plus a/photo.jpg + b/photo.jpg renamed one duplicate to photo_1.jpg
+  instead of skipping it.
+
+The plan is now regenerated from the cached files/dates after the handler returns — a pure
+  computation, no rescan (the single-scan pin test still passes). New regression test proves RED on
+  the pre-fix head and GREEN matching the pre-refactor tree byte-for-byte.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+### Chores
+
+- Remove benchmarks comparing against deleted functional modules
+  ([`89f5be6`](https://github.com/frankyxhl/fx_bin/commit/89f5be621be3c9f1ac67336077cfa96782285b80))
+
+Every benchmark in the suite was an imperative-vs-functional pair and the report is framed as
+  "Imperative vs Functional Implementation Analysis" — nothing meaningful survives with one side
+  gone.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+### Documentation
+
+- Make CLAUDE.md and specs match the actual codebase; record FXB-2112
+  ([`115f8cc`](https://github.com/frankyxhl/fx_bin/commit/115f8cc5edad5fa6ea732261d8f4120bcd3f2717))
+
+Fixes claims that were false: test paths that moved to tests/unit// tests/security/ long ago, an
+  example referencing a test file that does not exist, unittest module paths, a note that `unittest
+  discover tests` fails at bdd collection (pytest is the supported runner), the ROP example that
+  quoted the now-deleted replace_functional, an "upload server" in the project overview that has no
+  corresponding command, and an openspec requirement line naming the deleted module. Removal itself
+  is recorded as FXB-2112-CHG per AF routing.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- Move retired requirement out of the openspec parse domain
+  ([#86](https://github.com/frankyxhl/fx_bin/pull/86),
+  [`0dc1dbd`](https://github.com/frankyxhl/fx_bin/commit/0dc1dbd6b8cfadf5e43fb180ce56e13a26405388))
+
+A "### Requirement:" header with no scenario blocks is structurally invalid to the openspec parser —
+  validate --specs went 4/5. The retirement rationale now lives in a "## Retired Requirements"
+  section at the end of the file; validate --specs is back to 5/5.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- Retire orphaned spec requirements, align backup API names
+  ([#86](https://github.com/frankyxhl/fx_bin/pull/86),
+  [`cafc819`](https://github.com/frankyxhl/fx_bin/commit/cafc8190b419aed632cf3f12620314e950f4f6d3))
+
+The Path Boundary Validation requirement's only implementation was the deleted validate_file_access;
+  it is now explicitly retired in the spec with the rationale (local CLI, no server-style trust
+  boundary) rather than left orphaned. The functional-programming spec advertised restore_backup and
+  BackupHandle, which never matched the live API — corrected to restore_from_backup and FileBackup.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **FXB-2113**: Plan for organize command decomposition
+  ([`b8db092`](https://github.com/frankyxhl/fx_bin/commit/b8db092118ac45b7f11bb5fe8c5b822e468788f3))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+### Refactoring
+
+- Remove unreachable functional twin modules
+  ([`24e9c9d`](https://github.com/frankyxhl/fx_bin/commit/24e9c9d07cd1b16b691304e6c4ea10bd87718a6e))
+
+replace_functional.py and common_functional.py (415 lines each) have zero imports anywhere in
+  fx_bin/ — the CLI calls replace.py and common.py directly. The dead twin carried the same
+  non-UTF-8 bug fixed live in #85: unreachable code with real bugs is a maintenance trap.
+  py_fx_bin.py was a 4-line hello-world stub. Their dedicated test files (and tests/functional/,
+  whose tests never imported py_fx_bin and duplicate test_cli.py coverage) go with them.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **errors**: Drop UploadError, dead since the upload server left
+  ([`589f620`](https://github.com/frankyxhl/fx_bin/commit/589f6204e3241d9151aa605934fe6ac2b1ce7f01))
+
+Zero references outside errors.py itself; the upload server it served was removed from the project
+  long ago (its last doc mention went in #86). The UploadErrors union alias goes with it.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **open**: Extract shared flag-rejection helpers for fx open subcommands
+  ([`45fef9a`](https://github.com/frankyxhl/fx_bin/commit/45fef9aadb4f69582786eb5de5210452b84a16da))
+
+Six code paths each hand-rolled rejection of inapplicable flags with subtly different messages
+  (delete/toggle omit --yes from theirs because they require it). Three single-purpose helpers now
+  carry the checks; every error string and check order is byte-identical — verified against 9 CLI
+  invocations covering each message variant. A single parametrized mega-helper was tried first and
+  rejected: its keyword-only signature plus black's call-site explosion netted +33 lines.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **organize**: Compute the plan once per run; dataclasses.replace for fallbacks
+  ([`1873087`](https://github.com/frankyxhl/fx_bin/commit/1873087d1a2f6780877bb55a3bdb6c9ad9802849))
+
+Tasks 2+3 of FXB-2113 (one commit: the trivial replace() hunk in cli.py is diff-adjacent to the
+  single-scan rewrite).
+
+prepare_organize_plan(source, context, fail_fast_dates) now wraps scan -> dates ->
+  generate_organize_plan; the preview/confirm block, ASK-mode conflict detection, and ASK execution
+  consume one shared result. scan_files call sites: cli.py 3 -> 0, organize_cli.py holds the single
+  remaining call. _read_file_dates_for_ask_mode is subsumed and removed. Per the plan's accepted
+  semantic change, ASK mode no longer re-scans between prompt and execution.
+
+The two 11-field OrganizeContext rebuilds (conflict_mode=SKIP fallback) become dataclasses.replace
+  one-liners.
+
+One untested edge documented in FXB-2113: --on-conflict ask --fail-fast with both a disk conflict
+  and an unreadable-date file now surfaces the date error at the combined scan (SKIP-mode fallback
+  path) instead of silently exiting 1 after the prompts.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **organize**: Faithful fail-fast ordering and scan boundary
+  ([`e8d19ef`](https://github.com/frankyxhl/fx_bin/commit/e8d19ef47ecfd823d1fc8b4a6029c2b194171737))
+
+Review fixes on the single-scan commit. The combined scan now always swallows date-read errors
+  (matching BOTH historical swallow sites) and returns them as date_failures; the old execution-time
+  fail-fast raise is replayed at its original position — after conflict prompts, gated on
+  ask_user_choices exactly as before — reporting only the first failure. prepare_organize_plan takes
+  the scan_result instead of scanning, so the raw scan_files call sits outside the try blocks at
+  both call sites, restoring the original exception boundary. Verified byte-identical against the
+  parent commit in both the conflict and no-conflict fail-fast repros.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **organize**: Move organize closures to organize_cli module
+  ([`625ee88`](https://github.com/frankyxhl/fx_bin/commit/625ee88185e93b353a0826c591f9f3a469ce9be3))
+
+Six inner closures (confirm, move-tracking, ASK-mode date reads, ASK plan-item execution, ASK
+  execution, interactive conflict handling) become module-level functions in fx_bin/organize_cli.py
+  with explicit parameters. cli.py drops 207 lines.
+
+One signature beyond the captured-variable list: tests patch fx_bin.cli.sys (module-name swap) to
+  fake a TTY, which cannot reach an isatty() call that moved modules — cli.py now computes
+  sys.stdin.isatty() at each call site and passes is_tty explicitly. Behavior identical (same check,
+  same logical point); zero test edits.
+
+The bare `raise` in the ASK execution loop was determined to be unreachable (err_delta==1 is only
+  ever returned when fail_fast is False) and is moved verbatim; removal belongs to the dead-branch
+  task.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+### Testing
+
+- Trim dead-module references from mixed test files
+  ([`8fa5c0e`](https://github.com/frankyxhl/fx_bin/commit/8fa5c0eb36449f8cd8bc59c6f4020e5c2c7e552c))
+
+test_functional.py keeps TestCommonEdgeCases (5 live tests of fx_bin.common) and drops the two
+  classes testing deleted modules. test_path_traversal.py is removed entirely: all 7 of its tests
+  exercised validate_file_access, which existed only in replace_functional — the live replace.py has
+  no allowed_base concept, and as a local CLI operating on user-named paths there is no trust
+  boundary to enforce. Remaining docstring fixes only.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+- **organize**: Pin single-scan behavior; drop dead branches
+  ([`d1e0ca4`](https://github.com/frankyxhl/fx_bin/commit/d1e0ca410f9aa748bbf8198bd57cafb1f51aeb08))
+
+The new test wraps organize_functional.scan_files with a counting mock (side_effect = real function)
+  and asserts exactly one call for an ASK-mode run with a disk conflict — RED on the pre-refactor
+  tree ("Called 3 times"), GREEN here.
+
+Dead code removed with proofs: the no-op `elif not sys.stdin.isatty(): pass` arm (reached only under
+  dry_run, body pass either way), and the `if err_delta and context.fail_fast: raise` block proven
+  unreachable in two independent reviews (err_delta==1 only exists when fail_fast is False; had it
+  ever run, the bare raise outside except would have been RuntimeError, not a re-raise).
+
+Plan doc: baseline corrected 702->693, measured line drop 207, status updated.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_019Q9py8f6LdS69Kvujc5UZz
+
+
 ## v2.12.1 (2026-08-07)
 
 ### Bug Fixes
