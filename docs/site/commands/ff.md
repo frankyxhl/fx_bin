@@ -7,7 +7,9 @@ Find files whose names contain a keyword, with powerful filtering options and sm
 `fx ff` provides fast file discovery with keyword matching, flexible exclusion patterns, and smart default settings. Perfect for debugging, code navigation, and project analysis.
 
 **Key Features:**
-- 🔍 Keyword and pattern-based file finding
+- 🔍 Substring keyword matching on file/directory names
+- 🛤️ Path-segment matching: a keyword containing `/` matches the relative path (v2.13.0+)
+- 📋 Results copied to the clipboard by default in interactive use (v2.13.0+)
 - 🚀 First-match mode for quick lookups (`--first`)
 - 🎯 Smart exclusions (.git, .venv, node_modules)
 - 📝 Multiple exclusion patterns (repeatable)
@@ -23,10 +25,11 @@ fx ff [OPTIONS] KEYWORD
 
 | Parameter | Type | Default | Description |
 |-----------|------|----------|-------------|
-| `KEYWORD` | string | - | Keyword or pattern to search for (required) |
+| `KEYWORD` | string | - | Substring to search for; contains `/` → matched against the relative path (required) |
 | `--first` | flag | False | Stop after first match (for speed) |
 | `--include-ignored` | flag | False | Include default-ignored dirs (.git, .venv, node_modules) |
 | `--exclude` | string | - | Exclude names or glob patterns (repeatable) |
+| `--no-copy` | flag | False | Do not copy results to the clipboard |
 
 ## Examples
 
@@ -49,6 +52,36 @@ Find all Python files (using partial match):
 ```bash
 fx ff .py
 ```
+
+### Path-Segment Matching (v2.13.0+)
+
+A keyword containing `/` is matched against the path relative to the current
+directory instead of the file name alone, so you can pin a match to a
+directory:
+
+```bash
+# Only matches file-organizer.md inside frank_maintain/
+fx ff frank_maintain/file-organizer.md
+
+# Any path containing "docs/setup"
+fx ff docs/setup
+```
+
+On Windows both `/` and `\` work.
+
+### Clipboard Copy (v2.13.0+)
+
+When run interactively (stdout is a terminal), the printed absolute paths are
+also copied to the clipboard — the result exists to be pasted somewhere else.
+
+```bash
+fx ff report            # Results printed AND on the clipboard
+fx ff report --no-copy  # Skip the clipboard
+fx ff report | wc -l    # Piped output never touches the clipboard
+```
+
+If no clipboard tool is available (e.g. headless Linux without wl-clipboard or
+xclip), `fx ff` prints a warning to stderr and still exits successfully.
 
 ### First Match Only
 
@@ -216,22 +249,22 @@ fx ff model --exclude node_modules --exclude __pycache__
 
 #### Scenario 7: Test Discovery
 
-Find unit tests:
+Find unit tests (KEYWORD is a substring, not a glob — use `tests/` path matching or a distinctive fragment):
 
 ```bash
-fx ff "*unit*test*" --exclude node_modules --exclude __pycache__
+fx ff unit_test --exclude node_modules --exclude __pycache__
 ```
 
 Find integration tests:
 
 ```bash
-fx ff "*integration*test*" --exclude node_modules
+fx ff tests/integration
 ```
 
 Find e2e tests:
 
 ```bash
-fx ff "*e2e*test*" --exclude node_modules
+fx ff e2e --exclude node_modules
 ```
 
 #### Scenario 8: Code Review

@@ -60,6 +60,7 @@ nav:
     - commands/backup.md
     - commands/organize.md
     - commands/root.md
+    - commands/realpath.md
     - commands/today.md
   - Use Cases:
     - use-cases/daily-workflow.md

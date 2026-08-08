@@ -243,6 +243,7 @@ For detailed information about each command, see:
 - [`fx backup`](commands/backup.md) - Create timestamped backups
 - [`fx organize`](commands/organize.md) - Organize files by date
 - [`fx root`](commands/root.md) - Find Git project root
+- [`fx realpath`](commands/realpath.md) - Get absolute path (`fx rp`)
 - [`fx today`](commands/today.md) - Create daily workspace
 
 ---
