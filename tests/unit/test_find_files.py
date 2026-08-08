@@ -364,6 +364,21 @@ class TestPathSegmentMatching(unittest.TestCase):
         matches = find_files("src/main", first=True)
         self.assertEqual(len(matches), 1)
 
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_backslash_keyword_matches_when_os_sep_is_backslash(self, mock_stdout):
+        """Codex PR#89: on Windows os.sep is '\\'; both separators must work."""
+        with patch("fx_bin.find_files.os.sep", "\\"):
+            matches = find_files("frank_maintain\\file-organizer.md")
+        self.assertEqual(len(matches), 1)
+
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_forward_slash_keyword_matches_when_os_sep_is_backslash(self, mock_stdout):
+        """Codex PR#89: the documented `fx ff docs/setup` form must work on
+        Windows too."""
+        with patch("fx_bin.find_files.os.sep", "\\"):
+            matches = find_files("frank_maintain/file-organizer.md")
+        self.assertEqual(len(matches), 1)
+
 
 class TestFFClipboardCopy(unittest.TestCase):
     """CHG-2115: fx ff copies results to the clipboard by default (TTY only)."""
