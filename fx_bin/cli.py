@@ -1234,6 +1234,8 @@ def organize(
       --on-conflict overwrite  Overwrite existing files
       --on-conflict ask        Prompt for scan-time conflicts (runtime conflicts skip)
     """
+    import dataclasses
+
     from loguru import logger as loguru_logger
 
     from .organize_functional import execute_organize
@@ -1282,6 +1284,7 @@ def organize(
         _confirm_with_user,
         _execute_ask_mode_with_choices,
         _handle_disk_conflicts_interactively,
+        prepare_organize_plan,
     )
 
     # Show what we're doing
@@ -1293,35 +1296,11 @@ def organize(
 
     # For non-dry-run mode, show preview and get confirmation
     if not dry_run and not yes:
-        # First, scan to get file count for confirmation
-        from .organize_functional import scan_files
-
-        scan_result = scan_files(
-            source,
-            recursive=context.recursive,
-            follow_symlinks=False,
-            max_depth=100,
-            output_dir=context.output_dir,
-        )
-
         try:
-            files = unsafe_ioresult_unwrap(scan_result)
-
-            # Apply filters to get actual count
-            from .organize import generate_organize_plan
-            from .organize_functional import get_file_date
-
-            dates = {}
-            for f in files:
-                date_result = get_file_date(f, context.date_source)
-                try:
-                    dates[f] = unsafe_ioresult_unwrap(date_result)
-                except (
-                    Exception
-                ):  # nosec B110 - Intentionally skip files with date errors
-                    pass
-
-            plan = generate_organize_plan(files, dates, context)
+            # fail_fast_dates=False: preview always shows an accurate count,
+            # even if individual files' dates can't be read (matches the
+            # historical preview behavior, independent of --fail-fast).
+            _, _, plan = prepare_organize_plan(source, context, fail_fast_dates=False)
             actual_count = sum(1 for p in plan if p.action == "moved")
 
             click.echo(f"\nWill organize {actual_count} file(s) from {source}")
@@ -1348,36 +1327,20 @@ def organize(
     import os as os_module
 
     ask_user_choices: dict[str, str] = {}  # Map source file -> 'overwrite' or 'skip'
+    ask_plan: List[Any] = []
+    ask_files_count = 0
 
     if conflict_mode_enum == ConflictMode.ASK and not dry_run:
-        # Scan files and generate plan to identify disk conflicts
-        from .organize_functional import scan_files, get_file_date
-        from .organize import generate_organize_plan
-
-        scan_result = scan_files(
-            source,
-            recursive=context.recursive,
-            follow_symlinks=False,
-            max_depth=100,
-            output_dir=context.output_dir,
-        )
-
         try:
-            files = unsafe_ioresult_unwrap(scan_result)
-
-            # Get file dates
-            dates = {}
-            for f in files:
-                date_result = get_file_date(f, context.date_source)
-                try:
-                    dates[f] = unsafe_ioresult_unwrap(date_result)
-                except (
-                    Exception
-                ):  # nosec B110 - Intentionally skip files with date errors
-                    pass
-
-            # Generate plan
-            plan = generate_organize_plan(files, dates, context)
+            # fail_fast_dates=context.fail_fast: matches the historical
+            # ASK-mode execution behavior. This same plan is reused below
+            # for execution -- no re-scan between the conflict prompt and
+            # execution (accepted semantic tightening, PLN-2113 Task 3).
+            files, _, plan = prepare_organize_plan(
+                source, context, fail_fast_dates=context.fail_fast
+            )
+            ask_plan = plan
+            ask_files_count = len(files)
 
             # Find disk conflicts (target files that already exist)
             disk_conflicts = [
@@ -1397,41 +1360,16 @@ def organize(
                 f"Warning: Could not scan for conflicts: {e}. Using SKIP mode.",
                 err=True,
             )
-            context = OrganizeContext(
-                date_source=context.date_source,
-                depth=context.depth,
-                conflict_mode=ConflictMode.SKIP,
-                output_dir=context.output_dir,
-                dry_run=context.dry_run,
-                include_patterns=context.include_patterns,
-                exclude_patterns=context.exclude_patterns,
-                recursive=context.recursive,
-                clean_empty=context.clean_empty,
-                fail_fast=context.fail_fast,
-                hidden=context.hidden,
-            )
+            context = dataclasses.replace(context, conflict_mode=ConflictMode.SKIP)
 
     # For ASK mode with user choices, we need custom execution logic
     # Otherwise use standard execute_organize
     if ask_user_choices and conflict_mode_enum == ConflictMode.ASK:
-        # Custom execution for ASK mode with user choices
-        from .organize_functional import scan_files
-        from .organize import generate_organize_plan
-
-        # Scan for files to get count for summary
-        scan_result = scan_files(
-            source,
-            recursive=context.recursive,
-            follow_symlinks=False,
-            max_depth=100,
-            output_dir=context.output_dir,
-        )
-        files = unsafe_ioresult_unwrap(scan_result)
-
-        # Execute with custom logic
+        # Execute with custom logic, reusing the plan computed above during
+        # conflict detection instead of re-scanning.
         try:
             processed, skipped, errors = _execute_ask_mode_with_choices(
-                ask_user_choices, source, context
+                ask_user_choices, source, context, ask_plan
             )
         except Exception:
             return 1
@@ -1440,7 +1378,7 @@ def organize(
         from .organize import OrganizeSummary
 
         summary = OrganizeSummary(
-            total_files=len(files),
+            total_files=ask_files_count,
             processed=processed,
             skipped=skipped,
             errors=errors,

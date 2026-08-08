@@ -1,5 +1,6 @@
 """CLI orchestration helpers for fx organize."""
 
+import dataclasses
 from datetime import datetime
 from typing import TYPE_CHECKING, Tuple
 
@@ -65,24 +66,51 @@ def _execute_move_with_tracking(
         return (0, 0, 1)
 
 
-def _read_file_dates_for_ask_mode(
-    files: "list[str]", context: "OrganizeContext"
-) -> "dict[str, datetime]":
-    """Read file dates for ASK mode, respecting fail_fast setting.
+def prepare_organize_plan(
+    source: str,
+    context: "OrganizeContext",
+    fail_fast_dates: bool,
+) -> "tuple[list[str], dict[str, datetime], list[FileOrganizeResult]]":
+    """Scan the source, read file dates, and generate the organize plan.
+
+    Runs the scan -> date-read -> plan sequence exactly once, so callers
+    (preview/confirm, ASK-mode conflict detection, ASK-mode execution) can
+    share a single result instead of each re-scanning the disk.
+
+    Args:
+        source: Source directory to scan
+        context: Organization configuration context
+        fail_fast_dates: If True, echo and re-raise on the first per-file
+            date-read error (matches the historical ASK-mode execution
+            behavior). If False, silently skip files whose date can't be
+            read; such files surface later as a plan item with action
+            "error" (matches the historical preview/confirm behavior).
 
     Returns:
-        Dictionary mapping file paths to their dates
+        Tuple of (scanned files, file->date mapping, organize plan)
     """
+    scan_result = scan_files(
+        source,
+        recursive=context.recursive,
+        follow_symlinks=False,
+        max_depth=100,
+        output_dir=context.output_dir,
+    )
+    files = unsafe_ioresult_unwrap(scan_result)
+
     dates: "dict[str, datetime]" = {}
     for file_path in files:
         date_result = get_file_date(file_path, context.date_source)
         try:
             dates[file_path] = unsafe_ioresult_unwrap(date_result)
         except Exception as e:
-            if context.fail_fast:
+            if fail_fast_dates:
                 click.echo(f"Error: Failed to read date for {file_path}: {e}", err=True)
                 raise
-    return dates
+            # else: nosec B110 - Intentionally skip files with date errors
+
+    plan = generate_organize_plan(files, dates, context)
+    return files, dates, plan
 
 
 def _execute_ask_plan_item(
@@ -117,29 +145,19 @@ def _execute_ask_mode_with_choices(
     ask_user_choices: "dict[str, str]",
     source: str,
     context: "OrganizeContext",
+    plan: "list[FileOrganizeResult]",
 ) -> Tuple[int, int, int]:
     """Execute organization in ASK mode with user choices.
+
+    Args:
+        ask_user_choices: Map of source file -> 'overwrite' or 'skip'
+        source: Source directory being organized
+        context: Organization configuration context
+        plan: Pre-computed organize plan (from `prepare_organize_plan`)
 
     Returns:
         Tuple of (processed, skipped, errors)
     """
-    # Scan for files
-    scan_result = scan_files(
-        source,
-        recursive=context.recursive,
-        follow_symlinks=False,
-        max_depth=100,
-        output_dir=context.output_dir,
-    )
-
-    files = unsafe_ioresult_unwrap(scan_result)
-
-    # Read file dates
-    dates = _read_file_dates_for_ask_mode(files, context)
-
-    # Generate plan
-    plan = generate_organize_plan(files, dates, context)
-
     # Execute plan with ASK mode user choices
     processed = 0
     skipped = 0
@@ -197,19 +215,7 @@ def _handle_disk_conflicts_interactively(
             ask_user_choices[conflict.source] = "skip"
 
         # Change conflict_mode to SKIP for non-TTY
-        context = OrganizeContext(
-            date_source=context.date_source,
-            depth=context.depth,
-            conflict_mode=ConflictMode.SKIP,  # Fallback to SKIP
-            output_dir=context.output_dir,
-            dry_run=context.dry_run,
-            include_patterns=context.include_patterns,
-            exclude_patterns=context.exclude_patterns,
-            recursive=context.recursive,
-            clean_empty=context.clean_empty,
-            fail_fast=context.fail_fast,
-            hidden=context.hidden,
-        )
+        context = dataclasses.replace(context, conflict_mode=ConflictMode.SKIP)
     else:
         # Interactive TTY: prompt for each conflict
         click.echo(f"\nFound {len(disk_conflicts)} disk conflict(s):")
