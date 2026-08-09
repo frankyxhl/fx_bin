@@ -1,6 +1,121 @@
 # CHANGELOG
 
 
+## v2.14.0 (2026-08-09)
+
+### Chores
+
+- **deps-dev**: Bump cryptography from 46.0.7 to 50.0.0
+  ([`7212bba`](https://github.com/frankyxhl/fx_bin/commit/7212bbab4ac3c305368ea4f511a3cd3d0e55cd32))
+
+Bumps [cryptography](https://github.com/pyca/cryptography) from 46.0.7 to 50.0.0. -
+  [Changelog](https://github.com/pyca/cryptography/blob/main/CHANGELOG.rst) -
+  [Commits](https://github.com/pyca/cryptography/compare/46.0.7...50.0.0)
+
+--- updated-dependencies: - dependency-name: cryptography dependency-version: 50.0.0
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump idna from 3.10 to 3.15
+  ([`d2c3727`](https://github.com/frankyxhl/fx_bin/commit/d2c37272f37fd3130277a2868c53cc6940fc3e34))
+
+Bumps [idna](https://github.com/kjd/idna) from 3.10 to 3.15. - [Release
+  notes](https://github.com/kjd/idna/releases) -
+  [Changelog](https://github.com/kjd/idna/blob/master/HISTORY.md) -
+  [Commits](https://github.com/kjd/idna/compare/v3.10...v3.15)
+
+--- updated-dependencies: - dependency-name: idna dependency-version: '3.15'
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump nltk from 3.9.4 to 3.10.0
+  ([`ffd2fb4`](https://github.com/frankyxhl/fx_bin/commit/ffd2fb4bdf467c93136b61a35ba24038b4469dfa))
+
+Bumps [nltk](https://github.com/nltk/nltk) from 3.9.4 to 3.10.0. - [Release
+  notes](https://github.com/nltk/nltk/releases) -
+  [Changelog](https://github.com/nltk/nltk/blob/develop/ChangeLog) -
+  [Commits](https://github.com/nltk/nltk/compare/3.9.4...v3.10.0)
+
+--- updated-dependencies: - dependency-name: nltk dependency-version: 3.10.0
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps-dev**: Bump setuptools from 80.9.0 to 83.0.0
+  ([`564b8fd`](https://github.com/frankyxhl/fx_bin/commit/564b8fdb90333c20d32d01af5b0dc7ccc1cf7670))
+
+Bumps [setuptools](https://github.com/pypa/setuptools) from 80.9.0 to 83.0.0. - [Release
+  notes](https://github.com/pypa/setuptools/releases) -
+  [Changelog](https://github.com/pypa/setuptools/blob/main/NEWS.rst) -
+  [Commits](https://github.com/pypa/setuptools/compare/v80.9.0...v83.0.0)
+
+--- updated-dependencies: - dependency-name: setuptools dependency-version: 83.0.0
+
+dependency-type: indirect ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+### Documentation
+
+- Sync command reference with actual CLI
+  ([`07dde1e`](https://github.com/frankyxhl/fx_bin/commit/07dde1e675db77a72d966543f54a91f15e5f02d6))
+
+- README overview table: add missing fff / root / realpath (rp) / today / organize / version rows;
+  fix fx ff row (claimed content search + regex support, which ff never had) - README: document ff
+  v2.13.0 path-segment matching, default clipboard copy and --no-copy / --first options; add brief
+  root / realpath / organize sections - docs site: new commands/realpath.md page + mkdocs nav entry;
+  index table row; quick-start link - ff.md/fff.md: document v2.13.0 path matching + clipboard
+  behavior; fix bogus glob-keyword examples (ff matches substrings, not globs)
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_01PQcFrofPTcsnEtrVDUDZNG
+
+- Use quoted fx root --cd form for shell integration
+  ([`880057d`](https://github.com/frankyxhl/fx_bin/commit/880057d9fb07f271f3b4cf52f9afc9434fcd999d))
+
+Per Codex review on PR #90: default fx root output has a descriptive prefix, so cd $(fx root) fails;
+  document cd "$(fx root --cd)" which also survives paths with spaces.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_01PQcFrofPTcsnEtrVDUDZNG
+
+### Features
+
+- **realpath**: Copy resolved path to clipboard by default
+  ([`b3b8dfb`](https://github.com/frankyxhl/fx_bin/commit/b3b8dfb10095493700723aad9f49b5657dbe0e4e))
+
+CHG-2116: the output of fx realpath / fx rp is exactly one path whose purpose is to be pasted
+  elsewhere, so copy it by default when stdout is a TTY. --no-copy opts out; piped/scripted output
+  (open "$(fx rp x)") never touches the clipboard; clipboard failure warns on stderr and the command
+  still exits 0. Reuses the shared fx_bin.clipboard module from CHG-2115.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_01PQcFrofPTcsnEtrVDUDZNG
+
+### Testing
+
+- Version-compatible stderr capture for CliRunner
+  ([`5f950b3`](https://github.com/frankyxhl/fx_bin/commit/5f950b33172ae3d665dfe41f4782dbb93c0deec4))
+
+Per Codex review on PR #91: CliRunner(mix_stderr=False) raises TypeError on Click >= 8.2 (kwarg
+  removed; stderr always captured separately), which the click ^8.1.3 range allows. Add
+  tests.helpers .stderr_capturing_runner() picking by signature, and use it at all three call sites
+  (test_realpath, test_find_files, test_organize_cli). Verified full suite green on both click 8.1.3
+  and 8.3.3.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_01PQcFrofPTcsnEtrVDUDZNG
+
+
 ## v2.13.0 (2026-08-08)
 
 ### Bug Fixes
