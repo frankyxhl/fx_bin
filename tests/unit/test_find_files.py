@@ -432,9 +432,9 @@ class TestFFClipboardCopy(unittest.TestCase):
         mock_copy.assert_not_called()
 
     def test_clipboard_failure_warns_but_exits_zero(self):
-        from click.testing import CliRunner
         from fx_bin.cli import cli
         from fx_bin.errors import ClipboardError
+        from tests.helpers import stderr_capturing_runner
 
         with (
             patch("fx_bin.cli._stdout_is_tty", return_value=True),
@@ -443,7 +443,7 @@ class TestFFClipboardCopy(unittest.TestCase):
                 side_effect=ClipboardError("no tool"),
             ),
         ):
-            result = CliRunner(mix_stderr=False).invoke(cli, ["ff", "alpha"])
+            result = stderr_capturing_runner().invoke(cli, ["ff", "alpha"])
         self.assertEqual(result.exit_code, 0)
         self.assertIn("alpha.txt", result.stdout)
         self.assertIn("clipboard", result.stderr.lower())

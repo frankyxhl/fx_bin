@@ -274,9 +274,9 @@ class TestRealpathClipboardCopy(unittest.TestCase):
 
     def test_clipboard_failure_warns_but_exits_zero(self):
         from unittest.mock import patch
-        from click.testing import CliRunner
         from fx_bin.cli import cli
         from fx_bin.errors import ClipboardError
+        from tests.helpers import stderr_capturing_runner
 
         with (
             patch("fx_bin.cli._stdout_is_tty", return_value=True),
@@ -285,7 +285,7 @@ class TestRealpathClipboardCopy(unittest.TestCase):
                 side_effect=ClipboardError("no tool"),
             ),
         ):
-            result = CliRunner(mix_stderr=False).invoke(cli, ["rp", "."])
+            result = stderr_capturing_runner().invoke(cli, ["rp", "."])
         self.assertEqual(result.exit_code, 0)
         self.assertTrue(os.path.isabs(result.stdout.strip()))
         self.assertIn("clipboard", result.stderr.lower())
