@@ -490,13 +490,20 @@ def root(output_for_cd: bool) -> int:
         ctx.exit(1)
 
 
-def _run_realpath(path: str) -> int:
+def _run_realpath(path: str, no_copy: bool = False) -> int:
     """Shared implementation for realpath and rp commands."""
-    from . import realpath as realpath_module
+    from . import clipboard, realpath as realpath_module
 
     try:
         resolved = realpath_module.resolve_path(path)
         click.echo(str(resolved))
+        # The resolved path exists to be pasted somewhere else (CHG-2116):
+        # copy it by default, same TTY-gated semantics as fx ff.
+        if not no_copy and _stdout_is_tty():
+            try:
+                clipboard.copy_to_clipboard(str(resolved))
+            except clipboard.ClipboardError as exc:
+                click.echo(f"Warning: could not copy to clipboard: {exc}", err=True)
         return 0
     except FileNotFoundError:
         click.echo(f"Error: Path does not exist: {path}", err=True)
@@ -514,34 +521,49 @@ def _run_realpath(path: str) -> int:
 
 @cli.command()
 @click.argument("path", default=".")
-def realpath(path: str) -> int:
+@click.option(
+    "--no-copy",
+    is_flag=True,
+    default=False,
+    help="Do not copy the result to the clipboard",
+)
+def realpath(path: str, no_copy: bool) -> int:
     """Get absolute path of a file or directory.
 
     Resolves relative paths, symlinks, and ~ to the canonical absolute path.
-    The path must exist.
+    The path must exist. The result is copied to the clipboard by default
+    when run interactively (disable with --no-copy; piped output never
+    touches the clipboard).
 
     Examples:
         fx realpath .           # Current directory
         fx realpath ../foo      # Relative path
         fx realpath ~/Downloads # Home directory
     """
-    return _run_realpath(path)
+    return _run_realpath(path, no_copy=no_copy)
 
 
 @cli.command()
 @click.argument("path", default=".")
-def rp(path: str) -> int:
+@click.option(
+    "--no-copy",
+    is_flag=True,
+    default=False,
+    help="Do not copy the result to the clipboard",
+)
+def rp(path: str, no_copy: bool) -> int:
     """Get absolute path of a file or directory.
 
     Alias for `fx realpath`. Resolves relative paths, symlinks, and ~
-    to the canonical absolute path.
+    to the canonical absolute path. The result is copied to the clipboard
+    by default when run interactively (disable with --no-copy).
 
     Examples:
         fx rp .           # Current directory
         fx rp ../foo      # Relative path
         fx rp ~/Downloads # Home directory
     """
-    return _run_realpath(path)
+    return _run_realpath(path, no_copy=no_copy)
 
 
 @cli.command()
