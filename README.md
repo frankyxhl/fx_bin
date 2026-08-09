@@ -482,11 +482,13 @@ See [fx-root-setup.md](docs/fx-root-setup.md) for shell integration setup.
 #### 📍 fx realpath / fx rp - Absolute Path
 
 Resolve a relative path, `~`, or symlink to its canonical absolute path (the path must exist).
+The result is copied to the clipboard by default when run interactively — resolve and paste.
 
 ```bash
-fx realpath .            # Current directory
+fx realpath .            # Current directory (result on the clipboard)
 fx rp ../foo             # Relative path (alias)
 fx rp ~/Downloads        # Home directory
+fx rp . --no-copy        # Skip the clipboard copy
 ```
 
 #### 🗂️ fx organize - Date-Based File Organizer

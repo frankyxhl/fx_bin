@@ -8,9 +8,14 @@ Get the absolute path of a file or directory.
 absolute path. The path must exist. `fx rp` is a shorter alias for the same
 command.
 
+When run interactively (stdout is a terminal), the resolved path is also
+copied to the clipboard — resolve and paste. Use `--no-copy` to disable;
+piped/scripted output (e.g. `open "$(fx rp x)"`) never touches the clipboard.
+
 **Key Features:**
 
 - 📍 Canonical absolute path (symlinks resolved)
+- 📋 Result copied to the clipboard in interactive use (`--no-copy` disables)
 - 🏠 `~` expansion
 - ⚡ `fx rp` short alias
 - ❌ Fails clearly when the path does not exist
@@ -27,6 +32,7 @@ fx rp [PATH]
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `PATH` | string | `.` | File or directory to resolve (must exist) |
+| `--no-copy` | flag | False | Do not copy the result to the clipboard |
 
 ## Examples
 

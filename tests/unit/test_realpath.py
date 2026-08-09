@@ -217,5 +217,79 @@ class TestResolvePathReturnType(unittest.TestCase):
         self.assertTrue(result.is_absolute())
 
 
+class TestRealpathClipboardCopy(unittest.TestCase):
+    """CHG-2116: fx realpath / fx rp copy the result to the clipboard by
+    default (TTY only)."""
+
+    def setUp(self):
+        self.test_dir = tempfile.mkdtemp()
+        self.original_cwd = os.getcwd()
+        os.chdir(self.test_dir)
+
+    def tearDown(self):
+        os.chdir(self.original_cwd)
+        import shutil
+
+        shutil.rmtree(self.test_dir, ignore_errors=True)
+
+    def _invoke(self, args, tty=True):
+        from unittest.mock import patch
+        from click.testing import CliRunner
+        from fx_bin.cli import cli
+
+        with (
+            patch("fx_bin.cli._stdout_is_tty", return_value=tty),
+            patch("fx_bin.clipboard.copy_to_clipboard") as mock_copy,
+        ):
+            result = CliRunner().invoke(cli, args)
+        return result, mock_copy
+
+    def test_realpath_copies_result_on_tty(self):
+        result, mock_copy = self._invoke(["realpath", "."])
+        self.assertEqual(result.exit_code, 0)
+        mock_copy.assert_called_once()
+        copied = mock_copy.call_args[0][0]
+        self.assertEqual(copied, result.output.strip())
+        self.assertTrue(os.path.isabs(copied))
+
+    def test_rp_alias_copies_result_on_tty(self):
+        result, mock_copy = self._invoke(["rp", "."])
+        self.assertEqual(result.exit_code, 0)
+        mock_copy.assert_called_once()
+
+    def test_no_copy_flag_disables_copy(self):
+        result, mock_copy = self._invoke(["rp", ".", "--no-copy"])
+        self.assertEqual(result.exit_code, 0)
+        mock_copy.assert_not_called()
+
+    def test_no_copy_when_stdout_not_tty(self):
+        result, mock_copy = self._invoke(["realpath", "."], tty=False)
+        self.assertEqual(result.exit_code, 0)
+        mock_copy.assert_not_called()
+
+    def test_no_copy_on_nonexistent_path(self):
+        result, mock_copy = self._invoke(["rp", "does-not-exist"])
+        self.assertEqual(result.exit_code, 1)
+        mock_copy.assert_not_called()
+
+    def test_clipboard_failure_warns_but_exits_zero(self):
+        from unittest.mock import patch
+        from click.testing import CliRunner
+        from fx_bin.cli import cli
+        from fx_bin.errors import ClipboardError
+
+        with (
+            patch("fx_bin.cli._stdout_is_tty", return_value=True),
+            patch(
+                "fx_bin.clipboard.copy_to_clipboard",
+                side_effect=ClipboardError("no tool"),
+            ),
+        ):
+            result = CliRunner(mix_stderr=False).invoke(cli, ["rp", "."])
+        self.assertEqual(result.exit_code, 0)
+        self.assertTrue(os.path.isabs(result.stdout.strip()))
+        self.assertIn("clipboard", result.stderr.lower())
+
+
 if __name__ == "__main__":
     unittest.main()
