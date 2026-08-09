@@ -1299,9 +1299,13 @@
 <p><code>fx realpath</code> resolves relative paths, symlinks, and <code>~</code> to the canonical
 absolute path. The path must exist. <code>fx rp</code> is a shorter alias for the same
 command.</p>
+<p>When run interactively (stdout is a terminal), the resolved path is also
+copied to the clipboard — resolve and paste. Use <code>--no-copy</code> to disable;
+piped/scripted output (e.g. <code>open "$(fx rp x)"</code>) never touches the clipboard.</p>
 <p><strong>Key Features:</strong></p>
 <ul>
 <li>📍 Canonical absolute path (symlinks resolved)</li>
+<li>📋 Result copied to the clipboard in interactive use (<code>--no-copy</code> disables)</li>
 <li>🏠 <code>~</code> expansion</li>
 <li>⚡ <code>fx rp</code> short alias</li>
 <li>❌ Fails clearly when the path does not exist</li>
@@ -1326,6 +1330,12 @@ fx<span class="w"> </span>rp<span class="w"> </span><span class="o">[</span>PATH
 <td>string</td>
 <td><code>.</code></td>
 <td>File or directory to resolve (must exist)</td>
+</tr>
+<tr>
+<td><code>--no-copy</code></td>
+<td>flag</td>
+<td>False</td>
+<td>Do not copy the result to the clipboard</td>
 </tr>
 </tbody>
 </table>
