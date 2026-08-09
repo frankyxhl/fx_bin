@@ -609,7 +609,9 @@ class TestAskRuntimeConflicts(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures."""
-        self.runner = CliRunner(mix_stderr=False)
+        from tests.helpers import stderr_capturing_runner
+
+        self.runner = stderr_capturing_runner()
 
     def test_given_ask_mode_and_runtime_conflict_when_default_mode_then_logs_warning(
         self,
