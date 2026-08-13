@@ -42,14 +42,22 @@ def test_repo_opens_origin_from_nested_directory(
     nested = repository / "src" / "nested"
     nested.mkdir(parents=True)
     monkeypatch.chdir(nested)
+    dispatch_plan = object()
 
-    with patch("fx_bin.open_launcher.execute_dispatch_plan") as execute:
+    with (
+        patch(
+            "fx_bin.open_launcher.build_dispatch_plan",
+            return_value=dispatch_plan,
+        ) as build,
+        patch("fx_bin.open_launcher.execute_dispatch_plan") as execute,
+    ):
         result = CliRunner().invoke(cli, ["repo"])
 
     assert result.exit_code == 0
     assert result.output == "Opening https://github.com/frankyxhl/fx_bin\n"
-    plan = execute.call_args.args[0]
-    assert "https://github.com/frankyxhl/fx_bin" in plan.args
+    launch_target = build.call_args.args[0]
+    assert launch_target.target == "https://github.com/frankyxhl/fx_bin"
+    execute.assert_called_once_with(dispatch_plan)
 
 
 def test_repo_explicit_remote_overrides_origin(
@@ -59,13 +67,22 @@ def test_repo_explicit_remote_overrides_origin(
     _git(repository, "remote", "add", "origin", "git@github.com:owner/main.git")
     _git(repository, "remote", "add", "fork", "git@github.com:owner/fork.git")
     monkeypatch.chdir(repository)
+    dispatch_plan = object()
 
-    with patch("fx_bin.open_launcher.execute_dispatch_plan") as execute:
+    with (
+        patch(
+            "fx_bin.open_launcher.build_dispatch_plan",
+            return_value=dispatch_plan,
+        ) as build,
+        patch("fx_bin.open_launcher.execute_dispatch_plan") as execute,
+    ):
         result = CliRunner().invoke(cli, ["repo", "--remote", "fork"])
 
     assert result.exit_code == 0
     assert result.output == "Opening https://github.com/owner/fork\n"
-    assert execute.call_count == 1
+    launch_target = build.call_args.args[0]
+    assert launch_target.target == "https://github.com/owner/fork"
+    execute.assert_called_once_with(dispatch_plan)
 
 
 def test_repo_without_git_repository_prints_single_line(
