@@ -35,6 +35,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("replace", "Replace text in files"),
     ("backup", "Create timestamped backups of files/dirs"),
     ("root", "Find Git project root directory"),
+    ("repo", "Open the current GitHub repository"),
     ("realpath", "Get absolute path of a file or directory"),
     ("rp", "Get absolute path (alias for realpath)"),
     ("today", "Create/navigate to today's workspace directory"),
@@ -488,6 +489,37 @@ def root(output_for_cd: bool) -> int:
             click.echo(f"Error: {e}", err=True)
         ctx = click.get_current_context()
         ctx.exit(1)
+
+
+@cli.command()
+@click.option(
+    "--remote",
+    "remote_name",
+    metavar="NAME",
+    help="Open a specific Git remote instead of the default selection.",
+)
+def repo(remote_name: Optional[str]) -> None:
+    """Open the current GitHub repository in the default browser.
+
+    The command prefers the origin remote. Use --remote when a repository has
+    multiple remotes and a different one should be opened.
+    """
+    from . import open_launcher, repo as repo_module
+
+    try:
+        repository_url = repo_module.resolve_github_repository_url(
+            requested_remote=remote_name
+        )
+        launch_target = open_launcher.LaunchTarget(
+            label="GitHub repository",
+            target=repository_url,
+        )
+        plan = open_launcher.build_dispatch_plan(launch_target)
+        open_launcher.execute_dispatch_plan(plan)
+        click.echo(f"Opening {repository_url}")
+    except (repo_module.RepoError, open_launcher.OpenError) as exc:
+        click.echo(str(exc), err=True)
+        click.get_current_context().exit(1)
 
 
 def _run_realpath(path: str, no_copy: bool = False) -> int:
