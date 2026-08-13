@@ -130,6 +130,7 @@ poetry run fx --help
 | `fx replace` | Replace text in files | Atomic file operations, safe text replacement |
 | `fx backup` | Create timestamped backups | File/dir backup, compression |
 | `fx root` | Find Git project root directory | `cd "$(fx root --cd)"`, script integration |
+| `fx repo` | Open the current GitHub repository | `origin` preference, explicit remote selection |
 | `fx realpath` (`fx rp`) | Get absolute path of a file/directory | Resolves `~`, symlinks, relative paths |
 | `fx today` | Create/navigate to today's workspace | Date-based daily directories |
 | `fx organize` | Organize files into date-based directories | Photo sorting, dataset management |
@@ -478,6 +479,20 @@ cd "$(fx root --cd)"     # Jump to project root in scripts
 ```
 
 See [fx-root-setup.md](docs/fx-root-setup.md) for shell integration setup.
+
+#### 🌐 fx repo - Open GitHub Repository
+
+Open the GitHub.com page for the Git repository containing the current directory.
+The command prefers `origin`; use `--remote` to select another configured remote.
+
+```bash
+fx repo                  # Open origin in the default browser
+fx repo --remote fork    # Open a specific remote
+```
+
+Version 1 supports GitHub.com HTTPS and SSH remote URLs. If the current directory
+does not belong to a Git repository with a remote, the command exits without
+opening a browser and explains that no Git remote was found.
 
 #### 📍 fx realpath / fx rp - Absolute Path
 

@@ -102,6 +102,12 @@ class OpenError(FxBinError):
     pass
 
 
+class RepoError(FxBinError):
+    """Errors resolving a Git remote to a repository web page."""
+
+    pass
+
+
 class ClipboardError(OpenError):
     """Errors writing to the system clipboard.
 
@@ -152,6 +158,7 @@ AppError = Union[
     FilesError,
     FindError,
     OpenError,
+    RepoError,
     OrganizeError,
 ]
 
