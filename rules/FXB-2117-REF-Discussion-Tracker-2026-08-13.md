@@ -33,6 +33,7 @@ Tracks FXB discussion items raised on 2026-08-13.
 - **Process**: user explicitly selected a Normal CHG instead of a separate PRP; implementation will follow COR-1500 TDD.
 - **Approval**: Frank Xu approved FXB-2118 and requested implementation plus a reviewable PR.
 - **Implementation**: three RED→GREEN cycles completed; full suite passed with 86.76% coverage; publishing a reviewable PR from the `ryosaeba1985` fork.
+- **PR**: `frankyxhl/fx_bin#92` opened as ready for review by `ryosaeba1985`.
 
 ---
 

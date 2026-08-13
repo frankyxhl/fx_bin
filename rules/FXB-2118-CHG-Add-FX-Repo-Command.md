@@ -137,6 +137,7 @@ with a concise non-zero error. The error must not echo embedded credentials.
 | 2026-08-13 | TDD CLI and browser dispatch behavior | RED observed; 23 focused tests GREEN after refactor |
 | 2026-08-13 | Full verification | 753 passed, 1 skipped; 86.76% coverage; Black, Flake8, mypy, Bandit, security tests, and `af validate` passed |
 | 2026-08-13 | COR-1610 / FXB-2109 self-review | 9.8/10 PASS; no blocking findings |
+| 2026-08-13 | Opened PR #92 | Ready for review against `frankyxhl/fx_bin:main` |
 
 ## Post-Change Review
 
