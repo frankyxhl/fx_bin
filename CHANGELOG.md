@@ -1,6 +1,24 @@
 # CHANGELOG
 
 
+## v2.15.0 (2026-08-13)
+
+### Documentation
+
+- Record fx repo pull request
+  ([`eb7f530`](https://github.com/frankyxhl/fx_bin/commit/eb7f5304a77ad924486734d30123aa7005219e3a))
+
+### Features
+
+- Add fx repo command
+  ([`34408d6`](https://github.com/frankyxhl/fx_bin/commit/34408d6d2891eafe80792d21d0533e0b08749fc8))
+
+### Testing
+
+- Isolate repo CLI dispatch planning
+  ([`be2a6ff`](https://github.com/frankyxhl/fx_bin/commit/be2a6ff22dac66b517b5ef5aa753c42c40a89aaa))
+
+
 ## v2.14.0 (2026-08-09)
 
 ### Chores
