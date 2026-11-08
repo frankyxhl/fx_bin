@@ -29,6 +29,7 @@
 | 2117 | REF | Discussion Tracker 2026 08 13 | Active |
 | 2118 | CHG | Add FX Repo Command | In Progress |
 | 2119 | PRP | Add FX Pwd Command | Draft |
+| 2120 | CHG | Add Forgejo CI Workflow | Proposed |
 
 ---
 

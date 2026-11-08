@@ -1,0 +1,39 @@
+name: Forgejo CI
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Tests (Python 3.12)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install system packages
+        run: apt-get update && apt-get install -y xdg-utils
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Create non-root test user
+        run: useradd -m ci && chown -R ci:ci "$GITHUB_WORKSPACE"
+
+      - name: Install dependencies
+        run: runuser -u ci -- env HOME=/home/ci "PATH=$PATH" poetry install --with dev
+
+      - name: Flake8
+        run: runuser -u ci -- env HOME=/home/ci "PATH=$PATH" poetry run flake8 fx_bin/ --statistics
+
+      - name: Run Tests
+        run: runuser -u ci -- env HOME=/home/ci "PATH=$PATH" poetry run python -m pytest tests/ -v --tb=short --ignore=tests/runners/ --ignore=tests/performance/ --no-cov
