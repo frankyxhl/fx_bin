@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v2.16.0 (2026-11-08)
+
+### Features
+
+- **pwd**: Add fx pwd command
+  ([`943acb1`](https://github.com/frankyxhl/fx_bin/commit/943acb15fc67568f2b51cb2ba1332608d89d83a5))
+
+Release marker for PRP-2119 / PR 1 (fx pwd): the code landed in PR 1 under non-conventional
+  subjects, so semantic-release saw no feat. No file change.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+
+
 ## v2.15.0 (2026-08-13)
 
 ### Documentation
