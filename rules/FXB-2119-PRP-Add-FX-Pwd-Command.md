@@ -32,11 +32,12 @@ Sharing the current directory with another machine or a chat means running `pwd`
 - Host source: `socket.gethostname()`, used as returned. No `.local` stripping and no domain added.
 - Host format: `host:/path`, the scp/rsync style. The path is appended unchanged.
 - Clipboard: `clipboard.copy_to_clipboard`, called from the same TTY gate as `_run_realpath` in `fx_bin/cli.py`. A `ClipboardError` prints `Warning: could not copy to clipboard: <reason>` on stderr and the exit code stays 0.
-- Exit code 0 on success. If the current directory was deleted, print `Error: Cannot determine current directory (<reason>)` on stderr and exit 1.
+- Exit code 0 on success. The whole path step (reading `$PWD`, `os.path.samefile`, `os.getcwd()`) is wrapped in one `OSError` catch. If the current directory was deleted, even with `$PWD` still set to it, print `Error: Cannot determine current directory (<reason>)` on stderr and exit 1.
 
 ### Platforms
 
 - macOS and Linux: output is directly usable with `scp host:/path`.
+- macOS without a configured HostName: `socket.gethostname()` can return `name.local`. `README.md` says so; the value is used as returned.
 - Windows: the path keeps its drive letter and backslashes, so `--host` prints something like `DESKTOP-AB12CD3:C:\Users\frank\demo`. This is not a valid scp address. Known limit of the first version; no path conversion (Frank's ruling).
 
 ### Files
@@ -51,9 +52,9 @@ Sharing the current directory with another machine or a chat means running `pwd`
 
 1. `fx pwd` prints the current directory.
 2. `fx pwd --host` prints `<gethostname()>:<cwd>`; `-H` is the same.
-3. On a TTY the clipboard helper receives exactly the printed line; with `--no-copy` it is never called; with piped output it is never called.
+3. On a TTY the clipboard helper receives exactly the printed line, with and without `--host`; with `--no-copy` it is never called; with piped output it is never called.
 4. A clipboard failure prints the warning on stderr and exits 0.
-5. A deleted current directory exits 1 with the error line.
+5. A deleted current directory exits 1 with the error line, both with `$PWD` unset and with `$PWD` still set to the deleted path.
 6. The command appears in `fx list`.
 7. With `$PWD` set to a symlink that points at the current directory, the symlink path is printed; with a stale or wrong `$PWD`, `os.getcwd()` is printed.
 8. Host name is taken from `socket.gethostname()` (patched in the test), not from the environment.
