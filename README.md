@@ -132,6 +132,7 @@ poetry run fx --help
 | `fx root` | Find Git project root directory | `cd "$(fx root --cd)"`, script integration |
 | `fx repo` | Open the current GitHub repository | `origin` preference, explicit remote selection |
 | `fx realpath` (`fx rp`) | Get absolute path of a file/directory | Resolves `~`, symlinks, relative paths |
+| `fx pwd` | Print the current directory | Copies to clipboard, `--host` gives `host:/path` |
 | `fx today` | Create/navigate to today's workspace | Date-based daily directories |
 | `fx organize` | Organize files into date-based directories | Photo sorting, dataset management |
 | `fx list` | List all available commands | Help and usage information |
@@ -505,6 +506,20 @@ fx rp ../foo             # Relative path (alias)
 fx rp ~/Downloads        # Home directory
 fx rp . --no-copy        # Skip the clipboard copy
 ```
+
+#### 📂 fx pwd - Current Directory
+
+Print the current directory like the system `pwd`. The result is copied to the clipboard by default when run interactively; piped output never touches the clipboard.
+`--host` (`-H`) prefixes the host name, giving `host:/path`, ready for `scp` or `rsync`.
+
+```bash
+fx pwd                   # /Users/frank/projects/demo (also on the clipboard)
+fx pwd --host            # myhost:/Users/frank/projects/demo
+fx pwd --no-copy         # Skip the clipboard copy
+```
+
+The host name is whatever `socket.gethostname()` returns. On a Mac without a configured HostName this can be `name.local`.
+On Windows the path keeps its drive letter and backslashes, so `--host` output such as `PCNAME:C:\Users\frank\demo` is not a valid `scp` address.
 
 #### 🗂️ fx organize - Date-Based File Organizer
 

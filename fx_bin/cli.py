@@ -38,6 +38,7 @@ COMMANDS_INFO: List[Tuple[str, str]] = [
     ("repo", "Open the current GitHub repository"),
     ("realpath", "Get absolute path of a file or directory"),
     ("rp", "Get absolute path (alias for realpath)"),
+    ("pwd", "Print the current directory and copy it to the clipboard"),
     ("today", "Create/navigate to today's workspace directory"),
     ("organize", "Organize files into date-based directories"),
     ("list", "List all available commands"),
@@ -573,6 +574,51 @@ def realpath(path: str, no_copy: bool) -> int:
         fx realpath ~/Downloads # Home directory
     """
     return _run_realpath(path, no_copy=no_copy)
+
+
+@cli.command(
+    help=(
+        "Print the current directory.\n\n"
+        "Works like the system pwd and copies the result to the clipboard by "
+        "default when run interactively (disable with --no-copy; piped output "
+        "never touches the clipboard). With --host the host name is prefixed, "
+        "giving host:/path.\n\n"
+        "Examples:\n\n"
+        "\b\n"
+        "    fx pwd           # /Users/frank/projects/demo\n"
+        "    fx pwd --host    # myhost:/Users/frank/projects/demo\n"
+        "    fx pwd --no-copy # print only"
+    )
+)
+@click.option(
+    "--host",
+    "-H",
+    "with_host",
+    is_flag=True,
+    default=False,
+    help="Prefix the host name, giving host:/path",
+)
+@click.option(
+    "--no-copy",
+    is_flag=True,
+    default=False,
+    help="Do not copy the result to the clipboard",
+)
+def pwd(with_host: bool, no_copy: bool) -> int:
+    from . import clipboard, pwd_cmd
+
+    try:
+        line = pwd_cmd.pwd_line(with_host)
+    except OSError as exc:
+        click.echo(f"Error: Cannot determine current directory ({exc})", err=True)
+        click.get_current_context().exit(1)
+    click.echo(line)
+    if not no_copy and _stdout_is_tty():
+        try:
+            clipboard.copy_to_clipboard(line)
+        except clipboard.ClipboardError as exc:
+            click.echo(f"Warning: could not copy to clipboard: {exc}", err=True)
+    return 0
 
 
 @cli.command()

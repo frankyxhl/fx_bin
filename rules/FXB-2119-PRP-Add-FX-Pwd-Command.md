@@ -45,7 +45,7 @@ Sharing the current directory with another machine or a chat means running `pwd`
 - `fx_bin/cli.py`: the `pwd` command and its row in the command list.
 - `fx_bin/pwd_cmd.py` (new, small): builds the output line from cwd and optional host.
 - `tests/test_pwd.py` (new): CLI and unit tests.
-- `README.md`: command documentation. `CHANGELOG.md`: one entry.
+- `README.md`: command table row and section. `CHANGELOG.md` is generated from commits by the release tool and is not edited by hand.
 - `rules/`: this PRP and the index row.
 
 ### Tests (written first, failing on `2800c22`)
