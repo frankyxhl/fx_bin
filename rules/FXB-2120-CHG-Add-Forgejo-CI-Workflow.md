@@ -13,7 +13,7 @@
 
 ## What
 
-Add `.forgejo/workflows/ci.yml`: one job that checks out, sets up Python 3.12, installs Poetry with `pip install poetry`, runs `poetry install --with dev`, flake8 on `fx_bin/`, and the same pytest command as the GitHub Tests job. Pull requests to main only. `.github/workflows` is not touched.
+Add `.forgejo/workflows/ci.yml`: one job that checks out, sets up Python 3.12, installs Poetry with `pip install poetry`, runs `poetry install --with dev`, flake8 on `fx_bin/`, and the same pytest command as the GitHub Tests job. Pull requests to main only. The job also installs `xdg-utils` (the runner image lacks `xdg-open`) and runs poetry, flake8 and pytest as a non-root user, because the runner is root and the read-only-file tests only behave as on GitHub for a normal user. `.github/workflows` is not touched.
 
 ## Why
 
