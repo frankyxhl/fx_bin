@@ -83,9 +83,7 @@ class TestPwdCommand(unittest.TestCase):
         mock_copy.assert_not_called()
 
     def test_no_copy_when_stdout_not_tty(self):
-        result, mock_copy = self._invoke(
-            ["pwd"], tty=False, env={"PWD": self.test_dir}
-        )
+        result, mock_copy = self._invoke(["pwd"], tty=False, env={"PWD": self.test_dir})
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.output.strip(), self.test_dir)
         mock_copy.assert_not_called()
