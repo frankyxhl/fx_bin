@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1360,10 +1360,10 @@ fx<span class="w"> </span>open<span class="w"> </span>https://example.com
 fx<span class="w"> </span>open<span class="w"> </span>./diagram.png<span class="w"> </span>--app<span class="w"> </span>Preview
 
 <span class="c1"># Add a saved URL; bare domains are normalized to https URLs</span>
-fx<span class="w"> </span>open<span class="w"> </span>add<span class="w"> </span>yahoo.co.jp<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;Yahoo! JAPAN&quot;</span><span class="w"> </span>--slug<span class="w"> </span>yahoo-jp<span class="w"> </span>--entry-tag<span class="w"> </span>portal<span class="w"> </span>--yes
+fx<span class="w"> </span>open<span class="w"> </span>add<span class="w"> </span>yahoo.co.jp<span class="w"> </span>--name<span class="w"> </span><span class="s2">"Yahoo! JAPAN"</span><span class="w"> </span>--slug<span class="w"> </span>yahoo-jp<span class="w"> </span>--entry-tag<span class="w"> </span>portal<span class="w"> </span>--yes
 
 <span class="c1"># Ask an external AI command to propose metadata</span>
-<span class="nv">FX_OPEN_AI_COMMAND</span><span class="o">=</span><span class="s2">&quot;my-link-metadata&quot;</span><span class="w"> </span>fx<span class="w"> </span>open<span class="w"> </span>add<span class="w"> </span>https://example.com<span class="w"> </span>--ai<span class="w"> </span>--yes
+<span class="nv">FX_OPEN_AI_COMMAND</span><span class="o">=</span><span class="s2">"my-link-metadata"</span><span class="w"> </span>fx<span class="w"> </span>open<span class="w"> </span>add<span class="w"> </span>https://example.com<span class="w"> </span>--ai<span class="w"> </span>--yes
 </code></pre></div>
 <hr />
 <h2 id="config">Config</h2>
@@ -1381,11 +1381,11 @@ fx<span class="w"> </span>open<span class="w"> </span>--config<span class="w"> <
 <p>Example <code>open.toml</code>:</p>
 <div class="language-toml highlight"><pre><span></span><code><span class="k">[[items]]</span>
 <span class="n">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Claude Code usage&quot;</span>
-<span class="n">slug</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cc-usage&quot;</span>
-<span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://example.com/claude-code-usage&quot;</span>
-<span class="n">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;usage&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;claude-code&quot;</span><span class="p">]</span>
-<span class="n">browser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Google Chrome&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Claude Code usage"</span>
+<span class="n">slug</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"cc-usage"</span>
+<span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://example.com/claude-code-usage"</span>
+<span class="n">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"usage"</span><span class="p">,</span><span class="w"> </span><span class="s2">"claude-code"</span><span class="p">]</span>
+<span class="n">browser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Google Chrome"</span>
 </code></pre></div>
 <p>Supported item fields:</p>
 <table>
@@ -1505,10 +1505,10 @@ and is invalid in the add workflow.</p>
 <h2 id="ai-metadata">AI Metadata</h2>
 <p><code>--ai</code> calls the external command configured in <code>FX_OPEN_AI_COMMAND</code>.</p>
 <p>Provider stdin:</p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="s2">&quot;https://example.com&quot;</span><span class="p">,</span><span class="nt">&quot;existing_slugs&quot;</span><span class="p">:[</span><span class="s2">&quot;example&quot;</span><span class="p">],</span><span class="nt">&quot;allowed_fields&quot;</span><span class="p">:[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span><span class="s2">&quot;slug&quot;</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">]}</span>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"target"</span><span class="p">:</span><span class="s2">"https://example.com"</span><span class="p">,</span><span class="nt">"existing_slugs"</span><span class="p">:[</span><span class="s2">"example"</span><span class="p">],</span><span class="nt">"allowed_fields"</span><span class="p">:[</span><span class="s2">"name"</span><span class="p">,</span><span class="s2">"slug"</span><span class="p">,</span><span class="s2">"tags"</span><span class="p">]}</span>
 </code></pre></div>
 <p>Provider stdout:</p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Example&quot;</span><span class="p">,</span><span class="nt">&quot;slug&quot;</span><span class="p">:</span><span class="s2">&quot;example-docs&quot;</span><span class="p">,</span><span class="nt">&quot;tags&quot;</span><span class="p">:[</span><span class="s2">&quot;docs&quot;</span><span class="p">]}</span>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"Example"</span><span class="p">,</span><span class="nt">"slug"</span><span class="p">:</span><span class="s2">"example-docs"</span><span class="p">,</span><span class="nt">"tags"</span><span class="p">:[</span><span class="s2">"docs"</span><span class="p">]}</span>
 </code></pre></div>
 <p>Rules:</p>
 <ul>
@@ -1583,10 +1583,10 @@ string execution.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>

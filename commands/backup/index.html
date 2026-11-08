@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1735,10 +1735,10 @@
 fx<span class="w"> </span>backup<span class="w"> </span>file.txt
 
 <span class="c1"># Custom format (YYYY-MM-DD)</span>
-fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">"%Y-%m-%d"</span>
 
 <span class="c1"># Custom format (YYYYMMDD)</span>
-fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">"%Y%m%d"</span>
 </code></pre></div>
 <h3 id="real-world-scenarios">Real-World Scenarios</h3>
 <h4 id="scenario-1-pre-update-backup">Scenario 1: Pre-Update Backup</h4>
@@ -1785,7 +1785,7 @@ tar<span class="w"> </span>-xf<span class="w"> </span>data_20260110_143022.tar.x
 </code></pre></div>
 <h4 id="scenario-5-daily-backup-routine">Scenario 5: Daily Backup Routine</h4>
 <p>Create daily backups:</p>
-<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup today&#39;s work</span>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup today's work</span>
 fx<span class="w"> </span>backup<span class="w"> </span>~/workspace/
 
 <span class="c1"># Compress to save space</span>
@@ -1798,7 +1798,7 @@ fx<span class="w"> </span>ff<span class="w"> </span>important.txt<span class="w"
 
 <span class="c1"># Backup multiple directories</span>
 <span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>src/<span class="w"> </span>tests/<span class="w"> </span>docs/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span>fx<span class="w"> </span>backup<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span>
+<span class="w">  </span>fx<span class="w"> </span>backup<span class="w"> </span><span class="s2">"</span><span class="nv">$dir</span><span class="s2">"</span>
 <span class="k">done</span>
 </code></pre></div>
 <h3 id="automated-backup-script">Automated Backup Script</h3>
@@ -1807,7 +1807,7 @@ fx<span class="w"> </span>ff<span class="w"> </span>important.txt<span class="w"
 
 <span class="c1"># Create compressed backup</span>
 <span class="nv">timestamp</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
-<span class="nv">backup_file</span><span class="o">=</span><span class="s2">&quot;project_</span><span class="si">${</span><span class="nv">timestamp</span><span class="si">}</span><span class="s2">.tar.xz&quot;</span>
+<span class="nv">backup_file</span><span class="o">=</span><span class="s2">"project_</span><span class="si">${</span><span class="nv">timestamp</span><span class="si">}</span><span class="s2">.tar.xz"</span>
 
 <span class="c1"># Backup project</span>
 fx<span class="w"> </span>backup<span class="w"> </span>.<span class="w"> </span>--compress
@@ -1820,19 +1820,19 @@ fx<span class="w"> </span>backup<span class="w"> </span>.<span class="w"> </span
 <span class="c1"># Backup and verify</span>
 
 <span class="c1"># Create backup</span>
-<span class="nv">backup_name</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>backup<span class="w"> </span>mydir/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;mydir_[^ ]*&quot;</span><span class="k">)</span>
+<span class="nv">backup_name</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>backup<span class="w"> </span>mydir/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s2">"mydir_[^ ]*"</span><span class="k">)</span>
 
 <span class="c1"># Verify backup exists</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$backup_name</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Backup verified: </span><span class="nv">$backup_name</span><span class="s2">&quot;</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"</span><span class="nv">$backup_name</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Backup verified: </span><span class="nv">$backup_name</span><span class="s2">"</span>
 <span class="k">else</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Backup failed!&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Backup failed!"</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 </code></pre></div>
 <h3 id="selective-backup">Selective Backup</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Backup specific file types</span>
-fx<span class="w"> </span>backup<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="k">)</span><span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
+fx<span class="w"> </span>backup<span class="w"> </span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="k">)</span><span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">"%Y%m%d"</span>
 
 <span class="c1"># Backup multiple specific files</span>
 fx<span class="w"> </span>backup<span class="w"> </span>file1.txt<span class="w"> </span>file2.txt<span class="w"> </span>file3.txt
@@ -1840,7 +1840,7 @@ fx<span class="w"> </span>backup<span class="w"> </span>file1.txt<span class="w"
 <h3 id="backup-rotation">Backup Rotation</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Keep last N backups</span>
 <span class="c1"># Find and remove old backups (keep last 5)</span>
-find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;project_*&quot;</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">"project_*"</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>sort<span class="w"> </span>-r<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>tail<span class="w"> </span>-n<span class="w"> </span>+6<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>xargs<span class="w"> </span>rm<span class="w"> </span>-rf
@@ -1926,11 +1926,11 @@ which<span class="w"> </span>xz
 </code></pre></div>
 <h3 id="timestamp-format-errors">Timestamp Format Errors</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Valid formats</span>
-fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
-fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">"%Y-%m-%d"</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">"%Y%m%d"</span>
 
 <span class="c1"># Invalid formats (may cause errors)</span>
-fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">&quot;invalid&quot;</span><span class="w">  </span><span class="c1"># ❌</span>
+fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w"> </span>--timestamp-format<span class="w"> </span><span class="s2">"invalid"</span><span class="w">  </span><span class="c1"># ❌</span>
 </code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="always-backup-before-changes">Always Backup Before Changes</h3>
@@ -1938,7 +1938,7 @@ fx<span class="w"> </span>backup<span class="w"> </span>file.txt<span class="w">
 fx<span class="w"> </span>backup<span class="w"> </span>important_file_or_directory/
 
 <span class="c1"># Then perform operation</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old"</span><span class="w"> </span><span class="s2">"new"</span><span class="w"> </span>*.py
 fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads/
 </code></pre></div>
 <h3 id="use-compression-for-large-directories">Use Compression for Large Directories</h3>
@@ -2034,10 +2034,10 @@ ls<span class="w"> </span>-t<span class="w"> </span>~/backups/project_*<span cla
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>

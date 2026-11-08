@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -2078,13 +2078,13 @@
 </code></pre></div>
 <h3 id="filtering">Filtering</h3>
 <p>Organize only images:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.gif&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.jpg"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.png"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.gif"</span>
 </code></pre></div>
 <p>Organize excluding hidden files:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.*&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-e<span class="w"> </span><span class="s2">".*"</span>
 </code></pre></div>
 <p>Organize only PDF and Word documents:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Documents<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.pdf&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.docx&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>organize<span class="w"> </span>~/Documents<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.pdf"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.docx"</span>
 </code></pre></div>
 <h3 id="conflict-handling">Conflict Handling</h3>
 <p>Skip conflicting files:</p>
@@ -2101,32 +2101,32 @@
 <h4 id="scenario-1-photo-organization">Scenario 1: Photo Organization</h4>
 <p>Organize photos by creation date:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize all photos</span>
-fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpeg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.gif&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.jpg"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.jpeg"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.png"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.gif"</span>
 
 <span class="c1"># With dry-run preview</span>
-fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>--dry-run
+fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.jpg"</span><span class="w"> </span>--dry-run
 
 <span class="c1"># With custom depth (year/day)</span>
-fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Photos<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.jpg"</span><span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
 </code></pre></div>
 <h4 id="scenario-2-download-sorting">Scenario 2: Download Sorting</h4>
 <p>Organize downloads by type:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize images</span>
-fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Downloads/Images
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.jpg"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.png"</span><span class="w"> </span>-o<span class="w"> </span>~/Downloads/Images
 
 <span class="c1"># Organize documents</span>
-fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.pdf&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.docx&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Downloads/Documents
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.pdf"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.docx"</span><span class="w"> </span>-o<span class="w"> </span>~/Downloads/Documents
 
 <span class="c1"># Organize code</span>
-fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.js&quot;</span><span class="w"> </span>-o<span class="w"> </span>~/Downloads/Code
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.js"</span><span class="w"> </span>-o<span class="w"> </span>~/Downloads/Code
 </code></pre></div>
 <h4 id="scenario-3-dataset-management">Scenario 3: Dataset Management</h4>
 <p>Organize datasets with filtering:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize CSV files</span>
-fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>--recursive<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.csv"</span><span class="w"> </span>--recursive<span class="w"> </span>--depth<span class="w"> </span><span class="m">2</span>
 
 <span class="c1"># Organize all data files</span>
-fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.csv&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.json&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.xml&quot;</span><span class="w"> </span>--recursive
+fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.csv"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.json"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.xml"</span><span class="w"> </span>--recursive
 </code></pre></div>
 <h4 id="scenario-4-cleanup-organization">Scenario 4: Cleanup Organization</h4>
 <p>Organize with conflict handling:</p>
@@ -2142,10 +2142,10 @@ fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class
 <h4 id="scenario-5-archive-organization">Scenario 5: Archive Organization</h4>
 <p>Organize archives by date:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize all archives</span>
-fx<span class="w"> </span>organize<span class="w"> </span>~/Archives<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.zip&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.tar&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.gz&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.rar&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Archives<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.zip"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.tar"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.gz"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.rar"</span>
 
 <span class="c1"># Use modification time for archives</span>
-fx<span class="w"> </span>organize<span class="w"> </span>~/Archives<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.zip&quot;</span><span class="w"> </span>--date-source<span class="w"> </span>modified
+fx<span class="w"> </span>organize<span class="w"> </span>~/Archives<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.zip"</span><span class="w"> </span>--date-source<span class="w"> </span>modified
 </code></pre></div>
 <h4 id="scenario-6-backup-before-organization">Scenario 6: Backup Before Organization</h4>
 <p>Create backup before organizing:</p>
@@ -2179,20 +2179,20 @@ fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class=
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="pattern-matching">Pattern Matching</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Include patterns (repeatable)</span>
-fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.js&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.ts&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.js"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.ts"</span>
 
 <span class="c1"># Exclude patterns (repeatable)</span>
-fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;__pycache__&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.*&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-e<span class="w"> </span><span class="s2">"*.pyc"</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"__pycache__"</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">".*"</span>
 
 <span class="c1"># Combine include and exclude</span>
-fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*test*&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*spec*&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"*test*"</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"*spec*"</span>
 </code></pre></div>
 <h3 id="recursive-processing">Recursive Processing</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Process all subdirectories</span>
 fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--recursive
 
 <span class="c1"># With filtering</span>
-fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--recursive<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--recursive<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.jpg"</span>
 
 <span class="c1"># Clean up empty directories</span>
 fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class="w"> </span>--recursive<span class="w"> </span>--clean-empty
@@ -2220,7 +2220,7 @@ fx<span class="w"> </span>organize<span class="w"> </span>~/Downloads<span class
 <h3 id="batch-processing">Batch Processing</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Organize multiple directories</span>
 <span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>Downloads1<span class="w"> </span>Downloads2<span class="w"> </span>Downloads3<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span>fx<span class="w"> </span>organize<span class="w"> </span>~/<span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span><span class="w"> </span>--yes<span class="w"> </span>--quiet
+<span class="w">  </span>fx<span class="w"> </span>organize<span class="w"> </span>~/<span class="s2">"</span><span class="nv">$dir</span><span class="s2">"</span><span class="w"> </span>--yes<span class="w"> </span>--quiet
 <span class="k">done</span>
 </code></pre></div>
 <h2 id="advanced-usage">Advanced Usage</h2>
@@ -2274,7 +2274,7 @@ fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class=
 fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>--fail-fast
 
 <span class="c1"># Use specific patterns to limit scope</span>
-fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>~/LargeDir<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.jpg"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.png"</span>
 </code></pre></div>
 <h3 id="for-many-files">For Many Files</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use verbose to monitor progress</span>
@@ -2334,13 +2334,13 @@ fx<span class="w"> </span>organize<span class="w"> </span>~/Archive<span class="
 </code></pre></div>
 <h3 id="filter-appropriately">Filter Appropriately</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Include specific types</span>
-fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.jpg"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.png"</span>
 
 <span class="c1"># Exclude unwanted files</span>
-fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;__pycache__&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-e<span class="w"> </span><span class="s2">"*.pyc"</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"__pycache__"</span>
 
 <span class="c1"># Combine for precise control</span>
-fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;*test*&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"*test*"</span>
 </code></pre></div>
 <h2 id="common-issues">Common Issues</h2>
 <h3 id="permission-denied">Permission Denied</h3>
@@ -2382,18 +2382,18 @@ fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> <
 </code></pre></div>
 <h3 id="pattern-matching-issues">Pattern Matching Issues</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Patterns not matching as expected</span>
-fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.py"</span>
 
 <span class="c1"># Solution: Test pattern first</span>
 ls<span class="w"> </span>*.py
 
 <span class="c1"># Use correct glob syntax</span>
-fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.py"</span>
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="no-files-organized">No Files Organized</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check if files match patterns</span>
-fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--dry-run
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>--dry-run
 
 <span class="c1"># Check source directory</span>
 ls<span class="w"> </span>src/
@@ -2420,7 +2420,7 @@ fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> <
 fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--quiet
 
 <span class="c1"># Limit file types</span>
-fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span>
+fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.jpg"</span>
 
 <span class="c1"># Process in batches</span>
 fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> </span>--fail-fast
@@ -2488,10 +2488,10 @@ fx<span class="w"> </span>organize<span class="w"> </span>src/<span class="w"> <
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>

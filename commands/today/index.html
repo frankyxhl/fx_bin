@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1849,15 +1849,15 @@ fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </
 <h3 id="custom-date-format">Custom Date Format</h3>
 <p>Use custom date format:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Format: YYYY-MM-DD</span>
-fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">"%Y-%m-%d"</span>
 <span class="c1"># Creates: ~/Downloads/2026-01-10</span>
 
 <span class="c1"># Format: YYYYMMDD</span>
-fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">"%Y%m%d"</span>
 <span class="c1"># Creates: ~/Downloads/20260110</span>
 
 <span class="c1"># Format: YYYYMM</span>
-fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y%m&quot;</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">"%Y%m"</span>
 <span class="c1"># Creates: ~/Downloads/202601</span>
 </code></pre></div>
 <h3 id="real-world-scenarios">Real-World Scenarios</h3>
@@ -1865,7 +1865,7 @@ fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> 
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Start daily development session</span>
 fx<span class="w"> </span>today
 
-<span class="c1"># In the new shell, work on today&#39;s tasks</span>
+<span class="c1"># In the new shell, work on today's tasks</span>
 <span class="c1"># Create files, write code, etc.</span>
 <span class="c1"># All work is automatically organized by date</span>
 
@@ -1877,16 +1877,16 @@ fx<span class="w"> </span>today
 <h4 id="scenario-2-shell-integration">Scenario 2: Shell Integration</h4>
 <p>Add to <code>.bashrc</code> or <code>.zshrc</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create alias for quick access</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">&#39;fx today&#39;</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ftcd</span><span class="o">=</span><span class="s1">&#39;cd &quot;$(fx today --cd)&quot;&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">'fx today'</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftcd</span><span class="o">=</span><span class="s1">'cd "$(fx today --cd)"'</span>
 
 <span class="c1"># Usage</span>
 ft<span class="w">          </span><span class="c1"># Create workspace and start shell</span>
-ftcd<span class="w">        </span><span class="c1"># Just change to today&#39;s workspace</span>
+ftcd<span class="w">        </span><span class="c1"># Just change to today's workspace</span>
 </code></pre></div>
 <h4 id="scenario-3-daily-documentation">Scenario 3: Daily Documentation</h4>
 <p>Organize daily documentation:</p>
-<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create workspace for today&#39;s docs</span>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create workspace for today's docs</span>
 fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Documents
 
 <span class="c1"># Write documentation in workspace</span>
@@ -1936,16 +1936,16 @@ fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </
 <h3 id="shell-aliases">Shell Aliases</h3>
 <p>Create aliases in <code>.bashrc</code> or <code>.zshrc</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Quick workspace creation</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">&#39;fx today&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">'fx today'</span>
 
 <span class="c1"># Change to workspace</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ftcd</span><span class="o">=</span><span class="s1">&#39;cd &quot;$(fx today --cd)&quot;&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftcd</span><span class="o">=</span><span class="s1">'cd "$(fx today --cd)"'</span>
 
 <span class="c1"># Workspace with custom base</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ftp</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Projects&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftp</span><span class="o">=</span><span class="s1">'fx today --base ~/Projects'</span>
 
 <span class="c1"># Workspace for documents</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ftd</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Documents&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftd</span><span class="o">=</span><span class="s1">'fx today --base ~/Documents'</span>
 </code></pre></div>
 <h3 id="daily-workflows">Daily Workflows</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
@@ -1953,7 +1953,7 @@ fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </
 
 <span class="c1"># Create workspace</span>
 <span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">"</span>
 
 <span class="c1"># Create daily TODO list</span>
 cat<span class="w"> </span>&gt;<span class="w"> </span>TODO.md<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
@@ -1977,14 +1977,14 @@ vim<span class="w"> </span>TODO.md
 <span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
 
 <span class="c1"># Create subdirectories</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>/<span class="o">{</span>src,test,docs<span class="o">}</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">"</span>/<span class="o">{</span>src,test,docs<span class="o">}</span>
 
 <span class="c1"># Copy templates</span>
-cp<span class="w"> </span>~/templates/*.py<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">/src/&quot;</span>
+cp<span class="w"> </span>~/templates/*.py<span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">/src/"</span>
 
 <span class="c1"># Start working</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
-vim<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">/src/main.py&quot;</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">"</span>
+vim<span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">/src/main.py"</span>
 </code></pre></div>
 <h3 id="dry-run-preview">Dry-Run Preview</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Preview workspace creation without creating</span>
@@ -2003,32 +2003,32 @@ fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </
 <h3 id="date-formats-reference">Date Formats Reference</h3>
 <p>Common date formats (strftime):</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Daily: 20260110</span>
-fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y%m%d&quot;</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">"%Y%m%d"</span>
 
 <span class="c1"># Standard: 2026-01-10</span>
-fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">"%Y-%m-%d"</span>
 
 <span class="c1"># Short: 202601</span>
-fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y%m&quot;</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">"%Y%m"</span>
 
 <span class="c1"># Long: Saturday, January 10, 2026</span>
-fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%A, %B %d, %Y&quot;</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">"%A, %B %d, %Y"</span>
 
 <span class="c1"># ISO Week: 2026-W02</span>
-fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-W%V&quot;</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">"%Y-W%V"</span>
 
 <span class="c1"># Day of Week: 2026-Saturday</span>
-fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-%A&quot;</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">"%Y-%A"</span>
 </code></pre></div>
 <h3 id="combining-with-other-commands">Combining with Other Commands</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create workspace and copy files</span>
 <span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
-cp<span class="w"> </span>~/template/*<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">/&quot;</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">"</span>
+cp<span class="w"> </span>~/template/*<span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">/"</span>
 
 <span class="c1"># Create workspace and initialize project</span>
 fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Projects
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span><span class="s2">"</span>
 git<span class="w"> </span>init
 touch<span class="w"> </span>README.md
 </code></pre></div>
@@ -2040,7 +2040,7 @@ touch<span class="w"> </span>README.md
 <span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
 
 <span class="c1"># Start zsh instead of default shell</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exec</span><span class="w"> </span>zsh
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exec</span><span class="w"> </span>zsh
 </code></pre></div>
 <h3 id="workspace-templates">Workspace Templates</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
@@ -2050,12 +2050,12 @@ touch<span class="w"> </span>README.md
 
 <span class="c1"># Copy template files</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-d<span class="w"> </span>~/templates/default<span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span>cp<span class="w"> </span>-r<span class="w"> </span>~/templates/default/*<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">/&quot;</span>
+<span class="w">  </span>cp<span class="w"> </span>-r<span class="w"> </span>~/templates/default/*<span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">/"</span>
 <span class="k">fi</span>
 
 <span class="c1"># Customize workspace</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
-sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/DATE/</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">/g&quot;</span><span class="w"> </span>README.md
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">"</span>
+sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">"s/DATE/</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">/g"</span><span class="w"> </span>README.md
 </code></pre></div>
 <h3 id="workspace-organization">Workspace Organization</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
@@ -2064,13 +2064,13 @@ sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/DA
 <span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span>
 
 <span class="c1"># Create standard directories</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>/<span class="o">{</span>src,test,docs,build<span class="o">}</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">"</span>/<span class="o">{</span>src,test,docs,build<span class="o">}</span>
 
 <span class="c1"># Create standard files</span>
-touch<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>/<span class="o">{</span>README.md,TODO.md,CHANGELOG.md<span class="o">}</span>
+touch<span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">"</span>/<span class="o">{</span>README.md,TODO.md,CHANGELOG.md<span class="o">}</span>
 
 <span class="c1"># Initialize git if desired</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>init
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>init
 </code></pre></div>
 <h3 id="daily-backup">Daily Backup</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
@@ -2078,7 +2078,7 @@ touch<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WOR
 
 <span class="c1"># Create workspace for backup</span>
 <span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Backups<span class="k">)</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">"</span>
 
 <span class="c1"># Create backup</span>
 fx<span class="w"> </span>backup<span class="w"> </span>~/project_dir<span class="w"> </span>--compress
@@ -2111,7 +2111,7 @@ fx<span class="w"> </span>today
 <span class="c1"># Error: Shell not found</span>
 
 <span class="c1"># Solution: Specify shell explicitly</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exec</span><span class="w"> </span>/bin/bash
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exec</span><span class="w"> </span>/bin/bash
 </code></pre></div>
 <h3 id="directory-already-exists">Directory Already Exists</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># If workspace already exists</span>
@@ -2122,15 +2122,15 @@ fx<span class="w"> </span>today
 </code></pre></div>
 <h3 id="invalid-date-format">Invalid Date Format</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># If date format is invalid</span>
-fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;invalid&quot;</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">"invalid"</span>
 
 <span class="c1"># Error: Invalid date format</span>
 
 <span class="c1"># Solution: Use valid strftime format</span>
-fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;%Y-%m-%d&quot;</span>
+fx<span class="w"> </span>today<span class="w"> </span>--format<span class="w"> </span><span class="s2">"%Y-%m-%d"</span>
 </code></pre></div>
 <h3 id="base-directory-not-found">Base Directory Not Found</h3>
-<div class="language-bash highlight"><pre><span></span><code><span class="c1"># If base directory doesn&#39;t exist</span>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># If base directory doesn't exist</span>
 fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/NonExistent
 
 <span class="c1"># Error: Base directory not found</span>
@@ -2142,22 +2142,22 @@ fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="consistent-workflow">Consistent Workflow</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Always use same base directory</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Work&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">'fx today --base ~/Work'</span>
 
 <span class="c1"># All workspaces in ~/Work/</span>
 <span class="c1"># Easy to find and backup</span>
 </code></pre></div>
 <h3 id="organize-by-project">Organize by Project</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Different base for different projects</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ftwork</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Work&#39;</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ftpersonal</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Personal&#39;</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ftprojects</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Projects&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftwork</span><span class="o">=</span><span class="s1">'fx today --base ~/Work'</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftpersonal</span><span class="o">=</span><span class="s1">'fx today --base ~/Personal'</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ftprojects</span><span class="o">=</span><span class="s1">'fx today --base ~/Projects'</span>
 
 <span class="c1"># Clear separation of concerns</span>
 </code></pre></div>
 <h3 id="use-daily-todo">Use Daily TODO</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create TODO in workspace</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--cd<span class="k">)</span><span class="s2">"</span>
 cat<span class="w"> </span>&gt;<span class="w"> </span>TODO.md<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
 <span class="s"># TODO - $(date +%Y-%m-%d)</span>
 
@@ -2241,10 +2241,10 @@ mv<span class="w"> </span>workspaces_backup_*.tar.gz<span class="w"> </span>~/Ba
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>

@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1769,7 +1769,7 @@
 </code></pre></div></p>
 <h3 id="shell-integration">Shell Integration</h3>
 <p>Change to project root:</p>
-<div class="language-bash highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">"</span>
 </code></pre></div>
 <h3 id="real-world-scenarios">Real-World Scenarios</h3>
 <h4 id="scenario-1-script-integration">Scenario 1: Script Integration</h4>
@@ -1780,11 +1780,11 @@
 <span class="c1"># Navigate to project root</span>
 <span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: Not in a Git repository&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: Not in a Git repository"</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$PROJECT_ROOT</span><span class="s2">"</span>
 
 <span class="c1"># Perform operations from root</span>
 pytest
@@ -1793,9 +1793,9 @@ make<span class="w"> </span>build
 <h4 id="scenario-2-git-operations">Scenario 2: Git Operations</h4>
 <p>Run Git operations from project root:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Always run from root</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>status
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>pull
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-10
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>status
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>pull
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-10
 </code></pre></div>
 <h4 id="scenario-3-build-scripts">Scenario 3: Build Scripts</h4>
 <p>Build from project root:</p>
@@ -1803,7 +1803,7 @@ make<span class="w"> </span>build
 <span class="c1"># Build script</span>
 
 <span class="c1"># Navigate to project root</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">"</span>
 
 <span class="c1"># Clean and build</span>
 make<span class="w"> </span>clean
@@ -1813,10 +1813,10 @@ make<span class="w"> </span><span class="nb">test</span>
 <h4 id="scenario-4-environment-configuration">Scenario 4: Environment Configuration</h4>
 <p>Load environment files from project root:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Load .env from project root</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>.env
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>.env
 
 <span class="c1"># Or export from project root</span>
-<span class="nb">export</span><span class="w"> </span><span class="k">$(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cat<span class="w"> </span>.env<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="k">$(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cat<span class="w"> </span>.env<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="k">)</span>
 </code></pre></div>
 <h4 id="scenario-5-project-statistics">Scenario 5: Project Statistics</h4>
 <p>Analyze project from root:</p>
@@ -1826,22 +1826,22 @@ make<span class="w"> </span><span class="nb">test</span>
 <span class="nv">ROOT</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span>
 
 <span class="c1"># Count Python files</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Python files: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ROOT</span><span class="s2">&quot;</span><span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Python files: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span><span class="s2">"</span><span class="nv">$ROOT</span><span class="s2">"</span><span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span><span class="s2">"</span>
 
 <span class="c1"># Count total lines of code</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Total LOC: </span><span class="k">$(</span>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ROOT</span><span class="s2">&quot;</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-exec<span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span><span class="o">{}</span><span class="w"> </span>+<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Total LOC: </span><span class="k">$(</span>find<span class="w"> </span><span class="s2">"</span><span class="nv">$ROOT</span><span class="s2">"</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>-exec<span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span><span class="o">{}</span><span class="w"> </span>+<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">"</span>
 </code></pre></div>
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="shell-aliases">Shell Aliases</h3>
 <p>Create aliases in <code>.bashrc</code> or <code>.zshrc</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Navigate to project root</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">gr</span><span class="o">=</span><span class="s1">&#39;cd &quot;$(fx root --cd)&quot;&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">gr</span><span class="o">=</span><span class="s1">'cd "$(fx root --cd)"'</span>
 
 <span class="c1"># Show project root</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">root</span><span class="o">=</span><span class="s1">&#39;fx root&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">root</span><span class="o">=</span><span class="s1">'fx root'</span>
 
 <span class="c1"># Run command from project root</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">grun</span><span class="o">=</span><span class="s1">&#39;cd &quot;$(fx root --cd)&quot; &amp;&amp; &#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">grun</span><span class="o">=</span><span class="s1">'cd "$(fx root --cd)" &amp;&amp; '</span>
 
 <span class="c1"># Examples</span>
 gr<span class="w">                 </span><span class="c1"># cd to project root</span>
@@ -1856,10 +1856,10 @@ grun<span class="w"> </span>pytest<span class="w">         </span><span class="c
 run_from_root<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">root</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: Not in a Git repository&quot;</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: Not in a Git repository"</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">1</span>
 <span class="w">  </span><span class="k">fi</span>
-<span class="w">  </span><span class="o">(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$root</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span><span class="o">)</span>
+<span class="w">  </span><span class="o">(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$root</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span><span class="o">)</span>
 <span class="o">}</span>
 
 <span class="c1"># Usage examples</span>
@@ -1874,14 +1874,14 @@ run_from_root<span class="w"> </span>make<span class="w"> </span>build
 <span class="c1"># Get project root with error handling</span>
 <span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
 
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: Not in a Git repository&quot;</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Please run this command from within a Git repository&quot;</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="nv">$PROJECT_ROOT</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: Not in a Git repository"</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Please run this command from within a Git repository"</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Project root: </span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Project root: </span><span class="nv">$PROJECT_ROOT</span><span class="s2">"</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$PROJECT_ROOT</span><span class="s2">"</span>
 
 <span class="c1"># Continue with operations...</span>
 </code></pre></div>
@@ -1898,23 +1898,23 @@ fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="w"> </spa
 <h3 id="relative-path-resolution">Relative Path Resolution</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Get absolute path to file from root</span>
 <span class="nv">ROOT</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span>
-<span class="nv">FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$ROOT</span><span class="s2">/src/main.py&quot;</span>
+<span class="nv">FILE</span><span class="o">=</span><span class="s2">"</span><span class="nv">$ROOT</span><span class="s2">/src/main.py"</span>
 
 <span class="c1"># Use absolute path</span>
-cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$FILE</span><span class="s2">&quot;</span>
+cat<span class="w"> </span><span class="s2">"</span><span class="nv">$FILE</span><span class="s2">"</span>
 </code></pre></div>
 <h2 id="integration-examples">Integration Examples</h2>
 <h3 id="git-aliases">Git Aliases</h3>
 <p>Add to <code>.gitconfig</code>:</p>
 <div class="language-ini highlight"><pre><span></span><code><span class="k">[alias]</span>
 <span class="w">    </span><span class="c1"># Run fx root from git</span>
-<span class="w">    </span><span class="na">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;!fx root&quot;</span>
+<span class="w">    </span><span class="na">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"!fx root"</span>
 
 <span class="w">    </span><span class="c1"># Show files from root</span>
-<span class="w">    </span><span class="na">files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;!fx root --cd | xargs fx files --recursive&quot;</span>
+<span class="w">    </span><span class="na">files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"!fx root --cd | xargs fx files --recursive"</span>
 
 <span class="w">    </span><span class="c1"># Show git root</span>
-<span class="w">    </span><span class="na">show-root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;!fx root&quot;</span>
+<span class="w">    </span><span class="na">show-root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"!fx root"</span>
 </code></pre></div>
 <h3 id="ide-integration">IDE Integration</h3>
 <p><strong>VS Code</strong>:
@@ -1929,11 +1929,11 @@ fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="w"> </spa
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Edit file relative to project root</span>
 <span class="k">function</span><span class="w"> </span>v<span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">root</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$root</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Not in a Git repository&quot;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="nv">$root</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Not in a Git repository"</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">1</span>
 <span class="w">  </span><span class="k">fi</span>
-<span class="w">  </span>vim<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$root</span><span class="s2">/</span><span class="nv">$1</span><span class="s2">&quot;</span>
+<span class="w">  </span>vim<span class="w"> </span><span class="s2">"</span><span class="nv">$root</span><span class="s2">/</span><span class="nv">$1</span><span class="s2">"</span>
 <span class="o">}</span>
 
 <span class="c1"># Usage: v src/main.py</span>
@@ -1984,7 +1984,7 @@ fx<span class="w"> </span>root<span class="w"> </span>--cd
 
 <span class="c1"># Without --cd flag (error message)</span>
 fx<span class="w"> </span>root
-<span class="c1"># Returns: &quot;Error: No git repository found in current directory or parent directories&quot;</span>
+<span class="c1"># Returns: "Error: No git repository found in current directory or parent directories"</span>
 </code></pre></div>
 <h3 id="multiple-git-repositories">Multiple Git Repositories</h3>
 <p>Finds the nearest <code>.git</code> directory:</p>
@@ -2044,9 +2044,9 @@ fx<span class="w"> </span>root
 <h3 id="script-exit-code">Script Exit Code</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># In scripts, check exit code</span>
 <span class="k">if</span><span class="w"> </span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;In Git repository&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"In Git repository"</span>
 <span class="k">else</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Not in Git repository&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Not in Git repository"</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 </code></pre></div>
@@ -2057,7 +2057,7 @@ fx<span class="w"> </span>root
 <span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span>
 
 <span class="c1"># Use PROJECT_ROOT variable throughout script</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$PROJECT_ROOT</span><span class="s2">"</span>
 
 <span class="c1"># Perform operations</span>
 pytest
@@ -2068,36 +2068,36 @@ make<span class="w"> </span>build
 <span class="c1"># Always check for Git repository</span>
 <span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
 
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: This script must be run from within a Git repository&quot;</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="nv">$PROJECT_ROOT</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: This script must be run from within a Git repository"</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 
 <span class="c1"># Continue with operations</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$PROJECT_ROOT</span><span class="s2">"</span>
 </code></pre></div>
 <h3 id="create-shell-aliases">Create Shell Aliases</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># .bashrc or .zshrc</span>
 
 <span class="c1"># Quick navigation</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">gr</span><span class="o">=</span><span class="s1">&#39;cd &quot;$(fx root --cd)&quot;&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">gr</span><span class="o">=</span><span class="s1">'cd "$(fx root --cd)"'</span>
 
 <span class="c1"># Quick info</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">root</span><span class="o">=</span><span class="s1">&#39;fx root&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">root</span><span class="o">=</span><span class="s1">'fx root'</span>
 
 <span class="c1"># Command from root</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">grun</span><span class="o">=</span><span class="s1">&#39;cd &quot;$(fx root --cd)&quot; &amp;&amp; &#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">grun</span><span class="o">=</span><span class="s1">'cd "$(fx root --cd)" &amp;&amp; '</span>
 </code></pre></div>
 <h3 id="use-in-cicd-pipelines">Use in CI/CD Pipelines</h3>
 <div class="language-yaml highlight"><pre><span></span><code><span class="c1"># GitHub Actions example</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run tests from project root</span>
 <span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">cd &quot;$(fx root --cd)&quot;</span>
+<span class="w">    </span><span class="no">cd "$(fx root --cd)"</span>
 <span class="w">    </span><span class="no">pytest</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build from project root</span>
 <span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">cd &quot;$(fx root --cd)&quot;</span>
+<span class="w">    </span><span class="no">cd "$(fx root --cd)"</span>
 <span class="w">    </span><span class="no">make build</span>
 </code></pre></div>
 <h2 id="see-also">See Also</h2>
@@ -2163,10 +2163,10 @@ make<span class="w"> </span>build
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>

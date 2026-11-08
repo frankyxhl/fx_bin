@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1511,7 +1511,7 @@
 <h2 id="workflow">Workflow</h2>
 <h3 id="1-start-daily-workspace">1. Start Daily Workspace</h3>
 <p>Begin your day by creating a dedicated workspace:</p>
-<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create today&#39;s workspace and start new shell</span>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create today's workspace and start new shell</span>
 fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Projects
 
 <span class="c1"># All daily work is now isolated in ~/Projects/YYYYMMDD/</span>
@@ -1523,13 +1523,13 @@ fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </
 <h3 id="2-navigate-to-project-root">2. Navigate to Project Root</h3>
 <p>Quickly navigate to your Git project root:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create shell alias (add to .bashrc or .zshrc)</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">gr</span><span class="o">=</span><span class="s1">&#39;cd &quot;$(fx root --cd)&quot;&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">gr</span><span class="o">=</span><span class="s1">'cd "$(fx root --cd)"'</span>
 
 <span class="c1"># Navigate to project root</span>
 gr
 
 <span class="c1"># Or use full command</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span><span class="s2">"</span>
 </code></pre></div>
 <p><strong>Benefits:</strong>
 - Always at the correct directory for Git operations
@@ -1538,12 +1538,12 @@ gr
 <h3 id="3-project-statistics">3. Project Statistics</h3>
 <p>Understand your project structure and composition:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Count all Python files</span>
-fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>--recursive
 
 <span class="c1"># Count by file type</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Python: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">&#39;*.py&#39;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;JavaScript: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">&#39;*.{js,jsx,ts,tsx}&#39;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Markdown: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">&#39;*.md&#39;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Python: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">'*.py'</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"JavaScript: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">'*.{js,jsx,ts,tsx}'</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Markdown: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">'*.md'</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span><span class="s2">"</span>
 
 <span class="c1"># Analyze directory sizes</span>
 fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
@@ -1558,7 +1558,7 @@ fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>-
 fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
 
 <span class="c1"># Find recently modified files of multiple types</span>
-fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;py,js,md&quot;</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">30</span>
+fx<span class="w"> </span>filter<span class="w"> </span><span class="s2">"py,js,md"</span><span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">30</span>
 
 <span class="c1"># Show file paths</span>
 fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--show-path<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
@@ -1577,8 +1577,8 @@ fx<span class="w"> </span>ff<span class="w"> </span>FIXME<span class="w"> </span
 
 <span class="c1"># Find all types of markers</span>
 <span class="k">for</span><span class="w"> </span>marker<span class="w"> </span><span class="k">in</span><span class="w"> </span>TODO<span class="w"> </span>FIXME<span class="w"> </span>XXX<span class="w"> </span>HACK<span class="w"> </span>NOTE<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$marker</span><span class="s2"> ===&quot;</span>
-<span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$marker</span><span class="s2">&quot;</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== </span><span class="nv">$marker</span><span class="s2"> ==="</span>
+<span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">"</span><span class="nv">$marker</span><span class="s2">"</span><span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
 <span class="k">done</span>
 </code></pre></div>
 <p><strong>Benefits:</strong>
@@ -1608,64 +1608,64 @@ fx<span class="w"> </span>ff<span class="w"> </span>settings<span class="w"> </s
 
 <span class="nb">set</span><span class="w"> </span>-e<span class="w">  </span><span class="c1"># Exit on error</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Daily Development Workflow ===&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Daily Development Workflow ==="</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># 1. Create daily workspace</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1. Creating daily workspace...&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"1. Creating daily workspace..."</span>
 <span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </span>~/Projects<span class="k">)</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Workspace: </span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"   Workspace: </span><span class="nv">$WORKSPACE</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># 2. Navigate to project root</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. Navigating to project root...&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"2. Navigating to project root..."</span>
 <span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>root<span class="w"> </span>--cd<span class="k">)</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Project root: </span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROJECT_ROOT</span><span class="s2">&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"   Project root: </span><span class="nv">$PROJECT_ROOT</span><span class="s2">"</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$PROJECT_ROOT</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># 3. Project statistics</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;3. Project statistics...&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Python files: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">&#39;*.py&#39;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   JS files: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">&#39;*.{js,jsx,ts,tsx}&#39;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Total files: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"3. Project statistics..."</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"   Python files: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">'*.py'</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"   JS files: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">'*.{js,jsx,ts,tsx}'</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"   Total files: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># 4. Recent changes</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;4. Recently modified files (last 10)...&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"4. Recently modified files (last 10)..."</span>
 fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span><span class="w"> </span>--show-path
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># 5. TODO markers</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;5. TODO markers...&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"5. TODO markers..."</span>
 <span class="nv">TODO_COUNT</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>TODO<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Found </span><span class="nv">$TODO_COUNT</span><span class="s2"> TODO items&quot;</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TODO_COUNT</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"   Found </span><span class="nv">$TODO_COUNT</span><span class="s2"> TODO items"</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$TODO_COUNT</span><span class="s2">"</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span>TODO<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
 <span class="k">fi</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># 6. Summary</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Daily Workflow Complete ===&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Ready to start work!&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Daily Workflow Complete ==="</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Ready to start work!"</span>
 </code></pre></div>
 <h2 id="productivity-tips">Productivity Tips</h2>
 <h3 id="shell-aliases">Shell Aliases</h3>
 <p>Add these to <code>.bashrc</code> or <code>.zshrc</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Daily workspace</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">&#39;fx today --base ~/Projects&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ft</span><span class="o">=</span><span class="s1">'fx today --base ~/Projects'</span>
 
 <span class="c1"># Project root navigation</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">gr</span><span class="o">=</span><span class="s1">&#39;cd &quot;$(fx root --cd)&quot;&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">gr</span><span class="o">=</span><span class="s1">'cd "$(fx root --cd)"'</span>
 
 <span class="c1"># Show project stats</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">pstats</span><span class="o">=</span><span class="s1">&#39;echo &quot;Python: $(fx files . --pattern &quot;*.py&quot; --recursive | tail -1 | awk &quot;{print \$1}&quot;)&quot;&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">pstats</span><span class="o">=</span><span class="s1">'echo "Python: $(fx files . --pattern "*.py" --recursive | tail -1 | awk "{print \$1}")"'</span>
 
 <span class="c1"># Recent files</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">precent</span><span class="o">=</span><span class="s1">&#39;fx filter py --sort-by modified --reverse --limit 10 --show-path&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">precent</span><span class="o">=</span><span class="s1">'fx filter py --sort-by modified --reverse --limit 10 --show-path'</span>
 
 <span class="c1"># Find TODOs</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ptodo</span><span class="o">=</span><span class="s1">&#39;fx ff TODO --exclude node_modules --exclude .git --exclude __pycache__&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ptodo</span><span class="o">=</span><span class="s1">'fx ff TODO --exclude node_modules --exclude .git --exclude __pycache__'</span>
 </code></pre></div>
 <h3 id="morning-routine">Morning Routine</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># 1. Start daily workspace</span>
@@ -1688,7 +1688,7 @@ git<span class="w"> </span>diff
 
 <span class="c1"># 2. Commit if ready</span>
 git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Daily progress&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Daily progress"</span>
 
 <span class="c1"># 3. Backup before leaving</span>
 fx<span class="w"> </span>backup<span class="w"> </span>.<span class="w"> </span>--compress
@@ -1702,12 +1702,12 @@ fx<span class="w"> </span>backup<span class="w"> </span>.<span class="w"> </span
 <span class="c1"># Manage multiple projects</span>
 
 <span class="k">for</span><span class="w"> </span>project<span class="w"> </span><span class="k">in</span><span class="w"> </span>project1<span class="w"> </span>project2<span class="w"> </span>project3<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$project</span><span class="s2"> ===&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"=== </span><span class="nv">$project</span><span class="s2"> ==="</span>
 
 <span class="w">  </span><span class="nb">cd</span><span class="w"> </span>~/projects/<span class="nv">$project</span>
 
 <span class="w">  </span><span class="c1"># Show stats</span>
-<span class="w">  </span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
+<span class="w">  </span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
 
 <span class="w">  </span><span class="c1"># Show recent files</span>
 <span class="w">  </span>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
@@ -1715,7 +1715,7 @@ fx<span class="w"> </span>backup<span class="w"> </span>.<span class="w"> </span
 <span class="w">  </span><span class="c1"># Find TODOs</span>
 <span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span>TODO<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git
 
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 <span class="k">done</span>
 </code></pre></div>
 <h3 id="code-review-preparation">Code Review Preparation</h3>
@@ -1723,17 +1723,17 @@ fx<span class="w"> </span>backup<span class="w"> </span>.<span class="w"> </span
 <span class="c1"># Prepare for code review</span>
 
 <span class="c1"># 1. Find modified files</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Modified files ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Modified files ==="</span>
 fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
 
 <span class="c1"># 2. Find TODOs in modified files</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== TODOs ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== TODOs ==="</span>
 fx<span class="w"> </span>ff<span class="w"> </span>TODO<span class="w"> </span>--exclude<span class="w"> </span>node_modules<span class="w"> </span>--exclude<span class="w"> </span>.git<span class="w"> </span>--exclude<span class="w"> </span>__pycache__
 
 <span class="c1"># 3. Check for large files</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Large files ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Large files ==="</span>
 fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <h3 id="daily-backup">Daily Backup</h3>
@@ -1741,14 +1741,14 @@ fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>-
 <span class="c1"># Daily backup routine</span>
 
 <span class="c1"># Backup current directory</span>
-<span class="nv">BACKUP_NAME</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>backup<span class="w"> </span>.<span class="w"> </span>--compress<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;backup_[^ ]*&quot;</span><span class="k">)</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Backup created: </span><span class="nv">$BACKUP_NAME</span><span class="s2">&quot;</span>
+<span class="nv">BACKUP_NAME</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>backup<span class="w"> </span>.<span class="w"> </span>--compress<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s2">"backup_[^ ]*"</span><span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Backup created: </span><span class="nv">$BACKUP_NAME</span><span class="s2">"</span>
 
 <span class="c1"># Copy to remote storage (optional)</span>
-<span class="c1"># scp &quot;$BACKUP_NAME&quot; user@remote:/backup/location/</span>
+<span class="c1"># scp "$BACKUP_NAME" user@remote:/backup/location/</span>
 
 <span class="c1"># Clean up old backups (keep last 7 days)</span>
-find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;backup_*.tar.xz&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">"backup_*.tar.xz"</span><span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="workspace-already-exists">Workspace Already Exists</h3>
@@ -1757,7 +1757,7 @@ fx<span class="w"> </span>today<span class="w"> </span>--base<span class="w"> </
 
 <span class="c1"># But you may want to navigate to existing workspace</span>
 <span class="nv">WORKSPACE</span><span class="o">=</span>~/Projects/<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
-<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WORKSPACE</span><span class="s2">&quot;</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$WORKSPACE</span><span class="s2">"</span>
 </code></pre></div>
 <h3 id="not-in-git-repository">Not in Git Repository</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># If not in a Git repository, fx root will fail</span>
@@ -1843,10 +1843,10 @@ fx<span class="w"> </span>filter<span class="w"> </span>py
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>

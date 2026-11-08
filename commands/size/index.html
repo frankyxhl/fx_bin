@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1675,36 +1675,36 @@ fx<span class="w"> </span>size<span class="w"> </span>dist/
 fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1
 
 <span class="c1"># Or count specific file types</span>
-fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.js&quot;</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.js"</span>
 </code></pre></div>
 <h4 id="scenario-5-compare-directories">Scenario 5: Compare Directories</h4>
 <p>Compare sizes of multiple directories:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Compare three directories</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Project A: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>project_a<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Project B: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>project_b<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Project C: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>project_c<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Project A: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>project_a<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Project B: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>project_b<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Project C: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>project_c<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">"</span>
 </code></pre></div>
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="combining-with-other-commands">Combining with Other Commands</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find and analyze large Python files</span>
-find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-exec<span class="w"> </span>fx<span class="w"> </span>size<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>-exec<span class="w"> </span>fx<span class="w"> </span>size<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 
 <span class="c1"># Analyze only files matching a pattern</span>
-fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.log&quot;</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.log"</span>
 </code></pre></div>
 <h3 id="finding-space-hogs">Finding Space Hogs</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find directories over 100MB</span>
 <span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nv">size</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$size</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;GB&quot;</span>*<span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$size</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;10&quot;</span>*<span class="s2">&quot;MB&quot;</span>*<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">: </span><span class="nv">$size</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="nv">size</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span><span class="s2">"</span><span class="nv">$dir</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$size</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">"GB"</span>*<span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$size</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">"10"</span>*<span class="s2">"MB"</span>*<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$dir</span><span class="s2">: </span><span class="nv">$size</span><span class="s2">"</span>
 <span class="w">  </span><span class="k">fi</span>
 <span class="k">done</span>
 </code></pre></div>
 <h3 id="recursive-size-calculation">Recursive Size Calculation</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Get total size of all subdirectories</span>
 <span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$dir</span><span class="s2">: </span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span><span class="s2">"</span><span class="nv">$dir</span><span class="s2">"</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span><span class="s2">"</span>
 <span class="k">done</span>
 </code></pre></div>
 <h3 id="size-comparison-script">Size Comparison Script</h3>
@@ -1716,8 +1716,8 @@ fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>-
 
 <span class="nv">after_size</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Before: </span><span class="nv">$before_size</span><span class="s2">&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;After:  </span><span class="nv">$after_size</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Before: </span><span class="nv">$before_size</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"After:  </span><span class="nv">$after_size</span><span class="s2">"</span>
 </code></pre></div>
 <h2 id="performance-notes">Performance Notes</h2>
 <ul>
@@ -1740,7 +1740,7 @@ ls<span class="w"> </span>-la<span class="w"> </span>/path/to/directory
 fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
 
 <span class="c1"># Use pattern to filter</span>
-fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.py"</span>
 
 <span class="c1"># Use specific paths instead of full recursion</span>
 fx<span class="w"> </span>size<span class="w"> </span>src/<span class="w"> </span>tests/<span class="w"> </span>docs/
@@ -1820,10 +1820,10 @@ fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>-
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>

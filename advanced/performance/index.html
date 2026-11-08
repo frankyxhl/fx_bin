@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1792,8 +1792,8 @@ fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </spa
 fx<span class="w"> </span>organize<span class="w"> </span>~/Data<span class="w"> </span>--dry-run
 
 <span class="c1"># Preview replacement</span>
-<span class="c1"># Note: fx replace doesn&#39;t have dry-run, use grep first</span>
-grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<span class="c1"># Note: fx replace doesn't have dry-run, use grep first</span>
+grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">"old_text"</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">"*.py"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
 </code></pre></div>
 <h2 id="large-project-optimization">Large Project Optimization</h2>
 <h3 id="1-batch-processing">1. Batch Processing</h3>
@@ -1803,8 +1803,8 @@ grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;old
 
 <span class="c1"># Split processing by directory</span>
 <span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>src/<span class="w"> </span>tests/<span class="w"> </span>docs/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Processing: </span><span class="nv">$dir</span><span class="s2">&quot;</span>
-<span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Processing: </span><span class="nv">$dir</span><span class="s2">"</span>
+<span class="w">  </span>fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span><span class="s2">"</span><span class="nv">$dir</span><span class="s2">"</span>
 <span class="k">done</span>
 </code></pre></div>
 <h3 id="2-parallel-processing">2. Parallel Processing</h3>
@@ -1813,28 +1813,28 @@ grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;old
 <span class="c1"># Parallel file finding</span>
 
 <span class="c1"># Find in multiple directories in parallel</span>
-find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span><span class="p">|</span><span class="w"> </span>parallel<span class="w"> </span><span class="s2">&quot;fx ff config {} --exclude node_modules&quot;</span>
+find<span class="w"> </span>.<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span><span class="p">|</span><span class="w"> </span>parallel<span class="w"> </span><span class="s2">"fx ff config {} --exclude node_modules"</span>
 </code></pre></div>
 <h3 id="3-caching-results">3. Caching Results</h3>
 <p>Cache frequently accessed information:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 <span class="c1"># Cache file counts</span>
 
-<span class="nv">CACHE_FILE</span><span class="o">=</span><span class="s2">&quot;.fx_cache.txt&quot;</span>
+<span class="nv">CACHE_FILE</span><span class="o">=</span><span class="s2">".fx_cache.txt"</span>
 
 <span class="c1"># Check cache age</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nv">CACHE_AGE</span><span class="o">=</span><span class="k">$((</span><span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">$(</span>stat<span class="w"> </span>-c<span class="w"> </span>%Y<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span><span class="k">)</span><span class="w"> </span><span class="k">))</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="nv">$CACHE_FILE</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nv">CACHE_AGE</span><span class="o">=</span><span class="k">$((</span><span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">$(</span>stat<span class="w"> </span>-c<span class="w"> </span>%Y<span class="w"> </span><span class="s2">"</span><span class="nv">$CACHE_FILE</span><span class="s2">"</span><span class="k">)</span><span class="w"> </span><span class="k">))</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$CACHE_AGE</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">    </span><span class="c1"># Cache is less than 1 hour old</span>
-<span class="w">    </span>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span>
+<span class="w">    </span>cat<span class="w"> </span><span class="s2">"</span><span class="nv">$CACHE_FILE</span><span class="s2">"</span>
 <span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
 <span class="w">  </span><span class="k">fi</span>
 <span class="k">fi</span>
 
 <span class="c1"># Update cache</span>
-fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span>
-cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE_FILE</span><span class="s2">&quot;</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$CACHE_FILE</span><span class="s2">"</span>
+cat<span class="w"> </span><span class="s2">"</span><span class="nv">$CACHE_FILE</span><span class="s2">"</span>
 </code></pre></div>
 <h2 id="memory-optimization">Memory Optimization</h2>
 <h3 id="1-avoid-large-output">1. Avoid Large Output</h3>
@@ -1842,25 +1842,25 @@ cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CACHE
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># ❌ Bad: Store large output</span>
 <span class="nv">FILES</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.<span class="k">)</span>
 <span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$FILES</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span>
 <span class="k">done</span>
 
 <span class="c1"># ✅ Good: Stream output</span>
 fx<span class="w"> </span>ff<span class="w"> </span>.<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>file<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span>
 <span class="k">done</span>
 </code></pre></div>
 <h3 id="2-process-files-individually">2. Process Files Individually</h3>
 <p>Process files one at a time:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># ❌ Bad: Load all files into array</span>
 <span class="nv">FILES</span><span class="o">=(</span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w"> </span>--exclude<span class="w"> </span>__pycache__<span class="k">)</span><span class="o">)</span>
-<span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FILES</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span>python<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">FILES</span><span class="p">[@]</span><span class="si">}</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span>python<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span><span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span>
 <span class="k">done</span>
 
 <span class="c1"># ✅ Good: Process files individually</span>
 fx<span class="w"> </span>ff<span class="w"> </span>.py<span class="w"> </span>--exclude<span class="w"> </span>__pycache__<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>file<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span>python<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="w">  </span>python<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span><span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span>
 <span class="k">done</span>
 </code></pre></div>
 <h2 id="disk-io-optimization">Disk I/O Optimization</h2>
@@ -1872,7 +1872,7 @@ fx<span class="w"> </span>ff<span class="w"> </span>api
 fx<span class="w"> </span>ff<span class="w"> </span>service
 
 <span class="c1"># ✅ Good: Single pass with broader pattern</span>
-fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;config|api|service&quot;</span>
+fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">"config|api|service"</span>
 </code></pre></div>
 <h3 id="2-use-compression-wisely">2. Use Compression Wisely</h3>
 <p>Use compression only for large directories:</p>
@@ -1891,26 +1891,26 @@ fx<span class="w"> </span>backup<span class="w"> </span>file.txt
 <span class="c1"># benchmark_fx.sh</span>
 
 <span class="c1"># Time fx commands</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Performance Benchmark ===&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Performance Benchmark ==="</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1. fx ff (full search)&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"1. fx ff (full search)"</span>
 <span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>ff<span class="w"> </span>api
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. fx ff --first&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"2. fx ff --first"</span>
 <span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>ff<span class="w"> </span>api<span class="w"> </span>--first
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;3. fx fff&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"3. fx fff"</span>
 <span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>fff<span class="w"> </span>api
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;4. fx files&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"4. fx files"</span>
 <span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;5. fx filter&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"5. fx filter"</span>
 <span class="nb">time</span><span class="w"> </span>fx<span class="w"> </span>filter<span class="w"> </span>py<span class="w"> </span>--sort-by<span class="w"> </span>modified<span class="w"> </span>--reverse<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <h3 id="memory-profiling">Memory Profiling</h3>
@@ -1918,14 +1918,14 @@ fx<span class="w"> </span>backup<span class="w"> </span>file.txt
 <span class="c1"># memory_profile.sh</span>
 
 <span class="c1"># Profile memory usage</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Memory Profile ===&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Memory Profile ==="</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># Track memory usage</span>
-<span class="k">for</span><span class="w"> </span>cmd<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;fx ff .&quot;</span><span class="w"> </span><span class="s2">&quot;fx files .&quot;</span><span class="w"> </span><span class="s2">&quot;fx filter py&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Command: </span><span class="nv">$cmd</span><span class="s2">&quot;</span>
-<span class="w">  </span>/usr/bin/time<span class="w"> </span>-v<span class="w"> </span><span class="nv">$cmd</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Maximum resident set size&quot;</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="k">for</span><span class="w"> </span>cmd<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">"fx ff ."</span><span class="w"> </span><span class="s2">"fx files ."</span><span class="w"> </span><span class="s2">"fx filter py"</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Command: </span><span class="nv">$cmd</span><span class="s2">"</span>
+<span class="w">  </span>/usr/bin/time<span class="w"> </span>-v<span class="w"> </span><span class="nv">$cmd</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Maximum resident set size"</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 <span class="k">done</span>
 </code></pre></div>
 <h2 id="performance-best-practices">Performance Best Practices</h2>
@@ -1937,7 +1937,7 @@ fx<span class="w"> </span>fff<span class="w"> </span>config
 fx<span class="w"> </span>ff<span class="w"> </span>config
 
 <span class="c1"># For counting: Use files</span>
-fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.py"</span>
 
 <span class="c1"># For analysis: Use size</span>
 fx<span class="w"> </span>size<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
@@ -1974,7 +1974,7 @@ fx<span class="w"> </span>ff<span class="w"> </span>.<span class="w"> </span>--e
 fx<span class="w"> </span>ff<span class="w"> </span>.<span class="w"> </span>--first
 
 <span class="c1"># 4. Be more specific with pattern</span>
-fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;api_v1&quot;</span><span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span><span class="s2">&quot;api&quot;</span>
+fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">"api_v1"</span><span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span><span class="s2">"api"</span>
 </code></pre></div>
 <h3 id="slow-file-counting">Slow File Counting</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># If fx files is slow:</span>
@@ -1983,7 +1983,7 @@ fx<span class="w"> </span>ff<span class="w"> </span><span class="s2">&quot;api_v
 fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--max-depth<span class="w"> </span><span class="m">2</span>
 
 <span class="c1"># 2. Use pattern to filter</span>
-fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>--recursive
 
 <span class="c1"># 3. Count specific directories</span>
 fx<span class="w"> </span>files<span class="w"> </span>src/<span class="w"> </span>--recursive
@@ -1995,7 +1995,7 @@ fx<span class="w"> </span>files<span class="w"> </span>src/<span class="w"> </sp
 fx<span class="w"> </span>organize<span class="w"> </span>.<span class="w"> </span>--dry-run
 
 <span class="c1"># 2. Use filtering</span>
-fx<span class="w"> </span>organize<span class="w"> </span>.<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.jpg&quot;</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;*.png&quot;</span><span class="w"> </span>--recursive
+fx<span class="w"> </span>organize<span class="w"> </span>.<span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.jpg"</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">"*.png"</span><span class="w"> </span>--recursive
 
 <span class="c1"># 3. Process in batches</span>
 fx<span class="w"> </span>organize<span class="w"> </span>batch1/
@@ -2069,10 +2069,10 @@ fx<span class="w"> </span>organize<span class="w"> </span>.<span class="w"> </sp
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>

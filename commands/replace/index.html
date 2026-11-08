@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1684,68 +1684,68 @@
 <h2 id="examples">Examples</h2>
 <h3 id="basic-usage">Basic Usage</h3>
 <p>Replace text in a single file:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>file.txt
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old"</span><span class="w"> </span><span class="s2">"new"</span><span class="w"> </span>file.txt
 </code></pre></div>
 <p>Replace text in multiple files:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.txt
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old"</span><span class="w"> </span><span class="s2">"new"</span><span class="w"> </span>*.txt
 </code></pre></div>
 <h3 id="real-world-scenarios">Real-World Scenarios</h3>
 <h4 id="scenario-1-version-updates">Scenario 1: Version Updates</h4>
 <p>Update version strings across multiple files:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Update version from 1.0.0 to 2.0.0</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;version=&#39;1.0.0&#39;&quot;</span><span class="w"> </span><span class="s2">&quot;version=&#39;2.0.0&#39;&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"version='1.0.0'"</span><span class="w"> </span><span class="s2">"version='2.0.0'"</span><span class="w"> </span>*.py
 
 <span class="c1"># Update __version__ variables</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;__version__ = &#39;1.0.0&#39;&quot;</span><span class="w"> </span><span class="s2">&quot;__version__ = &#39;2.0.0&#39;&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"__version__ = '1.0.0'"</span><span class="w"> </span><span class="s2">"__version__ = '2.0.0'"</span><span class="w"> </span>*.py
 </code></pre></div>
 <h4 id="scenario-2-refactoring">Scenario 2: Refactoring</h4>
 <p>Update function names across codebase:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Rename function</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old_function_name&quot;</span><span class="w"> </span><span class="s2">&quot;new_function_name&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old_function_name"</span><span class="w"> </span><span class="s2">"new_function_name"</span><span class="w"> </span>*.py
 
 <span class="c1"># Update class names</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;OldClassName&quot;</span><span class="w"> </span><span class="s2">&quot;NewClassName&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"OldClassName"</span><span class="w"> </span><span class="s2">"NewClassName"</span><span class="w"> </span>*.py
 </code></pre></div>
 <h4 id="scenario-3-configuration-updates">Scenario 3: Configuration Updates</h4>
 <p>Update configuration settings:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Update database URL</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old_database_url&quot;</span><span class="w"> </span><span class="s2">&quot;new_database_url&quot;</span><span class="w"> </span>config.yaml
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old_database_url"</span><span class="w"> </span><span class="s2">"new_database_url"</span><span class="w"> </span>config.yaml
 
 <span class="c1"># Update API endpoints</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;api.example.com&quot;</span><span class="w"> </span><span class="s2">&quot;api.newdomain.com&quot;</span><span class="w"> </span>config.json
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"api.example.com"</span><span class="w"> </span><span class="s2">"api.newdomain.com"</span><span class="w"> </span>config.json
 </code></pre></div>
 <h4 id="scenario-4-text-processing">Scenario 4: Text Processing</h4>
 <p>Standardize text formatting:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Replace tabs with spaces</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;\t&quot;</span><span class="w"> </span><span class="s2">&quot;    &quot;</span><span class="w"> </span>file.txt
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"\t"</span><span class="w"> </span><span class="s2">"    "</span><span class="w"> </span>file.txt
 
 <span class="c1"># Remove trailing spaces</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;  &quot;</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>file.txt
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"  "</span><span class="w"> </span><span class="s2">""</span><span class="w"> </span>file.txt
 </code></pre></div>
 <h4 id="scenario-5-path-updates">Scenario 5: Path Updates</h4>
 <p>Update file paths in code:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Update import paths</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;from old.module&quot;</span><span class="w"> </span><span class="s2">&quot;from new.module&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"from old.module"</span><span class="w"> </span><span class="s2">"from new.module"</span><span class="w"> </span>*.py
 
 <span class="c1"># Update include paths</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;#include &lt;old.h&gt;&quot;</span><span class="w"> </span><span class="s2">&quot;#include &lt;new.h&gt;&quot;</span><span class="w"> </span>*.c
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"#include &lt;old.h&gt;"</span><span class="w"> </span><span class="s2">"#include &lt;new.h&gt;"</span><span class="w"> </span>*.c
 </code></pre></div>
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="combining-with-other-commands">Combining with Other Commands</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Find files and replace text</span>
-fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span>
+fx<span class="w"> </span>ff<span class="w"> </span>config<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old"</span><span class="w"> </span><span class="s2">"new"</span>
 
 <span class="c1"># Count files before replacement</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Files to update: </span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>__version__<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Files to update: </span><span class="k">$(</span>fx<span class="w"> </span>ff<span class="w"> </span>__version__<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span><span class="s2">"</span>
 
 <span class="c1"># Replace and verify</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old"</span><span class="w"> </span><span class="s2">"new"</span><span class="w"> </span>*.py<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">"new"</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">"*.py"</span>
 </code></pre></div>
 <h3 id="batch-replacement-with-multiple-patterns">Batch Replacement with Multiple Patterns</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Multiple replacements (run sequentially)</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern1&quot;</span><span class="w"> </span><span class="s2">&quot;replacement1&quot;</span><span class="w"> </span>*.py
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern2&quot;</span><span class="w"> </span><span class="s2">&quot;replacement2&quot;</span><span class="w"> </span>*.py
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern3&quot;</span><span class="w"> </span><span class="s2">&quot;replacement3&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"pattern1"</span><span class="w"> </span><span class="s2">"replacement1"</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"pattern2"</span><span class="w"> </span><span class="s2">"replacement2"</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"pattern3"</span><span class="w"> </span><span class="s2">"replacement3"</span><span class="w"> </span>*.py
 </code></pre></div>
 <h3 id="safe-replacement-workflow">Safe Replacement Workflow</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
@@ -1755,21 +1755,21 @@ fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;
 fx<span class="w"> </span>backup<span class="w"> </span>project_dir<span class="w"> </span>--compress
 
 <span class="c1"># 2. Perform replacements</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old"</span><span class="w"> </span><span class="s2">"new"</span><span class="w"> </span>*.py
 
 <span class="c1"># 3. Verify changes</span>
-grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
+grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"new"</span><span class="w"> </span>*.py
 
 <span class="c1"># 4. Test the code</span>
 pytest
 </code></pre></div>
 <h3 id="handling-special-characters">Handling Special Characters</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Quote strings with special characters</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old@domain.com&quot;</span><span class="w"> </span><span class="s2">&quot;new@domain.com&quot;</span><span class="w"> </span>file.txt
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old@domain.com"</span><span class="w"> </span><span class="s2">"new@domain.com"</span><span class="w"> </span>file.txt
 
 <span class="c1"># Replace with newline (advanced)</span>
 <span class="c1"># Note: This may require escape sequences depending on shell</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span><span class="s2">&quot;replacement\nnewline&quot;</span><span class="w"> </span>file.txt
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"pattern"</span><span class="w"> </span><span class="s2">"replacement\nnewline"</span><span class="w"> </span>file.txt
 </code></pre></div>
 <h2 id="safety-features">Safety Features</h2>
 <h3 id="atomic-writes">Atomic Writes</h3>
@@ -1799,13 +1799,13 @@ fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;
 <h3 id="no-changes-made">No Changes Made</h3>
 <p>If replacement seems to have no effect:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check if text exists</span>
-grep<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span>file.txt
+grep<span class="w"> </span><span class="s2">"old_text"</span><span class="w"> </span>file.txt
 
 <span class="c1"># Check for exact match (case-sensitive)</span>
-grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span>file.txt
+grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"old_text"</span><span class="w"> </span>file.txt
 
 <span class="c1"># Try with different quoting</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s1">&#39;old&#39;</span><span class="w"> </span><span class="s1">&#39;new&#39;</span><span class="w"> </span>file.txt
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s1">'old'</span><span class="w"> </span><span class="s1">'new'</span><span class="w"> </span>file.txt
 </code></pre></div>
 <h3 id="permission-denied">Permission Denied</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Check file permissions</span>
@@ -1815,21 +1815,21 @@ ls<span class="w"> </span>-la<span class="w"> </span>file.txt
 chmod<span class="w"> </span>+w<span class="w"> </span>file.txt
 
 <span class="c1"># Or run with sudo (not recommended)</span>
-sudo<span class="w"> </span>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>file.txt
+sudo<span class="w"> </span>fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old"</span><span class="w"> </span><span class="s2">"new"</span><span class="w"> </span>file.txt
 </code></pre></div>
 <h3 id="binary-file-corruption">Binary File Corruption</h3>
 <p><code>fx replace</code> is not designed for binary files:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Do not use on binary files</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span><span class="s2">&quot;replacement&quot;</span><span class="w"> </span>image.jpg<span class="w">  </span><span class="c1"># ❌ CORRUPTION RISK</span>
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"pattern"</span><span class="w"> </span><span class="s2">"replacement"</span><span class="w"> </span>image.jpg<span class="w">  </span><span class="c1"># ❌ CORRUPTION RISK</span>
 
 <span class="c1"># Use hex editors or specialized tools for binary files</span>
 </code></pre></div>
 <h3 id="special-character-issues">Special Character Issues</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use single quotes for strings with special characters</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s1">&#39;old@domain&#39;</span><span class="w"> </span><span class="s1">&#39;new@domain&#39;</span><span class="w"> </span>file.txt
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s1">'old@domain'</span><span class="w"> </span><span class="s1">'new@domain'</span><span class="w"> </span>file.txt
 
 <span class="c1"># Escape special characters</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old\|new&quot;</span><span class="w"> </span><span class="s2">&quot;replacement&quot;</span><span class="w"> </span>file.txt
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old\|new"</span><span class="w"> </span><span class="s2">"replacement"</span><span class="w"> </span>file.txt
 </code></pre></div>
 <h3 id="restore-failed">Restore Failed</h3>
 <p>If automatic restore fails:</p>
@@ -1845,18 +1845,18 @@ cp<span class="w"> </span>file_timestamp.txt<span class="w"> </span>file.txt
 <h3 id="always-test-first">Always Test First</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Test replacement on a single file</span>
 cp<span class="w"> </span>file.txt<span class="w"> </span>file_test.txt
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>file_test.txt
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old"</span><span class="w"> </span><span class="s2">"new"</span><span class="w"> </span>file_test.txt
 cat<span class="w"> </span>file_test.txt
 
 <span class="c1"># Only then replace in all files</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.txt
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old"</span><span class="w"> </span><span class="s2">"new"</span><span class="w"> </span>*.txt
 </code></pre></div>
 <h3 id="create-backup-before-batch-operations">Create Backup Before Batch Operations</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Always backup before bulk changes</span>
 fx<span class="w"> </span>backup<span class="w"> </span>project_dir<span class="w"> </span>--compress
 
 <span class="c1"># Then perform replacements</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old"</span><span class="w"> </span><span class="s2">"new"</span><span class="w"> </span>*.py
 
 <span class="c1"># Verify changes</span>
 git<span class="w"> </span>diff
@@ -1864,10 +1864,10 @@ git<span class="w"> </span>diff
 <h3 id="use-version-control">Use Version Control</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Before replacement, commit current state</span>
 git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Before replacement&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Before replacement"</span>
 
 <span class="c1"># Perform replacement</span>
-fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">&quot;old&quot;</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="w"> </span>*.py
+fx<span class="w"> </span>replace<span class="w"> </span><span class="s2">"old"</span><span class="w"> </span><span class="s2">"new"</span><span class="w"> </span>*.py
 
 <span class="c1"># Review changes</span>
 git<span class="w"> </span>diff
@@ -1877,13 +1877,13 @@ git<span class="w"> </span>checkout<span class="w"> </span>.
 </code></pre></div>
 <h3 id="verify-replacements">Verify Replacements</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Count occurrences after replacement</span>
-grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;new_text&quot;</span><span class="w"> </span>*.py
+grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"new_text"</span><span class="w"> </span>*.py
 
 <span class="c1"># View replacement context</span>
-grep<span class="w"> </span>-C<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="s2">&quot;new_text&quot;</span><span class="w"> </span>file.txt
+grep<span class="w"> </span>-C<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="s2">"new_text"</span><span class="w"> </span>file.txt
 
 <span class="c1"># Ensure no unintended changes</span>
-grep<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span class="w"> </span>file.txt<span class="w">  </span><span class="c1"># Should return nothing</span>
+grep<span class="w"> </span><span class="s2">"old_text"</span><span class="w"> </span>file.txt<span class="w">  </span><span class="c1"># Should return nothing</span>
 </code></pre></div>
 <h2 id="see-also">See Also</h2>
 <ul>
@@ -1948,10 +1948,10 @@ grep<span class="w"> </span><span class="s2">&quot;old_text&quot;</span><span cl
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>

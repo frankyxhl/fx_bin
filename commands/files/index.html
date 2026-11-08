@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1613,23 +1613,23 @@
 </code></pre></div>
 <h3 id="pattern-matching">Pattern Matching</h3>
 <p>Count only Python files:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.py"</span>
 </code></pre></div>
 <p>Count test files:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*test*.py&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*test*.py"</span>
 </code></pre></div>
 <p>Count all image files:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.{jpg,jpeg,png,gif}&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.{jpg,jpeg,png,gif}"</span>
 </code></pre></div>
 <h3 id="excluding-files">Excluding Files</h3>
 <p>Count files excluding test files:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*test*&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">"*test*"</span>
 </code></pre></div>
 <p>Exclude multiple patterns:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*test*&quot;</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;__pycache__&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">"*test*"</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">"*.pyc"</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">"__pycache__"</span>
 </code></pre></div>
 <p>Count documentation files excluding README:</p>
-<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.md&quot;</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;README.md&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.md"</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">"README.md"</span>
 </code></pre></div>
 <h3 id="recursive-vs-non-recursive">Recursive vs Non-Recursive</h3>
 <p>Count files recursively (default):</p>
@@ -1658,19 +1658,19 @@ Total: 198
 </code></pre></div>
 <p>Count by file type:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Count Python files</span>
-fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>--recursive
 
 <span class="c1"># Count JavaScript files</span>
-fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.{js,jsx,ts,tsx}&quot;</span><span class="w"> </span>--recursive
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.{js,jsx,ts,tsx}"</span><span class="w"> </span>--recursive
 
 <span class="c1"># Count Markdown files</span>
-fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.md&quot;</span><span class="w"> </span>--recursive
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.md"</span><span class="w"> </span>--recursive
 </code></pre></div>
 <h4 id="scenario-2-audit-large-directories">Scenario 2: Audit Large Directories</h4>
 <p>Find directories with many files:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Count files in subdirectories</span>
 <span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$dir</span><span class="s2">: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span><span class="s2">"</span><span class="nv">$dir</span><span class="s2">"</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span><span class="s2">"</span>
 <span class="k">done</span>
 </code></pre></div>
 <p>Or use <code>fx size</code> for size analysis:</p>
@@ -1679,25 +1679,25 @@ fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>
 <h4 id="scenario-3-clean-test-count">Scenario 3: Clean Test Count</h4>
 <p>Count test files:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Count all test files</span>
-fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*test*.py&quot;</span><span class="w"> </span>--recursive
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*test*.py"</span><span class="w"> </span>--recursive
 
 <span class="c1"># Count by test type</span>
-fx<span class="w"> </span>files<span class="w"> </span>tests/<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*test*.py&quot;</span><span class="w"> </span>--recursive
+fx<span class="w"> </span>files<span class="w"> </span>tests/<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*test*.py"</span><span class="w"> </span>--recursive
 </code></pre></div>
 <h4 id="scenario-4-documentation-audit">Scenario 4: Documentation Audit</h4>
 <p>Count documentation files:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Count Markdown files</span>
-fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.md&quot;</span><span class="w"> </span>--recursive
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.md"</span><span class="w"> </span>--recursive
 
 <span class="c1"># Count excluding generated docs</span>
-fx<span class="w"> </span>files<span class="w"> </span>docs/<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.md&quot;</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*generated*&quot;</span><span class="w"> </span>--recursive
+fx<span class="w"> </span>files<span class="w"> </span>docs/<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.md"</span><span class="w"> </span>--exclude<span class="w"> </span><span class="s2">"*generated*"</span><span class="w"> </span>--recursive
 </code></pre></div>
 <h4 id="scenario-5-source-code-distribution">Scenario 5: Source Code Distribution</h4>
 <p>Analyze project composition:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Count by language</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Python: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">&#39;*.py&#39;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;JavaScript: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">&#39;*.{js,jsx,ts,tsx}&#39;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Markdown: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">&#39;*.md&#39;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Python: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">'*.py'</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"JavaScript: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">'*.{js,jsx,ts,tsx}'</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Markdown: </span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s1">'*.md'</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span><span class="s2">"</span>
 </code></pre></div>
 <h2 id="tips-and-tricks">Tips and Tricks</h2>
 <h3 id="combining-with-other-commands">Combining with Other Commands</h3>
@@ -1705,24 +1705,24 @@ fx<span class="w"> </span>files<span class="w"> </span>docs/<span class="w"> </s
 find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-exec<span class="w"> </span>fx<span class="w"> </span>files<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
 
 <span class="c1"># Count files matching a pattern</span>
-find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>files
+find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>fx<span class="w"> </span>files
 </code></pre></div>
 <h3 id="using-in-scripts">Using in Scripts</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 <span class="c1"># Count files and exit with error if too few</span>
-<span class="nv">count</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$count</span><span class="s2">&quot;</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: Expected at least 10 Python files, found </span><span class="nv">$count</span><span class="s2">&quot;</span>
+<span class="nv">count</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$count</span><span class="s2">"</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Error: Expected at least 10 Python files, found </span><span class="nv">$count</span><span class="s2">"</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: Found </span><span class="nv">$count</span><span class="s2"> Python files&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"OK: Found </span><span class="nv">$count</span><span class="s2"> Python files"</span>
 </code></pre></div>
 <h3 id="monitoring-file-count-changes">Monitoring File Count Changes</h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Count before and after operations</span>
-<span class="nv">before</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+<span class="nv">before</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span>
 <span class="c1"># ... perform operations ...</span>
-<span class="nv">after</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Files changed: </span><span class="k">$((</span><span class="nv">after</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">before</span><span class="k">))</span><span class="s2">&quot;</span>
+<span class="nv">after</span><span class="o">=</span><span class="k">$(</span>fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Files changed: </span><span class="k">$((</span><span class="nv">after</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">before</span><span class="k">))</span><span class="s2">"</span>
 </code></pre></div>
 <h2 id="performance-notes">Performance Notes</h2>
 <ul>
@@ -1743,7 +1743,7 @@ ls<span class="w"> </span>-la<span class="w"> </span>/path/to/directory
 <h3 id="slow-performance">Slow Performance</h3>
 <p>For very large directories:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Use pattern to reduce search scope</span>
-fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--recursive
+fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>--recursive
 
 <span class="c1"># Use max-depth to limit recursion</span>
 fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--max-depth<span class="w"> </span><span class="m">2</span>
@@ -1754,7 +1754,7 @@ fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>
 fx<span class="w"> </span>files<span class="w"> </span>.<span class="w"> </span>--recursive<span class="w"> </span>--detailed
 
 <span class="c1"># Check for hidden files</span>
-ls<span class="w"> </span>-la<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;^\.&quot;</span>
+ls<span class="w"> </span>-la<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"^\."</span>
 </code></pre></div>
 <h2 id="see-also">See Also</h2>
 <ul>
@@ -1820,10 +1820,10 @@ ls<span class="w"> </span>-la<span class="w"> </span><span class="p">|</span><sp
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "search.highlight", "toc.integrate"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>
