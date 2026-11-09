@@ -1,7 +1,36 @@
 # CHANGELOG
 
 
+## v2.16.1 (2026-11-09)
+
+### Chores
+
+- Merge GitHub main 54b4a14 (release 2.16.0) into main
+  ([`7503919`](https://github.com/frankyxhl/fx_bin/commit/750391978957b42ac8c3d09987007a771764d9af))
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+
+
 ## v2.16.0 (2026-11-08)
+
+### Bug Fixes
+
+- **deps**: Update dev and security-group packages to patched versions
+  ([`d4fabf3`](https://github.com/frankyxhl/fx_bin/commit/d4fabf36b0b19b93d793ed96482e7a8b6e90d014))
+
+anyio 4.12.0 to 4.16.0, authlib 1.6.12 to 1.9.5, black 26.3.1 to 26.10.1, certifi 2025.8.3 to
+  2026.10.23, mako 1.3.12 to 1.4.3, nltk 3.10.0 to 3.10.4, setuptools 83.0.0 to 84.2.1, urllib3
+  2.7.0 to 2.8.0; transitive joserfc 1.8.0 (authlib) and typing-extensions 4.16.0. filelock stays
+  3.20.3 (safety pins <4.0). Runtime dependencies unchanged. Lock regenerated with Poetry 2.5.1.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+
+### Code Style
+
+- Reformat tests/unit/test_pwd.py with black 26.10.1
+  ([`ba2a417`](https://github.com/frankyxhl/fx_bin/commit/ba2a4178ac8eb16a254c273e8346cd003b834b84))
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
 
 ### Features
 
